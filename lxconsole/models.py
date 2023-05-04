@@ -14,11 +14,10 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(255), nullable=True)
     first_name = db.Column(db.String(255), nullable=True)
     last_name = db.Column(db.String(255), nullable=True)
-    image_file = db.Column(db.String(255), nullable=False, default='')
     password = db.Column(db.String(255), nullable=False)
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     def __repr__(self):
-        return f"User('{self.username}', '{self.email}', '{self.image_file}')"
+        return f"User('{self.username}', '{self.email}', '{self.last_name}', '{self.first_name}')"
 
 
 class Group(db.Model):
