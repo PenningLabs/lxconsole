@@ -1,0 +1,199 @@
+{% extends "main.html" %}
+
+{% block header %}
+  <div class="row mb-2">
+    <div class="col-sm-6">
+      <h1>{{ page_title | safe }}</h1>
+    </div>
+    <div class="col-sm-6">
+      <a class="btn btn-outline-primary float-sm-right mr-4" href="#" data-toggle="modal" data-target="#addModal" title="Add Server" aria-hidden="true">
+        <i class="fas fa-plus fa-sm fa-fw"></i> Server
+      </a>
+    </div>
+  </div>
+{% endblock header %}
+
+{% block content %}
+  <div class="col-12">
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title">LXD Servers</h3>
+        <div class="card-tools">
+          <button type="button" class="btn btn-tool" onclick="reloadPageContent()" title="Refresh">
+          <i class="fas fa-sync"></i>
+          </button>
+        </div>
+      </div>
+      <div class="card-body">
+        <table class="table table-hover" id="myDataTable" width="100%" cellspacing="0">
+        </table>
+      </div>
+    </div>
+  </div>
+{% endblock content %}
+
+{% block modal %}
+  {% include 'modals/servers.html' %}
+{% endblock modal %}
+
+{% block script %}
+  <script>
+    var reloadTime = 10000;
+
+    function reloadPageContent() {
+      //Clear the automatic page reload
+      clearTimeout(pageReloadTimeout);
+
+      //Reload the datatables content
+      $('#myDataTable').DataTable().ajax.reload(null, false);
+
+      //Set the automatic page reload
+      pageReloadTimeout = setTimeout(() => { reloadPageContent(); }, reloadTime);
+    }
+
+    function loadPageContent(){
+
+      // Configure Datatable
+      $('#myDataTable').DataTable({
+        ajax: {
+          url: "../api/servers/list_servers",
+          dataType: "json",
+          dataSrc: "data",
+          contentType: "application/json"
+        },
+        columns: [
+          { title: "Name", data: function (row, type, set) {
+              if (row.hasOwnProperty('id') && row.hasOwnProperty('name')) {
+                if (row.name)
+                  return '<a href="server?id=' + row.id + '">' + row.name + '</a>'
+                  return row.name
+              }
+              return '-'
+            },
+          },
+          { title: "Addr", data: function (row, type, set) {
+              if (row.hasOwnProperty('id') && row.hasOwnProperty('addr')) {
+                if (row.addr)
+                  return row.addr
+              }
+              return '-'
+            },
+          },
+          { title: "Port", data: function (row, type, set) {
+              if (row.hasOwnProperty('port')) {
+                if (row.port)
+                  return row.port
+              }
+              return '-'
+            },
+          },
+          { title: "Proxy", data: function (row, type, set) {
+              if (row.hasOwnProperty('proxy')) {
+                if (row.proxy)
+                  return row.proxy
+              }
+              return '-'
+            },
+          },
+          { title: "SSL Verify", data: function (row, type, set) {
+              if (row.hasOwnProperty('ssl_verify')) {
+                return row.ssl_verify
+              }
+              return '-'
+            },
+          },
+          { title: "Actions", data: function (row, type, set) {
+            links = ''
+            if (row.hasOwnProperty('id') && row.hasOwnProperty('addr') && row.hasOwnProperty('port') && row.hasOwnProperty('name')) {
+              links = '<a href="#" onclick=editServer(\''+row.id+'\')> <i class="fas fa-edit fa-lg" style="color:#ddd" title="Edit" aria-hidden="true"></i> </a>' +
+              '&nbsp' +
+              '<a href="#" onclick=confirmDeleteServer(\''+row.id+'\',\''+row.addr+'\',\''+row.port+'\',\''+row.name+'\')> <i class="fas fa-trash-alt fa-lg" style="color:#ddd" title="Delete" aria-hidden="true"></i> </a>'
+            }
+            return links
+              
+            },
+          },
+        ],
+        order: [],
+      });
+
+      //Set reload page content
+      pageReloadTimeout = setTimeout(() => { reloadPageContent(); }, reloadTime);
+
+    }
+
+    function loadInstructionsModal(){
+      $("#instructionsModal").modal('show');
+    }
+
+    function addServer(){
+      console.log("Info: adding lxd server " + $("#addModalAddrInput").val() + ":" + $("#addModalPortInput").val());
+      $.post("../api/servers/add_server", { 
+        addr: $("#addModalAddrInput").val(), 
+        port: $("#addModalPortInput").val(),
+        proxy: $("#addModalProxyInput").val(),
+        ssl_verify: $("#addModalSSLVerifyInput").val()
+      }, function (data) {
+        console.log(data)
+        if (data.error)
+          alert(data.error)
+        setTimeout(() => { reloadPageContent(); }, 1000);
+      });
+    }
+
+    function confirmDeleteServer(id, addr, port, name){
+      console.log("Info: confirming removal of lxd server " + name);
+      if (confirm("Are you sure you want to remove host " + name + "?") == true) {
+        deleteServer(id);
+        setTimeout(() => { reloadPageContent(); }, 1000);
+      }
+    }
+
+    function deleteServer(id){
+      console.log("Info: removing lxd server " + id);
+      $.get("../api/servers/remove_server", {
+        id: id
+      }, function (data) {
+        setTimeout(() => { reloadPageContent(); }, 1000);
+      });
+    }
+
+    function editServer(id){
+      console.log("Info: loading edit server " + id);
+      $.get("../api/servers/get_server", { 
+        id: id,
+      }, function (data) {
+        console.log(data);
+        console.log(data.data[0].addr);
+        $("#editModalIdInput").val(data.data[0].id);
+        $("#editModalAddrInput").val(data.data[0].addr);
+        $("#editModalPortInput").val(data.data[0].port);
+        $("#editModalProxyInput").val(data.data[0].proxy);
+        $("#editModalSSLVerifyInput").val(data.data[0].ssl_verify.toString());
+        $("#editModal").modal('show');
+      });
+    }
+
+    function updateServer(){
+      console.log("Info: updating server " + $("#editModalIdInput").val());
+      $.post("../api/servers/update_server", {
+        id: $("#editModalIdInput").val(),
+        addr: $("#editModalAddrInput").val(), 
+        port: $("#editModalPortInput").val(),
+        proxy: $("#editModalProxyInput").val(),
+        ssl_verify: $("#editModalSSLVerifyInput").val()
+      }, function (data) {
+        console.log(data)
+        setTimeout(() => { reloadPageContent(); }, 1000);
+      });
+    }
+
+    $(document).ready(function(){
+
+      loadPageContent()
+      
+    });
+
+  </script>
+{% endblock script %}
+

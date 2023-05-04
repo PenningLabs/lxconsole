@@ -1,0 +1,565 @@
+{% extends "main.html" %}
+
+{% block header %}
+{% endblock header %}
+
+{% block content %}
+<div class="row">
+
+  <div class="col-12 mt-n3">
+    <div class="row">
+
+
+      <div class="col-md-3 col-sm-6 col-12">
+        <div class="info-box">
+          <a href="#" class="stretched-link" id="containersLink"></a>
+          <span class="info-box-icon"><i class="fas fa-cube text-primary"></i></span>
+          <div class="info-box-content">
+            <span class="info-box-number" id="runningContainers"></span>
+            <div class="progress">
+              <div class="progress-bar bg-primary" style="width: 0%" id="containerPercentageProgressBar"></div>
+            </div>
+            <span class="progress-description" id="containerPercentage"></span>
+          </div>
+        </div>  
+      </div>
+
+      <div class="col-md-3 col-sm-6 col-12">
+        <div class="info-box">
+          <a href="#" class="stretched-link" id="virtualMachinesLink"></a>
+          <span class="info-box-icon"><i class="fas fa-cube text-primary"></i></span>
+          <div class="info-box-content">
+            <span class="info-box-number" id="runningVirtualMachines"></span>
+            <div class="progress">
+              <div class="progress-bar bg-primary" style="width: 0%" id="virtualMachinePercentageProgressBar"></div>
+            </div>
+            <span class="progress-description" id="virtualMachinePercentage"></span>
+          </div>
+        </div>  
+      </div>
+
+      <div class="col-md-3 col-sm-6 col-12">
+        <div class="info-box">
+          <a href="#" class="stretched-link" id="clusterMembersLink"></a>
+          <span class="info-box-icon"><i class="fas fa-layer-group text-primary"></i></span>
+          <div class="info-box-content">
+            <span class="info-box-number" id="onlineClusterMembers"></span>
+            <div class="progress">
+              <div class="progress-bar bg-primary" style="width: 0%" id="clusterPercentageProgressBar"></div>
+            </div>
+            <span class="progress-description" id="clusterPercentage"></span>
+          </div>
+        </div>  
+      </div>
+
+      <div class="col-md-3 col-sm-6 col-12">
+        <div class="info-box">
+          <span class="info-box-icon"><i class="fas fa-memory text-primary"></i></span>
+          <div class="info-box-content">
+            <span class="info-box-number" id="totalMemory"></span>
+            <div class="progress progress-sm">
+              <div class="progress-bar bg-primary" style="width: 0%" id="memoryPercentageProgressBar"></div>
+            </div>
+            <span class="progress-description" id="memoryPercentage"></span>
+          </div>
+        </div>  
+      </div>
+
+      <div class="col-sm-6 col-lg-4 col-xl-2">
+        <a href="#" class="stretched-link" id="imagesLink"></a>
+        <div class="card small-box">
+          <div class="inner"> 
+            <h3>
+              <span id="totalImages">0</span>
+            </h3>
+            <h6>IMAGES</h6>
+          </div>
+          <div class="icon">
+            <i class="fas fa-box-open"></i>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-sm-6 col-lg-4 col-xl-2">
+        <a href="#" class="stretched-link" id="profilesLink"></a>
+        <div class="card small-box">
+          <div class="inner"> 
+            <h3>
+              <span id="totalProfiles">0</span>
+            </h3>
+            <h6>PROFILES</h6>
+          </div>
+          <div class="icon">
+            <i class="fas fa-money-check"></i>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-sm-6 col-lg-4 col-xl-2">
+        <a href="#" class="stretched-link" id="networksLink"></a>
+        <div class="card small-box">
+          <div class="inner"> 
+            <h3>
+              <span id="totalNetworks">0</span>
+            </h3>
+            <h6>NETWORKS</h6>
+          </div>
+          <div class="icon">
+            <i class="fas fa-network-wired"></i>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-sm-6 col-lg-4 col-xl-2">
+        <a href="#" class="stretched-link" id="storagePoolsLink"></a>
+        <div class="card small-box">
+          <div class="inner"> 
+            <h3>
+              <span id="totalStoragePools">0</span>
+            </h3>
+            <h6>STORAGE POOLS</h6>
+          </div>
+          <div class="icon">
+            <i class="fas fa-hdd"></i>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-sm-6 col-lg-4 col-xl-2">
+        <a href="#" class="stretched-link" id="projectsLink"></a>
+        <div class="card small-box">
+          <div class="inner"> 
+            <h3>
+              <span id="totalProjects">0</span>
+            </h3>
+            <h6>PROJECTS</h6>
+          </div>
+          <div class="icon">
+            <i class="fas fa-chart-bar"></i>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-sm-6 col-lg-4 col-xl-2">
+        <a href="#" class="stretched-link" id="networkAclsLink"></a>
+        <div class="card small-box">
+          <div class="inner"> 
+            <h3>
+              <span id="totalNetworkAcls">0</span>
+            </h3>
+            <h6>NETWORK ACLs</h6>
+          </div>
+          <div class="icon">
+            <i class="fas fa-shield-alt"></i>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  
+    <div class="col-sm-12 col-md-6 mb-4">
+      <div class="card h-100">
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+          <h6 class="m-0 font-weight-bold text-primary">LXD Information</h6>
+        </div>
+        <!-- Card Body -->
+        <div class="card-body">
+          <strong>Operating System</strong>: <span id="osName"></span> <span id="osVersion"></span><br />
+          <strong>LXD Version</strong>: <span id="serverVersion"></span><br />
+          <strong>Server Name</strong>: <span id="serverName"></span><br />
+          <strong>Kernel</strong>: <span id="kernel"></span> <span id="kernelArchitecture"></span><br />
+          <strong>Firewall</strong>: <span id="firewall"></span><br />
+          <br />
+          <strong>Driver</strong>: <span id="driver"></span><br />
+          <strong>Driver Version</strong>: <span id="driverVersion"></span><br />
+          <br />
+          <strong>Storage Type</strong>: <span id="storage"></span><br />
+          <strong>Storage Version</strong>: <span id="storageVersion"></span><br />
+        </div>
+      </div>
+    </div>
+
+    <div class="col-sm-12 col-md-6 mb-4">
+      <div class="card h-100">
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+          <h6 class="m-0 font-weight-bold text-primary">Resource Information</h6>
+        </div>
+        <!-- Card Body -->
+        <div class="card-body">
+          <strong>System Vendor</strong>: <span id="systemVendor"></span> <br />
+          <strong>System Product</strong>: <span id="systemProduct"></span> <br />
+          <strong>Total Memory</strong>: <span id="memoryTotal"></span> <span id="memoryUnit"></span><br />
+          <br />
+          <strong>CPU Information</strong>:
+          <ul>
+            <li><strong>Architecture</strong>: <span id="architecture"></span> </li>
+            <li><strong>CPU Count</strong>: <span id="cpus"></span> </li>
+            <li><strong>Socket</strong>: <span id="sockets"></span> </li>
+            <ul id="socketList"></ul>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-sm-12 col-md-7 mb-4">
+      <div class="card h-100">
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+          <h6 class="m-0 font-weight-bold text-primary">Disk Storage Information</h6>
+        </div>
+        <!-- Card Body -->
+        <div class="card-body">
+          <table class="table">
+            <thead>
+              <th>ID</th>
+              <th>Model</th>
+              <th>Type</th>
+              <th>Size</th>
+            </thead>
+            <tbody id="diskList"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-sm-12 col-md-5 mb-4">
+      <div class="card h-100">
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+          <h6 class="m-0 font-weight-bold text-primary">IP Addresses Information</h6>
+        </div>
+        <!-- Card Body -->
+        <div class="card-body">
+          <strong>Addresses</strong>: <br />
+          <ul id="addressList"></ul>
+        </div>
+      </div>
+    </div>
+
+</div>
+{% endblock content %}
+
+{% block modal %}
+  {% include 'modals/server.html' %}
+{% endblock modal %}
+
+{% block script %}
+  
+  <script>
+    var reloadTime = 10000;
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const serverId = urlParams.get('id');
+    project = urlParams.get('project');
+    populateSidebarLinks();
+    populateNavbarLinks();
+
+    function addServer(){
+      var serverName = $("#addModalNameInput").val();
+      var serverAddr = $("#addModalAddrInput").val();
+      var serverPassword = $("#addModalPasswordInput").val();
+      console.log("Info: adding lxd server " + serverName + " " + serverAddr);
+      $.post("../api/servers/add_server", { 
+        server_name: serverName, 
+        server_addr: serverAddr,
+        server_password: serverPassword
+      }, function (data) {
+        setTimeout(() => { reloadPageContent(); }, 1000);
+      });
+    }
+
+    function reloadPageContent() {
+      //Clear the automatic page reload
+      clearTimeout(pageReloadTimeout);
+
+      //Reload the datatables content
+      $('#myDataTable').DataTable().ajax.reload(null, false);
+
+      //Set the automatic page reload
+      pageReloadTimeout = setTimeout(() => { reloadPageContent(); }, reloadTime);
+    }
+
+    function loadPageContent(){
+      applySidebarStyles();
+      applySidebarLinks();
+
+      //Display the current project
+      $("#selectedProject").text(project);
+
+      //Populate the Server dropdown
+      $.getJSON("../api/servers/list_servers?id="+serverId, function (data) {
+        data = data.data
+        for (var index = 0; index < data.length; index++) {
+          if (data[index].name == '')
+            optionText = data[index].addr
+          else
+            optionText = data[index].name
+          if (data[index].id == serverId)
+            $('#serverListNav').append('<option value="' + data[index].id + '" selected="selected">' + optionText + '</option>');
+          else
+            $('#serverListNav').append('<option value="' + data[index].id + '">' + optionText + '</option>');
+        }
+      })
+
+      //Populate the Project dropdown
+      $.getJSON("../api/projects/list_projects?id="+serverId+"&project="+project, function (data) {
+        data = data.metadata
+        $("#totalProjects").text(data.length);
+        for (var index = 0; index < data.length; index++) {
+          optionText = data[index].replace('/1.0/projects/','');
+          if (optionText == project)
+            $('#projectListNav').append('<option value="' + optionText + '" selected="selected">' + optionText + '</option>');
+          else
+            $('#projectListNav').append('<option value="' + optionText + '">' + optionText + '</option>');
+        }
+      })
+
+      //LXD Info
+      $.getJSON("../api/server/get_server_info?id="+encodeURI(serverId)+'&project='+encodeURI(project), function (data) {
+        data = data.metadata.environment;
+        $("#driver").text(data.driver);
+        $("#driverVersion").text(data.driver_version);
+        $("#firewall").text(data.firewall);
+        $("#kernel").text(data.kernel);
+        $("#kernelArchitecture").text(data.kernel_architecture);
+        $("#kernelVersion").text(data.kernel_version);
+        $("#osName").text(data.os_name);
+        $("#osVersion").text(data.os_version)
+        $("#serverVersion").text(data.server_version);
+        $("#serverName").text(data.server_name);
+        $("#storage").text(data.storage);
+        $("#storageVersion").text(data.storage_version);
+        addresses = data.addresses;
+        addresses.forEach(element => {
+          $("#addressList").append('<li>'+element+'</li>');
+        });
+
+      });
+
+      //Resource Info
+      $.getJSON("../api/server/get_server_resources?id="+encodeURI(serverId)+'&project='+encodeURI(project), function (data) {
+        data = data.metadata;
+        $("#systemVendor").text(data.system.vendor);
+        $("#systemProduct").text(data.system.product);
+        $("#architecture").text(data.cpu.architecture);
+        $("#cpus").text(data.cpu.total);
+        memory = data.memory.total
+        unit = 'Bytes'
+        if (memory >= 1024){
+          memory = memory / 1024
+          unit = 'KiB'
+        }
+        if (memory >= 1024){
+          memory = memory / 1024
+          unit = 'MiB'
+        }
+        if (memory >= 1024){
+          memory = memory / 1024
+          unit = 'GiB'
+        }
+        $("#memoryTotal").text(memory);
+        $("#memoryUnit").text(unit);
+
+        memoryPercentage = data.memory.used / data.memory.total
+        if (memoryPercentage < 1)
+          memoryPercentage = parseInt(memoryPercentage * 100)
+        else
+          memoryPercentage = 100
+
+        $("#totalMemory").text(memory + ' ' + unit + ' MEMORY');
+        $('#memoryPercentageProgressBar').css('width', memoryPercentage + '%');
+        $('#memoryPercentageProgressBar').attr('aria-valuenow', memoryPercentage + '%');
+        if (memory > 90.00)
+          $('#memoryPercentageProgressBar').attr('class', 'progress-bar bg-danger');
+        else
+          $('#memoryPercentageProgressBar').attr('class', 'progress-bar bg-primary');
+        $("#memoryPercentage").text(memoryPercentage + '% of host memory used')
+
+        sockets = data.cpu.sockets;
+        sockets.forEach(element => {
+          $("#socketList").append('<li>Socket '+element.socket+': '+element.name+'</li>');
+        });
+
+        disks = data.storage.disks;
+        disks.forEach(element => {
+          if (element.type == "cdrom"){
+            return;
+          }
+          tableRow = '<tr>';
+          tableRow += '<td>'+element.id+'</td>';
+          tableRow += '<td>'+element.model+'</td>';
+          tableRow += '<td>'+element.type+'</td>';
+          if (element.size < 1099511627776){
+            diskTotal = Math.round(element.size/1024/1024/1024 * 100) / 100;
+            diskUnit = "GiB";
+          }
+          else {
+            diskTotal = Math.round(element.size/1024/1024/1024/1024 * 100) / 100;
+            diskUnit = "TiB";
+          }
+          tableRow += '<td>'+diskTotal + ' ' +diskUnit +'</td>';
+          tableRow += '</tr>';
+          $('#diskList').append(tableRow);
+        });
+
+      });
+
+      //Load Containers Info
+      $.getJSON("../api/containers/list_instances?id="+encodeURI(serverId)+'&project='+encodeURI(project)+'&recursion=1', function (data) {
+        data = data.metadata;
+        
+        running_containers = 0
+        data.forEach(element => {
+          if (element.status == "Running")
+            running_containers ++
+        });
+
+        $("#runningContainers").text(data.length + ' CONTAINERS');
+
+        containerPercentage = (running_containers / data.length) * 100
+        if (isNaN(containerPercentage)){
+          containerPercentage = 0;
+        }
+        else {
+          containerPercentage = parseInt(containerPercentage);
+        }
+
+        $('#containerPercentageProgressBar').css('width', containerPercentage + '%');
+        $('#containerPercentageProgressBar').attr('aria-valuenow', containerPercentage + '%');
+        $("#containerPercentage").text(containerPercentage + '% of containers are running')
+        
+      });
+
+      // Load Virtual Machine Info
+      $.getJSON("../api/virtual-machines/list_instances?id="+encodeURI(serverId)+'&project='+encodeURI(project)+'&recursion=1', function (data) {
+        data = data.metadata;
+        
+        running_virtual_machines = 0
+        data.forEach(element => {
+          if (element.status == "Running")
+          running_virtual_machines ++
+        });
+
+        $("#runningVirtualMachines").text(data.length + ' VIRTUAL MACHINES');
+
+        virtualMachinePercentage = (running_virtual_machines / data.length) * 100
+        if (isNaN(virtualMachinePercentage)){
+          virtualMachinePercentage = 0;
+        }
+        else {
+          virtualMachinePercentage = parseInt(virtualMachinePercentage);
+        }
+
+        $('#virtualMachinePercentageProgressBar').css('width', virtualMachinePercentage + '%');
+        $('#virtualMachinePercentageProgressBar').attr('aria-valuenow', virtualMachinePercentage + '%');
+        $("#virtualMachinePercentage").text(virtualMachinePercentage + '% of virtual machines are running')
+
+      });
+
+      //Load Cluster Memebers Info
+      $.getJSON("../api/cluster-members/list_cluster_members?id="+encodeURI(serverId)+'&project='+encodeURI(project)+'&recursion=1', function (data) {
+        data = data.metadata;
+
+        online_members = 0
+        data.forEach(element => {
+          if (element.status == "Online")
+          online_members ++
+        });
+
+        $("#onlineClusterMembers").text(data.length + ' CLUSTER MEMBERS');
+
+        clusterPercentage = (online_members / data.length) * 100
+        if (isNaN(clusterPercentage)){
+          clusterPercentage = 0;
+        }
+        else {
+          clusterPercentage = parseInt(clusterPercentage);
+        }
+        
+        $('#clusterPercentageProgressBar').css('width', clusterPercentage + '%');
+        $('#clusterPercentageProgressBar').attr('aria-valuenow', clusterPercentage + '%');
+        if (clusterPercentage < 100.00)
+          $('#clusterPercentageProgressBar').attr('class', 'progress-bar bg-danger');
+        else
+          $('#clusterPercentageProgressBar').attr('class', 'progress-bar bg-primary');
+
+        $("#clusterPercentage").text(clusterPercentage + '% of cluster members are online')
+      });
+
+      //Load Images Info
+      $.getJSON("../api/images/list_images?id="+encodeURI(serverId)+'&project='+encodeURI(project), function (data) {
+        data = data.metadata
+        $("#totalImages").text(data.length);
+      });
+
+      //Load Profiles Info
+      $.getJSON("../api/profiles/list_profiles?id="+encodeURI(serverId)+'&project='+encodeURI(project), function (data) {
+        data = data.metadata
+        $("#totalProfiles").text(data.length);
+      });
+
+      //Load Network Info
+      $.getJSON("../api/networks/list_networks?id="+encodeURI(serverId)+'&project='+encodeURI(project), function (data) {
+        data = data.metadata
+        $("#totalNetworks").text(data.length);
+      });
+
+      //Load Storage Pools Info
+      $.getJSON("../api/storage-pools/list_storage_pools?id="+encodeURI(serverId)+'&project='+encodeURI(project), function (data) {
+        data = data.metadata
+        $("#totalStoragePools").text(data.length);
+      });
+
+      //Load Network ACLs Info
+      $.getJSON("../api/network-acls/list_network_acls?id="+encodeURI(serverId)+'&project='+encodeURI(project), function (data) {
+        data = data.metadata
+        $("#totalNetworkAcls").text(data.length);
+      });
+
+      //Set hyperlink references for cards
+      $("#containersLink").attr("href", "containers?id="+serverId+"&project="+project)
+      $("#virtualMachinesLink").attr("href", "virtual-machines?id="+serverId+"&project="+project)
+      $("#clusterMembersLink").attr("href", "cluster-members?id="+serverId+"&project="+project)
+      $("#imagesLink").attr("href", "images?id="+serverId+"&project="+project)
+      $("#profilesLink").attr("href", "profiles?id="+serverId+"&project="+project)
+      $("#networksLink").attr("href", "networks?id="+serverId+"&project="+project)
+      $("#storagePoolsLink").attr("href", "storage-pools?id="+serverId+"&project="+project)
+      $("#projectsLink").attr("href", "projects?id="+serverId+"&project="+project)
+      $("#networkAclsLink").attr("href", "network-acls?id="+serverId+"&project="+project)
+
+      //Set reload page content
+      pageReloadTimeout = setTimeout(() => { reloadPageContent(); }, reloadTime);
+
+    }
+
+    $(document).ready(function(){
+
+      //If serverId is missing redirect to servers page
+      if (!serverId) {
+        window.location.href = 'servers';
+      }
+
+      //If project is missing get initial project and reload page. If certificate restrictions are in place, default project may not be available
+      if (!project) {
+        $.get("../api/server/get_server_initial_project?id="+serverId, function(data) {
+          if (data.hasOwnProperty('error')) {
+            alert(data.error)
+            window.location.href = 'servers';
+          }
+          const url = new URL(window.location);
+          url.searchParams.set('project', data);
+          window.history.pushState({}, '', url);
+          project=data
+          loadPageContent()
+          operationStatusCheck()
+        })
+      }
+      else {
+        loadPageContent()
+        operationStatusCheck()
+      }
+      
+
+    });
+
+  </script>
+{% endblock script %}

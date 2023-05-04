@@ -1,0 +1,99 @@
+<!-- Add Group Modal-->
+<div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Create Group</h5>
+        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+        <form id="addForm">
+          <div class="row">
+            <label class="col-3 col-form-label text-right">Name: <span class="text-danger">*</span></label>
+            <div class="col-7">
+              <div class="form-group">
+                <input type="text" id="nameInput" class="form-control" required="required" placeholder="" name="name">
+              </div>
+            </div>
+            <div class="col-1">
+              <i class="far fa-sm fa-question-circle" title='(Required) - Enter in a name for the group.'></i>
+            </div>
+          </div>
+  
+          <div class="row">
+            <label class="col-3 col-form-label text-right">Description: </label>
+            <div class="col-7">
+              <div class="form-group">
+                <input type="text" id="descriptionInput" class="form-control" placeholder="" name="description">
+              </div>
+            </div>
+            <div class="col-1">
+              <i class="far fa-sm fa-question-circle" title='Enter in the description for the group.'></i>
+            </div>
+          </div>
+
+        </form>
+
+      </div> <!-- End Modal Body-->
+      <div class="modal-footer">
+        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+        <a class="btn btn-primary" href="#" onclick="addGroup()" data-dismiss="modal">Submit</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Edit Group Modal-->
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Edit Group</h5>
+        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+        <form id="editForm">
+          <div class="row">
+            <label class="col-3 col-form-label text-right">Name: <span class="text-danger">*</span></label>
+            <div class="col-7">
+              <div class="form-group">
+                <input type="text" id="nameEditInput" class="form-control" required="required" placeholder="" name="name">
+              </div>
+            </div>
+            <div class="col-1">
+              <i class="far fa-sm fa-question-circle" title='Enter in a name for the group.'></i>
+            </div>
+          </div>
+  
+          <div class="row">
+            <label class="col-3 col-form-label text-right">Description: </label>
+            <div class="col-7">
+              <div class="form-group">
+                <input type="text" id="descriptionEditInput" class="form-control" placeholder="" name="description">
+              </div>
+            </div>
+            <div class="col-1">
+              <i class="far fa-sm fa-question-circle" title='Enter in the description for the group.'></i>
+            </div>
+          </div>
+
+          <input type="hidden" id="idEditInput" name="id">
+        </form>
+
+      </div> <!-- End Modal Body-->
+      <div class="modal-footer">
+        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+        <a class="btn btn-primary" href="#" onclick="updateGroup()" data-dismiss="modal">Submit</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+

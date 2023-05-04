@@ -1,0 +1,474 @@
+{% extends "main.html" %}
+
+{% block header %}
+  <div class="row mb-2">
+    <div class="col-sm-6">
+      <h1>{{ page_title | safe }}</h1>
+    </div>
+    <div class="col-sm-6">
+      <a class="btn btn-outline-primary float-sm-right mr-4" href="#" data-toggle="modal" data-target="#addModal" title="Add Storage Pool" aria-hidden="true">
+        <i class="fas fa-plus fa-sm fa-fw"></i> Storage Pool
+      </a>
+    </div>
+  </div>
+{% endblock header %}
+
+{% block content %}
+  <div class="col-12">
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title">Storage Pools</h3>
+        <div class="card-tools">
+          <button type="button" class="btn btn-tool" onclick="reloadPageContent()" title="Refresh">
+          <i class="fas fa-sync"></i>
+          </button>
+        </div>
+      </div>
+      <div class="card-body">
+        <table class="table table-hover" id="myDataTable" width="100%" cellspacing="0">
+        </table>
+      </div>
+    </div>
+  </div>
+{% endblock content %}
+
+{% block modal %}
+  {% include 'modals/storage-pools.html' %}
+{% endblock modal %}
+
+{% block script %}
+  <script>
+    var reloadTime = 10000;
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const serverId = urlParams.get('id');
+    const project = urlParams.get('project');
+    var editedStoragePool = ''
+    applySidebarStyles();
+    applySidebarLinks();
+    populateSidebarLinks();
+    populateNavbarLinks();
+
+    function reloadPageContent() {
+      //Clear the automatic page reload
+      clearTimeout(pageReloadTimeout);
+
+      //Reload the datatables content
+      $('#myDataTable').DataTable().ajax.reload(null, false);
+
+      //Set the automatic page reload
+      pageReloadTimeout = setTimeout(() => { reloadPageContent(); }, reloadTime);
+    }
+
+    function loadPageContent(){
+
+      //Display the current project
+      $("#selectedProject").text(project);
+
+      //Populate the Server dropdown
+      $.getJSON("../api/servers/list_servers?id="+serverId, function (data) {
+        data = data.data
+        for (var index = 0; index < data.length; index++) {
+          if (data[index].name == '')
+            optionText = data[index].addr
+          else
+            optionText = data[index].name
+          if (data[index].id == serverId)
+            $('#serverListNav').append('<option value="' + data[index].id + '" selected="selected">' + optionText + '</option>');
+          else
+            $('#serverListNav').append('<option value="' + data[index].id + '">' + optionText + '</option>');
+        }
+      })
+
+      //Populate the Project dropdown
+      $.getJSON("../api/projects/list_projects?id="+serverId+"&project="+project, function (data) {
+        data = data.metadata
+        for (var index = 0; index < data.length; index++) {
+          optionText = data[index].replace('/1.0/projects/','');
+          if (optionText == project)
+            $('#projectListNav').append('<option value="' + optionText + '" selected="selected">' + optionText + '</option>');
+          else
+            $('#projectListNav').append('<option value="' + optionText + '">' + optionText + '</option>');
+        }
+      })
+
+      // Configure Datatable
+      $('#myDataTable').DataTable({
+        ajax: {
+          url: "../api/storage-pools/list_storage_pools?id="+serverId+"&project=" + project + "&recursion=1",
+          dataType: "json",
+          dataSrc: "metadata",
+          contentType: "application/json"
+        },
+        columns: [
+          { title: "Name", data: function (row, type, set) {
+              if (row.hasOwnProperty('name')) {
+                if (row.name)
+                  return '<a href="../storage-volumes?id=' + serverId + '&project=' + project + '&pool=' + row.name + '">' + row.name + '</a>';
+              }
+              return '-'
+            },
+          },
+          { title: "Description", data: function (row, type, set) {
+              if (row.hasOwnProperty('description')) {
+                if (row.description)
+                  return row.description
+              }
+              return '-'
+            },
+          },
+          { title: "Driver", data: function (row, type, set) {
+              if (row.hasOwnProperty('driver')) {
+                if (row.driver)
+                  return row.driver
+              }
+              return '-'
+            },
+          },
+          { title: "Status", data: function (row, type, set) {
+              if (row.hasOwnProperty('status')) {
+                if (row.status)
+                  return row.status
+              }
+              return '-'
+            },
+          },
+          { title: "Source", data: function (row, type, set) {
+              if (row.hasOwnProperty('config')) {
+                if (row.config.hasOwnProperty('source')) {
+                  if (row.config['source'])
+                    return row.config['source']
+                }
+              }
+              return '-'
+            },
+          },
+          { title: "Size", data: function (row, type, set) {
+              if (row.hasOwnProperty('config')) {
+                if (row.config.hasOwnProperty('size')) {
+                  if (row.config['size'])
+                    return row.config['size']
+                }
+              }
+              return '-'
+            },
+          },
+          { title: "Actions", data: function (row, type, set) {
+              links = ''
+              if (row.hasOwnProperty('name')) {
+                links = '<a href="#" onclick=editStoragePool(\''+row.name+'\')><i class="fas fa-edit fa-lg" style="color:#ddd" title="Edit" aria-hidden="true"></i></a>' +
+                  '&nbsp' + '&nbsp' +
+                  '<a href="#" onclick=confirmDeleteStoragePool(\''+row.name+'\')><i class="fas fa-trash-alt fa-lg" style="color:#ddd" title="Delete" aria-hidden="true"></i></a>'
+              }
+              return links
+            },
+          },
+        ],
+        order: [],
+      });
+
+      //Set reload page content
+      pageReloadTimeout = setTimeout(() => { reloadPageContent(); }, reloadTime);
+
+    }
+
+    function addItem(){
+      console.log("Info: adding new storage pool");
+      data = $('#addForm').serializeJSON();
+      $.post("../api/storage-pools/add_storage_pool?id="+serverId+"&project="+project, data, function (data) {
+        console.log(data)
+        if (data.error_code >= 400){
+          alert(data.error);
+        }
+        //Sync type
+        setTimeout(() => { reloadPageContent(); }, 1000);
+        operationStatusCheck()
+      });
+    }
+
+    function changeStoragePoolDriverInput(){
+    var storagePoolDriverInput = $("#storagePoolDriverInput").val();
+    if (storagePoolDriverInput == "btrfs"){
+      $("#storagePoolSourceHint").removeClass("text-danger");
+
+      $("#storagePoolSizeRow").show()
+      $("#storagePoolBtrfsMountOptionsRow").show()
+      $("#storagePoolCephClusterNameRow").hide()
+      $("#storagePoolCephOsdForceReuseRow").hide()
+      $("#storagePoolCephOsdPgNumRow").hide()
+      $("#storagePoolCephOsdPoolNameRow").hide()
+      $("#storagePoolCephOsdDataPoolNameRow").hide()
+      $("#storagePoolCephRbdCloneCopyRow").hide()
+      $("#storagePoolCephRbdFeaturesRow").hide()
+      $("#storagePoolCephUserNameRow").hide()
+      $("#storagePoolCephfsClusterNameRow").hide()
+      $("#storagePoolCephfsPathRow").hide()
+      $("#storagePoolCephfsUserNameRow").hide()
+      $("#storagePoolLvmThinpoolNameRow").hide()
+      $("#storagePoolLvmUseThinpoolRow").hide()
+      $("#storagePoolLvmVgNameRow").hide()
+      $("#storagePoolLvmVgForceReuseRow").hide()
+      $("#storagePoolVolumeLvmStripesRow").hide()
+      $("#storagePoolVolumeLvmStripesSizeRow").hide()
+      $("#storagePoolRsyncBwlimitRow").show()
+      $("#storagePoolRsyncCompressionRow").show()
+      $("#storagePoolVolatileInitialSourceRow").show()
+      $("#storagePoolVolatilePoolPristineRow").hide()
+      $("#storagePoolVolumeBlockFilesystemRow").hide()
+      $("#storagePoolVolumeBlockMountOptionsRow").hide()
+      $("#storagePoolVolumeSizeRow").show()
+      $("#storagePoolVolumeZfsRemoveSnapshotsRow").hide()
+      $("#storagePoolVolumeZfsUseRefquotaRow").hide()
+      $("#storagePoolZfsCloneCopyRow").hide()
+      $("#storagePoolZfsPoolNameRow").hide()  
+    }
+    if (storagePoolDriverInput == "ceph"){
+      $("#storagePoolSourceHint").removeClass("text-danger");
+
+      $("#storagePoolSizeRow").hide()
+      $("#storagePoolBtrfsMountOptionsRow").hide()
+      $("#storagePoolCephClusterNameRow").show()
+      $("#storagePoolCephOsdForceReuseRow").show()
+      $("#storagePoolCephOsdPgNumRow").show()
+      $("#storagePoolCephOsdPoolNameRow").show()
+      $("#storagePoolCephOsdDataPoolNameRow").show()
+      $("#storagePoolCephRbdCloneCopyRow").show()
+      $("#storagePoolCephRbdFeaturesRow").show()
+      $("#storagePoolCephUserNameRow").show()
+      $("#storagePoolCephfsClusterNameRow").hide()
+      $("#storagePoolCephfsPathRow").hide()
+      $("#storagePoolCephfsUserNameRow").hide()
+      $("#storagePoolLvmThinpoolNameRow").hide()
+      $("#storagePoolLvmUseThinpoolRow").hide()
+      $("#storagePoolLvmVgNameRow").hide()
+      $("#storagePoolLvmVgForceReuseRow").hide()
+      $("#storagePoolVolumeLvmStripesRow").hide()
+      $("#storagePoolVolumeLvmStripesSizeRow").hide()
+      $("#storagePoolRsyncBwlimitRow").show()
+      $("#storagePoolRsyncCompressionRow").show()
+      $("#storagePoolVolatileInitialSourceRow").show()
+      $("#storagePoolVolatilePoolPristineRow").show()
+      $("#storagePoolVolumeBlockFilesystemRow").show()
+      $("#storagePoolVolumeBlockMountOptionsRow").show()
+      $("#storagePoolVolumeSizeRow").show()
+      $("#storagePoolVolumeZfsRemoveSnapshotsRow").hide()
+      $("#storagePoolVolumeZfsUseRefquotaRow").hide()
+      $("#storagePoolZfsCloneCopyRow").hide()
+      $("#storagePoolZfsPoolNameRow").hide()  
+    }
+    if (storagePoolDriverInput == "cephfs"){
+      $("#storagePoolSourceHint").addClass("text-danger");
+
+      $("#storagePoolSizeRow").hide()
+      $("#storagePoolBtrfsMountOptionsRow").hide()
+      $("#storagePoolCephClusterNameRow").hide()
+      $("#storagePoolCephOsdForceReuseRow").hide()
+      $("#storagePoolCephOsdPgNumRow").hide()
+      $("#storagePoolCephOsdPoolNameRow").hide()
+      $("#storagePoolCephOsdDataPoolNameRow").hide()
+      $("#storagePoolCephRbdCloneCopyRow").hide()
+      $("#storagePoolCephRbdFeaturesRow").hide()
+      $("#storagePoolCephUserNameRow").hide()
+      $("#storagePoolCephfsClusterNameRow").show()
+      $("#storagePoolCephfsPathRow").show()
+      $("#storagePoolCephfsUserNameRow").show()
+      $("#storagePoolLvmThinpoolNameRow").hide()
+      $("#storagePoolLvmUseThinpoolRow").hide()
+      $("#storagePoolLvmVgNameRow").hide()
+      $("#storagePoolLvmVgForceReuseRow").hide()
+      $("#storagePoolVolumeLvmStripesRow").hide()
+      $("#storagePoolVolumeLvmStripesSizeRow").hide()
+      $("#storagePoolRsyncBwlimitRow").show()
+      $("#storagePoolRsyncCompressionRow").show()
+      $("#storagePoolVolatileInitialSourceRow").show()
+      $("#storagePoolVolatilePoolPristineRow").show()
+      $("#storagePoolVolumeBlockFilesystemRow").show()
+      $("#storagePoolVolumeBlockMountOptionsRow").show()
+      $("#storagePoolVolumeSizeRow").show()
+      $("#storagePoolVolumeZfsRemoveSnapshotsRow").hide()
+      $("#storagePoolVolumeZfsUseRefquotaRow").hide()
+      $("#storagePoolZfsCloneCopyRow").hide()
+      $("#storagePoolZfsPoolNameRow").hide()  
+    }
+    if (storagePoolDriverInput == "dir"){
+      $("#storagePoolSourceHint").removeClass("text-danger");
+
+      $("#storagePoolSizeRow").hide()
+      $("#storagePoolBtrfsMountOptionsRow").hide()
+      $("#storagePoolCephClusterNameRow").hide()
+      $("#storagePoolCephOsdForceReuseRow").hide()
+      $("#storagePoolCephOsdPgNumRow").hide()
+      $("#storagePoolCephOsdPoolNameRow").hide()
+      $("#storagePoolCephOsdDataPoolNameRow").hide()
+      $("#storagePoolCephRbdCloneCopyRow").hide()
+      $("#storagePoolCephRbdFeaturesRow").hide()
+      $("#storagePoolCephUserNameRow").hide()
+      $("#storagePoolCephfsClusterNameRow").hide()
+      $("#storagePoolCephfsPathRow").hide()
+      $("#storagePoolCephfsUserNameRow").hide()
+      $("#storagePoolLvmThinpoolNameRow").hide()
+      $("#storagePoolLvmUseThinpoolRow").hide()
+      $("#storagePoolLvmVgNameRow").hide()
+      $("#storagePoolLvmVgForceReuseRow").hide()
+      $("#storagePoolVolumeLvmStripesRow").hide()
+      $("#storagePoolVolumeLvmStripesSizeRow").hide()
+      $("#storagePoolRsyncBwlimitRow").show()
+      $("#storagePoolRsyncCompressionRow").show()
+      $("#storagePoolVolatileInitialSourceRow").show()
+      $("#storagePoolVolatilePoolPristineRow").hide()
+      $("#storagePoolVolumeBlockFilesystemRow").hide()
+      $("#storagePoolVolumeBlockMountOptionsRow").hide()
+      $("#storagePoolVolumeSizeRow").show()
+      $("#storagePoolVolumeZfsRemoveSnapshotsRow").hide()
+      $("#storagePoolVolumeZfsUseRefquotaRow").hide()
+      $("#storagePoolZfsCloneCopyRow").hide()
+      $("#storagePoolZfsPoolNameRow").hide()  
+    }
+    if (storagePoolDriverInput == "lvm"){
+      $("#storagePoolSourceHint").removeClass("text-danger");
+
+      $("#storagePoolSizeRow").show()
+      $("#storagePoolBtrfsMountOptionsRow").hide()
+      $("#storagePoolCephClusterNameRow").hide()
+      $("#storagePoolCephOsdForceReuseRow").hide()
+      $("#storagePoolCephOsdPgNumRow").hide()
+      $("#storagePoolCephOsdPoolNameRow").hide()
+      $("#storagePoolCephOsdDataPoolNameRow").hide()
+      $("#storagePoolCephRbdCloneCopyRow").hide()
+      $("#storagePoolCephRbdFeaturesRow").hide()
+      $("#storagePoolCephUserNameRow").hide()
+      $("#storagePoolCephfsClusterNameRow").hide()
+      $("#storagePoolCephfsPathRow").hide()
+      $("#storagePoolCephfsUserNameRow").hide()
+      $("#storagePoolLvmThinpoolNameRow").show()
+      $("#storagePoolLvmUseThinpoolRow").show()
+      $("#storagePoolLvmVgNameRow").show()
+      $("#storagePoolLvmVgForceReuseRow").show()
+      $("#storagePoolVolumeLvmStripesRow").show()
+      $("#storagePoolVolumeLvmStripesSizeRow").show()
+      $("#storagePoolRsyncBwlimitRow").show()
+      $("#storagePoolRsyncCompressionRow").show()
+      $("#storagePoolVolatileInitialSourceRow").show()
+      $("#storagePoolVolatilePoolPristineRow").hide()
+      $("#storagePoolVolumeBlockFilesystemRow").show()
+      $("#storagePoolVolumeBlockMountOptionsRow").show()
+      $("#storagePoolVolumeSizeRow").show()
+      $("#storagePoolVolumeZfsRemoveSnapshotsRow").hide()
+      $("#storagePoolVolumeZfsUseRefquotaRow").hide()
+      $("#storagePoolZfsCloneCopyRow").hide()
+      $("#storagePoolZfsPoolNameRow").hide()  
+    }
+    if (storagePoolDriverInput == "zfs"){
+      $("#storagePoolSourceHint").removeClass("text-danger");
+
+      $("#storagePoolSizeRow").show()
+      $("#storagePoolBtrfsMountOptionsRow").hide()
+      $("#storagePoolCephClusterNameRow").hide()
+      $("#storagePoolCephOsdForceReuseRow").hide()
+      $("#storagePoolCephOsdPgNumRow").hide()
+      $("#storagePoolCephOsdPoolNameRow").hide()
+      $("#storagePoolCephOsdDataPoolNameRow").hide()
+      $("#storagePoolCephRbdCloneCopyRow").hide()
+      $("#storagePoolCephRbdFeaturesRow").hide()
+      $("#storagePoolCephUserNameRow").hide()
+      $("#storagePoolCephfsClusterNameRow").hide()
+      $("#storagePoolCephfsPathRow").hide()
+      $("#storagePoolCephfsUserNameRow").hide()
+      $("#storagePoolLvmThinpoolNameRow").hide()
+      $("#storagePoolLvmUseThinpoolRow").hide()
+      $("#storagePoolLvmVgNameRow").hide()
+      $("#storagePoolLvmVgForceReuseRow").hide()
+      $("#storagePoolVolumeLvmStripesRow").hide()
+      $("#storagePoolVolumeLvmStripesSizeRow").hide()
+      $("#storagePoolRsyncBwlimitRow").show()
+      $("#storagePoolRsyncCompressionRow").show()
+      $("#storagePoolVolatileInitialSourceRow").show()
+      $("#storagePoolVolatilePoolPristineRow").hide()
+      $("#storagePoolVolumeBlockFilesystemRow").hide()
+      $("#storagePoolVolumeBlockMountOptionsRow").hide()
+      $("#storagePoolVolumeSizeRow").show()
+      $("#storagePoolVolumeZfsRemoveSnapshotsRow").show()
+      $("#storagePoolVolumeZfsUseRefquotaRow").show()
+      $("#storagePoolZfsCloneCopyRow").show()
+      $("#storagePoolZfsPoolNameRow").show()  
+    }
+  }
+
+    function confirmDeleteStoragePool(name){
+      console.log("Info: confirming deletion of storage pool " + name);
+      if (confirm("Are you sure you want to delete storage pool " + name + "?") == true) {
+        deleteStoragePool(name);
+      }
+    }
+
+    function createStoragePoolUsingJSON(){
+      var json = $("#jsonCreateInput").val();
+      console.log("Info: adding new project");
+      $.post("../api/storage-pools/add_storage_pool?id="+serverId+"&project="+project, { json: json },  function (data) {
+        console.log(data);
+        if (data.error_code >= 400){
+          alert(data.error);
+        }
+        //Sync type
+        setTimeout(() => { reloadPageContent(); }, 1000);
+        operationStatusCheck()
+      });
+    }
+
+    function deleteStoragePool(name){
+      console.log("Info: deleting storage pool " + name);
+      $.post("../api/storage-pools/delete_storage_pool?id=" + serverId + "&project=" + project, { name: name }, function (data) {
+        console.log(data);
+        if (data.error_code >= 400){
+          alert(data.error);
+        }
+        //Sync type
+        setTimeout(() => { reloadPageContent(); }, 1000);
+        operationStatusCheck()
+      });
+    }
+
+    function editStoragePool(name){
+      editedStoragePool = name
+      console.log("Info: loading storage pool " + name);
+      $.post("../api/storage-pools/load_storage_pool?id=" + serverId + "&project=" + project, { name: name }, function (data) {
+        console.log(data);
+        if (data.error_code >= 400){
+          alert(data.error);
+        }
+        $("#storagePoolNameEditInput").text("Name: " + name);
+        $("#jsonInput").val(JSON.stringify(data.metadata, null, 2));
+        $("#editModal").modal('show');
+      });
+    }
+
+    function updateStoragePool(){
+      name = editedStoragePool
+      var updatedJSON = $("#jsonInput").val();
+      console.log("Info: updating storage pool");
+      $.post("../api/storage-pools/update_storage_pool?id=" + serverId + "&project=" + project + "&name=" + encodeURI(name), { json: updatedJSON },  function (data) {
+        console.log(data);
+        if (data.error_code >= 400){
+          alert(data.error);
+        }
+        //Sync type
+        setTimeout(() => { reloadPageContent(); }, 1000);
+        operationStatusCheck()
+      });
+    }
+
+    $(document).ready(function(){
+
+      //If id or project variables are missing redirect to servers page
+      if (!serverId || !project) {
+        window.location.href = 'servers';
+      }
+      else {
+        loadPageContent()
+        operationStatusCheck()
+      }
+     
+    });
+
+  </script>
+{% endblock script %}

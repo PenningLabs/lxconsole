@@ -1,0 +1,509 @@
+<!-- Add Modal-->
+<div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Create Storage Pool</h5>
+          <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item">
+              <a class="nav-link active" id="form-tab" data-toggle="tab" href="#form" role="tab" aria-controls="form" aria-selected="true">Form</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="json-tab" data-toggle="tab" href="#json" role="tab" aria-controls="json" aria-selected="false">JSON</a>
+            </li>
+          </ul>
+          <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="form" role="tabpanel" aria-labelledby="form-tab">
+              <form id="addForm">
+                <br />
+                <div class="row">
+                  <label class="col-3 col-form-label text-right">Name: <span class="text-danger">*</span></label>
+                  <div class="col-7">
+                    <div class="form-group">
+                      <input type="text" class="form-control" placeholder="" name="name">
+                    </div>
+                  </div>
+                  <div class="col-1">
+                    <i class="far fa-sm fa-question-circle" title='(Required) - Enter in the name of the storage pool.'></i>
+                  </div>
+                </div>
+                <div class="row">
+                  <label class="col-3 col-form-label text-right">Description: </label>
+                  <div class="col-7">
+                    <div class="form-group">
+                      <input type="text" class="form-control" placeholder="" name="description">
+                    </div>
+                  </div>
+                  <div class="col-1">
+                    <i class="far fa-sm fa-question-circle" title='Enter in a description for the storage pool.'></i>
+                  </div>
+                </div>
+                <div class="row">
+                  <label class="col-3 col-form-label text-right">Driver: <span class="text-danger">*</span></label>
+                  <div class="col-7">
+                    <div class="form-group">
+                      <select id="storagePoolDriverInput" class="form-control" onclick="changeStoragePoolDriverInput()" name="driver">
+                        <option value="btrfs">btrfs</option>
+                        <option value="ceph">ceph</option>
+                        <option value="cephfs">cephfs</option>
+                        <option value="dir" selected>dir</option>
+                        <option value="lvm">lvm</option>
+                        <option value="zfs">zfs</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-1">
+                    <i class="far fa-sm fa-question-circle" title='(Required) - Select the storage pool driver.'></i>
+                  </div>
+                </div>
+                <div class="row" id="storagePoolSizeRow">
+                  <label class="col-3 col-form-label text-right">Size: </label>
+                  <div class="col-7">
+                    <div class="form-group">
+                      <input type="text" class="form-control" name="size">
+                    </div>
+                  </div>
+                  <div class="col-1">
+                    <i class="far fa-sm fa-question-circle" title='Enter in the size of the storage pool. Including the suffix for units other than bytes. Default: 30GB'></i>
+                  </div>
+                </div>
+                <div class="row" id="storagePoolSourceRow">
+                  <label class="col-3 col-form-label text-right">Source: </label>
+                  <div class="col-7">
+                    <div class="form-group">
+                      <input type="text" class="form-control" placeholder="" name="source">
+                    </div>
+                  </div>
+                  <div class="col-1">
+                    <i id="storagePoolSourceHint" class="far fa-sm fa-question-circle" title='Required for the cephfs driver type. Enter in a filepath to the block device, loop file, or filesystem entry. Default: (not set)'></i>
+                  </div>
+                </div>
+                <hr>
+                <div id="accordionConfigurationProperties">
+                  <h2>
+                    <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#configurationProperties" aria-expanded="false" aria-controls="configurationProperties">
+                      Configuration Properties
+                    </button>
+                  </h2> 
+                  <div id="configurationProperties" class="collapse" aria-labelledby="configurationProperties">
+
+                    <div class="row" id="storagePoolBtrfsMountOptionsRow" style="display: none;">
+                      <label class="col-4 col-form-label text-right">btrfs.mount_options: </label>
+                      <div class="col-6">
+                        <div class="form-group">
+                          <input type="text" class="form-control" placeholder="" name="btrfs.mount_options">
+                        </div>
+                      </div>
+                      <div class="col-1">
+                        <i class="far fa-sm fa-question-circle" title='Enter in the btrfs mount options for block devices. Default: user_subvol_rm_allowed'></i>
+                      </div>
+                    </div>
+                    <div class="row" id="storagePoolCephClusterNameRow" style="display: none;">
+                      <label class="col-4 col-form-label text-right">ceph.cluster_name: </label>
+                      <div class="col-6">
+                        <div class="form-group">
+                          <input type="text" class="form-control" placeholder="" name="ceph.cluster_name">
+                        </div>
+                      </div>
+                      <div class="col-1">
+                        <i class="far fa-sm fa-question-circle" title='Enter in the name of the ceph cluster where new storage pools are created. Default: ceph'></i>
+                      </div>
+                    </div>
+                    <div class="row" id="storagePoolCephOsdForceReuseRow" style="display: none;">
+                      <label class="col-4 col-form-label text-right">ceph.osd.force_reuse: </label>
+                      <div class="col-6">
+                        <div class="form-group">
+                          <select onchange="" class="form-control" name="ceph.osd.force_reuse">
+                            <option value="">(not set)</option>
+                            <option value="true">true</option>
+                            <option value="false">false</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-1">
+                        <i class="far fa-sm fa-question-circle" title='Select whether or not to force using an osd storage pool that is already in use by another LXD instance. Default: false'></i>
+                      </div>
+                    </div>
+                    <div class="row" id="storagePoolCephOsdPgNumRow" style="display: none;">
+                      <label class="col-4 col-form-label text-right">ceph.osd.pg_num: </label>
+                      <div class="col-6">
+                        <div class="form-group">
+                          <input type="number" class="form-control" placeholder="" name="ceph.osd.pg_num">
+                        </div>
+                      </div>
+                      <div class="col-1">
+                        <i class="far fa-sm fa-question-circle" title='Enter in the number of placement groups for the osd storage pool. Default: 32'></i>
+                      </div>
+                    </div>
+                    <div class="row" id="storagePoolCephOsdPoolNameRow" style="display: none;">
+                      <label class="col-4 col-form-label text-right">ceph.osd.pool_name: </label>
+                      <div class="col-6">
+                        <div class="form-group">
+                          <input type="text" class="form-control" placeholder="" name="ceph.osd.pool_name">
+                        </div>
+                      </div>
+                      <div class="col-1">
+                        <i class="far fa-sm fa-question-circle" title='Enter in the name of the osd storage pool. Default: (inherited from Storage Pool name)'></i>
+                      </div>
+                    </div>
+                    <div class="row" id="storagePoolCephOsdDataPoolNameRow" style="display: none;">
+                      <label class="col-4 col-form-label text-right">ceph.osd.data_pool_name: </label>
+                      <div class="col-6">
+                        <div class="form-group">
+                          <input type="text" class="form-control" placeholder="" name="ceph.osd.data_pool_name">
+                        </div>
+                      </div>
+                      <div class="col-1">
+                        <i class="far fa-sm fa-question-circle" title='Enter in the name of the osd data pool. Default: (not set)'></i>
+                      </div>
+                    </div>
+                    <div class="row" id="storagePoolCephRbdCloneCopyRow" style="display: none;">
+                      <label class="col-4 col-form-label text-right">ceph.rbd.clone_copy: </label>
+                      <div class="col-6">
+                        <div class="form-group">
+                          <select onchange="" class="form-control" name="ceph.rbd.clone_copy">
+                            <option value="">(not set)</option>
+                            <option value="true">true</option>
+                            <option value="false">false</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-1">
+                        <i class="far fa-sm fa-question-circle" title='Select whether or not to use RBD lightweight clones rather than using full dataset copies. Default: true'></i>
+                      </div>
+                    </div>
+                    <div class="row" id="storagePoolCephRbdFeaturesRow" style="display: none;">
+                      <label class="col-4 col-form-label text-right">ceph.rbd.features: </label>
+                      <div class="col-6">
+                        <div class="form-group">
+                          <input type="text" class="form-control" placeholder="" name="ceph.rbd.features">
+                        </div>
+                      </div>
+                      <div class="col-1">
+                        <i class="far fa-sm fa-question-circle" title='Enter in a comma separated list of RBD features to enable. Default: layering'></i>
+                      </div>
+                    </div>
+                    <div class="row" id="storagePoolCephUserNameRow" style="display: none;">
+                      <label class="col-4 col-form-label text-right">ceph.user.name: </label>
+                      <div class="col-6">
+                        <div class="form-group">
+                          <input type="text" class="form-control" placeholder="" name="ceph.user.name">
+                        </div>
+                      </div>
+                      <div class="col-1">
+                        <i class="far fa-sm fa-question-circle" title='Enter in the name of the ceph user. Default: admin'></i>
+                      </div>
+                    </div>
+                    <div class="row" id="storagePoolCephfsClusterNameRow" style="display: none;">
+                      <label class="col-4 col-form-label text-right">cephfs.cluster_name: </label>
+                      <div class="col-6">
+                        <div class="form-group">
+                          <input type="text" class="form-control" placeholder="" name="cephfs.cluster_name">
+                        </div>
+                      </div>
+                      <div class="col-1">
+                        <i class="far fa-sm fa-question-circle" title='Enter in the name of the ceph cluster used when creating new storage pools. Default: ceph'></i>
+                      </div>
+                    </div>
+                    <div class="row" id="storagePoolCephfsPathRow" style="display: none;">
+                      <label class="col-4 col-form-label text-right">cephfs.path: </label>
+                      <div class="col-6">
+                        <div class="form-group">
+                          <input type="text" class="form-control" placeholder="" name="cephfs.path">
+                        </div>
+                      </div>
+                      <div class="col-1">
+                        <i class="far fa-sm fa-question-circle" title='Enter in the base filepath for the CEPHFS mount. Default: /'></i>
+                      </div>
+                    </div>
+                    <div class="row" id="storagePoolCephfsUserNameRow" style="display: none;">
+                      <label class="col-4 col-form-label text-right">cephfs.user.name: </label>
+                      <div class="col-6">
+                        <div class="form-group">
+                          <input type="text" class="form-control" placeholder="" name="cephfs.user.name">
+                        </div>
+                      </div>
+                      <div class="col-1">
+                        <i class="far fa-sm fa-question-circle" title='Enter in the name of the CEPHFS user. Default: admin'></i>
+                      </div>
+                    </div>
+                    <div class="row" id="storagePoolLvmThinpoolNameRow" style="display: none;">
+                      <label class="col-4 col-form-label text-right">lvm.thinpool_name: </label>
+                      <div class="col-6">
+                        <div class="form-group">
+                          <input type="text" class="form-control" placeholder="" name="lvm.thinpool_name">
+                        </div>
+                      </div>
+                      <div class="col-1">
+                        <i class="far fa-sm fa-question-circle" title='Enter in the name of the thin pool where volumes are created. Default: LXDThinPool'></i>
+                      </div>
+                    </div>
+                    <div class="row" id="storagePoolLvmUseThinpoolRow" style="display: none;">
+                      <label class="col-4 col-form-label text-right">lvm.use_thinpool: </label>
+                      <div class="col-6">
+                        <div class="form-group">
+                          <select onchange="" class="form-control" name="lvm.use_thinpool">
+                            <option value="">(not set)</option>
+                            <option value="true">true</option>
+                            <option value="false">false</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-1">
+                        <i class="far fa-sm fa-question-circle" title='Select whether or not to use thinpools for logical volumes. Default: true'></i>
+                      </div>
+                    </div>
+                    <div class="row" id="storagePoolLvmVgNameRow" style="display: none;">
+                      <label class="col-4 col-form-label text-right">lvm.vg_name: </label>
+                      <div class="col-6">
+                        <div class="form-group">
+                          <input type="text" class="form-control" placeholder="" name="lvm.vg_name">
+                        </div>
+                      </div>
+                      <div class="col-1">
+                        <i class="far fa-sm fa-question-circle" title='Enter in the name of the volume group to create. Default: (inherited from Storage Pool name)'></i>
+                      </div>
+                    </div>
+                    <div class="row" id="storagePoolLvmVgForceReuseRow" style="display: none;">
+                      <label class="col-4 col-form-label text-right">lvm.vg.force_reuse: </label>
+                      <div class="col-6">
+                        <div class="form-group">
+                          <select onchange="" class="form-control" name="lvm.vg.force_reuse">
+                            <option value="">(not set)</option>
+                            <option value="true">true</option>
+                            <option value="false">false</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-1">
+                        <i class="far fa-sm fa-question-circle" title='Select whether or not to force using an existing non-empty volume group. Default: false'></i>
+                      </div>
+                    </div>
+                    <div class="row" id="storagePoolVolumeLvmStripesRow" style="display: none;">
+                      <label class="col-4 col-form-label text-right">volume.lvm.stripes: </label>
+                      <div class="col-6">
+                        <div class="form-group">
+                          <input type="text" class="form-control" placeholder="" name="volume.lvm.stripes">
+                        </div>
+                      </div>
+                      <div class="col-1">
+                        <i class="far fa-sm fa-question-circle" title='Enter in the number of stripes to use when creating new volumes. Default: (not set)'></i>
+                      </div>
+                    </div>
+                    <div class="row" id="storagePoolVolumeLvmStripesSizeRow" style="display: none;">
+                      <label class="col-4 col-form-label text-right">volume.lvm.stripes.size: </label>
+                      <div class="col-6">
+                        <div class="form-group">
+                          <input type="text" class="form-control" placeholder="" name="volume.lvm.stripes.size">
+                        </div>
+                      </div>
+                      <div class="col-1">
+                        <i class="far fa-sm fa-question-circle" title='Enter in the size of stripes to use. It must be at least 4096 bytes and be a multiple of 512. Default: (not set)'></i>
+                      </div>
+                    </div>
+                    <div class="row" id="storagePoolRsyncBwlimitRow" style="display: none;">
+                      <label class="col-4 col-form-label text-right">rsync.bwlimit: </label>
+                      <div class="col-6">
+                        <div class="form-group">
+                          <input type="text" class="form-control" placeholder="" name="rsync.bwlimit">
+                        </div>
+                      </div>
+                      <div class="col-1">
+                        <i class="far fa-sm fa-question-circle" title='Enter in the socket I/O upper limit when rsync is used to transfer storage entities. Default: 0 (unlimited)'></i>
+                      </div>
+                    </div>
+                    <div class="row" id="storagePoolRsyncCompressionRow" style="display: none;">
+                      <label class="col-4 col-form-label text-right">rsync.compression: </label>
+                      <div class="col-6">
+                        <div class="form-group">
+                          <select onchange="" class="form-control" name="rsync.compression">
+                            <option value="">(not set)</option>
+                            <option value="true">true</option>
+                            <option value="false">false</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-1">
+                        <i class="far fa-sm fa-question-circle" title='Select whether or not to use compression while migrating storage pools. Default: true'></i>
+                      </div>
+                    </div>
+                    <div class="row" id="storagePoolVolatileInitialSourceRow" style="display: none;">
+                      <label class="col-4 col-form-label text-right">volatile.initial_source: </label>
+                      <div class="col-6">
+                        <div class="form-group">
+                          <input type="text" class="form-control" placeholder="" name="volatile.initial_source">
+                        </div>
+                      </div>
+                      <div class="col-1">
+                        <i class="far fa-sm fa-question-circle" title='Enter in the filepath of the actual source passed during the creation process. Default: (not set). For example, /dev/sdb'></i>
+                      </div>
+                    </div>
+                    <div class="row" id="storagePoolVolatilePoolPristineRow" style="display: none;">
+                      <label class="col-4 col-form-label text-right">volatile.pool.pristine: </label>
+                      <div class="col-6">
+                        <div class="form-group">
+                          <select onchange="" class="form-control" name="volatile.pool.pristine">
+                            <option value="">(not set)</option>
+                            <option value="true">true</option>
+                            <option value="false">false</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-1">
+                        <i class="far fa-sm fa-question-circle" title='Select whether or not the pool has been empty since it was created. Default: true.'></i>
+                      </div>
+                    </div>
+                    <div class="row" id="storagePoolVolumeBlockFilesystemRow" style="display: none;">
+                      <label class="col-4 col-form-label text-right">volume.block.filesystem: </label>
+                      <div class="col-6">
+                        <div class="form-group">
+                          <input type="text" class="form-control" placeholder="" name="volume.block.filesystem">
+                        </div>
+                      </div>
+                      <div class="col-1">
+                        <i class="far fa-sm fa-question-circle" title='Enter in the filesystem to use for new volumes. Default: ext4'></i>
+                      </div>
+                    </div>
+                    <div class="row" id="storagePoolVolumeBlockMountOptionsRow" style="display: none;">
+                      <label class="col-4 col-form-label text-right">volume.block.mount_options: </label>
+                      <div class="col-6">
+                        <div class="form-group">
+                          <input type="text" class="form-control" placeholder="" name="volume.block.mount_options">
+                        </div>
+                      </div>
+                      <div class="col-1">
+                        <i class="far fa-sm fa-question-circle" title='Enter in mount options for block devices. Default: discard'></i>
+                      </div>
+                    </div>
+                    <div class="row" id="storagePoolVolumeSizeRow" style="display: none;">
+                      <label class="col-4 col-form-label text-right">volume.size: </label>
+                      <div class="col-6">
+                        <div class="form-group">
+                          <input type="text" class="form-control" placeholder="" name="volume.size">
+                        </div>
+                      </div>
+                      <div class="col-1">
+                        <i class="far fa-sm fa-question-circle" title='Enter in default storage volume size. Default: unlimited (10GB for block devices)'></i>
+                      </div>
+                    </div>
+                    <div class="row" id="storagePoolVolumeZfsRemoveSnapshotsRow" style="display: none;">
+                      <label class="col-4 col-form-label text-right">volume.zfs.remove_snapshots: </label>
+                      <div class="col-6">
+                        <div class="form-group">
+                          <select onchange="" class="form-control" name="volume.zfs.remove_snapshots">
+                            <option value="">(not set)</option>
+                            <option value="true">true</option>
+                            <option value="false">false</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-1">
+                        <i class="far fa-sm fa-question-circle" title='Select whether or not to remove snapshots as needed. Default: false.'></i>
+                      </div>
+                    </div>
+                    <div class="row" id="storagePoolVolumeZfsUseRefquotaRow" style="display: none;">
+                      <label class="col-4 col-form-label text-right">volume.zfs.use_refquota: </label>
+                      <div class="col-6">
+                        <div class="form-group">
+                          <select onchange="" class="form-control" name="volume.zfs.use_refquota ">
+                            <option value="">(not set)</option>
+                            <option value="true">true</option>
+                            <option value="false">false</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-1">
+                        <i class="far fa-sm fa-question-circle" title='Select whether or not to use refquota instead of quota. Default: false.'></i>
+                      </div>
+                    </div>
+                    <div class="row" id="storagePoolZfsCloneCopyRow" style="display: none;">
+                      <label class="col-4 col-form-label text-right">zfs.clone_copy: </label>
+                      <div class="col-6">
+                        <div class="form-group">
+                          <select onchange="" class="form-control" name="zfs.clone_copy">
+                            <option value="">(not set)</option>
+                            <option value="true">true</option>
+                            <option value="false">false</option>
+                            <option value="rebase">rebase</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-1">
+                        <i class="far fa-sm fa-question-circle" title='Select whether or not to use ZFS lightweight clones rather than full dataset copies. Select "rebase" to copy based on the initial image. Default: true.'></i>
+                      </div>
+                    </div>
+                    <div class="row" id="storagePoolZfsPoolNameRow" style="display: none;">
+                      <label class="col-4 col-form-label text-right">zfs.pool_name: </label>
+                      <div class="col-6">
+                        <div class="form-group">
+                          <input type="text" class="form-control" placeholder="" name="zfs.pool_name">
+                        </div>
+                      </div>
+                      <div class="col-1">
+                        <i class="far fa-sm fa-question-circle" title='Enter in name of the zfs pool. Default: (inherited from Storage Pool name)'></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </form>
+              <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                <a class="btn btn-primary" href="#" onclick="addItem()" data-dismiss="modal">Submit</a>
+              </div>
+            </div>
+            <div class="tab-pane fade" id="json" role="tabpanel" aria-labelledby="json-tab">
+              <br />
+              <div class="row">
+                <div class="col-12">
+                  <div class="form-group text-right">
+                    <pre>
+                      <textarea name="json" class="form-control" id="jsonCreateInput" rows="16" placeholder="Enter JSON data"></textarea>
+                    </pre>
+                  </div>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                <a class="btn btn-primary" href="#" onclick="createStoragePoolUsingJSON()" data-dismiss="modal">Submit</a>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Modal-->
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Edit Storage Pool</h5>
+          <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <label class="col-4 col-form-label" id="storagePoolNameEditInput"></label>
+            <div class="col-12">
+              <div class="form-group text-right">
+                <pre>
+                  <textarea name="json" class="form-control" id="jsonInput" rows="16" ></textarea>
+                </pre>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+          <a class="btn btn-primary" href="#" onclick="updateStoragePool()" data-dismiss="modal">Submit</a>
+        </div>
+    </div>
+  </div>
+</div>

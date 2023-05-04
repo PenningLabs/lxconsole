@@ -1,0 +1,267 @@
+{% extends "main.html" %}
+
+{% block header %}
+  <div class="row mb-2">
+    <div class="col-sm-6">
+      <h1>{{ page_title | safe }}</h1>
+    </div>
+    <div class="col-sm-6">
+      <a class="btn btn-outline-primary float-sm-right mr-4" href="#" data-toggle="modal" data-target="#addModal" title="Add Profile" aria-hidden="true">
+        <i class="fas fa-plus fa-sm fa-fw"></i> Profile
+      </a>
+    </div>
+  </div>
+{% endblock header %}
+
+{% block content %}
+  <div class="col-12">
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title">Profiles</h3>
+        <div class="card-tools">
+          <button type="button" class="btn btn-tool" onclick="reloadPageContent()" title="Refresh">
+          <i class="fas fa-sync"></i>
+          </button>
+        </div>
+      </div>
+      <div class="card-body">
+        <table class="table table-hover" id="myDataTable" width="100%" cellspacing="0">
+        </table>
+      </div>
+    </div>
+  </div>
+{% endblock content %}
+
+{% block modal %}
+  {% include 'modals/profiles.html' %}
+{% endblock modal %}
+
+{% block script %}
+  <script>
+    var reloadTime = 10000;
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const serverId = urlParams.get('id');
+    const project = urlParams.get('project');
+    var editedProfile = ''
+    applySidebarStyles();
+    applySidebarLinks();
+    populateSidebarLinks();
+    populateNavbarLinks();
+
+    function reloadPageContent() {
+      //Clear the automatic page reload
+      clearTimeout(pageReloadTimeout);
+
+      //Reload the datatables content
+      $('#myDataTable').DataTable().ajax.reload(null, false);
+
+      //Set the automatic page reload
+      pageReloadTimeout = setTimeout(() => { reloadPageContent(); }, reloadTime);
+    }
+
+    function loadPageContent(){
+
+      //Display the current project
+      $("#selectedProject").text(project);
+
+      //Populate the Server dropdown
+      $.getJSON("../api/servers/list_servers?id="+serverId, function (data) {
+        data = data.data
+        for (var index = 0; index < data.length; index++) {
+          if (data[index].name == '')
+            optionText = data[index].addr
+          else
+            optionText = data[index].name
+          if (data[index].id == serverId)
+            $('#serverListNav').append('<option value="' + data[index].id + '" selected="selected">' + optionText + '</option>');
+          else
+            $('#serverListNav').append('<option value="' + data[index].id + '">' + optionText + '</option>');
+        }
+      })
+
+      //Populate the Project dropdown
+      $.getJSON("../api/projects/list_projects?id="+serverId+"&project="+project, function (data) {
+        data = data.metadata
+        for (var index = 0; index < data.length; index++) {
+          optionText = data[index].replace('/1.0/projects/','');
+          if (optionText == project)
+            $('#projectListNav').append('<option value="' + optionText + '" selected="selected">' + optionText + '</option>');
+          else
+            $('#projectListNav').append('<option value="' + optionText + '">' + optionText + '</option>');
+        }
+      })
+
+      // Configure Datatable
+      $('#myDataTable').DataTable({
+        ajax: {
+          url: "../api/profiles/list_profiles?id="+serverId+"&project=" + project + "&recursion=1",
+          dataType: "json",
+          dataSrc: "metadata",
+          contentType: "application/json"
+        },
+        columns: [
+          { title: "Name", data: function (row, type, set) {
+              if (row.hasOwnProperty('name')) {
+                if (row.name)
+                  return row.name
+              }
+              return '-'
+            },
+          },
+          { title: "Description", data: function (row, type, set) {
+              if (row.hasOwnProperty('description')) {
+                if (row.description)
+                  return row.description
+              }
+              return '-'
+            },
+          },
+          { title: "Devices", data: function (row, type, set) {
+              if (row.hasOwnProperty('devices')) {
+                if (Object.keys(row.devices).length > 0) {
+                  arr = []
+                  for (item in row.devices){
+                    arr.push(item)
+                  }
+                  return arr.join(", ")
+                }
+              }
+              return '-'
+            },
+          },
+          { title: "Actions", data: function (row, type, set) {
+              links = ''
+              if (row.hasOwnProperty('name')) {
+                links = '<a href="#" onclick=editItem(\''+row.name+'\')><i class="fas fa-edit fa-lg" style="color:#ddd" title="Edit" aria-hidden="true"></i></a>' +
+                '&nbsp' + '&nbsp' +
+                '<a href="#" onclick=renameItem(\''+row.name+'\')><i class="fas fa-tag fa-lg" style="color:#ddd" title="Rename" aria-hidden="true"></i></a>' +
+                '&nbsp' + '&nbsp' +
+                '<a href="#" onclick=confirmDeleteItem(\''+row.name+'\')><i class="fas fa-trash-alt fa-lg" style="color:#ddd" title="Delete" aria-hidden="true"></i></a>'
+              }
+              return links
+            },
+          },
+        ],
+        order: [],
+      });
+
+      //Set reload page content
+      pageReloadTimeout = setTimeout(() => { reloadPageContent(); }, reloadTime);
+
+    }
+
+    function addItem(){
+      console.log("Info: adding new profile");
+      data = $('#addForm').serializeJSON();
+      $.post("../api/profiles/add_profile?id="+serverId+"&project="+project, data, function (data) {
+        console.log(data)
+        if (data.error_code >= 400){
+          alert(data.error);
+        }
+        //Sync type
+        setTimeout(() => { reloadPageContent(); }, 1000);
+        operationStatusCheck()
+      });
+    }
+
+    function confirmDeleteItem(name){
+      console.log("Info: confirming deletion of profile " + name);
+      if (confirm("Are you sure you want to delete profile " + name + "?") == true) {
+        deleteItem(name);
+      }
+    }
+
+    function createItemUsingJSON(){
+      var json = $("#jsonCreateInput").val();
+      console.log("Info: adding new project");
+      $.post("../api/profiles/add_profile?id="+serverId+"&project="+project, { json: json },  function (data) {
+        console.log(data);
+        if (data.error_code >= 400){
+          alert(data.error);
+        }
+        //Sync type
+        setTimeout(() => { reloadPageContent(); }, 1000);
+        operationStatusCheck()
+      });
+    }
+
+    function deleteItem(name){
+      console.log("Info: deleting profile " + name);
+      $.post("../api/profiles/delete_profile?id=" + serverId + "&project=" + project, { name: name }, function (data) {
+        console.log(data);
+        if (data.error_code >= 400){
+          alert(data.error);
+        }
+        //Sync type
+        setTimeout(() => { reloadPageContent(); }, 1000);
+        operationStatusCheck()
+      });
+    }
+
+    function editItem(name){
+      editedProfile = name
+      console.log("Info: loading profile " + name);
+      $.post("../api/profiles/load_profile?id=" + serverId + "&project=" + project, { name: name }, function (data) {
+        console.log(data);
+        if (data.error_code >= 400){
+          alert(data.error);
+        }
+        $("#profileNameEditInput").text("Name: " + name);
+        $("#jsonInput").val(JSON.stringify(data.metadata, null, 2));
+        $("#editModal").modal('show');
+      });
+    }
+
+    function renameItem(name){
+      console.log("Loading rename modal for profile " + name)
+      $("#renameItemModalLabel").text("Rename profile: " + name);
+      $("#profileToRename").val(name);
+      $("#renameModal").modal('show');
+    }
+
+    function updateItem(){
+      name = editedProfile
+      var updatedJSON = $("#jsonInput").val();
+      console.log("Info: updating profile");
+      $.post("../api/profiles/update_profile?id=" + serverId + "&project=" + project + "&name=" + encodeURI(name), { json: updatedJSON },  function (data) {
+        console.log(data);
+        if (data.error_code >= 400){
+          alert(data.error);
+        }
+        //Sync type
+        setTimeout(() => { reloadPageContent(); }, 1000);
+        operationStatusCheck()
+      });
+    }
+
+    function updateItemName(){
+      var profileNewName = $("#newProfileName").val();
+      var profileToRename = $("#profileToRename").val();
+      console.log("Info: renaming profile " + profileToRename);
+      $.post("../api/profiles/update_profile?id=" + serverId + "&project=" + project + "&name=" + encodeURI(profileToRename), { 'name': profileNewName },  function (data) {
+        console.log(data);
+        if (data.error_code >= 400){
+          alert(data.error);
+        }
+        //Sync type
+        setTimeout(() => { reloadPageContent(); }, 1000);
+        operationStatusCheck()
+      });
+    } 
+
+    $(document).ready(function(){
+
+      //If id or project variables are missing redirect to servers page
+      if (!serverId || !project) {
+        window.location.href = 'servers';
+      }
+      else {
+        loadPageContent()
+        operationStatusCheck()
+      }
+      
+    });
+
+  </script>
+{% endblock script %}

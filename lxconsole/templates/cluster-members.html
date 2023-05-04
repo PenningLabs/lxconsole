@@ -1,0 +1,259 @@
+{% extends "main.html" %}
+
+{% block header %}
+  <div class="row mb-2">
+    <div class="col-sm-6">
+      <h1>{{ page_title | safe }}</h1>
+    </div>
+    <!--
+    <div class="col-sm-6">
+      <a class="btn btn-outline-primary float-sm-right mr-4" href="#" data-toggle="modal" data-target="#addModal" title="Add Cluster Member" aria-hidden="true">
+        <i class="fas fa-plus fa-sm fa-fw"></i> Cluster Member
+      </a>
+    </div>
+    -->
+  </div>
+{% endblock header %}
+
+{% block content %}
+  <div class="col-12">
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title">Cluster Members</h3>
+        <div class="card-tools">
+          <button type="button" class="btn btn-tool" onclick="reloadPageContent()" title="Refresh">
+          <i class="fas fa-sync"></i>
+          </button>
+        </div>
+      </div>
+      <div class="card-body">
+        <table class="table table-hover" id="myDataTable" width="100%" cellspacing="0">
+        </table>
+      </div>
+    </div>
+  </div>
+{% endblock content %}
+
+{% block modal %}
+  {% include 'modals/cluster-members.html' %}
+{% endblock modal %}
+
+{% block script %}
+  <script>
+    var reloadTime = 10000;
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const serverId = urlParams.get('id');
+    const project = urlParams.get('project');
+    var editedClusterMember = ''
+    applySidebarStyles();
+    applySidebarLinks();
+    populateSidebarLinks();
+    populateNavbarLinks();
+
+    function reloadPageContent() {
+      //Clear the automatic page reload
+      clearTimeout(pageReloadTimeout);
+
+      //Reload the datatables content
+      $('#myDataTable').DataTable().ajax.reload(null, false);
+
+      //Set the automatic page reload
+      pageReloadTimeout = setTimeout(() => { reloadPageContent(); }, reloadTime);
+    }
+
+    function loadPageContent(){
+
+      //Display the current project
+      $("#selectedProject").text(project);
+
+      //Populate the Server dropdown
+      $.getJSON("../api/servers/list_servers?id="+serverId, function (data) {
+        data = data.data
+        for (var index = 0; index < data.length; index++) {
+          if (data[index].name == '')
+            optionText = data[index].addr
+          else
+            optionText = data[index].name
+          if (data[index].id == serverId)
+            $('#serverListNav').append('<option value="' + data[index].id + '" selected="selected">' + optionText + '</option>');
+          else
+            $('#serverListNav').append('<option value="' + data[index].id + '">' + optionText + '</option>');
+        }
+      })
+
+      //Populate the Project dropdown
+      $.getJSON("../api/projects/list_projects?id="+serverId+"&project="+project, function (data) {
+        data = data.metadata
+        for (var index = 0; index < data.length; index++) {
+          optionText = data[index].replace('/1.0/projects/','');
+          if (optionText == project)
+            $('#projectListNav').append('<option value="' + optionText + '" selected="selected">' + optionText + '</option>');
+          else
+            $('#projectListNav').append('<option value="' + optionText + '">' + optionText + '</option>');
+        }
+      })
+
+      // Configure Datatable
+      $('#myDataTable').DataTable({
+        ajax: {
+          url: "../api/cluster-members/list_cluster_members?id="+serverId+"&project=" + project + "&recursion=1",
+          dataType: "json",
+          dataSrc: "metadata",
+          contentType: "application/json"
+        },
+        columns: [
+          { title: "Server Name", data: function (row, type, set) {
+              if (row.hasOwnProperty('server_name')) {
+                if (row.server_name)
+                  return row.server_name
+              }
+              return '-'
+            },
+          },
+          { title: "Description", data: function (row, type, set) {
+              if (row.hasOwnProperty('description')) {
+                if (row.description)
+                  return row.description
+              }
+              return '-'
+            },
+          },
+          { title: "URL", data: function (row, type, set) {
+              if (row.hasOwnProperty('url')) {
+                if (row.url)
+                  return row.url
+              }
+              return '-'
+            },
+          },
+          { title: "Database", data: function (row, type, set) {
+              if (row.hasOwnProperty('database')) {
+                if (row.database)
+                  return row.database
+              }
+              return '-'
+            },
+          },
+          { title: "Status", data: function (row, type, set) {
+              if (row.hasOwnProperty('status')) {
+                if (row.status)
+                  return row.status
+              }
+              return '-'
+            },
+          },
+
+          // { title: "Actions", data: function (row, type, set) {
+          //     links = ''
+          //     if (row.hasOwnProperty('server_name')) {
+          //       links += '<a href="#" onclick=editItem(\''+row.name+'\')><i class="fas fa-edit fa-lg" style="color:#ddd" title="Edit" aria-hidden="true"></i></a>' +
+          //       '&nbsp' + '&nbsp' +
+          //       '<a href="#" onclick=confirmDeleteItem(\''+row.name+'\')><i class="fas fa-trash-alt fa-lg" style="color:#ddd" title="Delete" aria-hidden="true"></i></a>'
+          //     }
+          //     return links
+          //   },
+          // },
+
+        ],
+        order: [],
+      });
+
+      //Set reload page content
+      pageReloadTimeout = setTimeout(() => { reloadPageContent(); }, reloadTime);
+
+    }
+
+    function addItem(){
+      console.log("Info: adding new item");
+      data = $('#addForm').serializeJSON();
+      $.post("../api/cluster-members/add_cluster_member?id="+serverId+"&project="+project, data, function (data) {
+        console.log(data)
+        if (data.error_code >= 400){
+          alert(data.error);
+        }
+        //Sync type
+        reloadPageContent();
+      });
+    }
+
+    function confirmDeleteItem(name){
+      console.log("Info: confirming deletion of item " + name);
+      $("#deleteQuestionText").text("Are you sure you want to remove " + name + " from the cluster?");
+      $("#clusterMember").val(name);
+      $("#deleteModal").modal('show');
+    }
+
+    function createItemUsingJSON(){
+      var json = $("#jsonCreateInput").val();
+      console.log("Info: adding new project");
+      $.post("../api/cluster-members/add_cluster_member?id="+serverId+"&project="+project, { json: json },  function (data) {
+        console.log(data);
+        if (data.error_code >= 400){
+          alert(data.error);
+        }
+        //Sync type
+        reloadPageContent();
+      });
+    }
+
+    function deleteItem(){
+      name = $("#clusterMember").val();
+      force = "false";
+      if ($('#forceDeleteCheck').is(':checked')) {
+        force = "true";
+      }
+      console.log("Info: deleting item " + name);
+      $.post("../api/cluster-members/delete_cluster_member?id=" + serverId + "&project=" + project, { name: name, force: force }, function (data) {
+        console.log(data);
+        if (data.error_code >= 400){
+          alert(data.error);
+        }
+        //Sync type
+        reloadPageContent();
+      });
+    }
+
+    function editItem(name){
+      editedClusterMember = name
+      console.log("Info: loading cluster member " + name);
+      $.post("../api/cluster-members/load_cluster_member?id=" + serverId + "&project=" + project, { name: name }, function (data) {
+        console.log(data);
+        if (data.error_code >= 400){
+          alert(data.error);
+        }
+        $("#storagePoolNameEditInput").text("Name: " + name);
+        $("#jsonInput").val(JSON.stringify(data.metadata, null, 2));
+        $("#editModal").modal('show');
+      });
+    }
+
+    function updateItem(){
+      name = editedClusterMember
+      var updatedJSON = $("#jsonInput").val();
+      console.log("Info: updating cluster membere");
+      $.post("../api/cluster-members/update_cluster_member?id=" + serverId + "&project=" + project + "&name=" + encodeURI(name), { json: updatedJSON },  function (data) {
+        console.log(data);
+        if (data.error_code >= 400){
+          alert(data.error);
+        }
+        //Sync type
+        reloadPageContent();
+      });
+    }
+
+    $(document).ready(function(){
+
+      //If id or project variables are missing redirect to servers page
+      if (!serverId || !project) {
+        window.location.href = 'servers';
+      }
+      else {
+        loadPageContent()
+        operationStatusCheck()
+      }
+      
+    });
+
+  </script>
+{% endblock script %}

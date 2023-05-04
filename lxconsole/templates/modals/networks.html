@@ -1,0 +1,765 @@
+<!-- Add Modal-->
+<div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Create Network</h5>
+          <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item">
+              <a class="nav-link active" id="form-tab" data-toggle="tab" href="#form" role="tab" aria-controls="form" aria-selected="true">Form</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="json-tab" data-toggle="tab" href="#json" role="tab" aria-controls="json" aria-selected="false">JSON</a>
+            </li>
+          </ul>
+          <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="form" role="tabpanel" aria-labelledby="form-tab">
+              <div class="modal-body">
+                <form id="addForm">
+                  <div class="row">
+                    <label class="col-3 col-form-label text-right">Name: <span class="text-danger">*</span></label>
+                    <div class="col-7">
+                      <div class="form-group">
+                        <input type="text" class="form-control" placeholder="" name="name">
+                      </div>
+                    </div>
+                    <div class="col-1">
+                      <i class="far fa-sm fa-question-circle" title='(Required) - Enter the name of this network.'></i>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <label class="col-3 col-form-label text-right">Network Type: <span class="text-danger">*</span></label>
+                    <div class="col-7">
+                      <div class="form-group">
+                        <select id="networkTypeInput" onchange="changeNetworkTypeInput()" class="form-control" name="type">
+                          <option value="bridge">bridge</option>
+                          <option value="macvlan">macvlan</option>
+                          <option value="ovn">ovn</option>
+                          <option value="physical">physical</option>
+                          <option value="sriov">sriov</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="col-1">
+                      <i class="far fa-sm fa-question-circle" title='(Required) - Select the type of network. Default: bridge'></i>
+                    </div>
+                  </div>
+                  <div class="row" id="networkParentRow" style="display: none;">
+                    <label class="col-3 col-form-label text-right">Parent: <span class="text-danger">*</span></label>
+                    <div class="col-7">
+                      <div class="form-group">
+                        <select id="networkParentInput" onchange="" class="form-control" name="parent">
+                        </select>
+                      </div>
+                    </div>
+                    <div class="col-1">
+                      <i class="far fa-sm fa-question-circle" title='(Required) - Select the parent interface to create the network on'></i>
+                    </div>
+                  </div>
+                  <div class="row" id="networkNetworkRow" style="display: none;">
+                    <label class="col-3 col-form-label text-right">Network: <span class="text-danger">*</span></label>
+                    <div class="col-7">
+                      <div class="form-group">
+                        <select id="networkNetworkInput" onchange="" class="form-control" name="network">
+                        </select>
+                      </div>
+                    </div>
+                    <div class="col-1">
+                      <i class="far fa-sm fa-question-circle" title='(Required) - Select the uplink network interface for external connections.'></i>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <label class="col-3 col-form-label text-right">Description: </label>
+                    <div class="col-7">
+                      <div class="form-group">
+                        <input type="text" class="form-control" placeholder="" name="description">
+                      </div>
+                    </div>
+                    <div class="col-1">
+                      <i class="far fa-sm fa-question-circle" title='Enter in a description to help describe this network.'></i>
+                    </div>
+                  </div>
+                  <hr>
+                  <div id="accordionConfigurationProperties">
+                    <h2>
+                      <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#configurationProperties" aria-expanded="false" aria-controls="configurationProperties">
+                        Configuration Properties
+                      </button>
+                    </h2> 
+                    <div id="configurationProperties" class="collapse" aria-labelledby="configurationProperties">
+                      <div class="row" id="networkMtuRow" style="display: none;">
+                        <label class="col-3 col-form-label text-right">MTU: </label>
+                        <div class="col-7">
+                          <div class="form-group">
+                            <input type="number" class="form-control" placeholder="" name="mtu">
+                          </div>
+                        </div>
+                        <div class="col-1">
+                          <i class="far fa-sm fa-question-circle" title='Enter in the MTU of interface. Default: (not set)'></i>
+                        </div>
+                      </div>
+                      <div class="row" id="networkVlanRow" style="display: none;">
+                        <label class="col-3 col-form-label text-right">VLAN: </label>
+                        <div class="col-7">
+                          <div class="form-group">
+                            <input type="number" class="form-control" placeholder="" name="vlan">
+                          </div>
+                        </div>
+                        <div class="col-1">
+                          <i class="far fa-sm fa-question-circle" title='Enter in a VLAN ID. Default: (not set)'></i>
+                        </div>
+                      </div>
+                      <div class="row" id="networkDnsNameserversRow" style="display: none;">
+                        <label class="col-3 col-form-label text-right">DNS Nameservers: </label>
+                        <div class="col-7">
+                          <div class="form-group">
+                            <input type="text" class="form-control" placeholder="" name="dns.nameservers">
+                          </div>
+                        </div>
+                        <div class="col-1">
+                          <i class="far fa-sm fa-question-circle" title='Used in standard bridge mode. Enter in a comma seperated list of DNS nameservers on the physical network. Default: (not set)'></i>
+                        </div>
+                      </div>
+                      <div class="row" id="networkBridgeDriverRow" style="display: none;">
+                        <label class="col-3 col-form-label text-right">Bridge Driver: </label>
+                        <div class="col-7">
+                          <div class="form-group">
+                            <select onchange="" class="form-control" name="bridge.driver">
+                              <option value="">(not set)</option>
+                              <option value="native">native</option>
+                              <option value="openvswitch">openvswitch</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="col-1">
+                          <i class="far fa-sm fa-question-circle" title='Select the bridge driver. Default: native'></i>
+                        </div>
+                      </div>
+                      <div class="row" id="networkBridgeExternalInterfacesRow" style="display: none;">
+                        <label class="col-3 col-form-label text-right">Bridge External Interfaces: </label>
+                        <div class="col-7">
+                          <div class="form-group">
+                            <input type="text" class="form-control" placeholder="" name="bridge.external.interfaces">
+                          </div>
+                        </div>
+                        <div class="col-1">
+                          <i class="far fa-sm fa-question-circle" title='Enter in a comma separated list of unconfigured network interfaces to be included in this bridge. Default: (not set)'></i>
+                        </div>
+                      </div>
+                      <div class="row" id="networkBridgeHwaddrRow" style="display: none;">
+                        <label class="col-3 col-form-label text-right">Bridge HWADDR: </label>
+                        <div class="col-7">
+                          <div class="form-group">
+                            <input type="text" class="form-control" placeholder="" name="bridge.hwaddr">
+                          </div>
+                        </div>
+                        <div class="col-1">
+                          <i class="far fa-sm fa-question-circle" title='Enter in a MAC address for this bridge. Default: (not set)'></i>
+                        </div>
+                      </div>
+                      <div class="row" id="networkBridgeModeRow" style="display: none;">
+                        <label class="col-3 col-form-label text-right">Bridge Mode: </label>
+                        <div class="col-7">
+                          <div class="form-group">
+                            <select onchange="" class="form-control" name="bridge.mode">
+                              <option value="">(not set)</option>
+                              <option value="fan">fan</option>
+                              <option value="standard">standard</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="col-1">
+                          <i class="far fa-sm fa-question-circle" title='Select the bridge operation mode. Default: standard'></i>
+                        </div>
+                      </div>
+                      <div class="row" id="networkBridgeMtuRow" style="display: none;">
+                        <label class="col-3 col-form-label text-right">Bridge MTU: </label>
+                        <div class="col-7">
+                          <div class="form-group">
+                            <input type="number" class="form-control" placeholder="" name="bridge.mtu">
+                          </div>
+                        </div>
+                        <div class="col-1">
+                          <i class="far fa-sm fa-question-circle" title='Enter in the MTU. Default value may very when using fan mode or a tunnel. Default: 1500'></i>
+                        </div>
+                      </div>
+                      <div class="row" id="networkDnsDomainRow" style="display: none;">
+                        <label class="col-3 col-form-label text-right">DNS Domain: </label>
+                        <div class="col-7">
+                          <div class="form-group">
+                            <input type="text" class="form-control" placeholder="" name="dns.domain">
+                          </div>
+                        </div>
+                        <div class="col-1">
+                          <i class="far fa-sm fa-question-circle" title='Enter in a domain that will be advertise to DHCP clients for DNS resolution. Default: lxd'></i>
+                        </div>
+                      </div>
+                      <div class="row" id="networkDnsModeRow" style="display: none;">
+                        <label class="col-3 col-form-label text-right">DNS Mode: </label>
+                        <div class="col-7">
+                          <div class="form-group">
+                            <select onchange="" class="form-control" name="dns.mode">
+                              <option value="">(not set)</option>
+                              <option value="dynamic">dynamic</option>
+                              <option value="managed">managed</option>
+                              <option value="none">none</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="col-1">
+                          <i class="far fa-sm fa-question-circle" title='Select a DNS registration mode. Use "none" for no DNS record. Use "managed" for static records generated by LXD. Use "dynamic" for records generated by the client. Default: managed'></i>
+                        </div>
+                      </div>
+                      <div class="row" id="networkDnsSearchRow" style="display: none;">
+                        <label class="col-3 col-form-label text-right">DNS Search: </label>
+                        <div class="col-7">
+                          <div class="form-group">
+                            <input type="text" class="form-control" placeholder="" name="dns.search">
+                          </div>
+                        </div>
+                        <div class="col-1">
+                          <i class="far fa-sm fa-question-circle" title='Enter in a comma separated domain search list. Default: lxd'></i>
+                        </div>
+                      </div>
+                      <div class="row" id="networkFanOverlaySubnetRow" style="display: none;">
+                        <label class="col-3 col-form-label text-right">Fan Overlay Subnet: </label>
+                        <div class="col-7">
+                          <div class="form-group">
+                            <input type="text" class="form-control" placeholder="" name="fan.overlay.subnet">
+                          </div>
+                        </div>
+                        <div class="col-1">
+                          <i class="far fa-sm fa-question-circle" title='Used only if using "fan" bridge mode. Enter in a CIDR notation subnet used as the overlay for the FAN. Default: 240.0.0.0/8'></i>
+                        </div>
+                      </div>
+                      <div class="row" id="networkFanTypeRow" style="display: none;">
+                        <label class="col-3 col-form-label text-right">Fan Type: </label>
+                        <div class="col-7">
+                          <div class="form-group">
+                            <select onchange="" class="form-control" name="fan.type">
+                              <option value="">(not set)</option>
+                              <option value="ipip">ipip</option>
+                              <option value="vxlan">vxlan</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="col-1">
+                          <i class="far fa-sm fa-question-circle" title='Used only if using "fan" bridge mode. Select the tunneling type for the FAN. Default: vxlan'></i>
+                        </div>
+                      </div>
+                      <div class="row" id="networkFanUnderlaySubnetRow" style="display: none;">
+                        <label class="col-3 col-form-label text-right">Fan Underlay Subnet: </label>
+                        <div class="col-7">
+                          <div class="form-group">
+                            <input type="text" class="form-control" placeholder="" name="fan.underlay.subnet">
+                          </div>
+                        </div>
+                        <div class="col-1">
+                          <i class="far fa-sm fa-question-circle" title='Used only if using "fan" bridge mode. Enter in a CIDR notation subnet used as the underlay for the FAN. Use "auto" to use the subnet of the default gateway. Default: auto'></i>
+                        </div>
+                      </div>
+                      <div class="row" id="networkIpv4AddressRow" style="display: none;">
+                        <label class="col-3 col-form-label text-right">IPv4 Address: </label>
+                        <div class="col-7">
+                          <div class="form-group">
+                            <input type="text" class="form-control" placeholder="" name="ipv4.address">
+                          </div>
+                        </div>
+                        <div class="col-1">
+                          <i class="far fa-sm fa-question-circle" title='Used only if using "standard" bridge mode. Enter in a CIDR notation IPv4 address for the bridge. To turn off IPv4 enter "none". To generate a new random unused subnet enter "auto". Default: auto'></i>
+                        </div>
+                      </div>
+                      <div class="row" id="networkIpv4DhcpRow" style="display: none;">
+                        <label class="col-3 col-form-label text-right">IPv4 DHCP: </label>
+                        <div class="col-7">
+                          <div class="form-group">
+                            <select onchange="" class="form-control" name="ipv4.dhcp">
+                              <option value="">(not set)</option>
+                              <option value="true">true</option>
+                              <option value="false">false</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="col-1">
+                          <i class="far fa-sm fa-question-circle" title='Used only if IPv4 Address is created. Select whether to allocate addresses using DHCP. Default: true'></i>
+                        </div>
+                      </div>
+                      <div class="row" id="networkIpv4DhcpExpiryRow" style="display: none;">
+                        <label class="col-3 col-form-label text-right">IPv4 DHCP Expiry: </label>
+                        <div class="col-7">
+                          <div class="form-group">
+                            <input type="text" class="form-control" placeholder="" name="ipv4.dhcp.expiry">
+                          </div>
+                        </div>
+                        <div class="col-1">
+                          <i class="far fa-sm fa-question-circle" title='Used only if IPv4 DHCP is true. Enter in the length of time for DHCP leases to expire. Default: 1h'></i>
+                        </div>
+                      </div>
+                      <div class="row" id="networkIpv4DhcpGatewayRow" style="display: none;">
+                        <label class="col-3 col-form-label text-right">IPv4 DHCP Gateway: </label>
+                        <div class="col-7">
+                          <div class="form-group">
+                            <input type="text" class="form-control" placeholder="" name="ipv4.dhcp.gateway">
+                          </div>
+                        </div>
+                        <div class="col-1">
+                          <i class="far fa-sm fa-question-circle" title='Used only if IPv4 DHCP is true. Enter in a gateway address, if different from entered IPv4 address. Default: (not set)'></i>
+                        </div>
+                      </div>
+                      <div class="row" id="networkIpv4DhcpRangesRow" style="display: none;">
+                        <label class="col-3 col-form-label text-right">IPv4 DHCP Ranges: </label>
+                        <div class="col-7">
+                          <div class="form-group">
+                            <input type="text" class="form-control" placeholder="" name="ipv4.dhcp.ranges">
+                          </div>
+                        </div>
+                        <div class="col-1">
+                          <i class="far fa-sm fa-question-circle" title='Used only if IPv4 DHCP is true. Enter in a comma separated list of IP ranges to use for DHCP. Default: (not set)'></i>
+                        </div>
+                      </div>
+                      <div class="row" id="networkIpv4FirewallRow" style="display: none;">
+                        <label class="col-3 col-form-label text-right">IPv4 Firewall: </label>
+                        <div class="col-7">
+                          <div class="form-group">
+                            <select onchange="" class="form-control" name="ipv4.firewall">
+                              <option value="">(not set)</option>
+                              <option value="true">true</option>
+                              <option value="false">false</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="col-1">
+                          <i class="far fa-sm fa-question-circle" title='Used only if IPv4 Address is created. Select whether to generate filtering firewall rules. Default: true'></i>
+                        </div>
+                      </div>
+                      <div class="row" id="networkIpv4NatAddressRow" style="display: none;">
+                        <label class="col-3 col-form-label text-right">IPv4 NAT Address: </label>
+                        <div class="col-7">
+                          <div class="form-group">
+                            <input type="text" class="form-control" placeholder="" name="ipv4.nat.address">
+                          </div>
+                        </div>
+                        <div class="col-1">
+                          <i class="far fa-sm fa-question-circle" title='Used only if IPv4 Address is created. Enter in the source IP address used for outbound traffic from the bridge. Default: (not set)'></i>
+                        </div>
+                      </div>
+                      <div class="row" id="networkIpv4NatRow" style="display: none;">
+                        <label class="col-3 col-form-label text-right">IPv4 NAT: </label>
+                        <div class="col-7">
+                          <div class="form-group">
+                            <select onchange="" class="form-control" name="ipv4.nat">
+                              <option value="">(not set)</option>
+                              <option value="true">true</option>
+                              <option value="false">false</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="col-1">
+                          <i class="far fa-sm fa-question-circle" title='Used only if IPv4 Address is created. Select whether or not to use NAT. Default: true (for bridges), false (for non-bridges)'></i>
+                        </div>
+                      </div>
+                      <div class="row" id="networkIpv4NatOrderRow" style="display: none;">
+                        <label class="col-3 col-form-label text-right">IPv4 NAT Order: </label>
+                        <div class="col-7">
+                          <div class="form-group">
+                            <select onchange="" class="form-control" name="ipv4.nat.order">
+                              <option value="">(not set)</option>
+                              <option value="after">after</option>
+                              <option value="before">before</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="col-1">
+                          <i class="far fa-sm fa-question-circle" title='Used only if IPv4 Address is created. Select whether to add the NAT rules before or after any pre-existing rules. Default: before'></i>
+                        </div>
+                      </div>
+                      <div class="row" id="networkIpv4OvnRangesRow" style="display: none;">
+                        <label class="col-3 col-form-label text-right">IPv4 OVN Ranges: </label>
+                        <div class="col-7">
+                          <div class="form-group">
+                            <input type="text" class="form-control" placeholder="" name="ipv4.ovn.ranges">
+                          </div>
+                        </div>
+                        <div class="col-1">
+                          <i class="far fa-sm fa-question-circle" title='Enter in a comma separated list of IPv4 ranges. Default: (not set)'></i>
+                        </div>
+                      </div>
+                      <div class="row" id="networkIpv4GatewayRow" style="display: none;">
+                        <label class="col-3 col-form-label text-right">IPv4 Gateway: </label>
+                        <div class="col-7">
+                          <div class="form-group">
+                            <input type="text" class="form-control" placeholder="" name="ipv4.gateway">
+                          </div>
+                        </div>
+                        <div class="col-1">
+                          <i class="far fa-sm fa-question-circle" title='Used in standard bridge mode. Using CIDR notation, enter in the IPv4 address for the gateway. Default: (not set)'></i>
+                        </div>
+                      </div>
+                      <div class="row" id="networkIpv4RoutesAnycastRow" style="display: none;">
+                        <label class="col-3 col-form-label text-right">IPv4 Routes Anycast: </label>
+                        <div class="col-7">
+                          <div class="form-group">
+                            <select onchange="" class="form-control" name="ipv4.routes.anycast">
+                              <option value="">(not set)</option>
+                              <option value="true">true</option>
+                              <option value="false">false</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="col-1">
+                          <i class="far fa-sm fa-question-circle" title='Used only if IPv4 Address is created. Select whether or not to allow overlapping routes on multiple networks or NICs at the same time. Default: false'></i>
+                        </div>
+                      </div>
+                      <div class="row" id="networkIpv4RoutesRow" style="display: none;">
+                        <label class="col-3 col-form-label text-right">IPv4 Routes: </label>
+                        <div class="col-7">
+                          <div class="form-group">
+                            <input type="text" class="form-control" placeholder="" name="ipv4.routes">
+                          </div>
+                        </div>
+                        <div class="col-1">
+                          <i class="far fa-sm fa-question-circle" title='Used only if IPv4 Address is created. Enter in a comma separated list of additional IPv4 subnets to route to the bridge. Default: (not set)'></i>
+                        </div>
+                      </div>
+                      <div class="row" id="networkIpv4RoutingRow" style="display: none;">
+                        <label class="col-3 col-form-label text-right">IPv4 Routing: </label>
+                        <div class="col-7">
+                          <div class="form-group">
+                            <select onchange="" class="form-control" name="ipv4.routing">
+                              <option value="">(not set)</option>
+                              <option value="true">true</option>
+                              <option value="false">false</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="col-1">
+                          <i class="far fa-sm fa-question-circle" title='Used only if IPv4 Address is created. Select whether to route network traffic in and out of the bridge. Default: true'></i>
+                        </div>
+                      </div>
+                      <div class="row" id="networkIpv6AddressRow" style="display: none;">
+                        <label class="col-3 col-form-label text-right">IPv6 Address: </label>
+                        <div class="col-7">
+                          <div class="form-group">
+                            <input type="text" class="form-control" placeholder="" name="ipv6.address">
+                          </div>
+                        </div>
+                        <div class="col-1">
+                          <i class="far fa-sm fa-question-circle" title='Used only if using "standard" bridge mode. Enter in a CIDR notation IPv6 address for the bridge. To turn off IPv6 enter "none". To generate a new random unused subnet enter "auto". Default: auto'></i>
+                        </div>
+                      </div>
+                      <div class="row" id="networkIpv6DhcpRow" style="display: none;">
+                        <label class="col-3 col-form-label text-right">IPv6 DHCP: </label>
+                        <div class="col-7">
+                          <div class="form-group">
+                            <select onchange="" class="form-control" name="ipv6.dhcp">
+                              <option value="">(not set)</option>
+                              <option value="true">true</option>
+                              <option value="false">false</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="col-1">
+                          <i class="far fa-sm fa-question-circle" title='Used only if IPv6 Address is created. Select whether to provide additional DHCP configurations over the network. Default: true'></i>
+                        </div>
+                      </div>
+                      <div class="row" id="networkIpv6DhcpExpiryRow" style="display: none;">
+                        <label class="col-3 col-form-label text-right">IPv6 DHCP Expiry: </label>
+                        <div class="col-7">
+                          <div class="form-group">
+                            <input type="text" class="form-control" placeholder="" name="ipv6.dhcp.expiry">
+                          </div>
+                        </div>
+                        <div class="col-1">
+                          <i class="far fa-sm fa-question-circle" title='Used only if IPv6 DHCP is true. Enter in the length of time for DHCP leases to expire. Default: 1h'></i>
+                        </div>
+                      </div>
+                      <div class="row" id="networkIpv6DhcpRangesRow" style="display: none;">
+                        <label class="col-3 col-form-label text-right">IPv6 DHCP Ranges: </label>
+                        <div class="col-7">
+                          <div class="form-group">
+                            <input type="text" class="form-control" placeholder="" name="ipv6.dhcp.ranges">
+                          </div>
+                        </div>
+                        <div class="col-1">
+                          <i class="far fa-sm fa-question-circle" title='Used only if IPv6 DHCP is true and stateful. Enter in a comma separated list of IPv6 ranges. Default: (not set)'></i>
+                        </div>
+                      </div>
+                      <div class="row" id="networkIpv6DhcpStatefulRow" style="display: none;">
+                        <label class="col-3 col-form-label text-right">IPv6 DHCP Stateful: </label>
+                        <div class="col-7">
+                          <div class="form-group">
+                            <select onchange="" class="form-control" name="ipv6.dhcp.stateful">
+                              <option value="">(not set)</option>
+                              <option value="true">true</option>
+                              <option value="false">false</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="col-1">
+                          <i class="far fa-sm fa-question-circle" title='Used only if IPv6 DHCP is true. Select whether to use DHCP to allocate addresses. Default: false'></i>
+                        </div>
+                      </div>
+                      <div class="row" id="networkIpv6FirewallRow" style="display: none;">
+                        <label class="col-3 col-form-label text-right">IPv6 Firewall: </label>
+                        <div class="col-7">
+                          <div class="form-group">
+                            <select onchange="" class="form-control" name="ipv6.firewall">
+                              <option value="">(not set)</option>
+                              <option value="true">true</option>
+                              <option value="false">false</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="col-1">
+                          <i class="far fa-sm fa-question-circle" title='Used only if IPv6 Address is created. Select whether to generate filtering firewall rules. Default: true'></i>
+                        </div>
+                      </div>
+                      <div class="row" id="networkIpv6NatAddressRow" style="display: none;">
+                        <label class="col-3 col-form-label text-right">IPv6 NAT Address: </label>
+                        <div class="col-7">
+                          <div class="form-group">
+                            <input type="text" class="form-control" placeholder="" name="ipv6.nat.address">
+                          </div>
+                        </div>
+                        <div class="col-1">
+                          <i class="far fa-sm fa-question-circle" title='Used only if IPv6 Address is created. Enter in the source IP address used for outbound traffic from the bridge. Default: (not set)'></i>
+                        </div>
+                      </div>
+                      <div class="row" id="networkIpv6NatRow" style="display: none;">
+                        <label class="col-3 col-form-label text-right">IPv6 NAT: </label>
+                        <div class="col-7">
+                          <div class="form-group">
+                            <select onchange="" class="form-control" name="ipv6.nat">
+                              <option value="">(not set)</option>
+                              <option value="true">true</option>
+                              <option value="false">false</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="col-1">
+                          <i class="far fa-sm fa-question-circle" title='Used only if IPv6 Address is created. Select whether or not to use NAT. Default: true'></i>
+                        </div>
+                      </div>
+                      <div class="row" id="networkIpv6NatOrderRow" style="display: none;">
+                        <label class="col-3 col-form-label text-right">IPv6 NAT Order: </label>
+                        <div class="col-7">
+                          <div class="form-group">
+                            <select onchange="" class="form-control" name="ipv6.nat.order">
+                              <option value="">(not set)</option>
+                              <option value="after">after</option>
+                              <option value="before">before</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="col-1">
+                          <i class="far fa-sm fa-question-circle" title='Used only if IPv6 Address is created. Select whether to add the NAT rules before or after any pre-existing rules. Default: before'></i>
+                        </div>
+                      </div>
+                      <div class="row" id="networkIpv6OvnRangesRow" style="display: none;">
+                        <label class="col-3 col-form-label text-right">IPv6 OVN Ranges: </label>
+                        <div class="col-7">
+                          <div class="form-group">
+                            <input type="text" class="form-control" placeholder="" name="ipv6.ovn.ranges">
+                          </div>
+                        </div>
+                        <div class="col-1">
+                          <i class="far fa-sm fa-question-circle" title='Enter in a comma separated list of IPv6 ranges. Default: (not set)'></i>
+                        </div>
+                      </div>
+                      <div class="row" id="networkIpv6GatewayRow" style="display: none;">
+                        <label class="col-3 col-form-label text-right">IPv6 Gateway: </label>
+                        <div class="col-7">
+                          <div class="form-group">
+                            <input type="text" class="form-control" placeholder="" name="ipv6.gateway">
+                          </div>
+                        </div>
+                        <div class="col-1">
+                          <i class="far fa-sm fa-question-circle" title='Used in standard bridge mode. Using CIDR notation, enter in the IPv6 address for the gateway. Default: (not set)'></i>
+                        </div>
+                      </div>
+                      <div class="row" id="networkIpv6RoutesAnycastRow" style="display: none;">
+                        <label class="col-3 col-form-label text-right">IPv6 Routes Anycast: </label>
+                        <div class="col-7">
+                          <div class="form-group">
+                            <select onchange="" class="form-control" name="ipv6.routes.anycast">
+                              <option value="">(not set)</option>
+                              <option value="true">true</option>
+                              <option value="false">false</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="col-1">
+                          <i class="far fa-sm fa-question-circle" title='Used only if IPv6 Address is created. Select whether or not to allow overlapping routes on multiple networks or NICs at the same time. Default: false'></i>
+                        </div>
+                      </div>
+                      <div class="row" id="networkIpv6RoutesRow" style="display: none;">
+                        <label class="col-3 col-form-label text-right">IPv6 Routes: </label>
+                        <div class="col-7">
+                          <div class="form-group">
+                            <input type="text" class="form-control" placeholder="" name="ipv6.routes">
+                          </div>
+                        </div>
+                        <div class="col-1">
+                          <i class="far fa-sm fa-question-circle" title='Used only if IPv6 Address is created. Enter in a comma separated list of additional IPv6 subnets to route to the bridge. Default: (not set)'></i>
+                        </div>
+                      </div>
+                      <div class="row" id="networkIpv6RoutingRow" style="display: none;">
+                        <label class="col-3 col-form-label text-right">IPv6 Routing: </label>
+                        <div class="col-7">
+                          <div class="form-group">
+                            <select onchange="" class="form-control" name="ipv6.routing">
+                              <option value="">(not set)</option>
+                              <option value="true">true</option>
+                              <option value="false">false</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="col-1">
+                          <i class="far fa-sm fa-question-circle" title='Used only if IPv6 Address is created. Select whether to route network traffic in and out of the bridge. Default: true'></i>
+                        </div>
+                      </div>
+                      <div class="row" id="networkMaasSubnetIpv4Row" style="display: none;">
+                        <label class="col-3 col-form-label text-right">MAAS Subnet IPv4: </label>
+                        <div class="col-7">
+                          <div class="form-group">
+                            <input type="text" class="form-control" placeholder="" name="maas.subnet.ipv4">
+                          </div>
+                        </div>
+                        <div class="col-1">
+                          <i class="far fa-sm fa-question-circle" title='Used only if IPv4 Address is created. Enter the MAAS IPv4 subnet to register the instances in. Default: (not set)'></i>
+                        </div>
+                      </div>
+                      <div class="row" id="networkMaasSubnetIpv6Row" style="display: none;">
+                        <label class="col-3 col-form-label text-right">MAAS Subnet IPv6: </label>
+                        <div class="col-7">
+                          <div class="form-group">
+                            <input type="text" class="form-control" placeholder="" name="maas.subnet.ipv6">
+                          </div>
+                        </div>
+                        <div class="col-1">
+                          <i class="far fa-sm fa-question-circle" title='Used only if IPv6 Address is created. Enter the MAAS IPv6 subnet to register the instances in. Default: (not set)'></i>
+                        </div>
+                      </div>
+                      <div class="row" id="networkRawDnsmasqRow" style="display: none;">
+                        <label class="col-3 col-form-label text-right">Raw DNSmasq: </label>
+                        <div class="col-7">
+                          <div class="form-group">
+                            <input type="text" class="form-control" placeholder="" name="raw.dnsmasq">
+                          </div>
+                        </div>
+                        <div class="col-1">
+                          <i class="far fa-sm fa-question-circle" title='Enter in any additional dnsmasq configuration. Default: (not set)'></i>
+                        </div>
+                      </div>
+                      <div class="row" id="networkOvnIngressModeRow" style="display: none;">
+                        <label class="col-3 col-form-label text-right">OVN Ingress Mode: </label>
+                        <div class="col-7">
+                          <div class="form-group">
+                            <select onchange="" class="form-control" name="ovn.ingress.mode">
+                              <option value="">(not set)</option>
+                              <option value="l2proxy">l2proxy</option>
+                              <option value="routed">routed</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="col-1">
+                          <i class="far fa-sm fa-question-circle" title='Used in standard bridge mode. Select whether or not to allow overlapping routes on multiple networks or NICs at the same time. Default: false'></i>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                <a class="btn btn-primary" href="#" onclick="addItem()" data-dismiss="modal">Submit</a>
+              </div>
+            </div>
+            <div class="tab-pane fade" id="json" role="tabpanel" aria-labelledby="json-tab">
+              <br />
+              <div class="row">
+                <div class="col-12">
+                  <div class="form-group text-right">
+                    <pre>
+                      <textarea name="json" class="form-control" id="jsonCreateInput" rows="16" placeholder="Enter JSON data"></textarea>
+                    </pre>
+                  </div>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                <a class="btn btn-primary" href="#" onclick="createNetworkUsingJSON()" data-dismiss="modal">Submit</a>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Modal-->
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Edit Network</h5>
+          <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <label class="col-12 col-form-label" id="networkNameEditInput"></label>
+            <div class="col-12">
+              <div class="form-group text-right">
+                <pre>
+                  <textarea name="json" class="form-control" id="jsonInput" rows="16" ></textarea>
+                </pre>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+          <a class="btn btn-primary" href="#" onclick="updateNetwork()" data-dismiss="modal">Submit</a>
+        </div>
+    </div>
+  </div>
+</div>
+
+<!-- Rename Modal-->
+<div class="modal fade" id="renameModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="renameNetworkModalLabel">Rename Network</h5>
+          <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <label class="col-3 col-form-label text-right" id="newNetworkNameLabel">Name: <span class="text-danger">*</span></label>
+            <div class="col-7">
+              <div class="form-group">
+                <input type="text" id="newNetworkName" class="form-control" placeholder="">
+              </div>
+            </div>
+            <div class="col-1">
+              <i class="far fa-sm fa-question-circle" title='(Required) - Enter in a new name for the network.'></i>
+            </div>
+          </div>
+          <input type="hidden" id ="networkToRename" name="networkToRename">
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+          <a class="btn btn-primary" href="#" onclick="updateNetworkName()" data-dismiss="modal">Ok</a>
+        </div>
+    </div>
+  </div>
+</div>

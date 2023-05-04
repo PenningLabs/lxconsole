@@ -1,0 +1,142 @@
+{% extends "main.html" %}
+
+{% block header %}
+<!--
+  <div class="row mb-2">
+    <div class="col-sm-6">
+      <h1>{{ page_title | safe }}</h1>
+    </div>
+    <div class="col-sm-6">
+      <a class="btn btn-outline-primary float-sm-right mr-4" href="#" data-toggle="modal" data-target="#addModal" title="Add Role" aria-hidden="true">
+        <i class="fas fa-plus fa-sm fa-fw"></i> Role
+      </a>
+    </div>
+  </div>
+-->
+{% endblock header %}
+
+{% block content %}
+  <div class="col-12">
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title">Roles</h3>
+        <div class="card-tools">
+          <button type="button" class="btn btn-tool" onclick="reloadPageContent()" title="Refresh">
+          <i class="fas fa-sync"></i>
+          </button>
+        </div>
+      </div>
+      <div class="card-body">
+        <table class="table table-hover" id="myDataTable" width="100%" cellspacing="0">
+        </table>
+      </div>
+    </div>
+  </div>
+{% endblock content %}
+
+{% block modal %}
+  {% include 'modals/roles.html' %}
+{% endblock modal %}
+
+{% block script %}
+  <script>
+    var reloadTime = 10000;
+
+    function reloadPageContent() {
+      //Clear the automatic page reload
+      clearTimeout(pageReloadTimeout);
+
+      //Reload the datatables content
+      $('#myDataTable').DataTable().ajax.reload(null, false);
+
+      //Set the automatic page reload
+      pageReloadTimeout = setTimeout(() => { reloadPageContent(); }, reloadTime);
+    }
+
+    function loadPageContent(){
+
+      // Configure Datatable
+      $('#myDataTable').DataTable({
+        ajax: {
+          url: "../api/roles/list_roles",
+          dataType: "json",
+          dataSrc: "data",
+          contentType: "application/json"
+        },
+        columns: [
+          { title: "Name", data: function (row, type, set) {
+              if (row.hasOwnProperty('name')) {
+                if (row.name)
+                  return row.name
+              }
+              return '-'
+            },
+          },
+          { title: "Description", data: function (row, type, set) {
+              if (row.hasOwnProperty('description')) {
+                if (row.description)
+                  return row.description
+              }
+              return '-'
+            },
+          },
+          /*
+          { title: "Actions", data: function (row, type, set) {
+              links = ''
+              if (row.hasOwnProperty('id') && row.hasOwnProperty('name')) {
+                links = '<a href="#" onclick=editRole(\''+row.id+'\',\''+row.name+'\')> <i class="fas fa-edit fa-lg" style="color:#ddd" title="Edit" aria-hidden="true"></i> </a>' +
+                '&nbsp' +
+                '<a href="#" onclick=deleteRole(\''+row.id+'\',\''+row.name+'\')> <i class="fas fa-trash-alt fa-lg" style="color:#ddd" title="Delete" aria-hidden="true"></i> </a>'
+              }
+              return links
+            },
+          },
+          */
+        ],
+        order: [],
+      });
+
+      //Set reload page content
+      pageReloadTimeout = setTimeout(() => { reloadPageContent(); }, reloadTime);
+
+    }
+
+    function loadInstructionsModal(){
+      $("#instructionsModal").modal('show');
+    }
+
+    // Add user
+    function addRole(){
+      console.log("Info: adding new role");
+      data = $('#addForm').serializeJSON();
+      $.post("../api/roles/add_role", data, function (data) {
+        console.log(data);
+        if (data.error_code >= 400){
+          alert(data.error);
+        }
+        //Aync type
+        setTimeout(() => { reloadPageContent(); }, 2000);
+      });
+    }
+
+    // Delete user
+    function deleteRole(id, name){
+      console.log("Info: confirming removal of role " + name);
+      if (confirm("Are you sure you want to remove role " + name + "?") == true) {
+        console.log("Info: deleting role " + name);
+        $.post("../api/roles/delete_role", {id: id}, function (data) {
+          setTimeout(() => { reloadPageContent(); }, 1000);
+        });
+      }
+    }
+
+
+    $(document).ready(function(){
+
+      loadPageContent()
+      
+    });
+
+  </script>
+{% endblock script %}
+

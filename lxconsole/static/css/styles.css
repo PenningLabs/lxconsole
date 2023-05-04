@@ -1,0 +1,59 @@
+.small-box .icon > i.fa, .small-box .icon > i.fab, .small-box .icon > i.fad, .small-box .icon > i.fal, .small-box .icon > i.far, .small-box .icon > i.fas, .small-box .icon > i.ion {
+  font-size: 50px;
+  top: 20px;
+}
+
+.card-title {
+  font-size: 1rem;
+}
+
+body {
+  color: #636363;
+}
+
+.info-box .progress {
+  height: 7px;
+}
+
+.info-box .info-box-number {
+  display: block;
+  margin-top: .25rem;
+  font-weight: 500;
+  font-size: 1.1rem;
+}
+
+@media (min-width: 1200px) {
+.col-lg-2 .small-box h3, .col-md-2 .small-box h3, .col-xl-2 .small-box h3 {
+  font-size: 1.6rem;
+}
+}
+
+.small-box h3 {
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin: 0 0 10px;
+  padding: 0;
+  white-space: nowrap;
+}
+
+/* Leftover CSS styles */
+.bg-dark {
+    background-color: #262626 !important;
+    background-size: cover;
+  }
+  
+.btn-danger {
+  color: #fff;
+  background-color: #ff0000;
+  border-color: #ff0000;
+}
+  
+.text-danger {
+  color: #ff0000 !important;
+}
+
+code {
+  font-size: 87.5%;
+  color: #ff0000 !important;
+  word-break: break-word;
+}

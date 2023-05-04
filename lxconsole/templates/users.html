@@ -1,0 +1,256 @@
+{% extends "main.html" %}
+
+{% block header %}
+  <div class="row mb-2">
+    <div class="col-sm-6">
+      <h1>{{ page_title | safe }}</h1>
+    </div>
+    <div class="col-sm-6">
+      <a class="btn btn-outline-primary float-sm-right mr-4" href="#" data-toggle="modal" data-target="#addModal" title="Add User" aria-hidden="true">
+        <i class="fas fa-plus fa-sm fa-fw"></i> User
+      </a>
+    </div>
+  </div>
+{% endblock header %}
+
+{% block content %}
+  <div class="col-12">
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title">Users</h3>
+        <div class="card-tools">
+          <button type="button" class="btn btn-tool" onclick="reloadPageContent()" title="Refresh">
+          <i class="fas fa-sync"></i>
+          </button>
+        </div>
+      </div>
+      <div class="card-body">
+        <table class="table table-hover" id="myDataTable" width="100%" cellspacing="0">
+        </table>
+      </div>
+    </div>
+  </div>
+{% endblock content %}
+
+{% block modal %}
+  {% include 'modals/users.html' %}
+{% endblock modal %}
+
+{% block script %}
+  <script>
+    var reloadTime = 10000;
+
+    function reloadPageContent() {
+      //Clear the automatic page reload
+      clearTimeout(pageReloadTimeout);
+
+      //Reload the datatables content
+      $('#myDataTable').DataTable().ajax.reload(null, false);
+
+      //Set the automatic page reload
+      pageReloadTimeout = setTimeout(() => { reloadPageContent(); }, reloadTime);
+    }
+
+    function loadPageContent(){
+
+      // Configure Datatable
+      $('#myDataTable').DataTable({
+        ajax: {
+          url: "../api/users/list_users",
+          dataType: "json",
+          dataSrc: "data",
+          contentType: "application/json"
+        },
+        columns: [
+          { title: "Username", data: function (row, type, set) {
+              if (row.hasOwnProperty('username')) {
+                if (row.username)
+                  return row.username
+              }
+              return '-'
+            },
+          },
+          { title: "Email", data: function (row, type, set) {
+              if (row.hasOwnProperty('email')) {
+                if (row.email)
+                  return row.email
+              }
+              return '-'
+            },
+          },
+          { title: "First Name", data: function (row, type, set) {
+              if (row.hasOwnProperty('first_name')) {
+                if (row.first_name)
+                  return row.first_name
+              }
+              return '-'
+            },
+          },
+          { title: "Last Name", data: function (row, type, set) {
+              if (row.hasOwnProperty('last_name')) {
+                if (row.last_name)
+                  return row.last_name
+              }
+              return '-'
+            },
+          },
+          { title: "Groups", data: function (row, type, set) {
+              if (row.hasOwnProperty('groups')) {
+                if (row.groups)
+                  return row.groups.sort().join(', ')
+              }
+              return '-'
+            },
+          },
+          { title: "Actions", data: function (row, type, set) {
+              links = ''
+              if (row.hasOwnProperty('id') && row.hasOwnProperty('username')) {
+                links = '<a href="#" onclick=editUser(\''+row.id+'\',\''+row.username+'\')> <i class="fas fa-edit fa-lg" style="color:#ddd" title="Edit" aria-hidden="true"></i> </a>' +
+                '&nbsp' +
+                '<a href="#" onclick=deleteUser(\''+row.id+'\',\''+row.username+'\')> <i class="fas fa-trash-alt fa-lg" style="color:#ddd" title="Delete" aria-hidden="true"></i> </a>'
+              }
+              return links
+            },
+          },
+        ],
+        order: [],
+      });
+
+        //Populate the Groups dropdown in the add modal form
+        $.getJSON("../api/groups/list_groups", function (data) {
+          groups = data.data
+          $("#groupInput").empty();
+          for (var index = 0; index < groups.length; index++) {
+            $('#groupInput').append('<option value="' + groups[index].id + '">' + groups[index].name + '</option>');
+          }
+        })
+
+      //Set reload page content
+      pageReloadTimeout = setTimeout(() => { reloadPageContent(); }, reloadTime);
+
+    }
+
+    // Add user
+    function addUser(){
+      console.log("Info: adding new user");
+      data = $('#addForm').serializeJSON();
+      $.post("../api/users/add_user", data, function (data) {
+        console.log(data);
+        if (data.error_code >= 400){
+          alert(data.error);
+        }
+        //Aync type
+        setTimeout(() => { reloadPageContent(); }, 2000);
+      });
+    }
+
+    // Edit user
+    function editUser(id, username){
+      console.log("Info: loading edit user " + username);
+      $.get("../api/users/get_user", { 
+        id: id,
+      }, function (data) {
+        data = data.metadata
+        console.log(data)
+        $('input[id=idEditInput]').val(data.id);
+        $('#idUserGroupsEditInput').val(data.id);
+        $('#idUserPasswordEditInput').val(data.id);
+
+        $('input[id=usernameEditInput]').val(data.username);
+        $('input[id=firstNameEditInput]').val(data.first_name);
+        $('input[id=lastNameEditInput]').val(data.last_name);
+        $('input[id=emailEditInput]').val(data.email);
+        
+        user_groups = data.groups
+        //Populate the Groups dropdown in the modal form
+        $.getJSON("../api/groups/list_groups", function (data) {
+          groups = data.data
+          $("#addGroupEditInput").empty();
+          $("#removeGroupEditInput").empty();
+          for (var index = 0; index < groups.length; index++) {
+            if (user_groups.includes(groups[index].name))
+              $('#removeGroupEditInput').append('<option value="' + groups[index].id + '">' + groups[index].name + '</option>');
+            else
+              $('#addGroupEditInput').append('<option value="' + groups[index].id + '">' + groups[index].name + '</option>');
+          }
+        })
+
+        $("#editModal").modal('show');
+      });
+    }
+
+    // Update user
+    function updateUser(){
+      console.log("Info: adding new user");
+      data = $('#editForm').serializeJSON();
+      $.post("../api/users/update_user", data, function (data) {
+        console.log(data);
+        if (data.error_code >= 400){
+          alert(data.error);
+        }
+        //Sync type
+        setTimeout(() => { reloadPageContent(); }, 1000);
+      });
+    }
+
+    // Update user group
+    function updateUserGroup(){
+      console.log("Info: editing user group");
+      data = $('#editUserGroupsForm').serializeJSON();
+      $.post("../api/users/update_user", data, function (data) {
+        console.log(data);
+        if (data.error_code >= 400){
+          alert(data.error);
+        }
+        //Sync type
+        setTimeout(() => { reloadPageContent(); }, 1000);
+      });
+    }
+
+    // Update user password
+    function updateUserPassword(){
+      console.log("Info: editing user password");
+      data = $('#editUserPasswordForm').serializeJSON();
+      $.post("../api/users/update_user", data, function (data) {
+        console.log(data);
+        if (data.error_code >= 400){
+          alert(data.error);
+        }
+        //Sync type
+        setTimeout(() => { reloadPageContent(); }, 1000);
+      });
+    }
+
+    // Delete user
+    function deleteUser(id, username){
+      console.log("Info: confirming removal of user" + username);
+      if (confirm("Are you sure you want to remove user " + username + "?") == true) {
+        console.log("Info: deleting user " + username);
+        $.post("../api/users/delete_user", {id: id}, function (data) {
+          setTimeout(() => { reloadPageContent(); }, 1000);
+        });
+      }
+    }
+
+    function changeActionInput(){
+      var actionEditInput = $("#actionEditInput").val();
+    
+      if (actionEditInput == "add"){
+        $("#addGroupEditInputRow").show()
+        $("#removeGroupEditInputRow").hide()
+      }
+      else {
+        $("#addGroupEditInputRow").hide()
+        $("#removeGroupEditInputRow").show()
+      }
+    }
+
+    $(document).ready(function(){
+
+      loadPageContent()
+      
+    });
+
+  </script>
+{% endblock script %}
+

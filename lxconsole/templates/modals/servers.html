@@ -1,0 +1,227 @@
+<!-- Add Modal-->
+<div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Add LXD Server</h5>
+        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p class="ml-4 mb-4">
+          Before adding an LXD server, it must first trust your client certificate. <br />
+          Click <a href="#" onclick="loadInstructionsModal()">here</a> for instructions on trusting certificates.
+        </p>
+        
+        <div class="row">
+          <label class="col-3 col-form-label text-right">Host Addr: <span class="text-danger">*</span></label>
+          <div class="col-7">
+            <div class="form-group">
+              <input type="text" class="form-control"  id="addModalAddrInput" name="name">
+            </div>
+          </div>
+          <div class="col-1">
+            <i class="far fa-sm fa-question-circle" title='(Required) - Enter in the IP address or FQDN of the LXD server'></i>
+          </div>
+        </div>
+
+        <div class="row">
+          <label class="col-3 col-form-label text-right">Port: <span class="text-danger">*</span></label>
+          <div class="col-7">
+            <div class="form-group">
+              <input type="number" class="form-control" id="addModalPortInput" required="required" name="Addr" value="8443">
+            </div>
+          </div>
+          <div class="col-1">
+            <i class="far fa-sm fa-question-circle" title='(Required) - Enter in the network port to connect to the LXD server. Default: 8443'></i>
+          </div>
+        </div>
+
+        <div class="row">
+          <label class="col-3 col-form-label text-right">Proxy: </label>
+          <div class="col-7">
+            <div class="form-group">
+              <input type="text" class="form-control" id="addModalProxyInput" required="required" name="Password">
+            </div>
+          </div>
+          <div class="col-1">
+            <i class="far fa-sm fa-question-circle" title='Enter in the IP address or FQDN and port of a proxy endpoint used to connect the client browser to a server via exec or console websocket. Default: (not set)'></i>
+          </div>
+        </div>
+
+        <div class="row">
+          <label class="col-3 col-form-label text-right">SSL Verify: </label>
+          <div class="col-7">
+            <div class="form-group">                  
+              <select id="addModalSSLVerifyInput" class="form-control" name="addModalSSLVerifyInput">
+                <option value="true">True</option>
+                <option value="false" selected>False</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-1">
+            <i class="far fa-sm fa-question-circle" title='Select whether or not the SSL/TLS certificate of the LXC server must be verified. By default LXD servers use a self-signed certificate. Default value: False'></i>
+          </div>
+        </div>
+
+      </div> <!-- End Modal Body-->
+      <div class="modal-footer">
+        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+        <a class="btn btn-primary" href="#" onclick="addServer()" data-dismiss="modal">Submit</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Modal-->
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Edit Server</h5>
+        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body">  
+
+        <div class="row">
+          <label class="col-3 col-form-label text-right">Host Addr: <span class="text-danger">*</span></label>
+          <div class="col-7">
+            <div class="form-group">
+              <input type="text" class="form-control"  id="editModalAddrInput" name="editModalAddrInput">
+            </div>
+          </div>
+          <div class="col-1">
+            <i class="far fa-sm fa-question-circle" title='(Required) - This field defines the IP address or FQDN used to connect to the rest API of an LXD server'></i>
+          </div>
+        </div>
+
+        <div class="row">
+          <label class="col-3 col-form-label text-right">Port: <span class="text-danger">*</span></label>
+          <div class="col-7">
+            <div class="form-group">
+              <input type="number" class="form-control" id="editModalPortInput" required="required" name="editModalPortInput">
+            </div>
+          </div>
+          <div class="col-1">
+            <i class="far fa-sm fa-question-circle" title='(Required) - Enter in the network port to connect to the LXD server. Default: 8443'></i>
+          </div>
+        </div>
+
+        <div class="row">
+          <label class="col-3 col-form-label text-right">Proxy: </label>
+          <div class="col-7">
+            <div class="form-group">
+              <input type="text" class="form-control" id="editModalProxyInput" required="required" name="editModalProxyInput">
+            </div>
+          </div>
+          <div class="col-1">
+            <i class="far fa-sm fa-question-circle" title='The proxy address provides an alternative address and port used when making exec and console websocket connections from your browser. Default value: (not set)'></i>
+          </div>
+        </div>
+
+        <div class="row">
+          <label class="col-3 col-form-label text-right">SSL Verify: </label>
+          <div class="col-7">
+            <div class="form-group">                  
+              <select id="editModalSSLVerifyInput" class="form-control" name="editModalSSLVerifyInput">
+                <option value="true">True</option>
+                <option value="false" selected>False</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-1">
+            <i class="far fa-sm fa-question-circle" title='Select whether or not the SSL/TLS certificate of the LXC server must be verified. By default LXD servers use a self-signed certificate. Default value: False'></i>
+          </div>
+        </div>
+
+        <input type="hidden" id="editModalIdInput">
+
+      </div> <!-- End Modal Body-->
+      <div class="modal-footer">
+        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+        <a class="btn btn-primary" href="#" onclick="updateServer()" data-dismiss="modal">Submit</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Instructions Modal-->
+<div class="modal fade" id="instructionsModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Instructions</h5>
+        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-12">
+            <p>
+              Copy the client certificate
+              and paste it into a new file on your remote LXD server such as <strong><em>lxconsole.crt</em></strong>. <br />
+              <pre id="instructionsClientCert">{{ client_crt }}</pre>
+            </p> 
+            <p>Import the certificate file on your remote LXD server by running the command:<br /> 
+              <code class="text-danger">lxc config trust add lxconsole.crt</code>
+            </p>
+            <p>
+              For LXD servers that are not part of a cluster, use a command to listen for incoming connections, such as:<br />
+              <code class="text-danger">lxc config set core.https_address [::]</code>
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" type="button" data-dismiss="modal">Dismiss</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Client Cert Modal-->
+<div class="modal fade" id="clientCertModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">LXD Client Certificate</h5>
+        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-12">
+            <pre><div class="pl-5" id="clientCert">{{ client_crt }}</div></pre>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" type="button" data-dismiss="modal">Dismiss</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Server Modal-->
+<div class="modal fade" id="deleteServer" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Remove Server</h5>
+        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body">Are you sure you want to remove this server?</div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+        <a class="btn btn-primary" href="#" onclick="deleteServer()" data-dismiss="modal">Yes</a>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,9 @@
+flask
+flask-sqlalchemy
+flask-bcrypt
+flask-login
+flask-wtf
+email-validator
+requests
+pyOpenSSL
+gunicorn

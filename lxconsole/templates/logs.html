@@ -1,0 +1,148 @@
+{% extends "main.html" %}
+
+{% block header %}
+  <div class="row mb-2">
+    <div class="col-sm-6">
+      <h1>{{ page_title | safe }}</h1>
+    </div>
+  </div>
+{% endblock header %}
+
+{% block content %}
+  <div class="col-12">
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title">Logs</h3>
+        <div class="card-tools">
+          <button type="button" class="btn btn-tool" onclick="reloadPageContent()" title="Refresh">
+          <i class="fas fa-sync"></i>
+          </button>
+        </div>
+      </div>
+      <div class="card-body">
+        <table class="table table-hover" id="myDataTable" width="100%" cellspacing="0">
+        </table>
+      </div>
+    </div>
+  </div>
+{% endblock content %}
+
+{% block modal %}
+  {% include 'modals/logs.html' %}
+{% endblock modal %}
+
+{% block script %}
+  <script>
+    var reloadTime = 10000;
+
+    function reloadPageContent() {
+      //Clear the automatic page reload
+      clearTimeout(pageReloadTimeout);
+
+      //Reload the datatables content
+      $('#myDataTable').DataTable().ajax.reload(null, false);
+
+      //Set the automatic page reload
+      pageReloadTimeout = setTimeout(() => { reloadPageContent(); }, reloadTime);
+    }
+
+    function loadPageContent(){
+
+      // Configure Datatable
+      $('#myDataTable').DataTable({
+        ajax: {
+          url: "../api/logs/list_logs",
+          dataType: "json",
+          dataSrc: "data",
+          contentType: "application/json"
+        },
+        columns: [
+          { title: "Id", data: function (row, type, set) {
+              if (row.hasOwnProperty('id')) {
+                if (row.id)
+                  return row.id
+              }
+              return '-'
+            },
+          },
+          { title: "Control", data: function (row, type, set) {
+              if (row.hasOwnProperty('control')) {
+                if (row.control)
+                  return row.control
+              }
+              return '-'
+            },
+          },
+          { title: "Server Id", data: function (row, type, set) {
+              if (row.hasOwnProperty('server_id')) {
+                if (row.server_id)
+                  return row.server_id
+              }
+              return '-'
+            },
+          },
+          { title: "Project", data: function (row, type, set) {
+              if (row.hasOwnProperty('project')) {
+                if (row.project)
+                  return row.project
+              }
+              return '-'
+            },
+          },
+
+          { title: "Message", data: function (row, type, set) {
+              if (row.hasOwnProperty('message')) {
+                if (row.message)
+                  return row.message
+              }
+              return '-'
+            },
+          },
+          { title: "User Id", data: function (row, type, set) {
+              if (row.hasOwnProperty('user_id')) {
+                if (row.user_id)
+                  return row.user_id
+              }
+              return '-'
+            },
+          },
+          { title: "Item", data: function (row, type, set) {
+              if (row.hasOwnProperty('item')) {
+                if (row.item)
+                  return row.item
+              }
+              return '-'
+            },
+          },
+          { title: "Status Code", data: function (row, type, set) {
+              if (row.hasOwnProperty('status_code')) {
+                if (row.status_code)
+                  return row.status_code
+              }
+              return '-'
+            },
+          },
+          { title: "Created At", data: function (row, type, set) {
+              if (row.hasOwnProperty('created_at')) {
+                if (row.created_at)
+                  return row.created_at
+              }
+              return '-'
+            },
+          },
+        ],
+        order: [],
+      });
+
+      //Set reload page content
+      pageReloadTimeout = setTimeout(() => { reloadPageContent(); }, reloadTime);
+
+    }
+
+    $(document).ready(function(){
+      loadPageContent()
+    });
+
+  </script>
+{% endblock script %}
+

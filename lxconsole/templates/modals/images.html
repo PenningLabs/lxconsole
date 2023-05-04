@@ -1,0 +1,652 @@
+  <!-- Add Modal-->
+  <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Download Image</h5>
+          <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item">
+              <a class="nav-link active" id="catalog-tab" data-toggle="tab" href="#catalog" role="tab" aria-controls="catalog" aria-selected="true">Catalog</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="form-tab" data-toggle="tab" href="#form" role="tab" aria-controls="form" aria-selected="false">Form</a>
+            </li>
+          </ul>
+          <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="catalog" role="tabpanel" aria-labelledby="catelog-tab">
+              <div class="row mt-4">
+
+                <!--Ubuntu 22.04 Official Download-->
+                <div class="col-sm-12 col-md-12 col-lg-6 col-xl-3 mb-4">
+                  <div class="card shadow">
+                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                      <h6 class="m-0 font-weight-bold text-primary">Ubuntu</h6>
+                      <div class="dropdown no-arrow">
+                        <button class="btn btn-success btn-xs" href="#" onclick="" title="" aria-hidden="true">
+                          OFFICAL</button>
+                      </div>
+                    </div>
+                    <!-- Card Body -->
+                    <div class="card-body pb-0">
+                      <div class="row">
+                        <div class="col-4">
+                          <img class="mb-2" src="../static/assets/img/operatingsystems/ubuntu.png" style="width: 65px; height: 65px;"><br>
+                        </div>
+                        <div class="col-8 text-center mt-3">
+                          <span class="h5">22.04</span>
+                        </div>
+                      </div>
+                      
+                      <span class="font-weight-bold">Image</span>: <span class="">22.04</span> <br />
+                      <span class="font-weight-bold">Repository</span>: <span class="">ubuntu</span>
+                    </div>
+                    <div class="card-footer bg-transparent border-0 text-right">
+                      <div class="dropdown">
+                        <button class="btn btn-primary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          Download
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                          <a class="dropdown-item" href="#" data-dismiss="modal" onclick="addCatalogImage('container','22.04','ubuntu')">Container</a>
+                          <a class="dropdown-item" href="#" data-dismiss="modal" onclick="addCatalogImage('virtual-machine','22.04','ubuntu')">Virtual Machine</a>
+                        </div>
+                      </div> 
+                    </div>
+                  </div>
+                </div>
+                <!--End Ubuntu 22.04 Download-->
+
+                <!--CentOS 9 Stream Download-->
+                <div class="col-sm-12 col-md-12 col-lg-6 col-xl-3 mb-4">
+                  <div class="card shadow">
+                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                      <h6 class="m-0 font-weight-bold text-primary">Centos</h6>
+                      <div class="dropdown no-arrow">
+                        <button class="btn btn-outline-success btn-xs" href="#" onclick="" title="" aria-hidden="true">
+                          COMMUNITY</button>
+                      </div>
+                    </div>
+                    <!-- Card Body -->
+                    <div class="card-body pb-0">
+                      <div class="row">
+                        <div class="col-4">
+                          <img class="mb-2" src="../static/assets/img/operatingsystems/centos.png" style="width: 65px; height: 65px;"><br>
+                        </div>
+                        <div class="col-8 text-center mt-3">
+                          <span class="h5">9 Stream</span>
+                        </div>
+                      </div>
+                      
+                      <span class="font-weight-bold">Image</span>: <span class="">centos/9-Stream</span> <br />
+                      <span class="font-weight-bold">Repository</span>: <span class="">images</span>
+                    </div>
+                    <div class="card-footer bg-transparent border-0 text-right">
+                      <div class="dropdown">
+                        <button class="btn btn-primary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          Download
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                          <a class="dropdown-item" href="#" data-dismiss="modal" onclick="addCatalogImage('container','centos/9-Stream','images')">Container</a>
+                          <a class="dropdown-item" href="#" data-dismiss="modal" onclick="addCatalogImage('virtual-machine','centos/9-Stream','images')">Virtual Machine</a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!--End CentOS 9 Stream Download-->
+
+                <!--Debian Bullseye Download-->
+                <div class="col-sm-12 col-md-12 col-lg-6 col-xl-3 mb-4">
+                  <div class="card shadow">
+                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                      <h6 class="m-0 font-weight-bold text-primary">Debian</h6>
+                      <div class="dropdown no-arrow">
+                        <button class="btn btn-outline-success btn-xs" href="#" onclick="" title="" aria-hidden="true">
+                          COMMUNITY</button>
+                      </div>
+                    </div>
+                    <!-- Card Body -->
+                    <div class="card-body pb-0">
+                      <div class="row">
+                        <div class="col-4">
+                          <img class="mb-2" src="../static/assets/img/operatingsystems/debian.png" style="width: 65px; height: 65px;"><br>
+                        </div>
+                        <div class="col-8 text-center mt-3">
+                          <span class="h5">Bullseye</span>
+                        </div>
+                      </div>
+                      
+                      <span class="font-weight-bold">Image</span>: <span class="">debian/bullseye</span> <br />
+                      <span class="font-weight-bold">Repository</span>: <span class="">images</span>
+                    </div>
+                    <div class="card-footer bg-transparent border-0 text-right">
+                      <div class="dropdown">
+                        <button class="btn btn-primary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          Download
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                          <a class="dropdown-item" href="#" data-dismiss="modal" onclick="addCatalogImage('container','debian/bullseye','images')">Container</a>
+                          <a class="dropdown-item" href="#" data-dismiss="modal" onclick="addCatalogImage('virtual-machine','debian/bullseye','images')">Virtual Machine</a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!--End Debian Bullseye Download-->
+
+                <!--OpenSUSE 15.4 Download-->
+                <div class="col-sm-12 col-md-12 col-lg-6 col-xl-3 mb-4">
+                  <div class="card shadow">
+                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                      <h6 class="m-0 font-weight-bold text-primary">OpenSUSE</h6>
+                      <div class="dropdown no-arrow">
+                        <button class="btn btn-outline-success btn-xs" href="#" onclick="" title="" aria-hidden="true">
+                          COMMUNITY</button>
+                      </div>
+                    </div>
+                    <!-- Card Body -->
+                    <div class="card-body pb-0">
+                      <div class="row">
+                        <div class="col-4">
+                          <img class="mb-2" src="../static/assets/img/operatingsystems/opensuse.png" style="width: 65px; height: 65px;"><br>
+                        </div>
+                        <div class="col-8 text-center mt-3">
+                          <span class="h5">15.4</span>
+                        </div>
+                      </div>
+                      
+                      <span class="font-weight-bold">Image</span>: <span class="">opensuse/15.4</span> <br />
+                      <span class="font-weight-bold">Repository</span>: <span class="">images</span>
+                    </div>
+                    <div class="card-footer bg-transparent border-0 text-right">
+                      <div class="dropdown">
+                        <button class="btn btn-primary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          Download
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                          <a class="dropdown-item" href="#" data-dismiss="modal" onclick="addCatalogImage('container','opensuse/15.4','images')">Container</a>
+                          <a class="dropdown-item" href="#" data-dismiss="modal" onclick="addCatalogImage('virtual-machine','opensuse/15.4','images')">Virtual Machine</a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!--End openSUSE 15.4 Download-->
+
+                <!--Alpine Linux 3.16 Download-->
+                <div class="col-sm-12 col-md-12 col-lg-6 col-xl-3 mb-4">
+                  <div class="card shadow">
+                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                      <h6 class="m-0 font-weight-bold text-primary">Alpine Linux</h6>
+                      <div class="dropdown no-arrow">
+                        <button class="btn btn-outline-success btn-xs" href="#" onclick="" title="" aria-hidden="true">
+                          COMMUNITY</button>
+                      </div>
+                    </div>
+                    <!-- Card Body -->
+                    <div class="card-body pb-0">
+                      <div class="row">
+                        <div class="col-4">
+                          <img class="mb-2" src="../static/assets/img/operatingsystems/alpine.png" style="width: 65px; height: 65px;"><br>
+                        </div>
+                        <div class="col-8 text-center mt-3">
+                          <span class="h5">3.16</span>
+                        </div>
+                      </div>
+                      
+                      <span class="font-weight-bold">Image</span>: <span class="">alpine/3.16</span> <br />
+                      <span class="font-weight-bold">Repository</span>: <span class="">images</span>
+                    </div>
+                    <div class="card-footer bg-transparent border-0 text-right">
+                      <div class="dropdown">
+                        <button class="btn btn-primary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          Download
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                          <a class="dropdown-item" href="#" data-dismiss="modal" onclick="addCatalogImage('container','alpine/3.16','images')">Container</a>
+                          <a class="dropdown-item" href="#" data-dismiss="modal" onclick="addCatalogImage('virtual-machine','alpine/3.16','images')">Virtual Machine</a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!--End Alpine 3.16 Linux Download-->
+
+                <!--Arch Linux Current Download-->
+                <div class="col-sm-12 col-md-12 col-lg-6 col-xl-3 mb-4">
+                  <div class="card shadow">
+                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                      <h6 class="m-0 font-weight-bold text-primary">Arch Linux</h6>
+                      <div class="dropdown no-arrow">
+                        <button class="btn btn-outline-success btn-xs" href="#" onclick="" title="" aria-hidden="true">
+                          COMMUNITY</button>
+                      </div>
+                    </div>
+                    <!-- Card Body -->
+                    <div class="card-body pb-0">
+                      <div class="row">
+                        <div class="col-4">
+                          <img class="mb-2" src="../static/assets/img/operatingsystems/archlinux.png" style="width: 65px; height: 65px;"><br>
+                        </div>
+                        <div class="col-8 text-center mt-3">
+                          <span class="h5">Current</span>
+                        </div>
+                      </div>
+                      
+                      <span class="font-weight-bold">Image</span>: <span class="">archlinux/current</span> <br />
+                      <span class="font-weight-bold">Repository</span>: <span class="">images</span>
+                    </div>
+                    <div class="card-footer bg-transparent border-0 text-right">
+                      <div class="dropdown">
+                        <button class="btn btn-primary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          Download
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                          <a class="dropdown-item" href="#" data-dismiss="modal" onclick="addCatalogImage('container','archlinux/current','images')">Container</a>
+                          <a class="dropdown-item" href="#" data-dismiss="modal" onclick="addCatalogImage('virtual-machine','archlinux/current','images')">Virtual Machine</a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!--End Arch Linux Download-->
+
+                <!--CentOS 7 Download-->
+                <div class="col-sm-12 col-md-12 col-lg-6 col-xl-3 mb-4">
+                  <div class="card shadow">
+                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                      <h6 class="m-0 font-weight-bold text-primary">Centos</h6>
+                      <div class="dropdown no-arrow">
+                        <button class="btn btn-outline-success btn-xs" href="#" onclick="" title="" aria-hidden="true">
+                          COMMUNITY</button>
+                      </div>
+                    </div>
+                    <!-- Card Body -->
+                    <div class="card-body pb-0">
+                      <div class="row">
+                        <div class="col-4">
+                          <img class="mb-2" src="../static/assets/img/operatingsystems/centos.png" style="width: 65px; height: 65px;"><br>
+                        </div>
+                        <div class="col-8 text-center mt-3">
+                          <span class="h5">7</span>
+                        </div>
+                      </div>
+                      
+                      <span class="font-weight-bold">Image</span>: <span class="">centos/7</span> <br />
+                      <span class="font-weight-bold">Repository</span>: <span class="">images</span>
+                    </div>
+                    <div class="card-footer bg-transparent border-0 text-right">
+                      <div class="dropdown">
+                        <button class="btn btn-primary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          Download
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                          <a class="dropdown-item" href="#" data-dismiss="modal" onclick="addCatalogImage('container','centos/7','images')">Container</a>
+                          <a class="dropdown-item" href="#" data-dismiss="modal" onclick="addCatalogImage('virtual-machine','centos/7','images')">Virtual Machine</a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!--End CentOS 7 Download-->
+
+                <!--CentOS 8 Stream Download-->
+                <div class="col-sm-12 col-md-12 col-lg-6 col-xl-3 mb-4">
+                  <div class="card shadow">
+                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                      <h6 class="m-0 font-weight-bold text-primary">Centos</h6>
+                      <div class="dropdown no-arrow">
+                        <button class="btn btn-outline-success btn-xs" href="#" onclick="" title="" aria-hidden="true">
+                          COMMUNITY</button>
+                      </div>
+                    </div>
+                    <!-- Card Body -->
+                    <div class="card-body pb-0">
+                      <div class="row">
+                        <div class="col-4">
+                          <img class="mb-2" src="../static/assets/img/operatingsystems/centos.png" style="width: 65px; height: 65px;"><br>
+                        </div>
+                        <div class="col-8 text-center mt-3">
+                          <span class="h5">8 Stream</span>
+                        </div>
+                      </div>
+                      
+                      <span class="font-weight-bold">Image</span>: <span class="">centos/8-Stream</span> <br />
+                      <span class="font-weight-bold">Repository</span>: <span class="">images</span>
+                    </div>
+                    <div class="card-footer bg-transparent border-0 text-right">
+                      <div class="dropdown">
+                        <button class="btn btn-primary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          Download
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                          <a class="dropdown-item" href="#" data-dismiss="modal" onclick="addCatalogImage('container','centos/8-Stream','images')">Container</a>
+                          <a class="dropdown-item" href="#" data-dismiss="modal" onclick="addCatalogImage('virtual-machine','centos/8-Stream','images')">Virtual Machine</a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!--End CentOS 8 Stream Download-->
+
+                <!--Kali Current Download-->
+                <div class="col-sm-12 col-md-12 col-lg-6 col-xl-3 mb-4">
+                  <div class="card shadow">
+                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                      <h6 class="m-0 font-weight-bold text-primary">Kali</h6>
+                      <div class="dropdown no-arrow">
+                        <button class="btn btn-outline-success btn-xs" href="#" onclick="" title="" aria-hidden="true">
+                          COMMUNITY</button>
+                      </div>
+                    </div>
+                    <!-- Card Body -->
+                    <div class="card-body pb-0">
+                      <div class="row">
+                        <div class="col-4">
+                          <img class="mb-2" src="../static/assets/img/operatingsystems/kali.png" style="width: 65px; height: 65px;"><br>
+                        </div>
+                        <div class="col-8 text-center mt-3">
+                          <span class="h5">Current</span>
+                        </div>
+                      </div>
+                      
+                      <span class="font-weight-bold">Image</span>: <span class="">kali/current</span> <br />
+                      <span class="font-weight-bold">Repository</span>: <span class="">images</span>
+                    </div>
+                    <div class="card-footer bg-transparent border-0 text-right">
+                      <div class="dropdown">
+                        <button class="btn btn-primary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          Download
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                          <a class="dropdown-item" href="#" data-dismiss="modal" onclick="addCatalogImage('container','kali/current','images')">Container</a>
+                          <!-- <a class="dropdown-item" href="#" data-dismiss="modal" onclick="addCatalogImage('virtual-machine','kali/current','images')">Virtual Machine</a> -->
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!--End Kali Download-->
+
+                <!--OpenSUSE Tumbleweed Download-->
+                <div class="col-sm-12 col-md-12 col-lg-6 col-xl-3 mb-4">
+                  <div class="card shadow">
+                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                      <h6 class="m-0 font-weight-bold text-primary">OpenSUSE</h6>
+                      <div class="dropdown no-arrow">
+                        <button class="btn btn-outline-success btn-xs" href="#" onclick="" title="" aria-hidden="true">
+                          COMMUNITY</button>
+                      </div>
+                    </div>
+                    <!-- Card Body -->
+                    <div class="card-body pb-0">
+                      <div class="row">
+                        <div class="col-4">
+                          <img class="mb-2" src="../static/assets/img/operatingsystems/opensuse.png" style="width: 65px; height: 65px;"><br>
+                        </div>
+                        <div class="col-8 text-center mt-3">
+                          <span class="h5">Tumbleweed</span>
+                        </div>
+                      </div>
+                      
+                      <span class="font-weight-bold">Image</span>: <span class="" style="font-size: .99rem;">opensuse/tumbleweed</span> <br />
+                      <span class="font-weight-bold">Repository</span>: <span class="">images</span>
+                    </div>
+                    <div class="card-footer bg-transparent border-0 text-right">
+                      <div class="dropdown">
+                        <button class="btn btn-primary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          Download
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                          <a class="dropdown-item" href="#" data-dismiss="modal" onclick="addCatalogImage('container','opensuse/tumbleweed','images')">Container</a>
+                          <a class="dropdown-item" href="#" data-dismiss="modal" onclick="addCatalogImage('virtual-machine','opensuse/tumbleweed','images')">Virtual Machine</a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!--End openSUSE Tumbleweed Download-->
+
+                <!--OpenWrt 22.03 Download-->
+                <div class="col-sm-12 col-md-12 col-lg-6 col-xl-3 mb-4">
+                  <div class="card shadow">
+                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                      <h6 class="m-0 font-weight-bold text-primary">OpenWrt</h6>
+                      <div class="dropdown no-arrow">
+                        <button class="btn btn-outline-success btn-xs" href="#" onclick="" title="" aria-hidden="true">
+                          COMMUNITY</button>
+                      </div>
+                    </div>
+                    <!-- Card Body -->
+                    <div class="card-body pb-0">
+                      <div class="row">
+                        <div class="col-4">
+                          <img class="mb-2" src="../static/assets/img/operatingsystems/openwrt.png" style="width: 65px; height: 65px;"><br>
+                        </div>
+                        <div class="col-8 text-center mt-3">
+                          <span class="h5">22.03</span>
+                        </div>
+                      </div>
+                      
+                      <span class="font-weight-bold">Image</span>: <span class="" style="font-size: .99rem;">openwrt/22.03</span> <br />
+                      <span class="font-weight-bold">Repository</span>: <span class="">images</span>
+                    </div>
+                    <div class="card-footer bg-transparent border-0 text-right">
+                      <div class="dropdown">
+                        <button class="btn btn-primary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          Download
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                          <a class="dropdown-item" href="#" data-dismiss="modal" onclick="addCatalogImage('container','openwrt/22.03','images')">Container</a>
+                          <!-- <a class="dropdown-item" href="#" data-dismiss="modal" onclick="addCatalogImage('virtual-machine','openwrt/22.03','images')">Virtual Machine</a> -->
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!--End OpenWrt 22.03 Download-->
+
+                <!--Ubuntu 20.04 Official Download-->
+                <div class="col-sm-12 col-md-12 col-lg-6 col-xl-3 mb-4">
+                  <div class="card shadow">
+                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                      <h6 class="m-0 font-weight-bold text-primary">Ubuntu</h6>
+                      <div class="dropdown no-arrow">
+                        <button class="btn btn-success btn-xs" href="#" onclick="" title="" aria-hidden="true">
+                          OFFICAL</button>
+                      </div>
+                    </div>
+                    <!-- Card Body -->
+                    <div class="card-body pb-0">
+                      <div class="row">
+                        <div class="col-4">
+                          <img class="mb-2" src="../static/assets/img/operatingsystems/ubuntu.png" style="width: 65px; height: 65px;"><br>
+                        </div>
+                        <div class="col-8 text-center mt-3">
+                          <span class="h5">20.04</span>
+                        </div>
+                      </div>
+                      
+                      <span class="font-weight-bold">Image</span>: <span class="">20.04</span> <br />
+                      <span class="font-weight-bold">Repository</span>: <span class="">ubuntu</span>
+                    </div>
+                    <div class="card-footer bg-transparent border-0 text-right">
+                      <div class="dropdown">
+                        <button class="btn btn-primary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          Download
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                          <a class="dropdown-item" href="#" data-dismiss="modal" onclick="addCatalogImage('container','20.04','ubuntu')">Container</a>
+                          <a class="dropdown-item" href="#" data-dismiss="modal" onclick="addCatalogImage('virtual-machine','20.04','ubuntu')">Virtual Machine</a>
+                        </div>
+                      </div> 
+                    </div>
+                  </div>
+                </div>
+                <!--End Ubuntu 20.04 Download-->
+
+                <!--Ubuntu 22.10 Download-->
+                <div class="col-sm-12 col-md-12 col-lg-6 col-xl-3 mb-4">
+                  <div class="card shadow">
+                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                      <h6 class="m-0 font-weight-bold text-primary">Ubuntu</h6>
+                      <div class="dropdown no-arrow">
+                        <button class="btn btn-outline-success btn-xs" href="#" onclick="" title="" aria-hidden="true">
+                          COMMUNITY</button>
+                      </div>
+                    </div>
+                    <!-- Card Body -->
+                    <div class="card-body pb-0">
+                      <div class="row">
+                        <div class="col-4">
+                          <img class="mb-2" src="../static/assets/img/operatingsystems/ubuntu.png" style="width: 65px; height: 65px;"><br>
+                        </div>
+                        <div class="col-8 text-center mt-3">
+                          <span class="h5">22.10</span>
+                        </div>
+                      </div>
+                      
+                      <span class="font-weight-bold">Image</span>: <span class="">ubuntu/kinetic</span> <br />
+                      <span class="font-weight-bold">Repository</span>: <span class="">images</span>
+                    </div>
+                    <div class="card-footer bg-transparent border-0 text-right">
+                      <div class="dropdown">
+                        <button class="btn btn-primary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          Download
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                          <a class="dropdown-item" href="#" data-dismiss="modal" onclick="addCatalogImage('container','ubuntu/kinetic','images')">Container</a>
+                          <a class="dropdown-item" href="#" data-dismiss="modal" onclick="addCatalogImage('virtual-machine','ubuntu/kinetic','images')">Virtual Machine</a>
+                        </div>
+                      </div> 
+                    </div>
+                  </div>
+                </div>
+                <!--End Ubuntu 22.10 Download-->
+
+              </div>
+            </div>
+            <div class="tab-pane fade" id="form" role="tabpanel" aria-labelledby="form-tab">
+              <form id="addForm">
+                <div class="row mt-4">
+                  <label class="col-2 col-form-label text-right">Image/Alias: <span class="text-danger">*</span></label>
+                  <div class="col-8">
+                    <div class="form-group">
+                      <input type="text" class="form-control" required="required" placeholder="" name="image">
+                    </div>
+                  </div>
+                  <div class="col-1">
+                    <i class="far fa-sm fa-question-circle" data-toggle="tooltip" data-html="true" title='(Required) - Enter in the repository specific name. For example, ubuntu/20.04 would be used for the images repository and simply 20.04 would be used for the ubuntu repositories.'></i>
+                  </div>
+    
+                  <label class="col-2 col-form-label text-right">Repository: <span class="text-danger">*</span></label>
+                  <div class="col-8">
+                    <div class="form-group">
+                      <select id="selectRepoInput" class="form-control" name="simplestreams_id">
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-1">
+                    <i class="far fa-sm fa-question-circle" title='(Required) - Select a repository from the configured simplestreams.'></i>
+                  </div>
+    
+                  <label class="col-2 col-form-label text-right">Image Type:</label>
+                  <div class="col-8 text-right">
+                    <div class="form-group">
+                      <select class="form-control" name="image_type">
+                        <option value="container" selected>container</option>
+                        <option value="virtual-machine">virtual-machine</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-1">
+                    <i class="far fa-sm fa-question-circle" title='Select whether to download a container based image or virtual machine. Default: container'></i>
+                  </div>
+                </div>
+              </form>            
+
+              <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                <a class="btn btn-primary" href="#" onclick="addItem()" data-dismiss="modal">Ok</a>
+              </div>
+
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <a href="#" data-toggle="modal" data-target="#trademarkNotices" title="Download Image" aria-hidden="true">Trademark notices</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Modal-->
+  <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Edit Image</h5>
+            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">×</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <label class="col-4 col-form-label" id="imageNameEditInput"></label>
+              <div class="col-12">
+                <div class="form-group text-right">
+                  <pre>
+                    <textarea name="json" class="form-control" id="jsonInput" rows="16" ></textarea>
+                  </pre>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+            <a class="btn btn-primary" href="#" onclick="updateImage()" data-dismiss="modal">Submit</a>
+          </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Trademark Notices Modal-->
+  <div class="modal fade" id="trademarkNotices" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Trademark Notices</h5>
+          <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-12">
+              <div>
+                The LXD Dashboard has made all efforts to keep within trademark usage guidlines when using the logos and names of Linux operating systems. Resources for acceptable use guidlines are provided below. The LXD Dashboard is not affliated with any of the Linux operating systems.
+                <ul>
+                  <li>Alpine is a trademark of Alpine Linux Development Team. Information on Alpine Linux trademark guidelines can be found here <a href="https://alpinelinux.org/" target="_blank">https://alpinelinux.org/</a></li>
+                  <li>Arch Linux is a registered trademark of Aaron Griffin and Judd Vinet, on behalf of Arch Linux. Information on Arch Linux trademark guidelines can be found here <a href="https://wiki.archlinux.org/title/DeveloperWiki:TrademarkPolicy" target="_blank">https://wiki.archlinux.org/title/DeveloperWiki:TrademarkPolicy</a></li>
+                  <li>CentOS is a trademarks of Red Hat, Inc. (“Red Hat”). Information on CentOS Linux trademark guidelines can be found here <a href="https://www.centos.org/legal/trademarks/" target="_blank">https://www.centos.org/legal/trademarks/</a></li>
+                  <li>Debian is a registered trademark owned by Software in the Public Interest, Inc. Information on Debian Linux trademark guidelines can be found here <a href="https://www.debian.org/trademark" target="_blank">https://www.debian.org/trademark</a></li>
+                  <li>Gentoo is a registered trademark of the Gentoo Foundation, Inc. Information on the Gentoo Linux trademark guidelines can be found here <a href="https://www.gentoo.org/inside-gentoo/foundation/name-logo-guidelines.html" target="_blank">https://www.gentoo.org/inside-gentoo/foundation/name-logo-guidelines.html</a></li>
+                  <li>Kali Linux is a registered trademark of Offensive Security. Information on Kali Linux trademark guidelines can be found here <a href="https://www.kali.org/docs/policy/trademark/" target="_blank">https://www.kali.org/docs/policy/trademark/</a></li>
+                  <li>OpenSUSE is a registered trademark of SUSE LLC. Information on the OpenSUSE trademark guidelines can be found here <a href="https://en.opensuse.org/openSUSE:Trademark_guidelines" target="_blank">https://en.opensuse.org/openSUSE:Trademark_guidelines</a></li>
+                  <li>OpenWrt trademark is a registered United States trademark of Software Freedom Conservancy (SFC). Information on OpenWrt trademark guidelines can be found here <a href="https://openwrt.org/trademark" target="blank">https://openwrt.org/trademark</a></li>
+                  <li>Ubuntu is a registered trademark of Canonical Ltd. Information on Ubuntu Linux trademark guidelines can be found here <a href="https://design.ubuntu.com/brand/ubuntu-logo/" target="_blank">https://design.ubuntu.com/brand/ubuntu-logo/</a></li>           
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" type="button" data-dismiss="modal">Dismiss</button>
+        </div>
+      </div>
+    </div>
+  </div>

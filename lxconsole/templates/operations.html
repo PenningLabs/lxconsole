@@ -1,0 +1,214 @@
+{% extends "main.html" %}
+
+{% block header %}
+  <div class="row mb-2">
+    <div class="col-sm-6">
+      <h1>{{ page_title | safe }}</h1>
+    </div>
+    <div class="col-sm-6">
+    </div>
+  </div>
+{% endblock header %}
+
+{% block content %}
+  <div class="col-12">
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title">Operations</h3>
+        <div class="card-tools">
+          <button type="button" class="btn btn-tool" onclick="reloadPageContent()" title="Refresh">
+          <i class="fas fa-sync"></i>
+          </button>
+        </div>
+      </div>
+      <div class="card-body">
+        <table class="table table-hover" id="myDataTable" width="100%" cellspacing="0">
+        </table>
+      </div>
+    </div>
+  </div>
+{% endblock content %}
+
+{% block modal %}
+  {% include 'modals/operations.html' %}
+{% endblock modal %}
+
+{% block script %}
+  <script>
+    var reloadTime = 2000;
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const serverId = urlParams.get('id');
+    const project = urlParams.get('project');
+    applySidebarStyles();
+    applySidebarLinks();
+    populateSidebarLinks();
+    populateNavbarLinks();
+
+    function reloadPageContent() {
+      //Clear the automatic page reload
+      clearTimeout(pageReloadTimeout);
+
+      //Reload the datatables content
+      $('#myDataTable').DataTable().ajax.reload(null, false);
+
+      //Set the automatic page reload
+      pageReloadTimeout = setTimeout(() => { reloadPageContent(); }, reloadTime);
+    }
+
+    function loadPageContent(){
+
+      //Display the current project
+      $("#selectedProject").text(project);
+
+      //Populate the Server dropdown
+      $.getJSON("../api/servers/list_servers?id="+serverId, function (data) {
+        data = data.data
+        for (var index = 0; index < data.length; index++) {
+          if (data[index].name == '')
+            optionText = data[index].addr
+          else
+            optionText = data[index].name
+          if (data[index].id == serverId)
+            $('#serverListNav').append('<option value="' + data[index].id + '" selected="selected">' + optionText + '</option>');
+          else
+            $('#serverListNav').append('<option value="' + data[index].id + '">' + optionText + '</option>');
+        }
+      })
+
+      //Populate the Project dropdown
+      $.getJSON("../api/projects/list_projects?id="+serverId+"&project="+project, function (data) {
+        data = data.metadata
+        for (var index = 0; index < data.length; index++) {
+          optionText = data[index].replace('/1.0/projects/','');
+          if (optionText == project)
+            $('#projectListNav').append('<option value="' + optionText + '" selected="selected">' + optionText + '</option>');
+          else
+            $('#projectListNav').append('<option value="' + optionText + '">' + optionText + '</option>');
+        }
+      })
+
+      // Configure Datatable
+      $('#myDataTable').DataTable({
+        ajax: {
+          url: "../api/operations/list_operations?id="+serverId+"&project=" + project + "&recursion=1",
+          dataType: "json",
+          dataSrc: "metadata.running",
+          contentType: "application/json"
+        },
+        columns: [
+          { title: "ID", data: function (row, type, set) {
+              if (row.hasOwnProperty('id')) {
+                if (row.id)
+                return '<a href="#" onclick=viewItem(\''+row.id+'\')>'+row.id+'</a>'
+              }
+              return '-'
+            },
+          },
+          { title: "Class", data: function (row, type, set) {
+              if (row.hasOwnProperty('class')) {
+                if (row.class)
+                  return row.class
+              }
+              return '-'
+            },
+          },
+          { title: "Description", data: function (row, type, set) {
+              if (row.hasOwnProperty('description')) {
+                if (row.description)
+                  return row.description
+              }
+              return '-'
+            },
+          },
+          { title: "Status", data: function (row, type, set) {
+              if (row.hasOwnProperty('status')) {
+                if (row.status)
+                  return row.status
+              }
+              return '-'
+            },
+          },
+          { title: "Created", data: function (row, type, set) {
+              if (row.hasOwnProperty('created_at')) {
+                if (row.created_at)
+                  return row.created_at
+              }
+              return '-'
+            },
+          },
+          { title: "Cancelable", data: function (row, type, set) {
+              if (row.hasOwnProperty('may_cancel')) {
+                // Boolean field
+                return row.may_cancel
+              }
+              return '-'
+            },
+          },
+
+          { title: "Actions", data: function (row, type, set) {
+              links = ''
+              if (row.hasOwnProperty('id') && row.hasOwnProperty('may_cancel')) {
+                if (row.may_cancel){
+                  links = '<a href="#" onclick=confirmDeleteItem(\''+row.id+'\')><i class="fas fa-trash-alt fa-lg" style="color:#ddd" title="Delete" aria-hidden="true"></i></a>' 
+                }
+              }
+              return links
+            },
+          },
+        ],
+        order: [],
+      });
+
+      //Set reload page content
+      pageReloadTimeout = setTimeout(() => { reloadPageContent(); }, reloadTime);
+
+    }
+
+    function confirmDeleteItem(name){
+      console.log("Info: confirming deletion of operation " + name);
+      if (confirm("Are you sure you want to delete operation " + name + "?") == true) {
+        deleteItem(name);
+      }
+    }
+
+    function deleteItem(name){
+      console.log("Info: deleting operation " + name);
+      $.post("../api/operations/delete_operation?id=" + serverId + "&project=" + project, { id: name }, function (data) {
+        console.log(data);
+        if (data.error_code >= 400){
+          alert(data.error);
+        }
+        //Sync type
+        setTimeout(() => { reloadPageContent(); }, 1000);
+        operationStatusCheck()
+      });
+    }
+
+    function viewItem(name){
+      console.log("Info: loading operation " + name);
+      $.post("../api/operations/load_operation?id=" + serverId + "&project=" + project, { id: name }, function (data) {
+        console.log(data);
+        if (data.error_code >= 400){
+          alert(data.error);
+        }
+        $("#operationNameViewInput").text("Name: " + name);
+        $("#jsonInput").val(JSON.stringify(data.metadata, null, 2));
+        $("#viewModal").modal('show');
+      });
+    }
+
+    $(document).ready(function(){
+
+      //If id or project variables are missing redirect to servers page
+      if (!serverId || !project) {
+        window.location.href = 'servers';
+      }
+      else {
+        loadPageContent()
+      }
+
+    });
+
+  </script>
+{% endblock script %}

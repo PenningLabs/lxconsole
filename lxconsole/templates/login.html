@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='assets/img/logo-light.svg') }}">
+    <title>lxconsole</title>
+  
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet" href="../static/css/fonts/source_sans_pro.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="../static/plugins/fontawesome-free/css/all.min.css">
+    <!-- DataTables -->
+    <link rel="stylesheet" href="../static/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="../static/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+    <link rel="stylesheet" href="../static/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="../static/dist/css/adminlte.min.css">
+    <!-- LXD Dashboard style -->
+    <link rel="stylesheet" href="../static/css/styles.css">
+
+    <style>
+        body {
+          background-image: url('../static/assets/img/logo-bg.svg') !important;
+          background-position: center center !important;
+          background-size: 100% auto !important;
+          background-repeat: no-repeat;
+          background-attachment: fixed;
+          background-color: #262626;
+        }
+      </style> 
+
+  </head>
+
+
+<body>
+<script>0</script>
+
+  <div class="container">
+
+    <!-- Outer Row -->
+    <div class="row justify-content-center">
+
+      <div class="col-xl-10 col-lg-12 col-md-9">
+
+        <div class="card o-hidden border-0 my-5">
+          <div class="card-body p-0">
+            <!-- Nested Row within Card Body -->
+            <div class="row">
+              <div class="col-lg-5 d-none d-lg-block border-right">
+
+                <div class="pt-5">
+                  <div class="text-center">
+                    <img src="../static/assets/img/logo-light.svg" width="50px" style="vertical-align: bottom !important;">
+                    <span class="h1"><strong>lxconsole</strong></span>
+                  </div>
+                </div>
+
+                <div class="pt-5">
+                  <div class="pl-4">
+                    <p class="h5">An open source management console for LXD servers and clusters.</p>
+                    <p class="h5 pt-3">For instructions on using lxconsole, visit <a href="https://lxconsole.com" target="_blank">https://lxconsole.com</a>.</p>
+                  </div>
+                </div>
+                  
+              </div>
+
+              <div class="col-lg-7 align-self-center">
+                <div class="p-5">
+                  {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                      {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">
+                          {{ message }}
+                        </div>
+                      {% endfor %}
+                    {% endif %}
+                  {% endwith %}
+
+                  {% block content %}
+                    <form method="POST" action="">
+                      {{ form.hidden_tag() }}
+                      <fieldset class="form-group">
+                        <legend class="border-bottom mb-4">Log In</legend>
+                        <div class="form-group">
+                          {{ form.username.label(class="form-control-label") }}
+                          {% if form.username.errors %}
+                            {{ form.username(class="form-control form-control-lg is-invalid") }}
+                            <div class="invalid-feedback">
+                              {% for error in form.username.errors %}
+                                <span>{{ error }}</span>
+                              {% endfor %}
+                            </div>
+                          {% else %}
+                            {{ form.username(class="form-control form-control-lg") }}
+                          {% endif %}
+                        </div>
+                        <div class="form-group">
+                          {{ form.password.label(class="form-control-label") }}
+                          {% if form.password.errors %}
+                            {{ form.password(class="form-control form-control-lg is-invalid") }}
+                            <div class="invalid-feedback">
+                              {% for error in form.password.errors %}
+                                <span>{{ error }}</span>
+                              {% endfor %}
+                            </div>
+                          {% else %}
+                            {{ form.password(class="form-control form-control-lg") }}
+                          {% endif %}
+                        </div>
+                        <div class="form-check">
+                          {{ form.remember(class="form-check-input") }}
+                          {{ form.remember.label(class="form-check-label") }}
+                        </div>
+                      </fieldset>
+                      <div class="form-group">
+                        {{ form.submit(class="btn btn-outline-primary") }}
+                      </div>
+                    </form>
+                  {% endblock content %}
+                
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+    <!-- jQuery -->
+    <script src="../static/plugins/jquery/jquery.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+
+
+    <!-- Bootstrap 4 -->
+    <script src="../static/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- DataTables  & Plugins -->
+    <script src="../static/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="../static/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+    <script src="../static/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+    <script src="../static/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+    <script src="../static/plugins/jquery-knob/jquery.knob.min.js"></script>
+    <script src="../static/js/serializejson.js"></script>
+    
+    <!-- AdminLTE App -->
+    <script src="../static/dist/js/adminlte.min.js"></script>
+
+    <!-- Page specific script -->
+    <script src="../static/js/sidebar.js"></script>
+
+</body>
+
+<script>
+  
+  $(document).ready(function(){
+
+  });
+
+</script>
+
+</html>
+
+
+
+
+
+
+
+

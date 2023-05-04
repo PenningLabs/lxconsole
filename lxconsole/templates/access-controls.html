@@ -1,0 +1,226 @@
+{% extends "main.html" %}
+
+{% block header %}
+  <div class="row mb-2">
+    <div class="col-sm-6">
+      <h1>{{ page_title | safe }}</h1>
+    </div>
+    <div class="col-sm-6">
+      <a class="btn btn-outline-primary float-sm-right mr-4" href="#" data-toggle="modal" data-target="#addModal" title="Add Access Control" aria-hidden="true">
+        <i class="fas fa-plus fa-sm fa-fw"></i> Access Control
+      </a>
+    </div>
+  </div>
+{% endblock header %}
+
+{% block content %}
+  <div class="col-12">
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title">Access Controls</h3>
+        <div class="card-tools">
+          <button type="button" class="btn btn-tool" onclick="reloadPageContent()" title="Refresh">
+          <i class="fas fa-sync"></i>
+          </button>
+        </div>
+      </div>
+      <div class="card-body">
+        <table class="table table-hover" id="myDataTable" width="100%" cellspacing="0">
+        </table>
+      </div>
+    </div>
+  </div>
+{% endblock content %}
+
+{% block modal %}
+  {% include 'modals/access-controls.html' %}
+{% endblock modal %}
+
+{% block script %}
+  <script>
+    var reloadTime = 10000;
+
+    function reloadPageContent() {
+      //Clear the automatic page reload
+      clearTimeout(pageReloadTimeout);
+
+      //Reload the datatables content
+      $('#myDataTable').DataTable().ajax.reload(null, false);
+
+      //Set the automatic page reload
+      pageReloadTimeout = setTimeout(() => { reloadPageContent(); }, reloadTime);
+    }
+
+    function loadPageContent(){
+      
+      // Configure Datatable
+      $('#myDataTable').DataTable({
+        ajax: {
+          url: "../api/access-controls/list_access_controls",
+          dataType: "json",
+          dataSrc: "data",
+          contentType: "application/json"
+        },
+        columns: [
+        { title: "Id", data: function (row, type, set) {
+              if (row.hasOwnProperty('id')) {
+                if (row.id)
+                  return row.id
+              }
+              return '-'
+            },
+          },
+          { title: "Group", data: function (row, type, set) {
+              if (row.hasOwnProperty('group_name')) {
+                if (row.group_name)
+                  return row.group_name
+              }
+              return '-'
+            },
+          },
+          { title: "Role", data: function (row, type, set) {
+              if (row.hasOwnProperty('role_name')) {
+                if (row.role_name)
+                  return row.role_name
+              }
+              return '-'
+            },
+          },
+          { title: "Scope", data: function (row, type, set) {
+              if (row.hasOwnProperty('scope')) {
+                if (row.scope)
+                  return row.scope
+              }
+              return '-'
+            },
+          },
+          { title: "Description", data: function (row, type, set) {
+              if (row.hasOwnProperty('description')) {
+                if (row.description)
+                  return row.description
+              }
+              return '-'
+            },
+          },
+          // { title: "Server", data: function (row, type, set) {
+          //     if (row.hasOwnProperty('server_addr')) {
+          //       if (row.server_addr)
+          //         return row.server_addr
+          //     }
+          //     return '-'
+          //   },
+          // },
+          { title: "Actions", data: function (row, type, set) {
+              links = ''
+              if (row.hasOwnProperty('id')) {
+                links = '<a href="#" onclick=editAccessControl(\''+row.id+'\')> <i class="fas fa-edit fa-lg" style="color:#ddd" title="Edit" aria-hidden="true"></i> </a>' +
+                '&nbsp' +
+                '<a href="#" onclick=deleteAccessContol(\''+row.id+'\')> <i class="fas fa-trash-alt fa-lg" style="color:#ddd" title="Delete" aria-hidden="true"></i> </a>'
+              }
+              return links
+            },
+          },
+        ],
+        order: [],
+      });
+
+      //Set reload page content
+      pageReloadTimeout = setTimeout(() => { reloadPageContent(); }, reloadTime);
+
+      //Populate the Group dropdown in the modal
+      $.getJSON("../api/groups/list_groups", function (data) {
+        data = data.data
+        for (var index = 0; index < data.length; index++) {
+          $('#groupInput').append('<option value="' + data[index].id + '">' + data[index].name + '</option>');
+          $('#groupEditInput').append('<option value="' + data[index].id + '">' + data[index].name + '</option>');
+        }
+      })
+
+      // //Populate the Server dropdown in the modal
+      // $.getJSON("../api/servers/list_servers", function (data) {
+      //   data = data.data
+      //   for (var index = 0; index < data.length; index++) {
+      //     $('#serverInput').append('<option value="' + data[index].id + '">' + data[index].name + '</option>');
+      //   }
+      // })
+
+      //Populate the Role dropdown in the modal
+      $.getJSON("../api/roles/list_roles", function (data) {
+        data = data.data
+        for (var index = 0; index < data.length; index++) {
+          $('#roleInput').append('<option value="' + data[index].id + '">' + data[index].name + '</option>');
+          $('#roleEditInput').append('<option value="' + data[index].id + '">' + data[index].name + '</option>');
+        }
+      })
+
+    }
+
+    function loadInstructionsModal(){
+      $("#instructionsModal").modal('show');
+    }
+
+    // Add access control
+    function addAccessControl(){
+      console.log("Info: adding new group");
+      data = $('#addForm').serializeJSON();
+      $.post("../api/access-controls/add_access_control", data, function (data) {
+        console.log(data);
+        if (data.error_code >= 400){
+          alert(data.error);
+        }
+        setTimeout(() => { reloadPageContent(); }, 1000);
+      });
+    }
+
+    // Edit access control
+    function editAccessControl(id){
+      console.log("Info: loading edit access control");
+      $.get("../api/access-controls/get_access_control", { 
+        id: id,
+      }, function (data) {
+        data = data.metadata
+        console.log(data)
+        $('input[id=idEditInput]').val(data.id);
+        $('input[id=scopeEditInput]').val(data.scope);
+        $('input[id=descriptionEditInput]').val(data.description);
+        $('select[id=groupEditInput]').val(data.group_id);
+        $('select[id=roleEditInput]').val(data.role_id);
+        $("#editModal").modal('show');
+      });
+    }
+
+    // Update access control
+    function updateAccessControl(){
+      console.log("Info: adding new access control");
+      data = $('#editForm').serializeJSON();
+      $.post("../api/access-controls/update_access_control", data, function (data) {
+        console.log(data);
+        if (data.error_code >= 400){
+          alert(data.error);
+        }
+        //Aync type
+        setTimeout(() => { reloadPageContent(); }, 2000);
+      });
+    }
+
+    // Delete access control
+    function deleteAccessContol(id){
+      console.log("Info: confirming removal of access control " + id);
+      if (confirm("Are you sure you want to remove access control " + id + "?") == true) {
+        console.log("Info: deleting access control " + id);
+        $.post("../api/access-controls/delete_access_control", {id: id}, function (data) {
+          setTimeout(() => { reloadPageContent(); }, 1000);
+        });
+      }
+    }
+
+
+    $(document).ready(function(){
+
+      loadPageContent()
+      
+    });
+
+  </script>
+{% endblock script %}
+

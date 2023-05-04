@@ -1,0 +1,46 @@
+<!-- Add Modal-->
+<div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Add Simplestreams Host</h5>
+        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        
+        <form id="addForm">
+          <div class="row">
+            <label class="col-3 col-form-label text-right">URL: <span class="text-danger">*</span></label>
+            <div class="col-7">
+              <div class="form-group">
+                <input type="text" class="form-control" required="required" placeholder="" name="url">
+              </div>
+            </div>
+            <div class="col-1">
+              <i class="far fa-sm fa-question-circle" title='(Required) - Enter in the URL of the simplestreams server. For example, https://images.linuxcontainers.org'></i>
+            </div>
+          </div>
+  
+          <div class="row">
+            <label class="col-3 col-form-label text-right">Alias: </label>
+            <div class="col-7">
+              <div class="form-group">
+                <input type="text" class="form-control" placeholder="" name="alias">
+              </div>
+            </div>
+            <div class="col-1">
+              <i class="far fa-sm fa-question-circle" title='Enter in an alias that will be used to select the simplestreams location when downloading an image.'></i>
+            </div>
+          </div>
+        </form>
+
+      </div> <!-- End Modal Body-->
+      <div class="modal-footer">
+        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+        <a class="btn btn-primary" href="#" onclick="addItem()" data-dismiss="modal">Submit</a>
+      </div>
+    </div>
+  </div>
+</div>

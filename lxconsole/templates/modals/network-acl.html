@@ -1,0 +1,189 @@
+<!-- Add Modal-->
+<div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Add Network ACL Rule</h5>
+          <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item">
+              <a class="nav-link active" id="form-tab" data-toggle="tab" href="#form" role="tab" aria-controls="form" aria-selected="true">Form</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="json-tab" data-toggle="tab" href="#json" role="tab" aria-controls="json" aria-selected="false">JSON</a>
+            </li>
+          </ul>
+          <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="form" role="tabpanel" aria-labelledby="form-tab">
+              <br />
+              <form id="addForm">
+                <div class="row">
+                  <label class="col-3 col-form-label text-right">Type: <span class="text-danger">*</span></label>
+                  <div class="col-7">
+                    <div class="form-group">
+                      <select onchange="" class="form-control" name="type">
+                        <option value="ingress">ingress</option>
+                        <option value="egress">egress</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-1">
+                    <i class="far fa-sm fa-question-circle" title='(Required) - Select the type of ACL.'></i>
+                  </div>
+                </div>
+                <div class="row">
+                  <label class="col-3 col-form-label text-right">Action: <span class="text-danger">*</span></label>
+                  <div class="col-7">
+                    <div class="form-group">
+                      <select onchange="" class="form-control" name="action">
+                        <option value="allow">allow</option>
+                        <option value="reject">reject</option>
+                        <option value="drop">drop</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-1">
+                    <i class="far fa-sm fa-question-circle" title='(Required) - Select the action to be applied to this rule.'></i>
+                  </div>
+                </div>
+                <div class="row">
+                  <label class="col-3 col-form-label text-right">State: <span class="text-danger">*</span></label>
+                  <div class="col-7">
+                    <div class="form-group">
+                      <select onchange="" class="form-control" name="state">
+                        <option value="enabled">enabled</option>
+                        <option value="disabled">disabled</option>
+                        <option value="logged">logged</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-1">
+                    <i class="far fa-sm fa-question-circle" title='(Required) - Select the state to be applied to this rule.'></i>
+                  </div>
+                </div>
+                <div class="row">
+                  <label class="col-3 col-form-label text-right">Description: </label>
+                  <div class="col-7">
+                    <div class="form-group">
+                      <input type="text" class="form-control" placeholder="" name="description">
+                    </div>
+                  </div>
+                  <div class="col-1">
+                    <i class="far fa-sm fa-question-circle" title='Enter in a description for this rule.'></i>
+                  </div>
+                </div>
+                <div class="row">
+                  <label class="col-3 col-form-label text-right">Source: </label>
+                  <div class="col-7">
+                    <div class="form-group">
+                      <input type="text" class="form-control" placeholder="" name="source">
+                    </div>
+                  </div>
+                  <div class="col-1">
+                    <i class="far fa-sm fa-question-circle" title='Enter in a comma separated list of CIDR address, IP ranges, source ACL names, @external, or @internal. Leaving this unset will default to any.'></i>
+                  </div>
+                </div> 
+                <div class="row">
+                  <label class="col-3 col-form-label text-right">Destination: </label>
+                  <div class="col-7">
+                    <div class="form-group">
+                      <input type="text" class="form-control" placeholder="" name="destination">
+                    </div>
+                  </div>
+                  <div class="col-1">
+                    <i class="far fa-sm fa-question-circle" title='Enter in a comma separated list of CIDR address, IP ranges, source ACL names, @external, or @internal. Leaving this unset will default to any.'></i>
+                  </div>
+                </div>
+                <div class="row">
+                  <label class="col-3 col-form-label text-right">Protocol: </label>
+                  <div class="col-7">
+                    <div class="form-group">
+                      <select onchange="" class="form-control" name="protocol">
+                        <option value="">(not set)</option>
+                        <option value="icmp4">icmp4</option>
+                        <option value="icmp6">icmp6</option>
+                        <option value="tcp">tcp</option>
+                        <option value="udp">udp</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-1">
+                    <i class="far fa-sm fa-question-circle" title='Select the traffic protocl for this rule. Leaving this unset will default to any.'></i>
+                  </div>
+                </div>
+                <div class="row">
+                  <label class="col-3 col-form-label text-right">Source Port: </label>
+                  <div class="col-7">
+                    <div class="form-group">
+                      <input type="text" class="form-control" placeholder="" name="source_port">
+                    </div>
+                  </div>
+                  <div class="col-1">
+                    <i class="far fa-sm fa-question-circle" title='Used with TCP or UDP rules. Enter in a comma seperated list of ports or port ranges. Leaving this unset will default to any.'></i>
+                  </div>
+                </div>
+                <div class="row">
+                  <label class="col-3 col-form-label text-right">Destination Port: </label>
+                  <div class="col-7">
+                    <div class="form-group">
+                      <input type="text" class="form-control" placeholder="" name="destination_port">
+                    </div>
+                  </div>
+                  <div class="col-1">
+                    <i class="far fa-sm fa-question-circle" title='Used with TCP or UDP rules. Enter in a comma seperated list of ports or port ranges. Leaving this unset will default to any.'></i>
+                  </div>
+                </div>
+                <div class="row">
+                  <label class="col-3 col-form-label text-right">ICMP Type: </label>
+                  <div class="col-7">
+                    <div class="form-group">
+                      <input type="text" class="form-control" placeholder="" name="icmp_type">
+                    </div>
+                  </div>
+                  <div class="col-1">
+                    <i class="far fa-sm fa-question-circle" title='Used with ICMP rules. Enter in an ICMP type number. Leaving this unset will default to any.'></i>
+                  </div>
+                </div>
+                <div class="row">
+                  <label class="col-3 col-form-label text-right">ICMP Code: </label>
+                  <div class="col-7">
+                    <div class="form-group">
+                      <input type="text" class="form-control" placeholder="" name="icmp_code">
+                    </div>
+                  </div>
+                  <div class="col-1">
+                    <i class="far fa-sm fa-question-circle" title='Used with ICMP rules. Enter in an ICMP code number. Leaving this unset will default to any.'></i>
+                  </div>
+                </div>
+              </form>
+              <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                <a class="btn btn-primary" href="#" onclick="addItem()" data-dismiss="modal">Submit</a>
+              </div>
+            </div>
+            <div class="tab-pane fade" id="json" role="tabpanel" aria-labelledby="json-tab">
+              <br />
+              <div class="row">
+                <div class="col-12">
+                  <div class="form-group text-right">
+                    <pre>
+                      <textarea name="json" class="form-control" id="jsonCreateInput" rows="16" placeholder="Enter JSON data"></textarea>
+                    </pre>
+                  </div>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                <a class="btn btn-primary" href="#" onclick="createItemUsingJSON()" data-dismiss="modal">Submit</a>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+  </div>
+</div>
+

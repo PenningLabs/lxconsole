@@ -1,0 +1,280 @@
+{% extends "main.html" %}
+
+{% block header %}
+  <div class="row mb-2">
+    <div class="col-sm-6">
+      <h1>{{ page_title | safe }}</h1>
+    </div>
+    <div class="col-sm-6">
+      <a class="btn btn-outline-primary float-sm-right mr-4" href="#" data-toggle="modal" data-target="#addModal" title="Add Storage Volume" aria-hidden="true">
+        <i class="fas fa-plus fa-sm fa-fw"></i> Storage Volume
+      </a>
+    </div>
+  </div>
+{% endblock header %}
+
+{% block content %}
+  <div class="col-12">
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title">Storage Volumes</h3>
+        <div class="card-tools">
+          <button type="button" class="btn btn-tool" onclick="reloadPageContent()" title="Refresh">
+          <i class="fas fa-sync"></i>
+          </button>
+        </div>
+      </div>
+      <div class="card-body">
+        <table class="table table-hover" id="myDataTable" width="100%" cellspacing="0">
+        </table>
+      </div>
+    </div>
+  </div>
+{% endblock content %}
+
+{% block modal %}
+  {% include 'modals/storage-volumes.html' %}
+{% endblock modal %}
+
+{% block script %}
+  <script>
+    var reloadTime = 10000;
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const serverId = urlParams.get('id');
+    const project = urlParams.get('project');
+    const pool = urlParams.get('pool');
+    var editedStorageVolume = ''
+    applySidebarStyles();
+    applySidebarLinks();
+    populateSidebarLinks();
+    populateNavbarLinks();
+
+    function reloadPageContent() {
+      //Clear the automatic page reload
+      clearTimeout(pageReloadTimeout);
+
+      //Reload the datatables content
+      $('#myDataTable').DataTable().ajax.reload(null, false);
+
+      //Set the automatic page reload
+      pageReloadTimeout = setTimeout(() => { reloadPageContent(); }, reloadTime);
+    }
+
+    function loadPageContent(){
+
+      //Display the current project
+      $("#selectedProject").text(project);
+
+      //Populate the Server dropdown
+      $.getJSON("../api/servers/list_servers?id="+serverId, function (data) {
+        data = data.data
+        for (var index = 0; index < data.length; index++) {
+          if (data[index].name == '')
+            optionText = data[index].addr
+          else
+            optionText = data[index].name
+          if (data[index].id == serverId)
+            $('#serverListNav').append('<option value="' + data[index].id + '" selected="selected">' + optionText + '</option>');
+          else
+            $('#serverListNav').append('<option value="' + data[index].id + '">' + optionText + '</option>');
+        }
+      })
+
+      //Populate the Project dropdown
+      $.getJSON("../api/projects/list_projects?id="+serverId+"&project="+project, function (data) {
+        data = data.metadata
+        for (var index = 0; index < data.length; index++) {
+          optionText = data[index].replace('/1.0/projects/','');
+          if (optionText == project)
+            $('#projectListNav').append('<option value="' + optionText + '" selected="selected">' + optionText + '</option>');
+          else
+            $('#projectListNav').append('<option value="' + optionText + '">' + optionText + '</option>');
+        }
+      })
+
+      // Configure Datatable
+      $('#myDataTable').DataTable({
+        ajax: {
+          url: "../api/storage-volumes/list_storage_volumes?id="+serverId+"&project=" + project + "&recursion=1" + "&pool=" + pool,
+          dataType: "json",
+          dataSrc: "metadata",
+          contentType: "application/json"
+        },
+        columns: [
+          { title: "Name", data: function (row, type, set) {
+              if (row.hasOwnProperty('name')) {
+                if (row.name){
+                  if (row.name.length > 27) {
+                    return row.name.substring(0,23) + "...";
+                  }
+                  return row.name
+                }
+              }
+              return '-'
+            },
+          },
+          { title: "Type", data: function (row, type, set) {
+              if (row.hasOwnProperty('type')) {
+                if (row.type)
+                  return row.type
+              }
+              return '-'
+            },
+          },
+          { title: "Location", data: function (row, type, set) {
+              if (row.hasOwnProperty('location')) {
+                if (row.location)
+                  return row.location
+              }
+              return '-'
+            },
+          },
+          { title: "Content Type", data: function (row, type, set) {
+              if (row.hasOwnProperty('content_type')) {
+                if (row.content_type)
+                  return row.content_type
+              }
+              return '-'
+            },
+          },
+          { title: "Used by", data: function (row, type, set) {
+              if (row.hasOwnProperty('used_by')) {
+                if (row.used_by){
+                  if (Object.keys(row.used_by).length > 0){
+                    arr = []
+                    row.used_by.forEach(element => {
+                      item = element.replace('/1.0/instances/', '')
+                      item = item.replace('/1.0/containers/', '')
+                      item = item.replace('/1.0/virtual-machines/', '')
+                      item = item.replace('/1.0/images/', '')
+                      if (item.length > 24) {
+                        arr.push(item.substring(0,23) + "...")
+                      }
+                      else {
+                        arr.push(item)
+                      }
+                    });
+                    return arr.join(", ")
+                  }
+                }
+              }
+              return '-'
+            },
+          },
+          { title: "Actions", data: function (row, type, set) {
+              links = ''
+              if (row.hasOwnProperty('type') && row.hasOwnProperty('name')) {
+                if (row.type == 'custom') {
+                  links = '<a href="#" onclick=editStorageVolume(\''+row.type+'/'+row.name+'\')><i class="fas fa-edit fa-lg" style="color:#ddd" title="Edit" aria-hidden="true"></i></a>' +
+                    '&nbsp' + '&nbsp' +
+                    '<a href="#" onclick=confirmDeleteStorageVolume(\''+row.type+'/'+row.name+'\')><i class="fas fa-trash-alt fa-lg" style="color:#ddd" title="Delete" aria-hidden="true"></i></a>'
+                }
+              }
+              return links
+            },
+          },
+        ],
+        order: [],
+      });
+
+      //Set reload page content
+      pageReloadTimeout = setTimeout(() => { reloadPageContent(); }, reloadTime);
+
+    }
+
+    function addItem(){
+      console.log("Info: adding new storage volume");
+      data = $('#addForm').serializeJSON();
+      $.post("../api/storage-volumes/add_storage_volume?id="+serverId+"&project="+project+"&pool="+pool, data, function (data) {
+        console.log(data)
+        if (data.error_code >= 400){
+          alert(data.error);
+        }
+        //Sync type
+        setTimeout(() => { reloadPageContent(); }, 1000);
+        operationStatusCheck()
+      });
+    }
+
+    function confirmDeleteStorageVolume(name){
+      console.log("Info: confirming deletion of storage volume " + name);
+      if (confirm("Are you sure you want to delete storage volume " + name + "?") == true) {
+        deleteStorageVolume(name);
+      }
+    }
+
+    function createStorageVolumeUsingJSON(){
+      var json = $("#jsonCreateInput").val();
+      console.log("Info: adding new storage volume");
+      $.post("../api/storage-volumes/add_storage_volume?id="+serverId+"&project="+project+"&pool="+pool, { json: json },  function (data) {
+        console.log(data);
+        if (data.error_code >= 400){
+          alert(data.error);
+        }
+        //Sync type
+        setTimeout(() => { reloadPageContent(); }, 1000);
+        operationStatusCheck()
+      });
+    }
+
+    function deleteStorageVolume(name){
+      console.log("Info: deleting storage volume " + name);
+      $.post("../api/storage-volumes/delete_storage_volume?id="+encodeURI(serverId)+"&project="+encodeURI(project)+"&pool="+pool, { name: name }, function (data) {
+        console.log(data);
+        if (data.error_code >= 400){
+          alert(data.error);
+        }
+        //Sync type
+        setTimeout(() => { reloadPageContent(); }, 1000);
+        operationStatusCheck()
+      });
+    }
+
+    function editStorageVolume(name){
+      editedStorageVolume = name
+      console.log("Info: loading storage volume " + name);
+      $.post("../api/storage-volumes/load_storage_volume?id="+encodeURI(serverId)+"&project="+encodeURI(project)+"&pool="+pool, { name: name }, function (data) {
+        console.log(data);
+        if (data.error_code >= 400){
+          alert(data.error);
+        }
+        $("#storageVolumeNameEditInput").text("Name: " + name);
+        $("#jsonInput").val(JSON.stringify(data.metadata, null, 2));
+        $("#editModal").modal('show');
+      });
+    }
+
+    function updateStorageVolume(){
+      name = editedStorageVolume
+      var updatedJSON = $("#jsonInput").val();
+      console.log("Info: updating storage volume");
+      $.post("../api/storage-volumes/update_storage_volume?id="+encodeURI(serverId)+"&project="+encodeURI(project)+"&pool="+pool+"&name="+encodeURI(name), { json: updatedJSON },  function (data) {
+        console.log(data);
+        if (data.error_code >= 400){
+          alert(data.error);
+        }
+        //Sync type
+        setTimeout(() => { reloadPageContent(); }, 1000);
+        operationStatusCheck()
+      });
+    }
+
+    $(document).ready(function(){
+
+      //If id or project variables are missing redirect to servers page
+      if (!serverId || !project) {
+        window.location.href = 'servers';
+      }
+      else if (!pool) {
+        window.location.href = '../storage-pools?id=' + serverId + '&project=' + project
+      }
+      else {
+        loadPageContent()
+        operationStatusCheck()
+      }
+      
+    });
+
+  </script>
+{% endblock script %}

@@ -1,0 +1,288 @@
+<!-- Add Modal-->
+<div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Create Storage Volume</h5>
+          <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item">
+              <a class="nav-link active" id="form-tab" data-toggle="tab" href="#form" role="tab" aria-controls="form" aria-selected="true">Form</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="json-tab" data-toggle="tab" href="#json" role="tab" aria-controls="json" aria-selected="false">JSON</a>
+            </li>
+          </ul>
+          <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="form" role="tabpanel" aria-labelledby="form-tab">
+              <form id="addForm">
+                <br />
+                <div class="row">
+                  <label class="col-3 col-form-label text-right">Name: <span class="text-danger">*</span></label>
+                  <div class="col-7">
+                    <div class="form-group">
+                      <input type="text" class="form-control" placeholder="" name="name">
+                    </div>
+                  </div>
+                  <div class="col-1">
+                    <i class="far fa-sm fa-question-circle" title='(Required) - Enter in the name of the storage volume.'></i>
+                  </div>
+                </div>
+                <div class="row">
+                  <label class="col-3 col-form-label text-right">Description: </label>
+                  <div class="col-7">
+                    <div class="form-group">
+                      <input type="text" class="form-control" placeholder="" name="description">
+                    </div>
+                  </div>
+                  <div class="col-1">
+                    <i class="far fa-sm fa-question-circle" title='Enter in a description for the storage volume.'></i>
+                  </div>
+                </div>
+                <div class="row">
+                  <label class="col-3 col-form-label text-right">Type: <span class="text-danger">*</span></label>
+                  <div class="col-7">
+                    <div class="form-group">
+                      <select id="storageVolumeContentTypeInput" class="form-control" name="type">
+                        <option value="custom" selected>custom</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-1">
+                    <i class="far fa-sm fa-question-circle" title='(Required) - Select the type.'></i>
+                  </div>
+                </div>
+                <div class="row">
+                  <label class="col-3 col-form-label text-right">Content Type: <span class="text-danger">*</span></label>
+                  <div class="col-7">
+                    <div class="form-group">
+                      <select id="storageVolumeContentTypeInput" class="form-control" name="content_type">
+                        <option value="block" selected>block</option>
+                        <option value="filesystem">filesystem</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-1">
+                    <i class="far fa-sm fa-question-circle" title='(Required) - Select the content type.'></i>
+                  </div>
+                </div>
+                <div class="row">
+                  <label class="col-3 col-form-label text-right">Size: </label>
+                  <div class="col-7">
+                    <div class="form-group">
+                      <input type="text" class="form-control" value="" name="size">
+                    </div>
+                  </div>
+                  <div class="col-1">
+                    <i class="far fa-sm fa-question-circle" title='Enter in the size for the storage volume. Include a suffix for units other than bytes.'></i>
+                  </div>
+                </div>
+                <hr>
+                <div id="accordionConfigurationProperties">
+                  <h2>
+                    <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#configurationProperties" aria-expanded="false" aria-controls="configurationProperties">
+                      Configuration Properties
+                    </button>
+                  </h2> 
+                  <div id="configurationProperties" class="collapse" aria-labelledby="configurationProperties">
+                    <div class="row" id="storageVolumeBlockFilesystemRow">
+                      <label class="col-4 col-form-label text-right">block.filesystem: </label>
+                      <div class="col-6">
+                        <div class="form-group">
+                          <input type="text" class="form-control" placeholder="" name="block.filesystem">
+                        </div>
+                      </div>
+                      <div class="col-1">
+                        <i class="far fa-sm fa-question-circle" title='Enter in the filesystem of the storage volume. Used in LVM based storage pools.'></i>
+                      </div>
+                    </div>
+                    <div class="row" id="storageVolumeBlockMountOptionsRow">
+                      <label class="col-4 col-form-label text-right">block.mount_options: </label>
+                      <div class="col-6">
+                        <div class="form-group">
+                          <input type="text" class="form-control" placeholder="" name="block.mount_options">
+                        </div>
+                      </div>
+                      <div class="col-1">
+                        <i class="far fa-sm fa-question-circle" title='Enter in mount options for the block devices. Used in LVM based storage pools.'></i>
+                      </div>
+                    </div>
+                    <div class="row" id="storageVolumeSecurityShiftedRow">
+                      <label class="col-4 col-form-label text-right">security.shifted: </label>
+                      <div class="col-6">
+                        <div class="form-group">
+                          <select onchange="" class="form-control" name="security.shifted">
+                            <option value="">(not set)</option>
+                            <option value="true">true</option>
+                            <option value="false">false</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-1">
+                        <i class="far fa-sm fa-question-circle" title='Select whether or not to enable id shifting overlay. Default: false.'></i>
+                      </div>
+                    </div>
+                    <div class="row" id="storageVolumeSecurityUnmappedRow">
+                      <label class="col-4 col-form-label text-right">security.unmapped: </label>
+                      <div class="col-6">
+                        <div class="form-group">
+                          <select onchange="" class="form-control" name="security.unmapped">
+                            <option value="">(not set)</option>
+                            <option value="true">true</option>
+                            <option value="false">false</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-1">
+                        <i class="far fa-sm fa-question-circle" title='Select whether or not to disable id mapping. Default: false.'></i>
+                      </div>
+                    </div>
+                    <div class="row" id="storageVolumeLvmStripesRow">
+                      <label class="col-4 col-form-label text-right">lvm.stripes: </label>
+                      <div class="col-6">
+                        <div class="form-group">
+                          <input type="text" class="form-control" placeholder="" name="lvm.stripes">
+                        </div>
+                      </div>
+                      <div class="col-1">
+                        <i class="far fa-sm fa-question-circle" title='Enter in the number of stripes to use for the volume.'></i>
+                      </div>
+                    </div>
+                    <div class="row" id="storageVolumeLvmStripesSizeRow">
+                      <label class="col-4 col-form-label text-right">lvm.stripes.size: </label>
+                      <div class="col-6">
+                        <div class="form-group">
+                          <input type="text" class="form-control" placeholder="" name="lvm.stripes.size">
+                        </div>
+                      </div>
+                      <div class="col-1">
+                        <i class="far fa-sm fa-question-circle" title='Enter in the size of stripes to use. Be sure to use at least 4096 bytes. Value must be a multiple of 512.'></i>
+                      </div>
+                    </div>
+                    <div class="row" id="storageVolumeSnapshotsExpiryRow">
+                      <label class="col-4 col-form-label text-right">snapshots.expiry: </label>
+                      <div class="col-6">
+                        <div class="form-group">
+                          <input type="text" class="form-control" placeholder="" name="snapshots.expiry">
+                        </div>
+                      </div>
+                      <div class="col-1">
+                        <i class="far fa-sm fa-question-circle" title='Enter in the time length when snapshots are to be deleted. For example, 1M, 2H, 3d, 4w, 5m, or 6y.'></i>
+                      </div>
+                    </div>
+                    <div class="row" id="storageVolumeSnapshotsScheduleRow">
+                      <label class="col-4 col-form-label text-right">snapshots.schedule: </label>
+                      <div class="col-6">
+                        <div class="form-group">
+                          <input type="text" class="form-control" placeholder="" name="snapshots.schedule">
+                        </div>
+                      </div>
+                      <div class="col-1">
+                        <i class="far fa-sm fa-question-circle" title='Enter in a cron expression or a comma separated list of schedule aliases. For example, <minute> <hour> <dom> <month> <dow> or  <@hourly> <@daily> <@midnight> <@weekly> <@monthly> <@annually> <@yearly>.'></i>
+                      </div>
+                    </div>
+                    <div class="row" id="storageVolumeSnapshotsPatternRow">
+                      <label class="col-4 col-form-label text-right">snapshots.pattern: </label>
+                      <div class="col-6">
+                        <div class="form-group">
+                          <input type="text" class="form-control" placeholder="" name="snapshots.pattern">
+                        </div>
+                      </div>
+                      <div class="col-1">
+                        <i class="far fa-sm fa-question-circle" title='Enter in a Pongo2 template string to represent the snapshot name. Default: snap%d'></i>
+                      </div>
+                    </div>
+                    <div class="row" id="storageVolumeZfsRemoveSnapshotsRow">
+                      <label class="col-4 col-form-label text-right">zfs.remove_snapshots: </label>
+                      <div class="col-6">
+                        <div class="form-group">
+                          <select onchange="" class="form-control" name="zfs.remove_snapshots">
+                            <option value="">(not set)</option>
+                            <option value="true">true</option>
+                            <option value="false">false</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-1">
+                        <i class="far fa-sm fa-question-circle" title='Select whether or not to remove snapshots as needed. Default: (same as parent storage pool) '></i>
+                      </div>
+                    </div>
+                    <div class="row" id="storageVolumeZfsUseRefquotaRow">
+                      <label class="col-4 col-form-label text-right">zfs.use_refquota: </label>
+                      <div class="col-6">
+                        <div class="form-group">
+                          <select onchange="" class="form-control" name="zfs.use_refquota">
+                            <option value="">(not set)</option>
+                            <option value="true">true</option>
+                            <option value="false">false</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-1">
+                        <i class="far fa-sm fa-question-circle" title='Select whether or not to use refquota instead of quota. Default: (same as parent storage pool) '></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+  
+              </form>
+              <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                <a class="btn btn-primary" href="#" onclick="addItem()" data-dismiss="modal">Submit</a>
+              </div>
+            </div>
+            <div class="tab-pane fade" id="json" role="tabpanel" aria-labelledby="json-tab">
+              <br />
+              <div class="row">
+                <div class="col-12">
+                  <div class="form-group text-right">
+                    <pre>
+                      <textarea name="json" class="form-control" id="jsonCreateInput" rows="16" placeholder="Enter JSON data"></textarea>
+                    </pre>
+                  </div>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                <a class="btn btn-primary" href="#" onclick="createStorageVolumeUsingJSON()" data-dismiss="modal">Submit</a>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Modal-->
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Edit Storage Volume</h5>
+          <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <label class="col-12 col-form-label" id="storageVolumeNameEditInput"></label>
+            <div class="col-12">
+              <div class="form-group text-right">
+                <pre>
+                  <textarea name="json" class="form-control" id="jsonInput" rows="16" ></textarea>
+                </pre>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+          <a class="btn btn-primary" href="#" onclick="updateStorageVolume()" data-dismiss="modal">Submit</a>
+        </div>
+    </div>
+  </div>
+</div>

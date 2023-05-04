@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  {% include 'head.html' %}
+  <!-- Add dark-mode class to body for dark theme-->
+  <body class="hold-transition sidebar-mini">
+    <script>0</script>
+    <div class="wrapper">
+
+      {% include 'navbar.html' %}
+  
+      {% include 'sidebar.html' %}
+
+      <!-- Content Wrapper. Contains page content -->
+      <div class="content-wrapper">
+
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+          <div class="container-fluid">
+            {% block header %}
+            {% endblock header %}
+          </div>
+        </section>
+
+        <!-- Main content -->
+        <section class="content">
+          <div class="container-fluid" id="page-container"">
+            <div class="row">
+                {% block content %}
+                {% endblock content %}
+            </div>
+          </div>
+        </section>
+
+      </div>
+
+      {% include 'modals/main.html' %}
+      {% block modal %}
+      {% endblock modal %}
+
+      <footer class="main-footer">
+        <div class="float-right d-none d-sm-block">
+          Version 0.1.0
+        </div>
+        Copyright &copy; 2020-Present <a href="https://penninglabs.com">Penning Labs</a>. All rights reserved.
+      </footer>
+
+    </div>
+    <!-- ./wrapper -->
+
+    <!-- jQuery -->
+    <script src="../static/plugins/jquery/jquery.min.js"></script>
+
+    <!-- Bootstrap 4 -->
+    <script src="../static/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- DataTables  & Plugins -->
+    <script src="../static/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="../static/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+    <script src="../static/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+    <script src="../static/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+    <script src="../static/plugins/jquery-knob/jquery.knob.min.js"></script>
+    <script src="../static/js/serializejson.js"></script>
+    
+    <!-- AdminLTE App -->
+    <script src="../static/dist/js/adminlte.min.js"></script>
+
+    <!-- Page specific script -->
+    <script src="../static/js/sidebar.js"></script>
+
+    <script>
+      function changeProject(project){
+        window.location.href = 'server?id=' + serverId + '&project=' + project;
+        // var url = new URL(window.location);
+        // var search_params = url.searchParams;
+        // search_params.set('project', project);
+        // url.search = search_params.toString();
+        // location = url.toString();
+      }
+      function changeServer(id){
+        window.location.href = 'server?id=' + id;
+        // var url = new URL(window.location);
+        // var search_params = url.searchParams;
+        // search_params.set('id', id);
+        // url.search = search_params.toString();
+        // location = url.toString();
+      }
+
+      function loadAccountModal(){
+        console.log("Info: loading account modal");
+        $.get("../api/users/get_user?id={{ page_user_id }}", function (data) {
+          data = data.metadata
+          $("#usernameEditInput").val(data.username);
+          $("#firstNameEditInput").val(data.first_name);
+          $("#lastNameEditInput").val(data.last_name);
+          $("#emailEditInput").val(data.email);
+          $("#accountModal").modal('show');
+        });
+      }
+
+      function updateAccount(){
+        $.post("../api/users/update_user", {
+          id: "{{ page_user_id }}",
+          username: $("#usernameEditInput").val(),
+          first_name: $("#firstNameEditInput").val(),
+          last_name: $("#lastNameEditInput").val(),
+          email: $("#emailEditInput").val(),
+          password: $("#passwordEditInput").val(),
+          confirm_password: $("#confirmPasswordEditInput").val()
+        }, function (data) {
+          console.log(data);
+          if (data.alert){
+            alert(data.alert);
+          }
+        });
+      }
+
+      operationReloadTimeout = ''
+      operationReloadTime = 5000
+      operationExists = false
+
+      function operationStatusCheck(){
+        
+        //Clear the automatic page reload
+        clearTimeout(operationReloadTimeout);
+
+        //Request list of opertions
+        $.get("../api/operations/list_operations?id="+serverId+"&project=" + project + "&recursion=1", function (data) {
+
+          //Clear any previous messages in notification area
+          $('#notificationText').text("");
+          notification = ""
+
+          // Check if we have any running operations
+          if (data.metadata.hasOwnProperty('running') && data.metadata.running.length > 0){
+
+            // Loop through each operation to find one to display
+            for (let i = 0; i < data.metadata.running.length; i++) {
+
+              // Check if task has a description property
+              if (data.metadata.running[i].hasOwnProperty('description') && data.metadata.running[i].description != null) {
+                // Create an array of descriptions that we do not want to display
+                ignoredDescriptions = ['Showing console','Executing command']   
+
+                // Check if description is in the ignored array
+                if (ignoredDescriptions.includes(data.metadata.running[i].description)){
+                  continue
+                }
+
+                operationExists = true;
+                notification += data.metadata.running[i].description
+
+                // Downloading image should also have download_progress that can be displayed
+                if (data.metadata.running[i].description == 'Downloading image'){
+                  if (data.metadata.running[i].hasOwnProperty('metadata') && data.metadata.running[i].metadata != null) {
+                    if (data.metadata.running[i].metadata.hasOwnProperty('download_progress') && data.metadata.running[i].metadata.download_progress != null) {
+                      notification += ' ' + data.metadata.running[i].metadata.download_progress
+                    }
+                  }
+                }
+
+                // Many of the operations will indicate which resource the operation is being perfomed on
+                if (data.metadata.running[i].hasOwnProperty('resources') && data.metadata.running[i].resources != null) {
+                  if (data.metadata.running[i].resources.hasOwnProperty('instances') && data.metadata.running[i].resources.instances != null) {
+                    notification += " " + data.metadata.running[i].resources.instances[i].replace("/1.0/instances/","")
+                  }
+                  else if (data.metadata.running[i].resources.hasOwnProperty('containers') && data.metadata.running[i].resources.containers != null) {
+                    notification += " " + data.metadata.running[i].resources.containers[i].replace("/1.0/containers/","")
+                  }
+                  else if (data.metadata.running[i].resources.hasOwnProperty('virtual-machines') && data.metadata.running[i].resources.virtual-machines != null) {
+                    notification += " " + data.metadata.running[i].resources.virtual-machines[i].replace("/1.0/virtual-machines/","")
+                  }
+                }
+
+                // Display the notification message and end the loop
+                $('#notificationText').text(notification)
+                break
+
+              }
+            }
+          }
+
+          // Check if we have any failed operations
+          else if (data.metadata.hasOwnProperty('failure') && data.metadata.failure.length > 0){
+
+            // Loop through each operation to find one to display
+            for (let i = 0; i < data.metadata.running.length; i++) {
+
+              // Check if task has a description property
+              if (data.metadata.failure[i].hasOwnProperty('description') && data.metadata.failure[i].description != null) {
+                notification += data.metadata.failure[i].description
+
+                // Many of the operations will indicate which resource the operation is being perfomed on
+                if (data.metadata.failure[i].hasOwnProperty('resources') && data.metadata.failure[i].resources != null) {
+                  if (data.metadata.failure[i].resources.hasOwnProperty('instances') && data.metadata.failure[i].resources.instances != null) {
+                    notification += " " + data.metadata.failure[i].resources.instances[i].replace("/1.0/instances/","")
+                  }
+                  else if (data.metadata.failure[i].resources.hasOwnProperty('containers') && data.metadata.failure[i].resources.containers != null) {
+                    notification += " " + data.metadata.failure[i].resources.containers[i].replace("/1.0/containers/","")
+                  }
+                  else if (data.metadata.failure[i].resources.hasOwnProperty('virtual-machines') && data.metadata.failure[i].resources.virtual-machines != null) {
+                    notification += " " + data.metadata.failure[i].resources.virtual-machines[i].replace("/1.0/virtual-machines/","")
+                  }
+                }
+
+                if (data.metadata.failure[i].hasOwnProperty('err')){
+                  notification += ". Failure: " + data.metadata.failure[i].err
+                }
+
+                // Log the error notification to the console
+                console.log(notification)
+
+                // Display the notification message and end the loop
+                $('#notificationText').text(notification)
+                break
+
+              }
+            }
+          }
+
+          else {
+            // If we had an existing running operation, reload page to update
+            if (operationExists) {
+              reloadPageContent()
+            }
+            operationExists = false
+          }
+          // Schedule operationStatusCheck to run again
+          operationReloadTimeout = setTimeout(() => { operationStatusCheck(); }, operationReloadTime);
+
+        });
+      }
+  
+    </script>
+
+    {% block script %}
+    {% endblock script %}
+
+  </body>
+</html>
+
+
+
+
+

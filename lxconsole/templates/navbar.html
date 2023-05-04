@@ -1,0 +1,84 @@
+  <!-- Navbar Change to navbar-dark for dark mode-->
+  <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+    <!-- Left navbar links -->
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link" data-widget="pushmenu" data-enable-remember="true" href="#" role="button"><i class="fas fa-bars"></i></a>
+      </li>
+
+      <li class="nav-item d-none d-sm-inline-block">
+        <span class="nav-link text-danger" id="notificationText"></span>
+      </li>
+    </ul>
+
+    <!-- Right navbar links -->
+    <ul class="navbar-nav ml-auto">
+
+      <!-- Topbar Server Select-->
+      <li id="serverNavbarLabel" class="nav-item" style="display: none;">
+        <span class="nav-link mr-n2">Server: </span>
+      </li>
+      <li id="serverNavbarSelect" class="nav-item" style="display: none;">
+        <div class="input-group">
+          <select class="form-control" id="serverListNav" style="width:150px;" onchange="changeServer(this.value)">
+          </select>
+        </div>
+      </li>
+
+      <!-- Topbar Project Select-->
+      <li id="projectNavbarLabel" class="nav-item" style="display: none;">
+        <span class="nav-link mr-n2">Project: </span>
+      </li>
+      <li id="projectNavbarSelect" class="nav-item" style="display: none;">
+        <div class="input-group">
+          <select class="form-control" id="projectListNav" style="width:150px;" onchange="changeProject(this.value)">
+          </select>
+        </div>
+      </li>
+
+      <!-- Nav Item - User Information -->
+      <li class="nav-item dropdown">
+        <a class="nav-link" href="#" id="userDropdown" data-toggle="dropdown" aria-expanded="false">
+          <i class="fas fa-user-circle"></i>
+          <span id="username">{{ page_username }}</span>
+        </a>
+        <!-- Dropdown - User Information -->
+        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
+          <a class="dropdown-item" href="#" onclick="loadAccountModal()">
+            <i class="fas fa-user-circle fa-sm fa-fw mr-2"></i>
+            Account
+          </a>
+          <a class="dropdown-item" href="users">
+            <i class="fas fa-user fa-sm fa-fw mr-2"></i>
+            Users
+          </a>
+          <a class="dropdown-item" href="groups">
+            <i class="fas fa-users fa-sm fa-fw mr-2"></i>
+            Groups
+          </a>
+          <!-- <a class="dropdown-item" href="roles">
+            <i class="fas fa-user-tag fa-sm fa-fw mr-2"></i>
+            Roles
+          </a> -->
+          <a class="dropdown-item" href="access-controls">
+            <i class="fas fa-user-lock fa-sm fa-fw mr-2"></i>
+            Access Controls
+          </a>
+          <!-- <a class="dropdown-item" href="logs">
+            <i class="fas fa-history fa-sm fa-fw mr-2"></i>
+            Logs
+          </a> -->
+          <a class="dropdown-item" href="#" data-toggle="modal" data-target="#aboutModal">
+            <i class="fas fa-info-circle fa-sm fa-fw mr-2"></i>
+            About
+          </a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="logout">
+            <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2"></i>
+            Logout
+          </a>
+        </div>
+      </li>
+
+    </ul>
+  </nav>

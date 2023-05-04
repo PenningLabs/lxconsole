@@ -1,0 +1,184 @@
+  <!-- Main Sidebar Container -->
+  <aside class="main-sidebar sidebar-dark-primary elevation-4">
+    <!-- Brand Logo -->
+    <a href="/" class="brand-link">
+      <img src="../static/assets/img/logo-dark.svg" alt="Logo" class="brand-image elevation-3" style="opacity: .8">
+      <span class="brand-text"><strong>lx</strong>console</span>
+    </a>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <!-- Sidebar Menu -->
+      <nav class="mt-2">
+
+        <ul class="nav nav-pills nav-sidebar flex-column user-panel py-2" data-widget="treeview" role="menu" data-accordion="false">
+          <li class="nav-item">
+            <a class="nav-link" id="serversLinkSidebar" href="servers">
+              <i id="serversIcon" class="nav-icon fas fa-server"></i>
+              <p id="serversSpan">
+                Servers
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" id="clusterMembersLinkSidebar" href="cluster-members" style="display: none;">
+              <i id="clusterMembersIcon" class="nav-icon fas fa-layer-group"></i>
+              <p id="clusterMembersSpan">
+                Cluster Members
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" id="clusterGroupsLinkSidebar" href="cluster-groups" style="display: none;">
+              <i id="clusterGroupsIcon" class="nav-icon fas fa-layer-group"></i>
+              <p id="clusterGroupsSpan">
+                Cluster Groups
+              </p>
+            </a>
+          </li>
+        </ul>
+
+        <ul id="instanceSidebarLinks" class="nav nav-pills nav-sidebar flex-column user-panel py-2" style="display: none;" data-widget="treeview" role="menu" data-accordion="false">
+          <li class="nav-item">
+            <a class="nav-link" id="containersLinkSidebar" href="containers">
+              <i id="containersIcon" class="nav-icon fas fa-cube"></i>
+              <p id="containersSpan">
+                Containers
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" id="virtualMachinesLinkSidebar" href="virtual-machines">
+              <i id="virtualMachinesIcon" class="nav-icon fas fa-cube"></i>
+              <p id="virtualMachinesSpan">
+                Virtual Machines
+              </p>
+            </a>
+          </li>
+        </ul>
+
+        <ul id="coreSidebarLinks" class="nav nav-pills nav-sidebar flex-column user-panel py-2" style="display: none;" data-widget="treeview" role="menu" data-accordion="false">
+          <li class="nav-item">
+            <a class="nav-link" id="imagesLinkSidebar" href="images">
+              <i id="imagesIcon" class="nav-icon fas fa-box-open"></i>
+              <p id="imagesSpan">
+                Images
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" id="profilesLinkSidebar" href="profiles">
+              <i id="profilesIcon" class="nav-icon fas fa-money-check"></i>
+              <p id="profilesSpan">
+                Profiles
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" id="projectsLinkSidebar" href="projects">
+              <i id="projectsIcon" class="nav-icon fas fa-chart-bar"></i>
+              <p id="projectsSpan">
+                Projects
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" id="storagePoolsLinkSidebar" href="storage-pools">
+              <i id="storagePoolsIcon" class="nav-icon fas fa-hdd"></i>
+              <p id="storagePoolsSpan">
+                Storage Pools
+              </p>
+            </a>
+          </li>
+        </ul>
+
+        <ul id="networkSidebarLinks" class="nav nav-pills nav-sidebar flex-column user-panel py-2" style="display: none;" data-widget="treeview" role="menu" data-accordion="false">
+          <li class="nav-item">
+            <a class="nav-link" id="networksLinkSidebar" href="networks">
+              <i id="networksIcon" class="nav-icon fas fa-network-wired"></i>
+              <p id="networksSpan">
+                Networks
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" id="networkAclsLinkSidebar" href="network-acls">
+              <i id="networkAclsIcon" class="nav-icon fas fa-shield-alt"></i>
+              <p id="networkAclsSpan">
+                Network ACLs
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" id="networkForwardsLinkSidebar" href="network-forwards" style="display: none;">
+              <i id="networkForwardsIcon" class="nav-icon fas fa-shield-alt"></i>
+              <p id="networkForwardsSpan">
+                Network Forwards
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" id="networkLoadBalancersLinkSidebar" href="network-load-balancers" style="display: none;">
+              <i id="networkLoadBalancersIcon" class="nav-icon fas fa-shield-alt"></i>
+              <p id="networkLoadBalancersSpan">
+                Network Load Balancers
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" id="networkPeersLinkSidebar" href="network-peers" style="display: none;">
+              <i id="networkPeersIcon" class="nav-icon fas fa-shield-alt"></i>
+              <p id="networkPeersSpan">
+                Network Peers
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" id="networkZonesLinkSidebar" href="network-zones" style="display: none;">
+              <i id="networkZonesIcon" class="nav-icon fas fa-shield-alt"></i>
+              <p id="networkZonesSpan">
+                Network Zones
+              </p>
+            </a>
+          </li>
+        </ul>
+
+        <ul id="additionalSidebarLinks" class="nav nav-pills nav-sidebar flex-column user-panel py-2" style="display: none;" data-widget="treeview" role="menu" data-accordion="false">
+          <li class="nav-item">
+            <a class="nav-link" id="operationsLinkSidebar" href="operations">
+              <i id="operationsIcon" class="nav-icon fas fa-exchange-alt"></i>
+              <p id="operationsSpan">
+                Operations
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" id="certificatesLinkSidebar" href="certificates">
+              <i id="certificatesIcon" class="nav-icon fas fa-wallet"></i>
+              <p id="certificatesSpan">
+                Certificates
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" id="simplestreamsLinkSidebar" href="simplestreams">
+              <i id="simplestreamsIcon" class="nav-icon fas fa-archive"></i>
+              <p id="simplestreamsSpan">
+                Simplestreams
+              </p>
+            </a>
+          </li>
+        </ul>
+
+      </nav>
+      <!-- /.sidebar-menu -->
+    </div>
+    <!-- /.sidebar -->
+  </aside>
+
+
+
+
+
+
+

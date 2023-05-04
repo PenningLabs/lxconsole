@@ -1,0 +1,509 @@
+{% extends "main.html" %}
+
+{% block header %}
+<div class="row mb-2">
+  <div class="col-sm-6">
+    <h1>{{ page_title | safe }}</h1>
+  </div>
+  <div class="col-sm-6">
+    <a class="btn btn-outline-primary float-sm-right mr-4" href="#" data-toggle="modal" data-target="#addModal" title="Add Network" aria-hidden="true">
+      <i class="fas fa-plus fa-sm fa-fw"></i> Network
+    </a>
+  </div>
+</div>
+{% endblock header %}
+
+{% block content %}
+  <div class="col-12">
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title">Networks</h3>
+        <div class="card-tools">
+          <button type="button" class="btn btn-tool" onclick="reloadPageContent()" title="Refresh">
+          <i class="fas fa-sync"></i>
+          </button>
+        </div>
+      </div>
+      <div class="card-body">
+        <table class="table table-hover" id="myDataTable" width="100%" cellspacing="0">
+        </table>
+      </div>
+    </div>
+  </div>
+{% endblock content %}
+
+{% block modal %}
+  {% include 'modals/networks.html' %}
+{% endblock modal %}
+
+{% block script %}
+  <script>
+    var reloadTime = 10000;
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const serverId = urlParams.get('id');
+    const project = urlParams.get('project');
+    var editedProfile = ''
+    applySidebarStyles();
+    applySidebarLinks();
+    populateSidebarLinks();
+    populateNavbarLinks();
+
+    function reloadPageContent() {
+      //Clear the automatic page reload
+      clearTimeout(pageReloadTimeout);
+
+      //Reload the datatables content
+      $('#myDataTable').DataTable().ajax.reload(null, false);
+
+      //Set the automatic page reload
+      pageReloadTimeout = setTimeout(() => { reloadPageContent(); }, reloadTime);
+    }
+
+    function loadPageContent(){
+
+      //Display the current project
+      $("#selectedProject").text(project);
+
+      //Populate the Server dropdown
+      $.getJSON("../api/servers/list_servers?id="+serverId, function (data) {
+        data = data.data
+        for (var index = 0; index < data.length; index++) {
+          if (data[index].name == '')
+            optionText = data[index].addr
+          else
+            optionText = data[index].name
+          if (data[index].id == serverId)
+            $('#serverListNav').append('<option value="' + data[index].id + '" selected="selected">' + optionText + '</option>');
+          else
+            $('#serverListNav').append('<option value="' + data[index].id + '">' + optionText + '</option>');
+        }
+      })
+
+      //Populate the Project dropdown
+      $.getJSON("../api/projects/list_projects?id="+serverId+"&project="+project, function (data) {
+        data = data.metadata
+        for (var index = 0; index < data.length; index++) {
+          optionText = data[index].replace('/1.0/projects/','');
+          if (optionText == project)
+            $('#projectListNav').append('<option value="' + optionText + '" selected="selected">' + optionText + '</option>');
+          else
+            $('#projectListNav').append('<option value="' + optionText + '">' + optionText + '</option>');
+        }
+      })
+
+      // Configure Datatable
+      $('#myDataTable').DataTable({
+        ajax: {
+          url: "../api/networks/list_networks?id="+serverId+"&project=" + project + "&recursion=1",
+          dataType: "json",
+          dataSrc: "metadata",
+          contentType: "application/json"
+        },
+        columns: [
+          { title: "Name", data: function (row, type, set) {
+              if (row.hasOwnProperty('name')) {
+                if (row.name)
+                  return row.name
+              }
+              return '-'
+            },
+          },
+
+          { title: "Description", data: function (row, type, set) {
+              if (row.hasOwnProperty('description')) {
+                if (row.description)
+                  return row.description
+              }
+              return '-'
+            },
+          },
+          { title: "IPv4", data: function (row, type, set) {
+              if (row.hasOwnProperty('config')){
+                if (row.config.hasOwnProperty('ipv4.address')) {
+                  if (row.config['ipv4.address'])
+                    return row.config['ipv4.address']
+                }
+              }
+              return '-'
+            },
+          },
+          { title: "IPv6", data: function (row, type, set) {
+              if (row.hasOwnProperty('config')){
+                if (row.config.hasOwnProperty('ipv6.address')) {
+                  if (row.config['ipv6.address'])
+                    return row.config['ipv6.address']
+                }
+              }
+              return '-'
+            },
+          },
+          { title: "Type", data: function (row, type, set) {
+              if (row.hasOwnProperty('type')) {
+                if (row.type)
+                  return row.type
+              }
+              return '-'
+            },
+          },
+          { title: "Managed", data: function (row, type, set) {
+              if (row.hasOwnProperty('managed')) {
+                // Boolean field
+                return row.managed
+              }
+              return '-'
+            },
+          },
+          { title: "Actions", data: function (row, type, set) {
+              links = ''
+              if (row.hasOwnProperty('name') && row.hasOwnProperty('managed')) {
+                if (row.managed){
+                  links = '<a href="#" onclick=editNetwork(\''+row.name+'\')><i class="fas fa-edit fa-lg" style="color:#ddd" title="Edit" aria-hidden="true"></i></a>' +
+                  '&nbsp' + '&nbsp' +
+                  '<a href="#" onclick=renameNetwork(\''+row.name+'\')><i class="fas fa-tag fa-lg" style="color:#ddd" title="Rename" aria-hidden="true"></i></a>' +
+                  '&nbsp' + '&nbsp' +
+                  '<a href="#" onclick=confirmDeleteNetwork(\''+row.name+'\')><i class="fas fa-trash-alt fa-lg" style="color:#ddd" title="Delete" aria-hidden="true"></i></a>'
+                }
+              }
+              return links
+            },
+          },
+        ],
+        order: [],
+      });
+
+      //Populate Network/Parent Fields in addModal
+      $.getJSON("../api/networks/list_networks?id="+serverId+'&project='+project+'&recursion=1', function (data) {
+        data = data.metadata
+        for (var index = 0; index < data.length; index++) {
+          optionText = data[index].name;
+          if (data[index].managed)
+            $('#networkNetworkInput').append('<option value="' + optionText + '">' + optionText + '</option>');
+          $('#networkParentInput').append('<option value="' + optionText + '">' + optionText + '</option>');
+        }
+      })
+
+      //Set reload page content
+      pageReloadTimeout = setTimeout(() => { reloadPageContent(); }, reloadTime);
+
+    }
+
+    function addItem(){
+      console.log("Info: adding new network");
+      data = $('#addForm').serializeJSON();
+      $.post("../api/networks/add_network?id="+serverId+"&project="+project, data, function (data) {
+        console.log(data)
+        if (data.error_code >= 400){
+          alert(data.error);
+        }
+        //Sync type
+        setTimeout(() => { reloadPageContent(); }, 1000);
+        operationStatusCheck()
+      });
+    }
+
+    function changeNetworkTypeInput(){
+      var networkTypeInput = $("#networkTypeInput").val();
+    
+      if (networkTypeInput == "bridge"){
+        $("#networkBridgeDriverRow").show()
+        $("#networkBridgeExternalInterfacesRow").show()
+        $("#networkBridgeHwaddrRow").show()
+        $("#networkBridgeModeRow").show()
+        $("#networkBridgeMtuRow").show()
+        $("#networkDnsDomainRow").show()
+        $("#networkDnsModeRow").show()
+        $("#networkDnsSearchRow").show()
+        $("#networkFanOverlaySubnetRow").show()
+        $("#networkFanTypeRow").show()
+        $("#networkFanUnderlaySubnetRow").show()
+        $("#networkIpv4AddressRow").show()
+        $("#networkIpv4DhcpRow").show()
+        $("#networkIpv4DhcpExpiryRow").show()
+        $("#networkIpv4DhcpGatewayRow").show()
+        $("#networkIpv4DhcpRangesRow").show()
+        $("#networkIpv4FirewallRow").show()
+        $("#networkIpv4NatAddressRow").show()
+        $("#networkIpv4NatRow").show()
+        $("#networkIpv4NatOrderRow").show()
+        $("#networkIpv4OvnRangesRow").show()
+        $("#networkIpv4RoutesRow").show()
+        $("#networkIpv4RoutingRow").show()
+        $("#networkIpv6AddressRow").show()
+        $("#networkIpv6DhcpRow").show()
+        $("#networkIpv6DhcpExpiryRow").show()
+        $("#networkIpv6DhcpRangesRow").show()
+        $("#networkIpv6DhcpStatefulRow").show()
+        $("#networkIpv6FirewallRow").show()
+        $("#networkIpv6NatAddressRow").show()
+        $("#networkIpv6NatRow").show()
+        $("#networkIpv6NatOrderRow").show()
+        $("#networkIpv6OvnRangesRow").show()
+        $("#networkIpv6RoutesRow").show()
+        $("#networkIpv6RoutingRow").show()
+        $("#networkMaasSubnetIpv4Row").show()
+        $("#networkMaasSubnetIpv6Row").show()
+        $("#networkRawDnsmasqRow").show()
+        $("#networkMtuRow").hide()
+        $("#networkParentRow").hide()
+        $("#networkVlanRow").hide()
+        $("#networkNetworkRow").hide()
+        $("#networkIpv4GatewayRow").hide()
+        $("#networkIpv4RoutesAnycastRow").hide()
+        $("#networkIpv6GatewayRow").hide()
+        $("#networkIpv6RoutesAnycastRow").hide()
+        $("#networkDnsNameserversRow").hide()
+        $("#networkOvnIngressModeRow").hide()
+      }
+      if (networkTypeInput == "macvlan" || networkTypeInput == "sriov"){
+        $("#networkBridgeDriverRow").hide()
+        $("#networkBridgeExternalInterfacesRow").hide()
+        $("#networkBridgeHwaddrRow").hide()
+        $("#networkBridgeModeRow").hide()
+        $("#networkBridgeMtuRow").hide()
+        $("#networkDnsDomainRow").hide()
+        $("#networkDnsModeRow").hide()
+        $("#networkDnsSearchRow").hide()
+        $("#networkFanOverlaySubnetRow").hide()
+        $("#networkFanTypeRow").hide()
+        $("#networkFanUnderlaySubnetRow").hide()
+        $("#networkIpv4AddressRow").hide()
+        $("#networkIpv4DhcpRow").hide()
+        $("#networkIpv4DhcpExpiryRow").hide()
+        $("#networkIpv4DhcpGatewayRow").hide()
+        $("#networkIpv4DhcpRangesRow").hide()
+        $("#networkIpv4FirewallRow").hide()
+        $("#networkIpv4NatAddressRow").hide()
+        $("#networkIpv4NatRow").hide()
+        $("#networkIpv4NatOrderRow").hide()
+        $("#networkIpv4OvnRangesRow").hide()
+        $("#networkIpv4RoutesRow").hide()
+        $("#networkIpv4RoutingRow").hide()
+        $("#networkIpv6AddressRow").hide()
+        $("#networkIpv6DhcpRow").hide()
+        $("#networkIpv6DhcpExpiryRow").hide()
+        $("#networkIpv6DhcpRangesRow").hide()
+        $("#networkIpv6DhcpStatefulRow").hide()
+        $("#networkIpv6FirewallRow").hide()
+        $("#networkIpv6NatAddressRow").hide()
+        $("#networkIpv6NatRow").hide()
+        $("#networkIpv6NatOrderRow").hide()
+        $("#networkIpv6OvnRangesRow").hide()
+        $("#networkIpv6RoutesRow").hide()
+        $("#networkIpv6RoutingRow").hide()
+        $("#networkMaasSubnetIpv4Row").show()
+        $("#networkMaasSubnetIpv6Row").show()
+        $("#networkRawDnsmasqRow").hide()
+        $("#networkMtuRow").show()
+        $("#networkParentRow").show()
+        $("#networkVlanRow").show()
+        $("#networkNetworkRow").hide()
+        $("#networkIpv4GatewayRow").hide()
+        $("#networkIpv4RoutesAnycastRow").hide()
+        $("#networkIpv6GatewayRow").hide()
+        $("#networkIpv6RoutesAnycastRow").hide()
+        $("#networkDnsNameserversRow").hide()
+        $("#networkOvnIngressModeRow").hide()
+      }
+      if (networkTypeInput == "ovn"){
+        $("#networkBridgeDriverRow").hide()
+        $("#networkBridgeExternalInterfacesRow").hide()
+        $("#networkBridgeHwaddrRow").show()
+        $("#networkBridgeModeRow").hide()
+        $("#networkBridgeMtuRow").show()
+        $("#networkDnsDomainRow").show()
+        $("#networkDnsModeRow").hide()
+        $("#networkDnsSearchRow").show()
+        $("#networkFanOverlaySubnetRow").hide()
+        $("#networkFanTypeRow").hide()
+        $("#networkFanUnderlaySubnetRow").hide()
+        $("#networkIpv4AddressRow").show()
+        $("#networkIpv4DhcpRow").show()
+        $("#networkIpv4DhcpExpiryRow").hide()
+        $("#networkIpv4DhcpGatewayRow").hide()
+        $("#networkIpv4DhcpRangesRow").hide()
+        $("#networkIpv4FirewallRow").hide()
+        $("#networkIpv4NatAddressRow").hide()
+        $("#networkIpv4NatRow").show()
+        $("#networkIpv4NatOrderRow").hide()
+        $("#networkIpv4OvnRangesRow").hide()
+        $("#networkIpv4RoutesRow").hide()
+        $("#networkIpv4RoutingRow").hide()
+        $("#networkIpv6AddressRow").show()
+        $("#networkIpv6DhcpRow").show()
+        $("#networkIpv6DhcpExpiryRow").hide()
+        $("#networkIpv6DhcpRangesRow").hide()
+        $("#networkIpv6DhcpStatefulRow").show()
+        $("#networkIpv6FirewallRow").hide()
+        $("#networkIpv6NatAddressRow").hide()
+        $("#networkIpv6NatRow").show()
+        $("#networkIpv6NatOrderRow").hide()
+        $("#networkIpv6OvnRangesRow").hide()
+        $("#networkIpv6RoutesRow").hide()
+        $("#networkIpv6RoutingRow").hide()
+        $("#networkMaasSubnetIpv4Row").hide()
+        $("#networkMaasSubnetIpv6Row").hide()
+        $("#networkRawDnsmasqRow").hide()
+        $("#networkMtuRow").hide()
+        $("#networkParentRow").hide()
+        $("#networkVlanRow").hide()
+        $("#networkNetworkRow").show()
+        $("#networkIpv4GatewayRow").hide()
+        $("#networkIpv4RoutesAnycastRow").hide()
+        $("#networkIpv6GatewayRow").hide()
+        $("#networkIpv6RoutesAnycastRow").hide()
+        $("#networkDnsNameserversRow").hide()
+        $("#networkOvnIngressModeRow").hide()
+      }
+      if (networkTypeInput == "physical"){
+        $("#networkBridgeDriverRow").hide()
+        $("#networkBridgeExternalInterfacesRow").hide()
+        $("#networkBridgeHwaddrRow").hide()
+        $("#networkBridgeModeRow").hide()
+        $("#networkBridgeMtuRow").hide()
+        $("#networkDnsDomainRow").hide()
+        $("#networkDnsModeRow").hide()
+        $("#networkDnsSearchRow").hide()
+        $("#networkFanOverlaySubnetRow").hide()
+        $("#networkFanTypeRow").hide()
+        $("#networkFanUnderlaySubnetRow").hide()
+        $("#networkIpv4AddressRow").hide()
+        $("#networkIpv4DhcpRow").hide()
+        $("#networkIpv4DhcpExpiryRow").hide()
+        $("#networkIpv4DhcpGatewayRow").hide()
+        $("#networkIpv4DhcpRangesRow").hide()
+        $("#networkIpv4FirewallRow").hide()
+        $("#networkIpv4NatAddressRow").hide()
+        $("#networkIpv4NatRow").hide()
+        $("#networkIpv4NatOrderRow").hide()
+        $("#networkIpv4OvnRangesRow").show()
+        $("#networkIpv4RoutesRow").show()
+        $("#networkIpv4RoutingRow").hide()
+        $("#networkIpv6AddressRow").hide()
+        $("#networkIpv6DhcpRow").hide()
+        $("#networkIpv6DhcpExpiryRow").hide()
+        $("#networkIpv6DhcpRangesRow").hide()
+        $("#networkIpv6DhcpStatefulRow").hide()
+        $("#networkIpv6FirewallRow").hide()
+        $("#networkIpv6NatAddressRow").hide()
+        $("#networkIpv6NatRow").hide()
+        $("#networkIpv6NatOrderRow").hide()
+        $("#networkIpv6OvnRangesRow").show()
+        $("#networkIpv6RoutesRow").show()
+        $("#networkIpv6RoutingRow").hide()
+        $("#networkMaasSubnetIpv4Row").show()
+        $("#networkMaasSubnetIpv6Row").show()
+        $("#networkRawDnsmasqRow").hide()
+        $("#networkMtuRow").show()
+        $("#networkParentRow").show()
+        $("#networkVlanRow").show()
+        $("#networkNetworkRow").hide()
+        $("#networkIpv4GatewayRow").show()
+        $("#networkIpv4RoutesAnycastRow").show()
+        $("#networkIpv6GatewayRow").show()
+        $("#networkIpv6RoutesAnycastRow").show()
+        $("#networkDnsNameserversRow").show()
+        $("#networkOvnIngressModeRow").show()
+      }
+    }
+
+    function confirmDeleteNetwork(name){
+      console.log("Info: confirming deletion of network " + name);
+      if (confirm("Are you sure you want to delete network " + name + "?") == true) {
+        deleteNetwork(name);
+      }
+    }
+
+    function createNetworkUsingJSON(){
+      var json = $("#jsonCreateInput").val();
+      console.log("Info: adding new network");
+      $.post("../api/networks/add_network?id="+serverId+"&project="+project, { json: json },  function (data) {
+        console.log(data);
+        if (data.error_code >= 400){
+          alert(data.error);
+        }
+        //Sync type
+        setTimeout(() => { reloadPageContent(); }, 1000);
+        operationStatusCheck()
+      });
+    }
+
+    function deleteNetwork(name){
+      console.log("Info: deleting network " + name);
+      $.post("../api/networks/delete_network?id=" + serverId + "&project=" + project, { name: name }, function (data) {
+        console.log(data);
+        if (data.error_code >= 400){
+          alert(data.error);
+        }
+        //Sync type
+        setTimeout(() => { reloadPageContent(); }, 1000);
+        operationStatusCheck()
+      });
+    }
+
+    function editNetwork(name){
+      editedNetwork = name
+      console.log("Info: loading network " + name);
+      $.post("../api/networks/load_network?id=" + serverId + "&project=" + project, { name: name }, function (data) {
+        console.log(data);
+        if (data.error_code >= 400){
+          alert(data.error);
+        }
+        $("#networkNameEditInput").text("Name: " + name);
+        $("#jsonInput").val(JSON.stringify(data.metadata, null, 2));
+        $("#editModal").modal('show');
+      });
+    }
+
+    function renameNetwork(name){
+      console.log("Loading rename modal for network " + name)
+      $("#renameNetworkModalLabel").text("Rename network: " + name);
+      $("#networkToRename").val(name);
+      $("#renameModal").modal('show');
+    }
+
+    function updateNetwork(){
+      name = editedNetwork
+      var updatedJSON = $("#jsonInput").val();
+      console.log("Info: updating network");
+      $.post("../api/networks/update_network?id=" + serverId + "&project=" + project + "&name=" + encodeURI(name), { json: updatedJSON },  function (data) {
+        console.log(data);
+        if (data.error_code >= 400){
+          alert(data.error);
+        }
+        //Sync type
+        setTimeout(() => { reloadPageContent(); }, 1000);
+        operationStatusCheck()
+      });
+    }
+
+    function updateNetworkName(){
+      var networkNewName = $("#newNetworkName").val();
+      var networkToRename = $("#networkToRename").val();
+      console.log("Info: renaming network " + networkToRename);
+      $.post("../api/networks/update_network?id=" + serverId + "&project=" + project + "&name=" + encodeURI(networkToRename), { 'name': networkNewName },  function (data) {
+        console.log(data);
+        if (data.error_code >= 400){
+          alert(data.error);
+        }
+        //Sync type
+        setTimeout(() => { reloadPageContent(); }, 1000);
+        operationStatusCheck()
+      });
+    } 
+
+    $(document).ready(function(){
+
+      //If id or project variables are missing redirect to servers page
+      if (!serverId || !project) {
+        window.location.href = 'servers';
+      }
+      else {
+        loadPageContent()
+        operationStatusCheck()
+      }
+      
+    });
+
+  </script>
+{% endblock script %}

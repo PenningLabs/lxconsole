@@ -1,0 +1,187 @@
+<!-- Add Access Control Modal-->
+<div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Create Access Control</h5>
+        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+        <form id="addForm">
+          
+          <div class="row">
+            <label class="col-3 col-form-label text-right">Group: <span class="text-danger">*</span></label>
+            <div class="col-7">
+              <div class="form-group">
+                <select id="groupInput" onchange="" class="form-control" name="group_id">
+                  <option value="">(not set)</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-1">
+              <i class="far fa-sm fa-question-circle" title='Select the group used in this access control.'></i>
+            </div>
+          </div>
+
+          <div class="row">
+            <label class="col-3 col-form-label text-right">Role: <span class="text-danger">*</span></label>
+            <div class="col-7">
+              <div class="form-group">
+                <select id="roleInput" onchange="" class="form-control" name="role_id">
+                  <option value="">(not set)</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-1">
+              <i class="far fa-sm fa-question-circle" title='Select the role used in this access control.'></i>
+            </div>
+          </div>
+
+          <div class="row">
+            <label class="col-3 col-form-label text-right">Scope: </label>
+            <div class="col-7">
+              <div class="form-group">
+                <select id="scopeInput" class="form-control" name="scope">
+                  <option value="global">global</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-1">
+              <i class="far fa-sm fa-question-circle" title='Select the scope for the access control.'></i>
+            </div>
+          </div>
+
+          <div class="row" style="display:none">
+            <label class="col-3 col-form-label text-right">Server: </label>
+            <div class="col-7">
+              <div class="form-group">
+                <select id="serverInput" onchange="" class="form-control" name="server_id">
+                  <option value="">(not set)</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-1">
+              <i class="far fa-sm fa-question-circle" title='Select the server used in this access control.'></i>
+            </div>
+          </div>
+  
+          <div class="row">
+            <label class="col-3 col-form-label text-right">Description: </label>
+            <div class="col-7">
+              <div class="form-group">
+                <input type="text" id="descriptionInput" class="form-control" placeholder="" name="description">
+              </div>
+            </div>
+            <div class="col-1">
+              <i class="far fa-sm fa-question-circle" title='Enter in the description for the group.'></i>
+            </div>
+          </div>
+
+        </form>
+
+      </div> <!-- End Modal Body-->
+      <div class="modal-footer">
+        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+        <a class="btn btn-primary" href="#" onclick="addAccessControl()" data-dismiss="modal">Submit</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Edit Access Control Modal-->
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Edit Access Control</h5>
+        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+        <form id="editForm">
+
+          <div class="row">
+            <label class="col-3 col-form-label text-right">Group: <span class="text-danger">*</span></label>
+            <div class="col-7">
+              <div class="form-group">
+                <select id="groupEditInput" onchange="" class="form-control" name="group_id">
+                  <option value="">(not set)</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-1">
+              <i class="far fa-sm fa-question-circle" title='Select the group used in this access control.'></i>
+            </div>
+          </div>
+
+          <div class="row">
+            <label class="col-3 col-form-label text-right">Role: <span class="text-danger">*</span></label>
+            <div class="col-7">
+              <div class="form-group">
+                <select id="roleEditInput" onchange="" class="form-control" name="role_id">
+                  <option value="">(not set)</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-1">
+              <i class="far fa-sm fa-question-circle" title='Select the role used in this access control.'></i>
+            </div>
+          </div>
+
+          <div class="row">
+            <label class="col-3 col-form-label text-right">Scope: </label>
+            <div class="col-7">
+              <div class="form-group">
+                <select id="scopeEditInput" class="form-control" name="scope">
+                  <option value="global">global</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-1">
+              <i class="far fa-sm fa-question-circle" title='Select the scope for the access control.'></i>
+            </div>
+          </div>
+
+          <div class="row" style="display:none">
+            <label class="col-3 col-form-label text-right">Server: </label>
+            <div class="col-7">
+              <div class="form-group">
+                <select id="serverEditInput" onchange="" class="form-control" name="server_id">
+                  <option value="">(not set)</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-1">
+              <i class="far fa-sm fa-question-circle" title='Select the server used in this access control.'></i>
+            </div>
+          </div>
+  
+          <div class="row">
+            <label class="col-3 col-form-label text-right">Description: </label>
+            <div class="col-7">
+              <div class="form-group">
+                <input type="text" id="descriptionEditInput" class="form-control" placeholder="" name="description">
+              </div>
+            </div>
+            <div class="col-1">
+              <i class="far fa-sm fa-question-circle" title='Enter in the description for the group.'></i>
+            </div>
+          </div>
+
+          <input type="hidden" id="idEditInput" name="id">
+        </form>
+
+      </div> <!-- End Modal Body-->
+      <div class="modal-footer">
+        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+        <a class="btn btn-primary" href="#" onclick="updateAccessControl()" data-dismiss="modal">Submit</a>
+      </div>
+    </div>
+  </div>
+</div>
