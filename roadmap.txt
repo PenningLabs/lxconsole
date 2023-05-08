@@ -27,6 +27,7 @@
 
 # 0.7.0
 - Add expandable datatables rows where appropriate for additional information
+- Include rename tasks in tables with edit form on new tab
 
 # 1.0.0
 - Stable release

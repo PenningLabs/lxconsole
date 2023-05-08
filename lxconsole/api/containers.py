@@ -164,42 +164,44 @@ def api_containers_endpoint(endpoint):
       return jsonify(instances)
     i = 0
     for instance in instances['metadata']:
+      instances['metadata'][i]['memory'] = ''
+      instances['metadata'][i]['disk'] = ''
+      instances['metadata'][i]['ipv4_addresses'] = []
+      instances['metadata'][i]['ipv6_addresses'] = []
+
       if 'state' in instance.keys():
+
+        # Set memory information if exists
         if 'memory' in instance['state'].keys():
           if 'usage' in instance['state']['memory'].keys():
             memory = instance['state']['memory']['usage']
-        if memory:
-          instances['metadata'][i]['memory'] = memory
-        else:
-          instances['metadata'][i]['memory'] = ""
+            if memory:
+              instances['metadata'][i]['memory'] = memory
 
+        # Set disk information if exists
         if 'disk' in instance['state'].keys():
           if 'root' in instance['state']['disk'].keys():
             if 'usage' in instance['state']['disk']['root'].keys():
               disk = instance['state']['disk']['root']['usage']
-        if disk:  
-          instances['metadata'][i]['disk'] = disk
-        else:
-          instances['metadata'][i]['disk'] = ''
+              if disk:  
+                instances['metadata'][i]['disk'] = disk
 
+        # Set network information if exists
         if 'network' in instance['state'].keys():
           networks = instance['state']['network']
-        if networks:
-          instances['metadata'][i]['ipv4_addresses'] = []
-          for network in networks.keys():
-            addresses = networks[network]['addresses']
-            for address in addresses:
-              if address['family'] == 'inet' and address['scope'] == 'global':
-                instances['metadata'][i]['ipv4_addresses'] += [ address['address'] + ' (' + network + ')' ]
-          instances['metadata'][i]['ipv6_addresses'] = []
-          for network in networks.keys():
-            addresses = networks[network]['addresses']
-            for address in addresses:
-              if address['family'] == 'inet6' and address['scope'] == 'global':
-                instances['metadata'][i]['ipv6_addresses'] += [ address['address'] + ' (' + network + ')' ]
-        else:
-          instances['metadata'][i]['ipv4_addresses'] = []
-          instances['metadata'][i]['ipv6_addresses'] = []
+          if networks:
+            instances['metadata'][i]['ipv4_addresses'] = []
+            for network in networks.keys():
+              addresses = networks[network]['addresses']
+              for address in addresses:
+                if address['family'] == 'inet' and address['scope'] == 'global':
+                  instances['metadata'][i]['ipv4_addresses'] += [ address['address'] + ' (' + network + ')' ]
+            instances['metadata'][i]['ipv6_addresses'] = []
+            for network in networks.keys():
+              addresses = networks[network]['addresses']
+              for address in addresses:
+                if address['family'] == 'inet6' and address['scope'] == 'global':
+                  instances['metadata'][i]['ipv6_addresses'] += [ address['address'] + ' (' + network + ')' ]
       i += 1
     return jsonify(instances)
    
