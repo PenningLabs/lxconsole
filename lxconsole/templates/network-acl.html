@@ -332,6 +332,7 @@
         ],
         order: [],
       });
+      
       //Set reload page content
       pageReloadTimeout = setTimeout(() => { reloadPageContent(); }, reloadTime);
 
@@ -395,7 +396,7 @@
         window.location.href = '../network-acls?id=' + serverId + '&project=' + project
       }
       else {
-        setTimeout(() => { reloadPageContent(); }, 1000);
+        loadPageContent()
         operationStatusCheck()
       }
  
