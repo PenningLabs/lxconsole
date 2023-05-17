@@ -640,7 +640,7 @@
       fontSize: 15,
       convertEol: true,
       rendererType: 'dom',
-      cols: parseInt(($("#page-container").width() - 40) / 9),
+      cols: parseInt(($("#page-container").width() - 58) / 9),
       rows: 35
     });
 
@@ -650,20 +650,20 @@
       fontSize: 15,
       convertEol: true,
       rendererType: 'dom',
-      cols: parseInt(($("#page-container").width() - 40) / 9),
+      cols: parseInt(($("#page-container").width() - 58) / 9),
       rows: 35
     });
 
     // Resize console and exec terminals on page resize
     $(window).resize(function(){
-      execTerminal.resize(parseInt(($("#page-container").width() - 40) / 9), 35);
+      execTerminal.resize(parseInt(($("#page-container").width() - 58) / 9), 35);
       console.log(`size: ${execTerminal.cols} columns, ${execTerminal.rows} rows`);
-      consoleTerminal.resize(parseInt(($("#page-container").width() - 40) / 9), 35);
+      consoleTerminal.resize(parseInt(($("#page-container").width() - 58) / 9), 35);
 
       resize_command = {
         command: "window-resize",
         args: {
-          width: parseInt(($("#page-container").width() - 40) / 9).toString(),
+          width: parseInt(($("#page-container").width() - 58) / 9).toString(),
           height: "35"
         },
       }
