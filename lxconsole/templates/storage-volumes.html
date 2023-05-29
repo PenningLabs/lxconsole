@@ -44,6 +44,13 @@
     const serverId = urlParams.get('id');
     const project = urlParams.get('project');
     const pool = urlParams.get('pool');
+    if (urlParams.get('filter') == 'custom'){
+      var filter = urlParams.get('filter')
+    } 
+    else {
+      var filter = ''
+    }
+
     var editedStorageVolume = ''
     applySidebarStyles();
     applySidebarLinks();
@@ -175,7 +182,17 @@
             },
           },
         ],
+        searchCols: [
+          null,
+          {"search":filter},
+          null,
+          null,
+          null,
+          null,
+
+        ],
         order: [],
+
       });
 
       //Set reload page content

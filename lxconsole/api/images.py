@@ -27,6 +27,16 @@ def api_images_endpoint(endpoint):
     client_cert = get_client_crt()
     client_key = get_client_key()
 
+    image = request.form.get('image')
+
+    # When using the manual form, the version and variant are included in the image string
+    if request.form.get('image_version'):
+      if request.form.get('image_variant'):
+        image = request.form.get('image') + '/' + request.form.get('image_version') + '/' + request.form.get('image_variant')
+      else :
+        image = request.form.get('image') + '/' + request.form.get('image_version')
+        
+
     data = {}
     source = {}
     source.update({'type': 'image'})
@@ -40,7 +50,7 @@ def api_images_endpoint(endpoint):
       source.update({'allow_inconsistent': 'false'})
     else:
       source.update({'server': request.form.get('repo')})
-    source.update({'alias': request.form.get('image')})
+    source.update({'alias': image })
     source.update({'image_type': request.form.get('image_type')})
 
     data.update({'source': source})
@@ -59,6 +69,23 @@ def api_images_endpoint(endpoint):
     client_key = get_client_key()
     results = requests.delete(url, verify=server.ssl_verify, cert=(client_cert, client_key))
     return jsonify(results.json())
+
+  if endpoint == 'list_simplestream_images':
+    id = request.args.get('id')
+    project = request.args.get('project')
+    server = Server.query.filter_by(id=id).first()
+    url = 'https://images.linuxcontainers.org/streams/v1/index.json'
+    client_cert = get_client_crt()
+    client_key = get_client_key()
+    results = requests.get(url, verify=True, cert=(client_cert, client_key))
+    images = []
+    image_results = json.dumps(results.json())
+    image_results = json.loads(image_results)
+    if 'index' in image_results.keys():
+      if 'images' in image_results['index'].keys():
+        if 'products' in image_results['index']['images'].keys():
+          images = image_results['index']['images']['products']
+    return jsonify(images)
 
 
   if endpoint == 'list_images':

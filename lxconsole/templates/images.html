@@ -150,7 +150,7 @@
                 if (row.size) {
                   if (type === 'display'){
                     size = row.size / 1024 / 1024
-                    return size.toFixed(2) + ' GiB'
+                    return size.toFixed(2) + ' MiB'
                   }
                   return row.size
                 }
@@ -185,6 +185,9 @@
           $('#selectRepoInput').append('<option value="' + data[index].id + '">' + optionText + '</option>');
         }
       })
+
+      //Populate the image catalog choices
+      updateCatalog()
 
       //Set reload page content
       pageReloadTimeout = setTimeout(() => { reloadPageContent(); }, reloadTime);
@@ -263,11 +266,14 @@
       });
     }
 
-    function addCatalogImage(imageType, image, repo){
-      if (repo == 'ubuntu') { repo = 'https://cloud-images.ubuntu.com/releases'}
-      if (repo == 'images') { repo = 'https://images.linuxcontainers.org'}
+    function addCatalogImage(){
+      image = $("#operatingSystem").val();
+      repo = 'https://images.linuxcontainers.org'
+      imageVersion = $("#operatingSystemVersion").val();
+      imageVariant = $("#operatingSystemVariant").val();
+      imageType = $("#operatingSystemType").val();
       console.log("Info: downloading image " + image + " from " + repo);
-      $.post("../api/images/add_image?id="+serverId+"&project="+project, { image: image, repo: repo, image_type: imageType },  function (data) {
+      $.post("../api/images/add_image?id="+serverId+"&project="+project, { image: image, repo: repo, image_version: imageVersion, image_variant: imageVariant, image_type: imageType },  function (data) {
         console.log(data);
         if (data.error_code >= 400){
           alert(data.error);
@@ -277,6 +283,97 @@
         operationStatusCheck()
       });
     }
+
+    function updateCatalog(){
+      catalog_images = {}
+      // Check if session variable catalog_images is not yet set
+      if (sessionStorage.getItem("catalog_images") === null) {
+        console.log("Info: updating catalog images");
+        $.get("../api/images/list_simplestream_images",  function (data) {
+          //Clear operating system select options in modal
+          $("#operatingSystem").empty();
+          //Loop through each operating system item
+          for (i = 0; i < data.length; i++) {
+            // Split the string by semicolon. Ex: "almalinux:8:amd64:cloud"
+            image = data[i].split(':')
+            //Check that operating system is not already in catalog_images object
+            if (!(image[0] in catalog_images)){
+              catalog_images[image[0]] = { "versions": [ image[1] ], "variants": [image[3]] }
+              $('#operatingSystem').append('<option value="' + image[0] + '">' + image[0] + '</option>');
+            }
+            //Populate OS versions
+            if (!(catalog_images[image[0]]['versions'].includes(image[1]))){
+              catalog_images[image[0]]['versions'].push(image[1])
+            }
+            //Populate OS variants
+            if (!(catalog_images[image[0]]['variants'].includes(image[3]))){
+              catalog_images[image[0]]['variants'].push(image[3])
+            }
+          }
+          //Check if we populated any operating systems and store them in session storage
+          if (Object.keys(catalog_images).length > 0) {
+            sessionStorage.setItem('catalog_images', JSON.stringify(catalog_images))
+          }
+  
+          //Update the OS version options based on selected OS
+          updateOSVersion()
+
+        });
+      }
+      else {
+        //Set catalog_images from session storage
+        catalog_images = JSON.parse(sessionStorage.getItem('catalog_images'))
+        //Double check to make sure there are actually operating systems as keys
+        if (Object.keys(catalog_images).length > 0) {
+          //Clear operating system select options in modal
+          $("#operatingSystem").empty();
+        
+          //Loop through each operating system to populate operating system select options
+          for (var catalog_image in catalog_images){
+            $('#operatingSystem').append('<option value="' + catalog_image + '">' + catalog_image + '</option>');
+          }
+
+          //Update the OS version options based on selected OS
+          updateOSVersion()
+        }
+      }
+    }
+
+    function updateOSVersion(){
+      catalog_images = {}
+      if (sessionStorage.getItem("catalog_images") != null) {
+        catalog_images = JSON.parse(sessionStorage.getItem('catalog_images'))
+        if (Object.keys(catalog_images).length > 0) {
+          $("#operatingSystemVersion").empty();
+          os = $("#operatingSystem option:selected").text();
+          for (let i = 0; i < catalog_images[os]['versions'].length; i++) {
+            $('#operatingSystemVersion').append('<option value="' + catalog_images[os]['versions'][i] + '">' + catalog_images[os]['versions'][i] + '</option>');
+          }
+        }
+      }
+      //Update the OS Variant
+      updateOSVariant()
+    }
+
+    function updateOSVariant(){
+      catalog_images = {}
+      if (sessionStorage.getItem("catalog_images") != null) {
+        catalog_images = JSON.parse(sessionStorage.getItem('catalog_images'))
+        if (Object.keys(catalog_images).length > 0) {
+          $("#operatingSystemVariant").empty();
+          os = $("#operatingSystem option:selected").text();
+          for (let i = 0; i < catalog_images[os]['variants'].length; i++) {
+            if (catalog_images[os]['variants'][i] == 'default') {
+              $('#operatingSystemVariant').append('<option value="' + catalog_images[os]['variants'][i] + '" selected>' + catalog_images[os]['variants'][i] + '</option>');
+            }
+            else {
+              $('#operatingSystemVariant').append('<option value="' + catalog_images[os]['variants'][i] + '">' + catalog_images[os]['variants'][i] + '</option>');
+            }
+          }
+        }
+      }
+    }
+
 
     $(document).ready(function(){
 
