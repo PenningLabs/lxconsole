@@ -1,3 +1,10 @@
+# 0.2.0
+- Added cluster groups
+- Added evacuate and restore options for cluster members
+- Added cluster members roles to tables
+- Added cluster members actions
+- Removed serializeJSON library in favor of jquery serialize
+
 # 0.1.0
 - Corrected image unit size, changing GiB to MiB
 - Added option filter for storage volumes by adding filter=custom to URL

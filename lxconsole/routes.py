@@ -49,6 +49,11 @@ def home():
 def certificates():
   return render_template('certificates.html', page_title='Certificates', page_user_id=current_user.id, page_username=current_user.username,)
 
+@app.route("/cluster-groups")
+@login_required
+def cluster_groups():
+  return render_template('cluster-groups.html', page_title='Cluster Groups', page_user_id=current_user.id, page_username=current_user.username,)
+
 @app.route("/cluster-members")
 @login_required
 def cluster_members():

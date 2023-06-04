@@ -162,7 +162,7 @@
     // Add access control
     function addAccessControl(){
       console.log("Info: adding new group");
-      data = $('#addForm').serializeJSON();
+      data = $('#addForm').serialize();
       $.post("../api/access-controls/add_access_control", data, function (data) {
         console.log(data);
         if (data.error_code >= 400){
@@ -192,7 +192,7 @@
     // Update access control
     function updateAccessControl(){
       console.log("Info: adding new access control");
-      data = $('#editForm').serializeJSON();
+      data = $('#editForm').serialize();
       $.post("../api/access-controls/update_access_control", data, function (data) {
         console.log(data);
         if (data.error_code >= 400){

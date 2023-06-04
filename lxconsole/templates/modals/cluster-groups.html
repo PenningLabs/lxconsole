@@ -3,7 +3,7 @@
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Add Cluster Member</h5>
+          <h5 class="modal-title" id="exampleModalLabel">Add Cluster Group</h5>
           <button class="close" type="button" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">×</span>
           </button>
@@ -29,7 +29,7 @@
                     </div>
                   </div>
                   <div class="col-1">
-                    <i class="far fa-sm fa-question-circle" title='(Required) - Enter in the name of the storage pool.'></i>
+                    <i class="far fa-sm fa-question-circle" title='(Required) - Enter in the name of the cluster group.'></i>
                   </div>
                 </div>
                 <div class="row">
@@ -40,7 +40,19 @@
                     </div>
                   </div>
                   <div class="col-1">
-                    <i class="far fa-sm fa-question-circle" title='Enter in a description for the storage pool.'></i>
+                    <i class="far fa-sm fa-question-circle" title='Enter in a description for the cluster group.'></i>
+                  </div>
+                </div>
+                <div class="row">
+                  <label class="col-3 col-form-label text-right">Cluster Members: </label>
+                  <div class="col-7">
+                    <div class="form-group">
+                      <select id="clusterMembersInput" class="select form-control" multiple name="members">
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-1">
+                    <i class="far fa-sm fa-question-circle" title='Select cluster members to add to this cluster group. Use Ctrl key for multiple select'></i>
                   </div>
                 </div>
               </form>
@@ -76,7 +88,7 @@
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Edit Cluster Member</h5>
+          <h5 class="modal-title" id="exampleModalLabel">Edit Cluster Group</h5>
           <button class="close" type="button" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">×</span>
           </button>
@@ -115,12 +127,11 @@
                   <label class="col-2 col-form-label text-right">Name:</label>
                   <div class="col-8">
                     <div class="form-group">
-                      <input type="text" class="form-control" placeholder="" name="server_name">
+                      <input type="text" class="form-control" placeholder="" name="name">
                     </div>
-                    <span>After renaming a cluster member, restart the LXD service on the host to clear cached name information.</span>
                   </div>
                   <div class="col-1">
-                    <i class="far fa-sm fa-question-circle" title='Enter in the new name of the cluster member. Host alias will apply rename changes after LXD services have restarted on host.'></i>
+                    <i class="far fa-sm fa-question-circle" title='Enter in the new name of the cluster group.'></i>
                   </div>
                 </div>
               </form>
@@ -140,22 +151,16 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Delete Cluster Member</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Delete Cluster Group</h5>
         <button class="close" type="button" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">×</span>
         </button>
       </div>
       <div class="modal-body">
         <div class="mb-2" id="deleteQuestionText">
-          Are you sure you want to delete this cluster member?
+          Are you sure you want to delete this cluster group?
         </div>
-        <div class="form-check">
-          <input class="form-check-input" type="checkbox" value="force" id="forceDeleteCheck">
-          <label class="form-check-label" for="forceDeleteCheck">
-            Force Delete
-          </label>
-        </div>
-        <input type="hidden" id="clusterMember" class="form-control" name="server_name">
+        <input type="hidden" id="clusterGroup" class="form-control" name="server_name">
       </div>
       <div class="modal-footer">
         <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>

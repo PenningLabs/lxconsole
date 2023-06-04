@@ -254,7 +254,7 @@
 
     function addItem(){
       console.log("Info: downloading image");
-      data = $('#addForm').serializeJSON();
+      data = $('#addForm').serialize();
       $.post("../api/images/add_image?id="+serverId+"&project="+project, data, function (data) {
         console.log(data);
         if (data.error_code >= 400){

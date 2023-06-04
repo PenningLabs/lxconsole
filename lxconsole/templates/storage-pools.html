@@ -174,7 +174,7 @@
 
     function addItem(){
       console.log("Info: adding new storage pool");
-      data = $('#addForm').serializeJSON();
+      data = $('#addForm').serialize();
       $.post("../api/storage-pools/add_storage_pool?id="+serverId+"&project="+project, data, function (data) {
         console.log(data)
         if (data.error_code >= 400){

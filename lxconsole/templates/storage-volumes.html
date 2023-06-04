@@ -202,7 +202,7 @@
 
     function addItem(){
       console.log("Info: adding new storage volume");
-      data = $('#addForm').serializeJSON();
+      data = $('#addForm').serialize();
       $.post("../api/storage-volumes/add_storage_volume?id="+serverId+"&project="+project+"&pool="+pool, data, function (data) {
         console.log(data)
         if (data.error_code >= 400){

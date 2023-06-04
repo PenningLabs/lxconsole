@@ -116,6 +116,13 @@
           $('#virtualMachineLocationInput').append('<option value="' + optionText + '">' + optionText + '</option>');
         }
       })
+      $.getJSON("../api/cluster-groups/list_cluster_groups?id="+serverId+"&project="+project, function (data) {
+        data = data.metadata
+        for (var index = 0; index < data.length; index++) {
+          optionText = data[index].replace('/1.0/cluster/groups/','');
+          $('#containerLocationInput').append('<option value="@' + optionText + '">@' + optionText + '</option>');
+        }
+      })
 
       //Populate the modal Image dropdown
       $.getJSON("../api/images/list_images?id="+serverId+"&project="+project+"&recursion=1", function (data) {
@@ -260,7 +267,7 @@
     // Add instance
     function addItem(){
       console.log("Info: adding new virtual machine");
-      data = $('#addForm').serializeJSON();
+      data = $('#addForm').serialize();
       $.post("../api/virtual-machines/add_instance?id="+serverId+"&project="+project, data, function (data) {
         console.log(data);
         if (data.error_code >= 400){

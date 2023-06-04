@@ -340,7 +340,7 @@
 
     function addItem(){
       console.log("Info: adding new network-acl");
-      data = $('#addForm').serializeJSON();
+      data = $('#addForm').serialize();
       $.post("../api/network-acl/add_network_acl?id="+serverId+"&project="+project+"&acl="+acl, data, function (data) {
         console.log(data)
         if (data.error_code >= 400){

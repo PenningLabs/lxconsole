@@ -133,7 +133,7 @@
     // Add user
     function addUser(){
       console.log("Info: adding new user");
-      data = $('#addForm').serializeJSON();
+      data = $('#addForm').serialize();
       $.post("../api/users/add_user", data, function (data) {
         console.log(data);
         if (data.error_code >= 400){
@@ -182,7 +182,7 @@
     // Update user
     function updateUser(){
       console.log("Info: adding new user");
-      data = $('#editForm').serializeJSON();
+      data = $('#editForm').serialize();
       $.post("../api/users/update_user", data, function (data) {
         console.log(data);
         if (data.error_code >= 400){
@@ -196,7 +196,7 @@
     // Update user group
     function updateUserGroup(){
       console.log("Info: editing user group");
-      data = $('#editUserGroupsForm').serializeJSON();
+      data = $('#editUserGroupsForm').serialize();
       $.post("../api/users/update_user", data, function (data) {
         console.log(data);
         if (data.error_code >= 400){
@@ -210,7 +210,7 @@
     // Update user password
     function updateUserPassword(){
       console.log("Info: editing user password");
-      data = $('#editUserPasswordForm').serializeJSON();
+      data = $('#editUserPasswordForm').serialize();
       $.post("../api/users/update_user", data, function (data) {
         console.log(data);
         if (data.error_code >= 400){

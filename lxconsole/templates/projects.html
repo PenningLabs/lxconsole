@@ -207,7 +207,7 @@
 
     function addItem(){
       console.log("Info: adding new project");
-      data = $('#addForm').serializeJSON();
+      data = $('#addForm').serialize();
       $.post("../api/projects/add_project?id="+serverId+"&project="+project, data, function (data) {
         console.log(data)
         if (data.error_code >= 400){

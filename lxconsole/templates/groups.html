@@ -104,7 +104,7 @@
     // Add group
     function addGroup(){
       console.log("Info: adding new group");
-      data = $('#addForm').serializeJSON();
+      data = $('#addForm').serialize();
       $.post("../api/groups/add_group", data, function (data) {
         console.log(data);
         if (data.error_code >= 400){
@@ -133,7 +133,7 @@
     // Update group
     function updateGroup(){
       console.log("Info: adding new group");
-      data = $('#editForm').serializeJSON();
+      data = $('#editForm').serialize();
       $.post("../api/groups/update_group", data, function (data) {
         console.log(data);
         if (data.error_code >= 400){

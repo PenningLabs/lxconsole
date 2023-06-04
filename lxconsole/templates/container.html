@@ -3125,7 +3125,7 @@
     // Update the instance from the edit instance modal form
     function updateInstanceForm(){
       console.log("Info: updating instance " + instance);
-      data = $('#editForm').serializeJSON();
+      data = $('#editForm').serialize();
       $.post("../api/container/update_instance?id=" + serverId + "&project=" + project + "&instance=" + encodeURI(instance), data,  function (data) {
         console.log(data);
         if (data.error_code >= 400){

@@ -135,7 +135,7 @@
 
     function addItem(){
       console.log("Info: adding new simplestreams repo");
-      data = $('#addForm').serializeJSON();
+      data = $('#addForm').serialize();
       $.post("../api/simplestreams/add_simplestream", data, function (data) {
         console.log(data)
         if (data.error_code >= 400){

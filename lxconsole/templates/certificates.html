@@ -168,7 +168,7 @@
 
     function addItem(){
       console.log("Info: adding new certificate");
-      data = $('#addForm').serializeJSON();
+      data = $('#addForm').serialize();
       $.post("../api/certificates/add_certificate?id="+serverId+"&project="+project, data, function (data) {
         console.log(data)
         if (data.error_code >= 400){

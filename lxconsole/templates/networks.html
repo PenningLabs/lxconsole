@@ -190,7 +190,7 @@
 
     function addItem(){
       console.log("Info: adding new network");
-      data = $('#addForm').serializeJSON();
+      data = $('#addForm').serialize();
       $.post("../api/networks/add_network?id="+serverId+"&project="+project, data, function (data) {
         console.log(data)
         if (data.error_code >= 400){

@@ -5,13 +5,11 @@
     <div class="col-sm-6">
       <h1>{{ page_title | safe }}</h1>
     </div>
-    <!--
     <div class="col-sm-6">
-      <a class="btn btn-outline-primary float-sm-right mr-4" href="#" data-toggle="modal" data-target="#addModal" title="Add Cluster Member" aria-hidden="true">
-        <i class="fas fa-plus fa-sm fa-fw"></i> Cluster Member
+      <a class="btn btn-outline-primary float-sm-right mr-4" href="#" data-toggle="modal" data-target="#addModal" title="Add Cluster Group" aria-hidden="true">
+        <i class="fas fa-plus fa-sm fa-fw"></i> Cluster Group
       </a>
     </div>
-    -->
   </div>
 {% endblock header %}
 
@@ -19,7 +17,7 @@
   <div class="col-12">
     <div class="card">
       <div class="card-header">
-        <h3 class="card-title">Cluster Members</h3>
+        <h3 class="card-title">Cluster Groups</h3>
         <div class="card-tools">
           <button type="button" class="btn btn-tool" onclick="reloadPageContent()" title="Refresh">
           <i class="fas fa-sync"></i>
@@ -35,7 +33,7 @@
 {% endblock content %}
 
 {% block modal %}
-  {% include 'modals/cluster-members.html' %}
+  {% include 'modals/cluster-groups.html' %}
 {% endblock modal %}
 
 {% block script %}
@@ -97,16 +95,16 @@
       // Configure Datatable
       $('#myDataTable').DataTable({
         ajax: {
-          url: "../api/cluster-members/list_cluster_members?id="+serverId+"&project=" + project + "&recursion=1",
+          url: "../api/cluster-groups/list_cluster_groups?id="+serverId+"&project=" + project + "&recursion=1",
           dataType: "json",
           dataSrc: "metadata",
           contentType: "application/json"
         },
         columns: [
-          { title: "Server Name", data: function (row, type, set) {
-              if (row.hasOwnProperty('server_name')) {
-                if (row.server_name)
-                  return row.server_name
+          { title: "Name", data: function (row, type, set) {
+              if (row.hasOwnProperty('name')) {
+                if (row.name)
+                  return row.name
               }
               return '-'
             },
@@ -119,35 +117,15 @@
               return '-'
             },
           },
-          { title: "Roles", data: function (row, type, set) {
-              if (row.hasOwnProperty('roles')) {
-                if (row.roles.length > 0){
-                  return row.roles.join(', <br />')
+          { title: "Members", data: function (row, type, set) {
+              if (row.hasOwnProperty('members')) {
+                if (Object.keys(row.members).length > 0) {
+                  arr = []
+                  for (let i = 0; i < row.members.length; i++) {
+                    arr.push(row.members[i]);
+                  }
+                  return arr.join(", ")
                 }
-              }
-              return '-'
-            },
-          },
-          { title: "URL", data: function (row, type, set) {
-              if (row.hasOwnProperty('url')) {
-                if (row.url)
-                  return row.url
-              }
-              return '-'
-            },
-          },
-          { title: "Database", data: function (row, type, set) {
-              if (row.hasOwnProperty('database')) {
-                if (row.database)
-                  return row.database
-              }
-              return '-'
-            },
-          },
-          { title: "Status", data: function (row, type, set) {
-              if (row.hasOwnProperty('status')) {
-                if (row.status)
-                  return row.status
               }
               return '-'
             },
@@ -155,18 +133,10 @@
 
           { title: "Actions", data: function (row, type, set) {
               links = ''
-              if (row.hasOwnProperty('status')) {
-                links += '<a href="#" onclick=editItem(\''+row.server_name+'\')><i class="fas fa-edit fa-lg" style="color:#ddd" title="Edit" aria-hidden="true"></i></a>'
-                links += '&nbsp' + '&nbsp'
-                if (row.status == 'Online'){
-                  links += '<a href="#" onclick=changeItemState(\''+row.server_name+'\',\'evacuate\')><i class="fas fa-sign-out-alt fa-lg" style="color:#ddd" title="Evacuate" aria-hidden="true"></i></a>'
-                  links += '&nbsp' + '&nbsp'
-                }
-                if (row.status == 'Evacuated'){
-                  links += '<a href="#" onclick=changeItemState(\''+row.server_name+'\',\'restore\')><i class="fas fa-sign-in-alt fa-lg" style="color:#ddd" title="Restore" aria-hidden="true"></i></a>'
-                  links += '&nbsp' + '&nbsp'
-                }
-                links += '<a href="#" onclick=confirmDeleteItem(\''+row.server_name+'\')><i class="fas fa-trash-alt fa-lg" style="color:#ddd" title="Delete" aria-hidden="true"></i></a>'
+              if (row.hasOwnProperty('name')) {
+                links += '<a href="#" onclick=editItem(\''+row.name+'\')><i class="fas fa-edit fa-lg" style="color:#ddd" title="Edit" aria-hidden="true"></i></a>' +
+                '&nbsp' + '&nbsp' +
+                '<a href="#" onclick=confirmDeleteItem(\''+row.name+'\')><i class="fas fa-trash-alt fa-lg" style="color:#ddd" title="Delete" aria-hidden="true"></i></a>'
               }
               return links
             },
@@ -184,7 +154,7 @@
     function addItem(){
       console.log("Info: adding new item");
       data = $('#addForm').serialize();
-      $.post("../api/cluster-members/add_cluster_member?id="+serverId+"&project="+project, data, function (data) {
+      $.post("../api/cluster-groups/add_cluster_group?id="+serverId+"&project="+project, data, function (data) {
         console.log(data)
         if (data.error_code >= 400){
           alert(data.error);
@@ -194,33 +164,17 @@
       });
     }
 
-    function changeItemState(name, action){
-      console.log("Info: confirming " + action + " action of cluster member " + name);
-      if (confirm("Are you sure you want to " + action + " cluster member " + name + "?") == true) {
-        console.log("Info: " + name + " " + action + " action started");
-        $.post("../api/cluster-members/change_cluster_member_state?id=" + serverId + "&project=" + project, { name: name, action: action }, function (data) {
-          console.log(data);
-          if (data.error_code >= 400){
-            alert(data.error);
-          }
-          //Aync type
-          setTimeout(() => { reloadPageContent(); }, 2000);
-          operationStatusCheck()
-        });
-      }
-    }
-
     function confirmDeleteItem(name){
       console.log("Info: confirming deletion of item " + name);
-      $("#deleteQuestionText").text("Are you sure you want to remove " + name + " from the cluster?");
-      $("#clusterMember").val(name);
+      $("#deleteQuestionText").text("Are you sure you want to remove the cluster group " + name + "?");
+      $("#clusterGroup").val(name);
       $("#deleteModal").modal('show');
     }
 
     function createItemUsingJSON(){
       var json = $("#jsonCreateInput").val();
-      console.log("Info: adding new project");
-      $.post("../api/cluster-members/add_cluster_member?id="+serverId+"&project="+project, { json: json },  function (data) {
+      console.log("Info: adding new cluster group");
+      $.post("../api/cluster-groups/add_cluster_group?id="+serverId+"&project="+project, { json: json },  function (data) {
         console.log(data);
         if (data.error_code >= 400){
           alert(data.error);
@@ -231,13 +185,9 @@
     }
 
     function deleteItem(){
-      name = $("#clusterMember").val();
-      force = "false";
-      if ($('#forceDeleteCheck').is(':checked')) {
-        force = "true";
-      }
+      name = $("#clusterGroup").val();
       console.log("Info: deleting item " + name);
-      $.post("../api/cluster-members/delete_cluster_member?id=" + serverId + "&project=" + project, { name: name, force: force }, function (data) {
+      $.post("../api/cluster-groups/delete_cluster_group?id=" + serverId + "&project=" + project, { name: name }, function (data) {
         console.log(data);
         if (data.error_code >= 400){
           alert(data.error);
@@ -250,7 +200,7 @@
     function editItem(name){
       editedClusterMember = name
       console.log("Info: loading cluster member " + name);
-      $.post("../api/cluster-members/load_cluster_member?id=" + serverId + "&project=" + project, { name: name }, function (data) {
+      $.post("../api/cluster-groups/load_cluster_group?id=" + serverId + "&project=" + project, { name: name }, function (data) {
         console.log(data);
         if (data.error_code >= 400){
           alert(data.error);
@@ -265,7 +215,7 @@
       name = editedClusterMember
       console.log("Info: renaming cluster group");
       data = $('#renameForm').serialize();
-      $.post("../api/cluster-members/update_cluster_member?id=" + serverId + "&project=" + project + "&name=" + encodeURI(name), data, function (data) {
+      $.post("../api/cluster-groups/update_cluster_group?id=" + serverId + "&project=" + project + "&name=" + encodeURI(name), data, function (data) {
         console.log(data)
         if (data.error_code >= 400){
           alert(data.error);
@@ -275,12 +225,11 @@
       });
     }
 
-
     function updateItem(){
       name = editedClusterMember
       var updatedJSON = $("#jsonInput").val();
-      console.log("Info: updating cluster member");
-      $.post("../api/cluster-members/update_cluster_member?id=" + serverId + "&project=" + project + "&name=" + encodeURI(name), { json: updatedJSON },  function (data) {
+      console.log("Info: updating cluster group");
+      $.post("../api/cluster-groups/update_cluster_group?id=" + serverId + "&project=" + project + "&name=" + encodeURI(name), { json: updatedJSON },  function (data) {
         console.log(data);
         if (data.error_code >= 400){
           alert(data.error);
@@ -299,6 +248,16 @@
       else {
         loadPageContent()
         operationStatusCheck()
+
+        //Populate the Cluster Members Dropdown in Add Modal
+        $.getJSON("../api/cluster-members/list_cluster_members?id="+serverId+"&project="+project, function (data) {
+          data = data.metadata
+          for (var index = 0; index < data.length; index++) {
+            optionText = data[index].replace('/1.0/cluster/members/','');
+            $('#clusterMembersInput').append('<option value="' + optionText + '">' + optionText + '</option>');
+          }
+        })
+
       }
       
     });

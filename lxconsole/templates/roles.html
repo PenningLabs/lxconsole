@@ -108,7 +108,7 @@
     // Add user
     function addRole(){
       console.log("Info: adding new role");
-      data = $('#addForm').serializeJSON();
+      data = $('#addForm').serialize();
       $.post("../api/roles/add_role", data, function (data) {
         console.log(data);
         if (data.error_code >= 400){

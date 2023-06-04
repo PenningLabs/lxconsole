@@ -30,6 +30,7 @@ function configureNavbarForServers(){
 function configureSidebarForServers(){
   $("#clusterMembersLinkSidebar").hide()
   $("#clusterGroupsLinkSidebar").hide()
+  $("#clusterGroupsLinkSidebar").hide()
   $("#instanceSidebarLinks").hide()
   $("#coreSidebarLinks").hide()
   $("#networkSidebarLinks").hide()
@@ -38,6 +39,7 @@ function configureSidebarForServers(){
 
 function populateSidebarLinks(){
   $("#clusterMembersLinkSidebar").show()
+  $("#clusterGroupsLinkSidebar").show()
   $("#instanceSidebarLinks").show()
   $("#coreSidebarLinks").show()
   $("#networkSidebarLinks").show()
@@ -60,6 +62,7 @@ function applySidebarLinks() {
   $("#networksLinkSidebar").attr("href", "networks?id=" + encodeURI(serverId) + "&project=" + encodeURI(project));
   $("#storagePoolsLinkSidebar").attr("href", "storage-pools?id=" + encodeURI(serverId) + "&project=" + encodeURI(project));
   $("#clusterMembersLinkSidebar").attr("href", "cluster-members?id=" + encodeURI(serverId) + "&project=" + encodeURI(project));
+  $("#clusterGroupsLinkSidebar").attr("href", "cluster-groups?id=" + encodeURI(serverId) + "&project=" + encodeURI(project));
   $("#projectsLinkSidebar").attr("href", "projects?id=" + encodeURI(serverId) + "&project=" + encodeURI(project));
   $("#networkAclsLinkSidebar").attr("href", "network-acls?id=" + encodeURI(serverId) + "&project=" + encodeURI(project));
   $("#operationsLinkSidebar").attr("href", "operations?id=" + encodeURI(serverId) + "&project=" + encodeURI(project));

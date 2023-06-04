@@ -2,6 +2,7 @@ from flask import Flask, Blueprint
 from . import server
 from . import servers
 from . import certificates
+from . import cluster_groups
 from . import cluster_members
 from . import images
 from . import container
@@ -34,6 +35,7 @@ api.add_url_rule('/containers/<endpoint>', view_func=containers.api_containers_e
 api.add_url_rule('/servers/<endpoint>', view_func=servers.api_servers_endpoint, methods=['GET', 'POST'])
 api.add_url_rule('/server/<endpoint>', view_func=server.api_server_endpoint)
 api.add_url_rule('/certificates/<endpoint>', view_func=certificates.api_certificates_endpoint, methods=['GET', 'POST'])
+api.add_url_rule('/cluster-groups/<endpoint>', view_func=cluster_groups.api_cluster_groups_endpoint, methods=['GET', 'POST'])
 api.add_url_rule('/cluster-members/<endpoint>', view_func=cluster_members.api_cluster_members_endpoint, methods=['GET', 'POST'])
 api.add_url_rule('/images/<endpoint>', view_func=images.api_images_endpoint, methods=['GET', 'POST'])
 api.add_url_rule('/networks/<endpoint>', view_func=networks.api_networks_endpoint, methods=['GET', 'POST'])

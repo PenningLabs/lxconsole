@@ -153,7 +153,7 @@
 
     function addItem(){
       console.log("Info: adding new profile");
-      data = $('#addForm').serializeJSON();
+      data = $('#addForm').serialize();
       $.post("../api/profiles/add_profile?id="+serverId+"&project="+project, data, function (data) {
         console.log(data)
         if (data.error_code >= 400){
