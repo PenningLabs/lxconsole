@@ -1,3 +1,8 @@
+# 0.2.1
+- Updated local xterm.js packages to version 5.1.0 and loading from local file
+- Modified CSS to hide terminal scrollbar in chrome based browsers
+- Added dynamic resize of terminal when sidebar is toggled
+
 # 0.2.0
 - Added cluster groups
 - Added evacuate and restore options for cluster members

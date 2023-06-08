@@ -57,3 +57,8 @@ code {
   color: #ff0000 !important;
   word-break: break-word;
 }
+
+
+.terminal .xterm-viewport {
+  overflow-y: hidden;
+}

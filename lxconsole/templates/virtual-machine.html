@@ -521,10 +521,9 @@
 {% endblock modal %}
 
 {% block script %}
-  <!-- <script src="../static/js/xterm/xterm.js"></script> -->
 
   <!-- xterm -->
-  <script src="https://unpkg.com/xterm@5.1.0/lib/xterm.js"></script>
+  <script src="../static/js/xterm/xterm.js"></script> 
 
   <script>
     
@@ -540,6 +539,7 @@
     var editedContainer
     var execControlSocket
     var execDataSocket
+    var resizeTimer
     populateSidebarLinks();
     populateNavbarLinks();
 
@@ -563,10 +563,9 @@
       rows: 35
     });
 
-    // Resize console and exec terminals on page resize
-    $(window).resize(function(){
+    // Resize the terminal and websocket connection on element resize
+    function terminalResize() {
       execTerminal.resize(parseInt(($("#page-container").width() - 40) / 9), 35);
-      console.log(`size: ${execTerminal.cols} columns, ${execTerminal.rows} rows`);
       consoleTerminal.resize(parseInt(($("#page-container").width() - 40) / 9), 35);
 
       resize_command = {
@@ -579,9 +578,27 @@
       
       if (typeof execControlSocket == 'object')
         execControlSocket.send(convertString2ArrayBuffer(JSON.stringify(resize_command)))
-      if(typeof consoleControlSocket == 'object')
+      if (typeof consoleControlSocket == 'object')
         consoleControlSocket.send(convertString2ArrayBuffer(JSON.stringify(resize_command)))
+    }
+    
+    // Listen for console and exec terminal size changes on page resize
+    $(window).resize(function(){
+      // Using a Timeout to prevent rapid resize calls and improve performance
+      clearTimeout(resizeTimer)
+      resizeTimer = setTimeout(() => { terminalResize(); }, 500);
     })
+
+    // Listen for console and exec terminal size changes on toggled sidebar
+    try {
+      ro = new ResizeObserver(() => {
+        // Using a Timeout to prevent rapid resize calls and improve performance
+        clearTimeout(resizeTimer)
+        resizeTimer = setTimeout(() => { terminalResize(); }, 500);
+      }).observe(document.getElementById("terminal-exec"))
+    } catch (error) {
+      console.log(error);
+    }    
 
     applySidebarStyles();
     applySidebarLinks();
