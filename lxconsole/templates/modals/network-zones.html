@@ -1,0 +1,160 @@
+<!-- Add Modal-->
+<div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Add Network Zone</h5>
+          <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item">
+              <a class="nav-link active" id="form-tab" data-toggle="tab" href="#form" role="tab" aria-controls="form" aria-selected="true">Form</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="json-tab" data-toggle="tab" href="#json" role="tab" aria-controls="json" aria-selected="false">JSON</a>
+            </li>
+          </ul>
+          <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="form" role="tabpanel" aria-labelledby="form-tab">
+              <form id="addForm">
+                <br />
+                <div class="row">
+                  <label class="col-3 col-form-label text-right">Name: <span class="text-danger">*</span></label>
+                  <div class="col-7">
+                    <div class="form-group">
+                      <input type="text" class="form-control" placeholder="" name="name">
+                    </div>
+                  </div>
+                  <div class="col-1">
+                    <i class="far fa-sm fa-question-circle" title='(Required) - Enter in the name of the network zone. Zones must be globally unique, even across projects.'></i>
+                  </div>
+                </div>
+                <div class="row">
+                  <label class="col-3 col-form-label text-right">Description: </label>
+                  <div class="col-7">
+                    <div class="form-group">
+                      <input type="text" class="form-control" placeholder="" name="description">
+                    </div>
+                  </div>
+                  <div class="col-1">
+                    <i class="far fa-sm fa-question-circle" title='Enter in a description for the network zone.'></i>
+                  </div>
+                </div>
+
+              </form>
+              <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                <a class="btn btn-primary" href="#" onclick="addItem()" data-dismiss="modal">Submit</a>
+              </div>
+            </div>
+            <div class="tab-pane fade" id="json" role="tabpanel" aria-labelledby="json-tab">
+              <br />
+              <div class="row">
+                <div class="col-12">
+                  <div class="form-group text-right">
+                    <pre>
+                      <textarea name="json" class="form-control" id="jsonCreateInput" rows="16" placeholder="Enter JSON data"></textarea>
+                    </pre>
+                  </div>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                <a class="btn btn-primary" href="#" onclick="createItemUsingJSON()" data-dismiss="modal">Submit</a>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Modal-->
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Edit Network Zone</h5>
+          <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item">
+              <a class="nav-link active" id="json-edit-tab" data-toggle="tab" href="#json-edit" role="tab" aria-controls="json-edit" aria-selected="false">JSON</a>
+            </li>
+            <!-- <li class="nav-item">
+              <a class="nav-link" id="rename-edit-tab" data-toggle="tab" href="#rename-edit" role="tab" aria-controls="rename-edit" aria-selected="true">Rename</a>
+            </li> -->
+          </ul>
+          <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="json-edit" role="tabpanel" aria-labelledby="json-edit-tab">
+              <br />
+              <div class="row">
+                <label class="col-4 col-form-label" id="itemNameEditInput"></label>
+                <div class="col-12">
+                  <div class="form-group text-right">
+                    <pre>
+                      <textarea name="json" class="form-control" id="jsonInput" rows="16" ></textarea>
+                    </pre>
+                  </div>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                <a class="btn btn-primary" href="#" onclick="updateItem()" data-dismiss="modal">Submit</a>
+              </div>
+            </div>
+            <div class="tab-pane fade" id="rename-edit" role="tabpanel" aria-labelledby="rename-edit-tab">
+              <form id="renameForm">
+                <br />
+                <div class="row">
+                  <label class="col-2 col-form-label text-right">Name:</label>
+                  <div class="col-8">
+                    <div class="form-group">
+                      <input type="text" class="form-control" placeholder="" name="name">
+                    </div>
+                  </div>
+                  <div class="col-1">
+                    <i class="far fa-sm fa-question-circle" title='Enter in the new name of the network zone.'></i>
+                  </div>
+                </div>
+              </form>
+              <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                <a class="btn btn-primary" href="#" onclick="renameItem()" data-dismiss="modal">Submit</a>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Modal-->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Delete Network Zone</h5>
+        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-2" id="deleteQuestionText">
+          Are you sure you want to delete this network zone?
+        </div>
+        <input type="hidden" id="networkZone" class="form-control" name="server_name">
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+        <a class="btn btn-primary" href="#" onclick="deleteItem()" data-dismiss="modal">Yes</a>
+      </div>
+    </div>
+  </div>
+</div>

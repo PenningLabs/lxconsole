@@ -30,7 +30,6 @@ function configureNavbarForServers(){
 function configureSidebarForServers(){
   $("#clusterMembersLinkSidebar").hide()
   $("#clusterGroupsLinkSidebar").hide()
-  $("#clusterGroupsLinkSidebar").hide()
   $("#instanceSidebarLinks").hide()
   $("#coreSidebarLinks").hide()
   $("#networkSidebarLinks").hide()
@@ -65,6 +64,7 @@ function applySidebarLinks() {
   $("#clusterGroupsLinkSidebar").attr("href", "cluster-groups?id=" + encodeURI(serverId) + "&project=" + encodeURI(project));
   $("#projectsLinkSidebar").attr("href", "projects?id=" + encodeURI(serverId) + "&project=" + encodeURI(project));
   $("#networkAclsLinkSidebar").attr("href", "network-acls?id=" + encodeURI(serverId) + "&project=" + encodeURI(project));
+  $("#networkZonesLinkSidebar").attr("href", "network-zones?id=" + encodeURI(serverId) + "&project=" + encodeURI(project));
   $("#operationsLinkSidebar").attr("href", "operations?id=" + encodeURI(serverId) + "&project=" + encodeURI(project));
   $("#certificatesLinkSidebar").attr("href", "certificates?id=" + encodeURI(serverId) + "&project=" + encodeURI(project));
   $("#simplestreamsLinkSidebar").attr("href", "simplestreams?id=" + encodeURI(serverId) + "&project=" + encodeURI(project));  
@@ -102,6 +102,10 @@ function  applySidebarStyles() {
     if (location.pathname == "/network-acls" || location.pathname == "/network-acl"){
       $('#networkAclsSpan').css('color','#fff');
       $('#networkAclsIcon').css('color','#fff');
+    }
+    if (location.pathname == "/network-zones" || location.pathname == "/network-zone"){
+      $('#networkZonesSpan').css('color','#fff');
+      $('#networkZonesIcon').css('color','#fff');
     }
     if (location.pathname == "/operations"){
       $('#operationsSpan').css('color','#fff');

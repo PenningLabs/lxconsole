@@ -6,8 +6,8 @@
       <h1>{{ page_title | safe }}</h1>
     </div>
     <div class="col-sm-6">
-      <a class="btn btn-outline-primary float-sm-right mr-4" href="#" data-toggle="modal" data-target="#addModal" title="Add Cluster Group" aria-hidden="true">
-        <i class="fas fa-plus fa-sm fa-fw"></i> Cluster Group
+      <a class="btn btn-outline-primary float-sm-right mr-4" href="#" data-toggle="modal" data-target="#addModal" title="Add Network Zone" aria-hidden="true">
+        <i class="fas fa-plus fa-sm fa-fw"></i> Network Zone
       </a>
     </div>
   </div>
@@ -17,7 +17,7 @@
   <div class="col-12">
     <div class="card">
       <div class="card-header">
-        <h3 class="card-title">Cluster Groups</h3>
+        <h3 class="card-title">Network Zones</h3>
         <div class="card-tools">
           <button type="button" class="btn btn-tool" onclick="reloadPageContent()" title="Refresh">
           <i class="fas fa-sync"></i>
@@ -33,7 +33,7 @@
 {% endblock content %}
 
 {% block modal %}
-  {% include 'modals/cluster-groups.html' %}
+  {% include 'modals/network-zones.html' %}
 {% endblock modal %}
 
 {% block script %}
@@ -43,7 +43,7 @@
     const urlParams = new URLSearchParams(queryString);
     const serverId = urlParams.get('id');
     const project = urlParams.get('project');
-    var editedClusterMember = ''
+    var editedNetworkZone = ''
     applySidebarStyles();
     applySidebarLinks();
     populateSidebarLinks();
@@ -95,7 +95,7 @@
       // Configure Datatable
       $('#myDataTable').DataTable({
         ajax: {
-          url: "../api/cluster-groups/list_cluster_groups?id="+serverId+"&project=" + project + "&recursion=1",
+          url: "../api/network-zones/list_network_zones?id="+serverId+"&project=" + project + "&recursion=1",
           dataType: "json",
           dataSrc: "metadata",
           contentType: "application/json"
@@ -113,19 +113,6 @@
               if (row.hasOwnProperty('description')) {
                 if (row.description)
                   return row.description
-              }
-              return '-'
-            },
-          },
-          { title: "Members", data: function (row, type, set) {
-              if (row.hasOwnProperty('members')) {
-                if (Object.keys(row.members).length > 0) {
-                  arr = []
-                  for (let i = 0; i < row.members.length; i++) {
-                    arr.push(row.members[i]);
-                  }
-                  return arr.join(", ")
-                }
               }
               return '-'
             },
@@ -154,7 +141,7 @@
     function addItem(){
       console.log("Info: adding new item");
       data = $('#addForm').serialize();
-      $.post("../api/cluster-groups/add_cluster_group?id="+serverId+"&project="+project, data, function (data) {
+      $.post("../api/network-zones/add_network_zone?id="+serverId+"&project="+project, data, function (data) {
         console.log(data)
         if (data.error_code >= 400){
           alert(data.error);
@@ -166,15 +153,15 @@
 
     function confirmDeleteItem(name){
       console.log("Info: confirming deletion of item " + name);
-      $("#deleteQuestionText").text("Are you sure you want to remove the cluster group " + name + "?");
-      $("#clusterGroup").val(name);
+      $("#deleteQuestionText").text("Are you sure you want to remove the network zone " + name + "?");
+      $("#networkZone").val(name);
       $("#deleteModal").modal('show');
     }
 
     function createItemUsingJSON(){
       var json = $("#jsonCreateInput").val();
-      console.log("Info: adding new cluster group");
-      $.post("../api/cluster-groups/add_cluster_group?id="+serverId+"&project="+project, { json: json },  function (data) {
+      console.log("Info: adding new network zone");
+      $.post("../api/network-zones/add_network_zone?id="+serverId+"&project="+project, { json: json },  function (data) {
         console.log(data);
         if (data.error_code >= 400){
           alert(data.error);
@@ -185,9 +172,9 @@
     }
 
     function deleteItem(){
-      name = $("#clusterGroup").val();
+      name = $("#networkZone").val();
       console.log("Info: deleting item " + name);
-      $.post("../api/cluster-groups/delete_cluster_group?id=" + serverId + "&project=" + project, { name: name }, function (data) {
+      $.post("../api/network-zones/delete_network_zone?id=" + serverId + "&project=" + project, { name: name }, function (data) {
         console.log(data);
         if (data.error_code >= 400){
           alert(data.error);
@@ -198,9 +185,9 @@
     }
 
     function editItem(name){
-      editedClusterMember = name
-      console.log("Info: loading cluster member " + name);
-      $.post("../api/cluster-groups/load_cluster_group?id=" + serverId + "&project=" + project, { name: name }, function (data) {
+      editedNetworkZone = name
+      console.log("Info: loading network zone " + name);
+      $.post("../api/network-zones/load_network_zone?id=" + serverId + "&project=" + project, { name: name }, function (data) {
         console.log(data);
         if (data.error_code >= 400){
           alert(data.error);
@@ -211,10 +198,10 @@
     }
 
     function renameItem(){
-      name = editedClusterMember
-      console.log("Info: renaming cluster group");
+      name = editedNetworkZone
+      console.log("Info: renaming network zone");
       data = $('#renameForm').serialize();
-      $.post("../api/cluster-groups/update_cluster_group?id=" + serverId + "&project=" + project + "&name=" + encodeURI(name), data, function (data) {
+      $.post("../api/network-zones/update_network_zone?id=" + serverId + "&project=" + project + "&name=" + encodeURI(name), data, function (data) {
         console.log(data)
         if (data.error_code >= 400){
           alert(data.error);
@@ -225,10 +212,10 @@
     }
 
     function updateItem(){
-      name = editedClusterMember
+      name = editedNetworkZone
       var updatedJSON = $("#jsonInput").val();
-      console.log("Info: updating cluster group");
-      $.post("../api/cluster-groups/update_cluster_group?id=" + serverId + "&project=" + project + "&name=" + encodeURI(name), { json: updatedJSON },  function (data) {
+      console.log("Info: updating netowrk zone");
+      $.post("../api/network-zones/update_network_zone?id=" + serverId + "&project=" + project + "&name=" + encodeURI(name), { json: updatedJSON },  function (data) {
         console.log(data);
         if (data.error_code >= 400){
           alert(data.error);
@@ -247,15 +234,6 @@
       else {
         loadPageContent()
         operationStatusCheck()
-
-        //Populate the Cluster Members Dropdown in Add Modal
-        $.getJSON("../api/cluster-members/list_cluster_members?id="+serverId+"&project="+project, function (data) {
-          data = data.metadata
-          for (var index = 0; index < data.length; index++) {
-            optionText = data[index].replace('/1.0/cluster/members/','');
-            $('#clusterMembersInput').append('<option value="' + optionText + '">' + optionText + '</option>');
-          }
-        })
 
       }
       

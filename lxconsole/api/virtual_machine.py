@@ -643,8 +643,8 @@ def api_virtual_machine_endpoint(endpoint):
     url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/virtual-machines/' + name + '/exec?project=' + project
     results = requests.post(url, verify=server.ssl_verify, cert=(client_cert, client_key), json=data)
   
-    # Sleep a second to give time for a second reading
-    time.sleep(1)
+    # Sleep to allow time for copy to complete
+    time.sleep(.5)
 
     #Get first /proc/stat information but from /tmp/stat
     url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/virtual-machines/' + name + '/files?project=' + project + '&path=/tmp/stat'
@@ -660,7 +660,8 @@ def api_virtual_machine_endpoint(endpoint):
           first_cpu_time = user_time + system_time + idle_time
           first_idle_time = idle_time
 
-  
+    # Sleep a second between reads
+    time.sleep(1)
 
     # Copy /proc/stat to /tmp/stat and then read that file as a work around
     data = {}
@@ -678,8 +679,8 @@ def api_virtual_machine_endpoint(endpoint):
     url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/virtual-machines/' + name + '/exec?project=' + project
     results = requests.post(url, verify=server.ssl_verify, cert=(client_cert, client_key), json=data)
 
-    # Sleep a second to give time for a second reading
-    time.sleep(1)
+    # Sleep to allow time for copy to complete
+    time.sleep(.5)
 
     #Get second /proc/stat information
     url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/virtual-machines/' + name + '/files?project=' + project + '&path=/tmp/stat'

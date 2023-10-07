@@ -1,9 +1,10 @@
 flask
 flask-sqlalchemy
 flask-bcrypt
-flask-login
+flask-login==0.6.2
 flask-wtf
 email-validator
 requests
 pyOpenSSL
 gunicorn
+werkzeug==2.3.0

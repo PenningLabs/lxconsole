@@ -7,9 +7,11 @@ from . import cluster_members
 from . import images
 from . import container
 from . import containers
+from . import network
 from . import networks
 from . import network_acl
 from . import network_acls
+from . import network_zones
 from . import profiles
 from . import operations
 from . import projects
@@ -38,9 +40,11 @@ api.add_url_rule('/certificates/<endpoint>', view_func=certificates.api_certific
 api.add_url_rule('/cluster-groups/<endpoint>', view_func=cluster_groups.api_cluster_groups_endpoint, methods=['GET', 'POST'])
 api.add_url_rule('/cluster-members/<endpoint>', view_func=cluster_members.api_cluster_members_endpoint, methods=['GET', 'POST'])
 api.add_url_rule('/images/<endpoint>', view_func=images.api_images_endpoint, methods=['GET', 'POST'])
+api.add_url_rule('/network/<endpoint>', view_func=network.api_network_endpoint, methods=['GET', 'POST'])
 api.add_url_rule('/networks/<endpoint>', view_func=networks.api_networks_endpoint, methods=['GET', 'POST'])
 api.add_url_rule('/network-acl/<endpoint>', view_func=network_acl.api_network_acl_endpoint, methods=['GET', 'POST'])
 api.add_url_rule('/network-acls/<endpoint>', view_func=network_acls.api_network_acls_endpoint, methods=['GET', 'POST'])
+api.add_url_rule('/network-zones/<endpoint>', view_func=network_zones.api_network_zones_endpoint, methods=['GET', 'POST'])
 api.add_url_rule('/profiles/<endpoint>', view_func=profiles.api_profiles_endpoint, methods=['GET', 'POST'])
 api.add_url_rule('/operations/<endpoint>', view_func=operations.api_operations_endpoint, methods=['GET', 'POST'])
 api.add_url_rule('/projects/<endpoint>', view_func=projects.api_projects_endpoint, methods=['GET', 'POST'])

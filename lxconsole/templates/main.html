@@ -40,7 +40,7 @@
 
       <footer class="main-footer">
         <div class="float-right d-none d-sm-block">
-          Version 0.2.1
+          Version 0.3.0
         </div>
         Copyright &copy; 2020-Present <a href="https://penninglabs.com">Penning Labs</a>. All rights reserved.
       </footer>
@@ -48,9 +48,15 @@
     </div>
     <!-- ./wrapper -->
 
-    <!-- jQuery -->
-    <script src="../static/plugins/jquery/jquery.min.js"></script>
+    <!-- jQuery - https://code.jquery.com/jquery-3.7.1.js -->
+    <script src="../static/js/jquery/jquery-3.7.1.js"></script>
 
+    <!-- jQuery Datatables -   https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js -->
+    <!-- <script src="../static/js/datatables/jquery.dataTables-1.13.6.min.js"></script> -->
+
+    <!-- Datatables Bootstrap 5 - https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js -->
+    <!-- <script src="../static/js/datatables/dataTables.bootstrap5.min.js"></script> -->
+  
     <!-- Bootstrap 4 -->
     <script src="../static/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
     
@@ -76,6 +82,7 @@
         // url.search = search_params.toString();
         // location = url.toString();
       }
+
       function changeServer(id){
         window.location.href = 'server?id=' + id;
         // var url = new URL(window.location);

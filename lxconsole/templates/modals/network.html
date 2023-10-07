@@ -1,0 +1,535 @@
+<!-- Add Forward Modal-->
+<div class="modal fade" id="addForwardModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Add Network Forward</h5>
+          <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item">
+              <a class="nav-link active" id="add-forward-form-tab" data-toggle="tab" href="#addForwardform" role="tab" aria-controls="add-forward-form-tab" aria-selected="true">Form</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="add-forward-json-tab" data-toggle="tab" href="#addForwardJson" role="tab" aria-controls="add-forward-json-tab" aria-selected="false">JSON</a>
+            </li>
+          </ul>
+          <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="addForwardform" role="tabpanel" aria-labelledby="form-tab">
+              <form id="addForwardForm">
+                <br />
+                <div class="row">
+                  <label class="col-3 col-form-label text-right">Listen Address: <span class="text-danger">*</span></label>
+                  <div class="col-7">
+                    <div class="form-group">
+                      <input type="text" class="form-control" placeholder="" name="listen_address">
+                    </div>
+                  </div>
+                  <div class="col-1">
+                    <i class="far fa-sm fa-question-circle" title='(Required) - Enter in the name of the listening network address.'></i>
+                  </div>
+                </div>
+                <div class="row">
+                  <label class="col-3 col-form-label text-right">Description: </label>
+                  <div class="col-7">
+                    <div class="form-group">
+                      <input type="text" class="form-control" placeholder="" name="description">
+                    </div>
+                  </div>
+                  <div class="col-1">
+                    <i class="far fa-sm fa-question-circle" title='Enter in a description for the network load balancer.'></i>
+                  </div>
+                </div>
+                <hr>
+                <h5>Port:</h5>
+                <div class="row">
+                  <label class="col-3 col-form-label text-right">Description: </label>
+                  <div class="col-7">
+                    <div class="form-group">
+                      <input type="text" class="form-control" placeholder="" name="port_description">
+                    </div>
+                  </div>
+                  <div class="col-1">
+                    <i class="far fa-sm fa-question-circle" title='Enter in a description for the port.'></i>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <label class="col-3 col-form-label text-right">Listen Port: </label>
+                  <div class="col-7">
+                    <div class="form-group">
+                      <input type="text" class="form-control" placeholder="" name="port_listen_port">
+                    </div>
+                  </div>
+                  <div class="col-1">
+                    <i class="far fa-sm fa-question-circle" title='Enter in a description for the network load balancer.'></i>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <label class="col-3 col-form-label text-right">Protocol: </label>
+                  <div class="col-7">
+                    <div class="form-group">
+                      <select class="form-control" name="port_protocol">
+                        <option value="tcp">TCP</option>
+                        <option value="udp">UDP</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-1">
+                    <i class="far fa-sm fa-question-circle" title='Enter in a description for the network load balancer.'></i>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <label class="col-3 col-form-label text-right">Target Address: </label>
+                  <div class="col-7">
+                    <div class="form-group">
+                      <input type="text" class="form-control" placeholder="" name="port_target_address">
+                    </div>
+                  </div>
+                  <div class="col-1">
+                    <i class="far fa-sm fa-question-circle" title='Enter in a description for the network load balancer.'></i>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <label class="col-3 col-form-label text-right">Target Port: </label>
+                  <div class="col-7">
+                    <div class="form-group">
+                      <input type="text" class="form-control" placeholder="" name="port_target_port">
+                    </div>
+                  </div>
+                  <div class="col-1">
+                    <i class="far fa-sm fa-question-circle" title='Enter in a description for the network load balancer.'></i>
+                  </div>
+                </div>
+
+
+              </form>
+              <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                <a class="btn btn-primary" href="#" onclick="addItem('forward')" data-dismiss="modal">Submit</a>
+              </div>
+            </div>
+            <div class="tab-pane fade" id="addForwardJson" role="tabpanel" aria-labelledby="json-tab">
+              <br />
+              <div class="row">
+                <div class="col-12">
+                  <div class="form-group text-right">
+                    <pre>
+                      <textarea name="json" class="form-control" id="jsonCreateForwardInput" rows="16" placeholder="Enter JSON data"></textarea>
+                    </pre>
+                  </div>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                <a class="btn btn-primary" href="#" onclick="createItemUsingJSON('forward')" data-dismiss="modal">Submit</a>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+  </div>
+</div>
+
+<!-- Add Load Balancer Modal-->
+<div class="modal fade" id="addLoadBalancerModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Add Network Load Balancer</h5>
+          <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item">
+              <a class="nav-link active" id="form-tab" data-toggle="tab" href="#form" role="tab" aria-controls="form" aria-selected="true">Form</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="json-tab" data-toggle="tab" href="#json" role="tab" aria-controls="json" aria-selected="false">JSON</a>
+            </li>
+          </ul>
+          <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="form" role="tabpanel" aria-labelledby="form-tab">
+              <form id="addLoadBalancerForm">
+                <br />
+                <div class="row">
+                  <label class="col-3 col-form-label text-right">Listen Address: <span class="text-danger">*</span></label>
+                  <div class="col-7">
+                    <div class="form-group">
+                      <input type="text" class="form-control" placeholder="" name="listen_address">
+                    </div>
+                  </div>
+                  <div class="col-1">
+                    <i class="far fa-sm fa-question-circle" title='(Required) - Enter in the name of the listening network address.'></i>
+                  </div>
+                </div>
+                <div class="row">
+                  <label class="col-3 col-form-label text-right">Description: </label>
+                  <div class="col-7">
+                    <div class="form-group">
+                      <input type="text" class="form-control" placeholder="" name="description">
+                    </div>
+                  </div>
+                  <div class="col-1">
+                    <i class="far fa-sm fa-question-circle" title='Enter in a description for the network load balancer.'></i>
+                  </div>
+                </div>
+
+                <hr>
+                <h5>Backend:</h5>
+                <div class="row">
+                  <label class="col-3 col-form-label text-right">Description: </label>
+                  <div class="col-7">
+                    <div class="form-group">
+                      <input type="text" class="form-control" placeholder="" name="backend_description">
+                    </div>
+                  </div>
+                  <div class="col-1">
+                    <i class="far fa-sm fa-question-circle" title='Enter in a description for the port.'></i>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <label class="col-3 col-form-label text-right">Name: </label>
+                  <div class="col-7">
+                    <div class="form-group">
+                      <input type="text" class="form-control" placeholder="" name="backend_name">
+                    </div>
+                  </div>
+                  <div class="col-1">
+                    <i class="far fa-sm fa-question-circle" title='Enter in a description for the network load balancer.'></i>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <label class="col-3 col-form-label text-right">Target Address: </label>
+                  <div class="col-7">
+                    <div class="form-group">
+                      <input type="text" class="form-control" placeholder="" name="backend_target_address">
+                    </div>
+                  </div>
+                  <div class="col-1">
+                    <i class="far fa-sm fa-question-circle" title='Enter in a description for the network load balancer.'></i>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <label class="col-3 col-form-label text-right">Target Port: </label>
+                  <div class="col-7">
+                    <div class="form-group">
+                      <input type="text" class="form-control" placeholder="" name="backend_target_port">
+                    </div>
+                  </div>
+                  <div class="col-1">
+                    <i class="far fa-sm fa-question-circle" title='Enter in a description for the network load balancer.'></i>
+                  </div>
+                </div>
+
+                <hr>
+                <h5>Port:</h5>
+                <div class="row">
+                  <label class="col-3 col-form-label text-right">Description: </label>
+                  <div class="col-7">
+                    <div class="form-group">
+                      <input type="text" class="form-control" placeholder="" name="port_description">
+                    </div>
+                  </div>
+                  <div class="col-1">
+                    <i class="far fa-sm fa-question-circle" title='Enter in a description for the port.'></i>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <label class="col-3 col-form-label text-right">Listen Port: </label>
+                  <div class="col-7">
+                    <div class="form-group">
+                      <input type="text" class="form-control" placeholder="" name="port_listen_port">
+                    </div>
+                  </div>
+                  <div class="col-1">
+                    <i class="far fa-sm fa-question-circle" title='Enter in a description for the network load balancer.'></i>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <label class="col-3 col-form-label text-right">Protocol: </label>
+                  <div class="col-7">
+                    <div class="form-group">
+                      <select class="form-control" name="port_protocol">
+                        <option value="tcp">TCP</option>
+                        <option value="udp">UDP</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-1">
+                    <i class="far fa-sm fa-question-circle" title='Enter in a description for the network load balancer.'></i>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <label class="col-3 col-form-label text-right">Target Backend: </label>
+                  <div class="col-7">
+                    <div class="form-group">
+                      <input type="text" class="form-control" placeholder="" name="port_target_backend">
+                    </div>
+                  </div>
+                  <div class="col-1">
+                    <i class="far fa-sm fa-question-circle" title='Enter in a description for the network load balancer.'></i>
+                  </div>
+                </div>
+
+              </form>
+              <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                <a class="btn btn-primary" href="#" onclick="addItem('load_balancer')" data-dismiss="modal">Submit</a>
+              </div>
+            </div>
+            <div class="tab-pane fade" id="json" role="tabpanel" aria-labelledby="json-tab">
+              <br />
+              <div class="row">
+                <div class="col-12">
+                  <div class="form-group text-right">
+                    <pre>
+                      <textarea name="json" class="form-control" id="jsonCreateLoadBalancerInput" rows="16" placeholder="Enter JSON data"></textarea>
+                    </pre>
+                  </div>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                <a class="btn btn-primary" href="#" onclick="createItemUsingJSON('load_balancer')" data-dismiss="modal">Submit</a>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+  </div>
+</div>
+
+<!-- Add Peer Modal-->
+<div class="modal fade" id="addPeerModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Add Network Peer</h5>
+          <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item">
+              <a class="nav-link active" id="add-peer-form-tab" data-toggle="tab" href="#addPeerform" role="tab" aria-controls="add-peer-form-tab" aria-selected="true">Form</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="add-peer-json-tab" data-toggle="tab" href="#addPeerJson" role="tab" aria-controls="add-peer-json-tab" aria-selected="false">JSON</a>
+            </li>
+          </ul>
+          <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="addPeerform" role="tabpanel" aria-labelledby="form-tab">
+              <form id="addPeerForm">
+                <br />
+                <div class="row">
+                  <label class="col-3 col-form-label text-right">Name: <span class="text-danger">*</span></label>
+                  <div class="col-7">
+                    <div class="form-group">
+                      <input type="text" class="form-control" placeholder="" name="name">
+                    </div>
+                  </div>
+                  <div class="col-1">
+                    <i class="far fa-sm fa-question-circle" title='(Required) - Enter in the name of the listening network address.'></i>
+                  </div>
+                </div>
+                <div class="row">
+                  <label class="col-3 col-form-label text-right">Description: </label>
+                  <div class="col-7">
+                    <div class="form-group">
+                      <input type="text" class="form-control" placeholder="" name="description">
+                    </div>
+                  </div>
+                  <div class="col-1">
+                    <i class="far fa-sm fa-question-circle" title='Enter in a description for the network load balancer.'></i>
+                  </div>
+                </div>
+                <div class="row">
+                  <label class="col-3 col-form-label text-right">Target Network: </label>
+                  <div class="col-7">
+                    <div class="form-group">
+                      <input type="text" class="form-control" placeholder="" name="target_network">
+                    </div>
+                  </div>
+                  <div class="col-1">
+                    <i class="far fa-sm fa-question-circle" title='Enter in a description for the network load balancer.'></i>
+                  </div>
+                </div>
+                <div class="row">
+                  <label class="col-3 col-form-label text-right">Target Project: </label>
+                  <div class="col-7">
+                    <div class="form-group">
+                      <input type="text" class="form-control" placeholder="" name="target_project">
+                    </div>
+                  </div>
+                  <div class="col-1">
+                    <i class="far fa-sm fa-question-circle" title='Enter in a description for the network load balancer.'></i>
+                  </div>
+                </div>
+
+              </form>
+              <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                <a class="btn btn-primary" href="#" onclick="addItem('peer')" data-dismiss="modal">Submit</a>
+              </div>
+            </div>
+            <div class="tab-pane fade" id="addPeerJson" role="tabpanel" aria-labelledby="json-tab">
+              <br />
+              <div class="row">
+                <div class="col-12">
+                  <div class="form-group text-right">
+                    <pre>
+                      <textarea name="json" class="form-control" id="jsonCreatePeerInput" rows="16" placeholder="Enter JSON data"></textarea>
+                    </pre>
+                  </div>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                <a class="btn btn-primary" href="#" onclick="createItemUsingJSON('peer')" data-dismiss="modal">Submit</a>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Edit Forward Modal-->
+<div class="modal fade" id="editForwardModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Edit Network Forward</h5>
+          <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item">
+              <a class="nav-link active" id="json-edit-tab" data-toggle="tab" href="#json-edit" role="tab" aria-controls="json-edit" aria-selected="false">JSON</a>
+            </li>
+          </ul>
+          <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="json-edit" role="tabpanel" aria-labelledby="json-edit-tab">
+              <br />
+              <div class="row">
+                <label class="col-4 col-form-label" id="forwardNameEditInput"></label>
+                <div class="col-12">
+                  <div class="form-group text-right">
+                    <pre>
+                      <textarea name="json" class="form-control" id="forwardJsonInput" rows="16" ></textarea>
+                    </pre>
+                    <input type="hidden" id="forwardNameHiddenInput" name="forward_name_hidden">
+                  </div>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                <a class="btn btn-primary" href="#" onclick="updateForward()" data-dismiss="modal">Submit</a>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Load Balancer Modal-->
+<div class="modal fade" id="editLoadBalancerModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Edit Network Load Balancer</h5>
+          <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item">
+              <a class="nav-link active" id="json-edit-tab" data-toggle="tab" href="#json-edit" role="tab" aria-controls="json-edit" aria-selected="false">JSON</a>
+            </li>
+          </ul>
+          <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="json-edit" role="tabpanel" aria-labelledby="json-edit-tab">
+              <br />
+              <div class="row">
+                <label class="col-4 col-form-label" id="loadBalancerNameEditInput"></label>
+                <div class="col-12">
+                  <div class="form-group text-right">
+                    <pre>
+                      <textarea name="json" class="form-control" id="loadBalancerJsonInput" rows="16" ></textarea>
+                    </pre>
+                    <input type="hidden" id="loadBalancerNameHiddenInput" name="load_balancer_name_hidden">
+                  </div>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                <a class="btn btn-primary" href="#" onclick="updateLoadBalancer()" data-dismiss="modal">Submit</a>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Peer Modal-->
+<div class="modal fade" id="editPeerModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Edit Network Peer</h5>
+          <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item">
+              <a class="nav-link active" id="json-edit-tab" data-toggle="tab" href="#json-edit" role="tab" aria-controls="json-edit" aria-selected="false">JSON</a>
+            </li>
+          </ul>
+          <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="json-edit" role="tabpanel" aria-labelledby="json-edit-tab">
+              <br />
+              <div class="row">
+                <label class="col-4 col-form-label" id="peerNameEditInput"></label>
+                <div class="col-12">
+                  <div class="form-group text-right">
+                    <pre>
+                      <textarea name="json" class="form-control" id="peerJsonInput" rows="16" ></textarea>
+                    </pre>
+                    <input type="hidden" id="peerNameHiddenInput" name="peer_name_hidden">
+                  </div>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                <a class="btn btn-primary" href="#" onclick="updatePeer()" data-dismiss="modal">Submit</a>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+  </div>
+</div>

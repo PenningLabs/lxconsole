@@ -1,3 +1,12 @@
+# 0.3.0
+ - Improved Dockerfile for quicker builds
+ - Added version specific flask and werkzeug to requirements due to build error in dependencies
+ - Added a Network Zones page
+ - Added a Network page with DHCP Leases, Network Load Balancers, Forwards, and Peers
+ - Added missing parameters in API for creating a network
+ - Upgraded jQuery to version 3.7.1
+ - Updated layout to container and virtual machines pages
+ 
 # 0.2.1
 - Updated local xterm.js packages to version 5.1.0 and loading from local file
 - Modified CSS to hide terminal scrollbar in chrome based browsers

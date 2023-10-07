@@ -89,6 +89,16 @@ def network_acl():
 def network_acls():
   return render_template('network-acls.html', page_title='Network ACLs', page_user_id=current_user.id, page_username=current_user.username,)
 
+@app.route("/network-zones")
+@login_required
+def network_zones():
+  return render_template('network-zones.html', page_title='Network Zones', page_user_id=current_user.id, page_username=current_user.username,)
+
+@app.route("/network")
+@login_required
+def network():
+  return render_template('network.html', page_title='Network', page_user_id=current_user.id, page_username=current_user.username,)
+
 @app.route("/networks")
 @login_required
 def networks():

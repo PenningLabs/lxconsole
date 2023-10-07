@@ -103,13 +103,14 @@
         columns: [
           { title: "Name", data: function (row, type, set) {
               if (row.hasOwnProperty('name')) {
+                if (row.name && row.managed && row.type)
+                  return '<a href="../network?id=' + serverId + '&project=' + project + '&network=' + row.name + '&network_type=' + row.type + '">' + row.name + '</a>';
                 if (row.name)
                   return row.name
               }
               return '-'
             },
           },
-
           { title: "Description", data: function (row, type, set) {
               if (row.hasOwnProperty('description')) {
                 if (row.description)
@@ -501,6 +502,7 @@
       else {
         loadPageContent()
         operationStatusCheck()
+        changeNetworkTypeInput()
       }
       
     });

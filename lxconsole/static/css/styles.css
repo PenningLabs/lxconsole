@@ -62,3 +62,13 @@ code {
 .terminal .xterm-viewport {
   overflow-y: hidden;
 }
+
+td.details-control {
+  text-align:center;
+  color:#007bff ;
+cursor: pointer;
+}
+tr.shown td.details-control {
+text-align:center; 
+color:#ff0000 ;
+}

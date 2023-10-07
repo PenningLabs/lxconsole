@@ -49,6 +49,8 @@
     <nav>
       <div class="nav nav-tabs" id="nav-page-tab" role="tablist">
         <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Home</a>
+        <a class="nav-item nav-link" id="nav-configuration-tab" data-toggle="tab" href="#nav-configuration" role="tab" aria-controls="nav-configuration" aria-selected="false">Configuration</a>
+        <a class="nav-item nav-link" id="nav-devices-tab" data-toggle="tab" href="#nav-devices" role="tab" aria-controls="nav-devices" aria-selected="false">Devices</a>
         <a class="nav-item nav-link" id="nav-console-tab" data-toggle="tab" href="#nav-console" role="tab" aria-controls="nav-console" aria-selected="false">Console</a>
         <a class="nav-item nav-link" id="nav-exec-tab" data-toggle="tab" href="#nav-exec" role="tab" aria-controls="nav-exec" aria-selected="false">Exec</a>
       </div>
@@ -62,12 +64,9 @@
             <!-- Interfaces Card-->
             <div class="card" id="interfacesCard">
               <div class="card-header">
-                <h3 class="card-title text-primary" data-card-widget="collapse">
+                <h3 class="card-title text-primary">
                     Interfaces
                 </h3>
-                <div class="card-tools">
-                  <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
-                </div>
               </div>
               <div class="card-body">
                 <div class="table-responsive">
@@ -80,11 +79,10 @@
             <!-- Snapshots Card-->
             <div class="card" id="snapshotsCard">
               <div class="card-header">
-                <h3 class="card-title text-primary" data-card-widget="collapse">
+                <h3 class="card-title text-primary">
                   Snapshots
                 </h3>
                 <div class="card-tools">
-                  <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
                   <button type="button" class="btn btn-tool" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <i class="fa fa-bars"></i>
                   </button>
@@ -104,11 +102,10 @@
             <!-- Backups Card-->
             <div class="card" id="backupsCard">
               <div class="card-header">
-                <h3 class="card-title text-primary" data-card-widget="collapse">
+                <h3 class="card-title text-primary">
                   Backups
                 </h3>
                 <div class="card-tools">
-                  <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-plus"></i></button>
                   <button type="button" class="btn btn-tool" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <i class="fa fa-bars"></i>
                   </button>
@@ -124,136 +121,13 @@
                 </div>
               </div>
             </div>
-
-            <!-- Network Devices Card-->
-            <div class="card collapsed-card" id="networkDevicesCard">
-              <div class="card-header">
-                <h3 class="card-title text-primary" data-card-widget="collapse">
-                  Network Devices
-                </h3>
-                <div class="card-tools">
-                  <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-plus"></i></button>
-                  <button type="button" class="btn btn-tool" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <i class="fa fa-bars"></i>
-                  </button>
-                  <div class="dropdown-menu dropdown-menu-right">
-                    <a class="dropdown-item" onclick="loadAddNetworkDeviceModal()" title="Add Network Device">Add Network Device</a>
-                  </div>
-                </div>
-              </div>
-              <div class="card-body">
-                <div class="table-responsive">
-                  <table class="table table-hover" id="networkDeviceTableList" width="100%" cellspacing="0">
-                  </table>
-                </div>
-              </div>
-            </div>
-    
-            <!-- Disk Devices Card-->
-            <div class="card collapsed-card" id="diskDevicesCard">
-              <div class="card-header">
-                <h3 class="card-title text-primary" data-card-widget="collapse">
-                  Disk Devices
-                </h3>
-                <div class="card-tools">
-                  <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-plus"></i></button>
-                  <button type="button" class="btn btn-tool" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <i class="fa fa-bars"></i>
-                  </button>
-                  <div class="dropdown-menu dropdown-menu-right">
-                    <a class="dropdown-item" onclick="loadAddDiskDeviceModal()" title="Add Disk Device">Add Disk Device</a>
-                  </div>
-                </div>
-              </div>
-              <div class="card-body">
-                <div class="table-responsive">
-                  <table class="table table-hover" id="diskDeviceTableList" width="100%" cellspacing="0">
-                  </table>
-                </div>
-              </div>
-            </div>
-
-            <!-- GPU Devices Card-->
-            <div class="card collapsed-card" id="gpuDevicesCard">
-              <div class="card-header">
-                <h3 class="card-title text-primary" data-card-widget="collapse">
-                  GPU Devices
-                </h3>
-                <div class="card-tools">
-                  <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-plus"></i></button>
-                  <button type="button" class="btn btn-tool" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <i class="fa fa-bars"></i>
-                  </button>
-                  <div class="dropdown-menu dropdown-menu-right">
-                    <a href="#" class="dropdown-item" data-toggle="modal" data-target="#addGPUDeviceModal" title="Add GPU Device">Add GPU Device</a>
-                  </div>
-                </div>
-              </div>
-              <div class="card-body">
-                <div class="table-responsive">
-                  <table class="table table-hover" id="gpuDeviceTableList" width="100%" cellspacing="0">
-                  </table>
-                </div>
-              </div>
-            </div>
-    
-            <!-- Proxy Devices Card-->
-            <div class="card collapsed-card" id="proxyDevicesCard">
-              <div class="card-header">
-                <h3 class="card-title text-primary" data-card-widget="collapse">
-                  Proxy Devices
-                </h3>
-                <div class="card-tools">
-                  <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-plus"></i></button>
-                  <button type="button" class="btn btn-tool" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <i class="fa fa-bars"></i>
-                  </button>
-                  <div class="dropdown-menu dropdown-menu-right">
-                    <a href="#" class="dropdown-item" data-toggle="modal" data-target="#addProxyDeviceModal" title="Add Proxy Device">Add Proxy Device</a>
-                  </div>
-                </div>
-              </div>
-              <div class="card-body">
-                <div class="table-responsive">
-                  <table class="table table-hover" id="proxyDeviceTableList" width="100%" cellspacing="0">
-                  </table>
-                </div>
-              </div>
-            </div>
-    
-            <!-- USB Devices Card-->
-            <div class="card collapsed-card" id="usbDevicesCard">
-              <div class="card-header">
-                <h3 class="card-title text-primary" data-card-widget="collapse">
-                  USB Devices
-                </h3>
-                <div class="card-tools">
-                  <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-plus"></i></button>
-                  <button type="button" class="btn btn-tool" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <i class="fa fa-bars"></i>
-                  </button>
-                  <div class="dropdown-menu dropdown-menu-right">
-                    <a href="#" class="dropdown-item" data-toggle="modal" data-target="#addUSBDeviceModal" title="Add USB Device">Add USB Device</a>
-                  </div>
-                </div>
-              </div>
-              <div class="card-body">
-                <div class="table-responsive">
-                  <table class="table table-hover" id="usbDeviceTableList" width="100%" cellspacing="0">
-                  </table>
-                </div>
-              </div>
-            </div>
         
             <!-- Logs Card-->
-            <div class="card collapsed-card" id="logsCard">
+            <div class="card" id="logsCard">
               <div class="card-header">
-                <h3 class="card-title text-primary" data-card-widget="collapse">
+                <h3 class="card-title text-primary">
                   Logs
                 </h3>
-                <div class="card-tools">
-                  <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-plus"></i></button>
-                </div>
               </div>
               <div class="card-body">
                 <div class="table-responsive">
@@ -265,8 +139,7 @@
     
           </div>
 
-          <div class="col-3">
-      
+          <div class="col-3">    
             <div class="accordion" id="accordionExample">
       
               <!-- General Data Card-->
@@ -310,165 +183,257 @@
                   </table>
                 </div>
               </div>
-      
-              <!-- Boot Configuration Card-->
-              <div class="card collapsed-card">
-                <div class="card-header">
-                  <h3 class="card-title text-primary" data-card-widget="collapse">
-                    Boot Configuration
-                  </h3>
-                  <div class="card-tools">
-                    <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-plus"></i></button>
-                  </div>
-                </div>
-                <div class="card-body">
-                  <table class="table table-sm">
-                    <tr><td class="pr-3">Autostart:</td> <td><span id="bootAutostart"></span></td></tr>
-                    <tr><td class="pr-3">Autostart Delay:</td> <td><span id="bootAutostartDelay"></span></td></tr>
-                    <tr><td class="pr-3">Autostart Priority:</td> <td><span id="bootAutostartPriority"></span></td></tr>
-                    <tr><td class="pr-3">Host Shutdown Timeout:</td> <td><span id="bootHostShutdownTimeout"></span></td></tr>
-                    <tr><td class="pr-3">Stop Priority:</td> <td><span id="bootStopPriority"></span></td></tr>
-                  </table>
-                </div>
-              </div>
-
-              <!-- Cloud-init Configuration Card-->
-              <div class="card collapsed-card">
-                <div class="card-header" id="headingCloudInitConfiguration">
-                  <h3 class="card-title text-primary" data-card-widget="collapse">
-                    Cloud-Init Configuration
-                  </h3>
-                  <div class="card-tools">
-                    <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-plus"></i></button>
-                  </div>
-                </div>
-                <div class="card-body">
-                  <table class="table table-sm">
-                    <tr><td class="pr-3">Network-Config:</td> <td><span id="cloudInitNetworkConfig"></span></td></tr>
-                    <tr><td class="pr-3">User-Data:</td> <td><span id="cloudInitUserData"></span></td></tr>
-                    <tr><td class="pr-3">Vendor-Data:</td> <td><span id="cloudInitVendorData"></span></td></tr>
-                  </table>
-                </div>
-              </div>
-
-              <!-- Limits Configuration Card-->
-              <div class="card collapsed-card">
-                <div class="card-header">
-                  <h3 class="card-title text-primary" data-card-widget="collapse">
-                    Limits Configuration
-                  </h3>
-                  <div class="card-tools">
-                    <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-plus"></i></button>
-                  </div>
-                </div>
-                <div class="card-body">
-                  <table class="table table-sm">
-                    <tr><td class="pr-3">CPU:</td> <td><span id="limitsCpu"></span></td></tr>
-                    <tr><td class="pr-3">Disk Priority:</td> <td><span id="limitsDiskPriority"></span></td></tr>
-                    <tr><td class="pr-3">Memory:</td> <td><span id="limitsMemory"></span></td></tr>
-                    <tr><td class="pr-3">Memory Hugepages:</td> <td><span id="limitsMemoryHugepages"></span></td></tr>
-                    <tr><td class="pr-3">Network Priority:</td> <td><span id="limitsNetworkPriority"></span></td></tr>
-                  </table>
-                </div>
-              </div>
-      
-              <!-- Migration Configuration Card-->
-              <div class="card collapsed-card">
-                <div class="card-header" id="headingMigrationConfiguration">
-                  <h3 class="card-title text-primary" data-card-widget="collapse">
-                    Migration Configuration
-                  </h3>
-                  <div class="card-tools">
-                    <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-plus"></i></button>
-                  </div>
-                </div>
-                <div class="card-body">
-                  <table class="table table-sm">
-                    <tr><td class="pr-3">Stateful:</td> <td><span id="migrationStateful"></span></td></tr>
-                  </table>
-                </div>
-              </div>
-      
-              <!-- Other Configuration Card-->
-              <div class="card collapsed-card">
-                <div class="card-header" id="headingOtherConfiguration">
-                  <h3 class="card-title text-primary" data-card-widget="collapse">
-                    Other Configuration
-                  </h3>
-                  <div class="card-tools">
-                    <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-plus"></i></button>
-                  </div>
-                </div>
-                <div class="card-body">
-                  <table class="table table-sm">
-                    <tr><td class="pr-3">Cluster Evacuate:</td> <td><span id="clusterEvacuate"></span></td></tr>
-                  </table>
-                </div>
-              </div>
             
-              <!-- Raw Configuration Card-->
-              <div class="card collapsed-card">
-                <div class="card-header" id="headingRawConfiguration">
-                  <h3 class="card-title text-primary" data-card-widget="collapse">
-                    Raw Configuration
-                  </h3>
-                  <div class="card-tools">
-                    <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-plus"></i></button>
-                  </div>
-                </div>
-                <div class="card-body">
-                  <table class="table table-sm">
-                    <tr><td class="pr-3">Apparmor:</td> <td><span id="rawApparmor"></span></td></tr>
-                    <tr><td class="pr-3">Qemu:</td> <td><span id="rawQemu"></span></td></tr>
-                    <tr><td class="pr-3">Qemu.conf:</td> <td><span id="rawQemuConf"></span></td></tr>
-                  </table>
-                </div>
-              </div>
-      
-              <!-- Security Configuration Card-->
-              <div class="card collapsed-card">
-                <div class="card-header" id="headingSecurityConfiguration">
-                  <h3 class="card-title text-primary" data-card-widget="collapse">
-                    Security Configuration
-                  </h3>
-                  <div class="card-tools">
-                    <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-plus"></i></button>
-                  </div>
-                </div>
-                <div class="card-body">
-                  <table class="table table-sm">
-                    <tr><td class="pr-3">Devlxd:</td> <td><span id="securityDevLxd"></span></td></tr>
-                    <tr><td class="pr-3">Protection Delete:</td> <td><span id="securityProtectionDelete"></span></td></tr>
-                    <tr><td class="pr-3">Agent Metrics:</td> <td><span id="securityAgentMetrics"></span></td></tr>
-                    <tr><td class="pr-3">Secureboot:</td> <td><span id="securitySecureboot"></span></td></tr>
-                  </table>
-                </div>
-              </div>
-            
-              <!-- Snapshot Configuration Card-->
-              <div class="card collapsed-card">
-                <div class="card-header" id="heading SnapshotConfiguration">
-                  <h3 class="card-title text-primary" data-card-widget="collapse">
-                    Snapshot Configuration
-                  </h3>
-                  <div class="card-tools">
-                    <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-plus"></i></button>
-                  </div>
-                </div>
-                <div class="card-body">
-                  <table class="table table-sm">
-                    <tr><td class="pr-3">Schedule:</td> <td><span id="snapshotsSchedule"></span></td></tr>
-                    <tr><td class="pr-3">Schedule Stopped:</td> <td><span id="snapshotsScheduleStopped"></span></td></tr>
-                    <tr><td class="pr-3">Pattern:</td> <td><span id="snapshotsPattern"></span></td></tr>
-                    <tr><td class="pr-3">Expiry:</td> <td><span id="snapshotsExpiry"></span></td></tr>
-                  </table>
-                </div>
-              </div>
-      
             </div>
           </div>
 
         </div>
+      </div>
+      <div class="tab-pane fade" id="nav-configuration" role="tabpanel" aria-labelledby="nav-configuration-tab">
+        <br />
+        <div class="row">
+
+          <div class="col-auto border-right pr-4 mr-4 ml-4">
+            <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+              <a class="nav-link active" id="v-pills-boot-configuration-tab" data-toggle="pill" href="#v-pills-boot-configuration" role="tab" aria-controls="v-pills-boot-configuration" aria-selected="true">Boot</a>
+              <a class="nav-link" id="v-pills-cloud-init-configuration-tab" data-toggle="pill" href="#v-pills-cloud-init-configuration" role="tab" aria-controls="v-pills-cloud-init-configuration" aria-selected="false">Cloud-init</a>
+              <a class="nav-link" id="v-pills-limits-configuration-tab" data-toggle="pill" href="#v-pills-limits-configuration" role="tab" aria-controls="v-pills-limits-configuration" aria-selected="false">Limits</a>
+              <a class="nav-link" id="v-pills-migration-configuration-tab" data-toggle="pill" href="#v-pills-migration-configuration" role="tab" aria-controls="v-pills-migration-configuration" aria-selected="false">Migration</a>
+              <a class="nav-link" id="v-pills-other-configuration-tab" data-toggle="pill" href="#v-pills-other-configuration" role="tab" aria-controls="v-pills-other-configuration" aria-selected="false">Other</a>
+              <a class="nav-link" id="v-pills-raw-configuration-tab" data-toggle="pill" href="#v-pills-raw-configuration" role="tab" aria-controls="v-pills-raw-configuration" aria-selected="false">Raw</a>
+              <a class="nav-link" id="v-pills-security-configuration-tab" data-toggle="pill" href="#v-pills-security-configuration" role="tab" aria-controls="v-pills-security-configuration" aria-selected="false">Security</a>
+              <a class="nav-link" id="v-pills-snapshots-configuration-tab" data-toggle="pill" href="#v-pills-snapshot-configuration" role="tab" aria-controls="v-pills-snapshot-configuration" aria-selected="false">Snapshot</a>
+            </div>
+          </div>
+          <div class="col">
+            <div class="tab-content" id="v-pills-configurationContent">
+
+              <div class="tab-pane fade show active" id="v-pills-boot-configuration" role="tabpanel" aria-labelledby="v-pills-boot-configuration-tab">
+                <!-- Boot Configuration Card-->
+                <table class="table w-auto">
+                  <tr><td class="pr-3">Autostart:</td> <td><span id="bootAutostart"></span></td></tr>
+                  <tr><td class="pr-3">Autostart Delay:</td> <td><span id="bootAutostartDelay"></span></td></tr>
+                  <tr><td class="pr-3">Autostart Priority:</td> <td><span id="bootAutostartPriority"></span></td></tr>
+                  <tr><td class="pr-3">Host Shutdown Timeout:</td> <td><span id="bootHostShutdownTimeout"></span></td></tr>
+                  <tr><td class="pr-3">Stop Priority:</td> <td><span id="bootStopPriority"></span></td></tr>
+                </table>
+              </div>
+
+              <div class="tab-pane fade" id="v-pills-cloud-init-configuration" role="tabpanel" aria-labelledby="v-pills-cloud-init-configuration-tab">
+                <!-- Cloud-init Configuration Card-->
+                <table class="table w-auto">
+                  <tr><td class="pr-3">Network-Config:</td> <td><span id="cloudInitNetworkConfig"></span></td></tr>
+                  <tr><td class="pr-3">User-Data:</td> <td><span id="cloudInitUserData"></span></td></tr>
+                  <tr><td class="pr-3">Vendor-Data:</td> <td><span id="cloudInitVendorData"></span></td></tr>
+                </table>
+              </div>
+
+              <div class="tab-pane fade" id="v-pills-limits-configuration" role="tabpanel" aria-labelledby="v-pills-limits-configuration-tab">
+                <!-- Limits Configuration Card-->
+                <table class="table w-auto">
+                  <tr><td class="pr-3">CPU:</td> <td><span id="limitsCpu"></span></td></tr>
+                  <tr><td class="pr-3">Disk Priority:</td> <td><span id="limitsDiskPriority"></span></td></tr>
+                  <tr><td class="pr-3">Memory:</td> <td><span id="limitsMemory"></span></td></tr>
+                  <tr><td class="pr-3">Memory Hugepages:</td> <td><span id="limitsMemoryHugepages"></span></td></tr>
+                  <tr><td class="pr-3">Network Priority:</td> <td><span id="limitsNetworkPriority"></span></td></tr>
+                </table>
+              </div>
+
+              <div class="tab-pane fade" id="v-pills-migration-configuration" role="tabpanel" aria-labelledby="v-pills-migration-configuration-tab">
+                <!-- Migration Configuration Card-->
+                <table class="table w-auto">
+                  <tr><td class="pr-3">Stateful:</td> <td><span id="migrationStateful"></span></td></tr>
+                </table>
+              </div>
+
+              <div class="tab-pane fade" id="v-pills-other-configuration" role="tabpanel" aria-labelledby="v-pills-other-configuration-tab">
+                <!-- Other Configuration Card-->
+                <table class="table w-auto">
+                  <tr><td class="pr-3">Cluster Evacuate:</td> <td><span id="clusterEvacuate"></span></td></tr>
+                </table>
+              </div>
+
+              <div class="tab-pane fade" id="v-pills-raw-configuration" role="tabpanel" aria-labelledby="v-pills-raw-configuration-tab">
+                <!-- Raw Configuration Card-->
+                <table class="table w-auto">
+                  <tr><td class="pr-3">Apparmor:</td> <td><span id="rawApparmor"></span></td></tr>
+                  <tr><td class="pr-3">Qemu:</td> <td><span id="rawQemu"></span></td></tr>
+                  <tr><td class="pr-3">Qemu.conf:</td> <td><span id="rawQemuConf"></span></td></tr>
+                </table>
+              </div>
+
+              <div class="tab-pane fade" id="v-pills-security-configuration" role="tabpanel" aria-labelledby="v-pills-security-configuration-tab">
+                <!-- Security Configuration Card-->
+                <table class="table w-auto">
+                  <tr><td class="pr-3">Devlxd:</td> <td><span id="securityDevLxd"></span></td></tr>
+                  <tr><td class="pr-3">Protection Delete:</td> <td><span id="securityProtectionDelete"></span></td></tr>
+                  <tr><td class="pr-3">Agent Metrics:</td> <td><span id="securityAgentMetrics"></span></td></tr>
+                  <tr><td class="pr-3">Secureboot:</td> <td><span id="securitySecureboot"></span></td></tr>
+                </table>
+              </div>
+
+              <div class="tab-pane fade" id="v-pills-snapshot-configuration" role="tabpanel" aria-labelledby="v-pills-snapshot-configuration-tab">
+                <!-- Snapshot Configuration Card-->
+                <table class="table w-auto">
+                  <tr><td class="pr-3">Schedule:</td> <td><span id="snapshotsSchedule"></span></td></tr>
+                  <tr><td class="pr-3">Schedule Stopped:</td> <td><span id="snapshotsScheduleStopped"></span></td></tr>
+                  <tr><td class="pr-3">Pattern:</td> <td><span id="snapshotsPattern"></span></td></tr>
+                  <tr><td class="pr-3">Expiry:</td> <td><span id="snapshotsExpiry"></span></td></tr>
+                </table>
+              </div>
+          
+            </div>
+          </div>
+
+        </div>
+      </div>
+      <div class="tab-pane fade" id="nav-devices" role="tabpanel" aria-labelledby="nav-devices-tab">
+        <br />
+        <div class="row">
+
+          <div class="col-auto border-right pr-4 mr-4 ml-4">
+            <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+              <a class="nav-link active" id="v-pills-disk-devices-tab" data-toggle="pill" href="#v-pills-disk-devices" role="tab" aria-controls="v-pills-disk-devices" aria-selected="true">Disk</a>
+              <a class="nav-link" id="v-pills-gpu-devices-tab" data-toggle="pill" href="#v-pills-gpu-devices" role="tab" aria-controls="v-pills-gpu-devices" aria-selected="false">GPU</a>
+              <a class="nav-link" id="v-pills-network-devices-tab" data-toggle="pill" href="#v-pills-network-devices" role="tab" aria-controls="v-pills-network-devices" aria-selected="false">Network</a>
+              <a class="nav-link" id="v-pills-proxy-devices-tab" data-toggle="pill" href="#v-pills-proxy-devices" role="tab" aria-controls="v-pills-proxy-devices" aria-selected="false">Proxy</a>
+              <a class="nav-link" id="v-pills-usb-devices-tab" data-toggle="pill" href="#v-pills-usb-devices" role="tab" aria-controls="v-pills-usb-devices" aria-selected="false">USB</a>
+            </div>
+          </div>
+          <div class="col">
+
+            <div class="tab-content" id="v-pills-deviceContent">
+
+              <div class="tab-pane fade show active" id="v-pills-disk-devices" role="tabpanel" aria-labelledby="v-pills-disk-devices-tab">
+                <!-- Disk Devices Card-->
+                <div class="card" id="diskDevicesCard">
+                  <div class="card-header">
+                    <h3 class="card-title text-primary">
+                      Disk Devices
+                    </h3>
+                    <div class="card-tools">
+                      <button type="button" class="btn btn-tool" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fa fa-bars"></i>
+                      </button>
+                      <div class="dropdown-menu dropdown-menu-right">
+                        <a class="dropdown-item" onclick="loadAddDiskDeviceModal()" title="Add Disk Device">Add Disk Device</a>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card-body">
+                    <div class="table-responsive">
+                      <table class="table table-hover" id="diskDeviceTableList" width="100%" cellspacing="0">
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="tab-pane fade" id="v-pills-gpu-devices" role="tabpanel" aria-labelledby="v-pills-gpu-devices-tab">
+                <!-- GPU Devices Card-->
+                <div class="card" id="gpuDevicesCard">
+                  <div class="card-header">
+                    <h3 class="card-title text-primary">
+                      GPU Devices
+                    </h3>
+                    <div class="card-tools">
+                      <button type="button" class="btn btn-tool" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fa fa-bars"></i>
+                      </button>
+                      <div class="dropdown-menu dropdown-menu-right">
+                        <a href="#" class="dropdown-item" data-toggle="modal" data-target="#addGPUDeviceModal" title="Add GPU Device">Add GPU Device</a>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card-body">
+                    <div class="table-responsive">
+                      <table class="table table-hover" id="gpuDeviceTableList" width="100%" cellspacing="0">
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="tab-pane fade" id="v-pills-network-devices" role="tabpanel" aria-labelledby="v-pills-network-devices-tab">
+                <!-- Network Devices Card-->
+                <div class="card" id="networkDevicesCard">
+                  <div class="card-header">
+                    <h3 class="card-title text-primary">
+                      Network Devices
+                    </h3>
+                    <div class="card-tools">
+                      <button type="button" class="btn btn-tool" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fa fa-bars"></i>
+                      </button>
+                      <div class="dropdown-menu dropdown-menu-right">
+                        <a class="dropdown-item" onclick="loadAddNetworkDeviceModal()" title="Add Network Device">Add Network Device</a>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card-body">
+                    <div class="table-responsive">
+                      <table class="table table-hover" id="networkDeviceTableList" width="100%" cellspacing="0">
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="tab-pane fade" id="v-pills-proxy-devices" role="tabpanel" aria-labelledby="v-pills-proxy-devices-tab">
+                <!-- Proxy Devices Card-->
+                <div class="card" id="proxyDevicesCard">
+                  <div class="card-header">
+                    <h3 class="card-title text-primary">
+                      Proxy Devices
+                    </h3>
+                    <div class="card-tools">
+                      <button type="button" class="btn btn-tool" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fa fa-bars"></i>
+                      </button>
+                      <div class="dropdown-menu dropdown-menu-right">
+                        <a href="#" class="dropdown-item" data-toggle="modal" data-target="#addProxyDeviceModal" title="Add Proxy Device">Add Proxy Device</a>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card-body">
+                    <div class="table-responsive">
+                      <table class="table table-hover" id="proxyDeviceTableList" width="100%" cellspacing="0">
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="tab-pane fade" id="v-pills-usb-devices" role="tabpanel" aria-labelledby="v-pills-usb-devices-tab">
+                <!-- USB Devices Card-->
+                <div class="card" id="usbDevicesCard">
+                  <div class="card-header">
+                    <h3 class="card-title text-primary">
+                      USB Devices
+                    </h3>
+                    <div class="card-tools">
+                      <button type="button" class="btn btn-tool" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fa fa-bars"></i>
+                      </button>
+                      <div class="dropdown-menu dropdown-menu-right">
+                        <a href="#" class="dropdown-item" data-toggle="modal" data-target="#addUSBDeviceModal" title="Add USB Device">Add USB Device</a>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card-body">
+                    <div class="table-responsive">
+                      <table class="table table-hover" id="usbDeviceTableList" width="100%" cellspacing="0">
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+          
+            </div>
+          </div>
+
+        </div>
+
       </div>
       <div class="tab-pane fade" id="nav-console" role="tabpanel" aria-labelledby="nav-console-tab">
         <br />
@@ -610,113 +575,33 @@
       clearTimeout(pageReloadTimeout);
 
       //Load Instance Data and Configuration
-      $.get("../api/virtual-machine/get_instance?id="+serverId+"&project="+project+"&name="+instance+"&recursion=1", function (data) {
-
-          data = data.metadata;
-          dataConfig = data.config;
-          target_location = data.location
-
-
-          $("#name").text(data.name);
-          if (data.hasOwnProperty('description')) { $("#description").text(data.description); }
-          $("#status").text(data.status);
-          $("#profiles").text(data.profiles.join(', '));
-          if (dataConfig.hasOwnProperty('image.description')) { $("#image").text(dataConfig["image.description"]); }
-          $("#location").text(data.location);
-          $("#created").text(data.created_at.substring(0,10));
-
-          if (dataConfig.hasOwnProperty('boot.autostart')) { $("#bootAutostart").text(dataConfig['boot.autostart']); } else { $("#bootAutostart").text(""); }
-          if (dataConfig.hasOwnProperty('boot.autostart.delay')) { $("#bootAutostartDelay").text(dataConfig['boot.autostart.delay']); } else { $("#bootAutostartDelay").text(""); }
-          if (dataConfig.hasOwnProperty('boot.autostart.priority')) { $("#bootAutostartPriority").text(dataConfig['boot.autostart.priority']); } else { $("#bootAutostartPriority").text(""); }
-          if (dataConfig.hasOwnProperty('boot.host_shutdown_timeout')) { $("#bootHostShutdownTimeout").text(dataConfig['boot.host_shutdown_timeout']); } else { $("#bootHostShutdownTimeout").text(""); }
-          if (dataConfig.hasOwnProperty('boot.stop.priority')) { $("#bootStopPriority").text(dataConfig['boot.stop.priority']); } else { $("#bootStopPriority").text(""); }
-
-          if (dataConfig.hasOwnProperty('cloud-init.network-config')) { $("#cloudInitNetworkConfig").text(dataConfig['cloud-init.network-config']); } else { $("#cloudInitNetworkConfig").text(""); }
-          if (dataConfig.hasOwnProperty('cloud-init.user-data')) { $("#cloudInitUserData").text(dataConfig['cloud-init.user-data']); } else { $("#cloudInitUserData").text(""); }
-          if (dataConfig.hasOwnProperty('cloud-init.vendor-data')) { $("#cloudInitVendorData").text(dataConfig['cloud-init.vendor-data']); } else { $("#cloudInitVendorData").text(""); }
-
-          if (dataConfig.hasOwnProperty('cluster.evacuate')) { $("#clusterEvacuate").text(dataConfig['cluster.evacuate']); } else { $("#clusterEvacuate").text(""); }
-
-          if (dataConfig.hasOwnProperty('limits.cpu')) { $("#limitsCpu").text(dataConfig['limits.cpu']); } else { $("#limitsCpu").text(""); }
-          if (dataConfig.hasOwnProperty('limits.disk.priority')) { $("#limitsDiskPriority").text(dataConfig['limits.disk.priority']); } else { $("#limitsDiskPriority").text(""); }
-          if (dataConfig.hasOwnProperty('limits.memory')) { $("#limitsMemory").text(dataConfig['limits.memory']); } else { $("#limitsMemory").text(""); }
-          if (dataConfig.hasOwnProperty('limits.memory.hugepages')) { $("#limitsMemoryHugepages").text(dataConfig['limits.memory.hugepages']); } else { $("#limitsMemoryHugepages").text(""); }
-          if (dataConfig.hasOwnProperty('limits.network.priority')) { $("#limitsNetworkPriority").text(dataConfig['limits.network.priority']); } else { $("#limitsNetworkPriority").text(""); }
-
-          if (dataConfig.hasOwnProperty('migration.stateful')) { $("#migrationStateful").text(dataConfig['migration.stateful']); } else { $("#migrationStateful").text(""); }
-
-          if (dataConfig.hasOwnProperty('raw.apparmor')) { $("#rawApparmor").text(dataConfig['raw.apparmor']); } else { $("#rawApparmor").text(""); }
-          if (dataConfig.hasOwnProperty('raw.qemu')) { $("#rawQemu").text(dataConfig['raw.qemu']); } else { $("#rawQemu").text(""); }
-          if (dataConfig.hasOwnProperty('raw.qemu.conf')) { $("#rawQemuConf").text(dataConfig['raw.qemu.conf']); } else { $("#rawQemuConf").text(""); }
-
-          if (dataConfig.hasOwnProperty('security.devlxd')) { $("#securityDevLxd").text(dataConfig['security.devlxd']); } else { $("#securityDevLxd").text(""); }
-          if (dataConfig.hasOwnProperty('security.protection.delete')) { $("#securityProtectionDelete").text(dataConfig['security.protection.delete']); } else { $("#securityProtectionDelete").text(""); }
-          if (dataConfig.hasOwnProperty('security.agent.metrics')) { $("#securityAgentMetrics").text(dataConfig['security.agent.metrics']); } else { $("#securityAgentMetrics").text(""); }
-          if (dataConfig.hasOwnProperty('security.secureboot')) { $("#securitySecureboot").text(dataConfig['security.secureboot']); } else { $("#securitySecureboot").text(""); }
-
-          if (dataConfig.hasOwnProperty('snapshots.schedule')) { $("#snapshotsSchedule").text(dataConfig['snapshots.schedule']); } else { $("#snapshotsSchedule").text(""); }
-          if (dataConfig.hasOwnProperty('snapshots.schedule.stopped')) { $("#snapshotsScheduleStopped").text(dataConfig['snapshots.schedule.stopped']); } else { $("#snapshotsScheduleStopped").text(""); }
-          if (dataConfig.hasOwnProperty('snapshots.pattern')) { $("#snapshotsPattern").text(dataConfig['snapshots.pattern']); } else { $("#snapshotsPattern").text(""); }
-          if (dataConfig.hasOwnProperty('snapshots.expiry')) { $("#snapshotsExpiry").text(dataConfig['snapshots.expiry']); } else { $("#snapshotsExpiry").text(""); }
-
-        });
-
+      loadInstanceData()
+      
       //Load Instance State Data and Configuration
-      $.get("../api/virtual-machine/get_instance_state?id="+serverId+"&project="+project+"&name="+instance+"&recursion=1", function (data) {
-        data = data.metadata;
-        displayMenuOptions(data)
-        $("#cpu").text(parseFloat(parseInt(data.cpu.usage) / 1000000).toFixed(2)  + ' ms')
-        $("#memory").text(parseFloat(parseInt(data.memory.usage) / 1024 / 1024 / 1024).toFixed(2)  + ' GiB')
-        $("#swap").text(parseFloat(parseInt(data.memory.swap_usage) / 1024 / 1024 / 1024).toFixed(2)  + ' GiB')
-        $("#pid").text(data.pid)
-        $("#processes").text(data.processes)
-        
-      });
+      loadInstanceStateData()
 
-      //Reload the datatables content
-      if (!$('#interfacesCard').hasClass('collapsed-card'))
-        $('#interfaceTableList').DataTable().ajax.reload(null, false);
-      if (!$('#snapshotsCard').hasClass('collapsed-card'))
-        $('#snapshotTableList').DataTable().ajax.reload(null, false);
-      if (!$('#networkDevicesCard').hasClass('collapsed-card'))
-        $('#networkDeviceTableList').DataTable().ajax.reload(null, false);
-      if (!$('#diskDevicesCard').hasClass('collapsed-card'))
-        $('#diskDeviceTableList').DataTable().ajax.reload(null, false);
-      if (!$('#gpuDevicesCard').hasClass('collapsed-card'))
-        $('#gpuDeviceTableList').DataTable().ajax.reload(null, false);
-      if (!$('#proxyDevicesCard').hasClass('collapsed-card'))
-        $('#proxyDeviceTableList').DataTable().ajax.reload(null, false);
-      if (!$('#usbDevicesCard').hasClass('collapsed-card'))
-        $('#usbDeviceTableList').DataTable().ajax.reload(null, false);
-      if (!$('#backupsCard').hasClass('collapsed-card'))
-        $('#backupTableList').DataTable().ajax.reload(null, false);
-      if (!$('#logsCard').hasClass('collapsed-card'))
-        $('#logTableList').DataTable().ajax.reload(null, false);
+      //Reload the HOME tab tables if active
+      if ($('#nav-home-tab').hasClass('active')) {
+        loadInterfaceTable()
+        loadSnapshotsTable()
+        loadBackupsTable()
+        loadLogsTable()
+      }
 
-      //Load CPU Percentage
-      $.get("../api/virtual-machine/get_instance_cpu_percentage?id="+serverId+"&project="+project+"&name="+instance, function (data) {
-        percentage = parseFloat(data.percentage).toFixed(2);
-        $('#cpuPercentage').text(percentage)
-        $('#cpuPercentageBar').css('width', percentage + '%');
-        $('#cpuPercentageBar').attr('aria-valuenow', percentage + '%');
-        if (percentage > 90.00)
-          $('#cpuPercentageBar').attr('class', 'progress-bar bg-danger');
-        else
-          $('#cpuPercentageBar').attr('class', 'progress-bar bg-primary');
-      });
+      //Reload the DEVICES tab tables if active
+      if ($('#nav-devices-tab').hasClass('active')) {
+        loadDiskDevicesTable()
+        loadGpuDevicesTable()
+        loadNetworkDevicesTable()
+        loadProxyDevicesTable()
+        loadUsbDevicesTable()
+      }
 
+      //Reload CPU Percentage
+      loadCpuPercentage()
 
-      //Load Memory Percentage
-      $.get("../api/virtual-machine/get_instance_memory_percentage?id="+serverId+"&project="+project+"&name="+instance, function (data) {
-        percentage = parseFloat(data.percentage).toFixed(2);
-        $('#memPercentage').text(percentage)
-        $('#memPercentageBar').css('width', percentage + '%');
-        $('#memPercentageBar').attr('aria-valuenow', percentage + '%');
-        if (percentage > 90.00)
-          $('#memPercentageBar').attr('class', 'progress-bar bg-danger');
-        else
-          $('#memPercentageBar').attr('class', 'progress-bar bg-primary');
-      });
+      //Reload Memory Percentage
+      loadMemoryPercentage()
       
       //Set the automatic page reload
       pageReloadTimeout = setTimeout(() => { reloadPageContent(); }, reloadTime);
@@ -753,317 +638,23 @@
       })
 
       //Load Instance Data and Configuration
-      $.get("../api/virtual-machine/get_instance?id="+serverId+"&project="+project+"&name="+instance+"&recursion=1", function (data) {
-        data = data.metadata;
-        dataConfig = data.config;
-        target_location = data.location
-
-        $.getJSON("../api/server/get_server_info?id="+encodeURI(serverId)+'&project='+encodeURI(project), function (data) {
-          data = data.metadata.environment;
-          server_name = data.server_name
-          server_clustered = data.server_clustered 
-          if (data.server_clustered && data.server_name != target_location) {
-            $('#startExecButton').prop('disabled', true);
-            $('#startConsoleButton').prop('disabled', true);
-            consoleTerminal.write("\r\n--- This instance is located on a differenct host within the cluster. Console is unavailable  --- \r\n");
-            execTerminal.write("\r\n--- This instance is located on a differenct host within the cluster. Exec is unavailable  --- \r\n");
-          }
-        });
-
-        $("#name").text(data.name);
-        if (data.hasOwnProperty('description')) { $("#description").text(data.description); }
-        $("#status").text(data.status);
-        $("#profiles").text(data.profiles.join(', '));
-        if (dataConfig.hasOwnProperty('image.description')) { $("#image").text(dataConfig["image.description"]); }
-        $("#location").text(data.location);
-        $("#created").text(data.created_at.substring(0,10));
-
-        if (dataConfig.hasOwnProperty('boot.autostart')) { $("#bootAutostart").text(dataConfig['boot.autostart']); } else { $("#bootAutostart").text(""); }
-        if (dataConfig.hasOwnProperty('boot.autostart.delay')) { $("#bootAutostartDelay").text(dataConfig['boot.autostart.delay']); } else { $("#bootAutostartDelay").text(""); }
-        if (dataConfig.hasOwnProperty('boot.autostart.priority')) { $("#bootAutostartPriority").text(dataConfig['boot.autostart.priority']); } else { $("#bootAutostartPriority").text(""); }
-        if (dataConfig.hasOwnProperty('boot.host_shutdown_timeout')) { $("#bootHostShutdownTimeout").text(dataConfig['boot.host_shutdown_timeout']); } else { $("#bootHostShutdownTimeout").text(""); }
-        if (dataConfig.hasOwnProperty('boot.stop.priority')) { $("#bootStopPriority").text(dataConfig['boot.stop.priority']); } else { $("#bootStopPriority").text(""); }
-
-        if (dataConfig.hasOwnProperty('cloud-init.network-config')) { $("#cloudInitNetworkConfig").text(dataConfig['cloud-init.network-config']); } else { $("#cloudInitNetworkConfig").text(""); }
-        if (dataConfig.hasOwnProperty('cloud-init.user-data')) { $("#cloudInitUserData").text(dataConfig['cloud-init.user-data']); } else { $("#cloudInitUserData").text(""); }
-        if (dataConfig.hasOwnProperty('cloud-init.vendor-data')) { $("#cloudInitVendorData").text(dataConfig['cloud-init.vendor-data']); } else { $("#cloudInitVendorData").text(""); }
-
-        if (dataConfig.hasOwnProperty('cluster.evacuate')) { $("#clusterEvacuate").text(dataConfig['cluster.evacuate']); } else { $("#clusterEvacuate").text(""); }
-
-        if (dataConfig.hasOwnProperty('limits.cpu')) { $("#limitsCpu").text(dataConfig['limits.cpu']); } else { $("#limitsCpu").text(""); }
-        if (dataConfig.hasOwnProperty('limits.disk.priority')) { $("#limitsDiskPriority").text(dataConfig['limits.disk.priority']); } else { $("#limitsDiskPriority").text(""); }
-        if (dataConfig.hasOwnProperty('limits.memory')) { $("#limitsMemory").text(dataConfig['limits.memory']); } else { $("#limitsMemory").text(""); }
-        if (dataConfig.hasOwnProperty('limits.memory.hugepages')) { $("#limitsMemoryHugepages").text(dataConfig['limits.memory.hugepages']); } else { $("#limitsMemoryHugepages").text(""); }
-        if (dataConfig.hasOwnProperty('limits.network.priority')) { $("#limitsNetworkPriority").text(dataConfig['limits.network.priority']); } else { $("#limitsNetworkPriority").text(""); }
-
-        if (dataConfig.hasOwnProperty('migration.stateful')) { $("#migrationStateful").text(dataConfig['migration.stateful']); } else { $("#migrationStateful").text(""); }
-
-        if (dataConfig.hasOwnProperty('raw.apparmor')) { $("#rawApparmor").text(dataConfig['raw.apparmor']); } else { $("#rawApparmor").text(""); }
-        if (dataConfig.hasOwnProperty('raw.qemu')) { $("#rawQemu").text(dataConfig['raw.qemu']); } else { $("#rawQemu").text(""); }
-        if (dataConfig.hasOwnProperty('raw.qemu.conf')) { $("#rawQemuConf").text(dataConfig['raw.qemu.conf']); } else { $("#rawQemuConf").text(""); }
-
-        if (dataConfig.hasOwnProperty('security.devlxd')) { $("#securityDevLxd").text(dataConfig['security.devlxd']); } else { $("#securityDevLxd").text(""); }
-        if (dataConfig.hasOwnProperty('security.protection.delete')) { $("#securityProtectionDelete").text(dataConfig['security.protection.delete']); } else { $("#securityProtectionDelete").text(""); }
-        if (dataConfig.hasOwnProperty('security.agent.metrics')) { $("#securityAgentMetrics").text(dataConfig['security.agent.metrics']); } else { $("#securityAgentMetrics").text(""); }
-        if (dataConfig.hasOwnProperty('security.secureboot')) { $("#securitySecureboot").text(dataConfig['security.secureboot']); } else { $("#securitySecureboot").text(""); }
-
-        if (dataConfig.hasOwnProperty('snapshots.schedule')) { $("#snapshotsSchedule").text(dataConfig['snapshots.schedule']); } else { $("#snapshotsSchedule").text(""); }
-        if (dataConfig.hasOwnProperty('snapshots.schedule.stopped')) { $("#snapshotsScheduleStopped").text(dataConfig['snapshots.schedule.stopped']); } else { $("#snapshotsScheduleStopped").text(""); }
-        if (dataConfig.hasOwnProperty('snapshots.pattern')) { $("#snapshotsPattern").text(dataConfig['snapshots.pattern']); } else { $("#snapshotsPattern").text(""); }
-        if (dataConfig.hasOwnProperty('snapshots.expiry')) { $("#snapshotsExpiry").text(dataConfig['snapshots.expiry']); } else { $("#snapshotsExpiry").text(""); }
-
-      });
+      loadInstanceData()
 
       //Load Instance State Data and Configuration
-      $.get("../api/virtual-machine/get_instance_state?id="+serverId+"&project="+project+"&name="+instance+"&recursion=1", function (data) {
-        data = data.metadata;
-        displayMenuOptions(data)
-        $("#cpu").text(parseFloat(parseInt(data.cpu.usage) / 1000000).toFixed(2)  + ' ms')
-        $("#memory").text(parseFloat(parseInt(data.memory.usage) / 1024 / 1024 / 1024).toFixed(2)  + ' GiB')
-        $("#swap").text(parseFloat(parseInt(data.memory.swap_usage) / 1024 / 1024 / 1024).toFixed(2)  + ' GiB')
-        $("#pid").text(data.pid)
-        $("#processes").text(data.processes)
-
-      });
+      loadInstanceStateData()
 
       //Load CPU Percentage
-      $.get("../api/virtual-machine/get_instance_cpu_percentage?id="+serverId+"&project="+project+"&name="+instance, function (data) {
-        percentage = parseFloat(data.percentage).toFixed(2);
-        $('#cpuPercentage').text(percentage)
-        $('#cpuPercentageBar').css('width', percentage + '%');
-        $('#cpuPercentageBar').attr('aria-valuenow', percentage + '%');
-        if (percentage > 90.00)
-          $('#cpuPercentageBar').attr('class', 'progress-bar bg-danger');
-        else
-          $('#cpuPercentageBar').attr('class', 'progress-bar bg-primary');
-      });
+      loadCpuPercentage()
+
+      //Load Home Tab Tables
+      loadInterfaceTable()
+      loadSnapshotsTable()
+      loadBackupsTable()
+      loadLogsTable()
 
       //Load Memory Percentage
-      $.get("../api/virtual-machine/get_instance_memory_percentage?id="+serverId+"&project="+project+"&name="+instance, function (data) {
-        percentage = parseFloat(data.percentage).toFixed(2);
-        $('#memPercentage').text(percentage)
-        $('#memPercentageBar').css('width', percentage + '%');
-        $('#memPercentageBar').attr('aria-valuenow', percentage + '%');
-        if (percentage > 90.00)
-          $('#memPercentageBar').attr('class', 'progress-bar bg-danger');
-        else
-          $('#memPercentageBar').attr('class', 'progress-bar bg-primary');
-      });
+      loadMemoryPercentage()
       
-      //Load Interfaces Table
-      $('#interfaceTableList').DataTable({
-        ajax: {
-          url: "../api/virtual-machine/get_instance_interfaces?id="+serverId+"&project="+project+"&name="+instance+"&recursion=1",
-          dataType: "json",
-          dataSrc: "data",
-          contentType: "application/json"
-        },
-        columns: [
-          { title: "Name", data: function (row, type, set) {
-              if (row.hasOwnProperty('name')) {
-                if (row.name)
-                  return row.name
-              }
-              return '-'
-            },
-          },
-          { title: "HW Addr", data: function (row, type, set) {
-              if (row.hasOwnProperty('hwaddr')) {
-                if (row.hwaddr)
-                  return row.hwaddr
-              }
-              return '-'
-            },
-          },
-          { title: "IPv4", data: function (row, type, set) {
-              if (row.hasOwnProperty('ipv4_addresses')) {
-                if (row.ipv4_addresses.length > 0)
-                  return row.ipv4_addresses.join(', <br />')
-              }
-              return '-'
-            },
-          },
-          { title: "IPv6", data: function (row, type, set) {
-              if (row.hasOwnProperty('ipv6_addresses')) {
-                if (row.ipv6_addresses.length > 0)
-                  return row.ipv6_addresses.join(', <br />')
-              }
-              return '-'
-            },
-          },
-          { title: "State", data: function (row, type, set) {
-              if (row.hasOwnProperty('state')) {
-                if (row.state)
-                  return row.state
-              }
-              return '-'
-            },
-          },
-        ],
-        order: [],
-      });
-      
-      //Load Snapshots Table
-      $('#snapshotTableList').DataTable({
-        ajax: {
-          url: "../api/virtual-machine/list_instance_snapshots?id="+serverId+"&project="+project+"&name="+instance+"&recursion=1",
-          dataType: "json",
-          dataSrc: "metadata",
-          contentType: "application/json"
-        },
-        columns: [
-          { title: "Name", data: function (row, type, set) {
-              if (row.hasOwnProperty('name')) {
-                if (row.name)
-                  return row.name
-              }
-              return '-'
-            },
-          },
-          { title: "Stateful", data: function (row, type, set) {
-              if (row.hasOwnProperty('stateful')) {
-                // Boolean field
-                return row.stateful
-              }
-              return '-'
-            },
-          },
-          { title: "Size", data: function (row, type, set) {
-              if (row.hasOwnProperty('size')) {
-                if (row.size){
-                  if (type === 'display') {
-                    return (row.size / 1024 / 1024).toFixed(2) + ' MiB'
-                  }
-                  return row.size
-                }
-              }
-              return '-'
-            },
-          },
-          { title: "Created", data: function (row, type, set) {
-              if (row.hasOwnProperty('created_at')) {
-                if (row.created_at)
-                  return row.created_at
-              }
-              return '-'
-            },
-          },
-          { title: "Expires", data: function (row, type, set) {
-              if (row.hasOwnProperty('expires_at')) {
-                if (row.expires_at)
-                  if (row.expires_at == '0001-01-01T00:00:00Z')
-                    return 'never'
-                  return row.expires_at
-              }
-              return '-'
-            },
-          },
-          { title: "Actions", data: function (row, type, set) {
-              links = ''
-              if (row.hasOwnProperty('name')) {
-                links += '<a onclick=restoreInstanceSnapshot(\''+row.name+'\')><i class="fas fa-window-restore fa-lg" style="color:#ddd" title="Restore Snapshot" aria-hidden="true"></i></a>'
-                links += '&nbsp' + '&nbsp' 
-                links += '<a onclick=loadCreateInstanceFromSnapshotModal(\''+row.name+'\')><i class="fas fa-cube fa-lg" style="color:#ddd" title="Create Instance" aria-hidden="true"></i></a>'
-                links += '&nbsp' + '&nbsp'
-                links += '<a onclick=loadPublishImageFromSnapshotModal(\''+row.name+'\')><i class="fas fa-box-open fa-lg" style="color:#ddd" title="Publish Image" aria-hidden="true"></i></a>'
-                links += '&nbsp' + '&nbsp' 
-                links += '<a onclick=deleteSnapshot(\''+row.name+'\')><i class="fas fa-trash-alt fa-lg" style="color:#ddd" title="Delete" aria-hidden="true"></i></a>'
-              }
-              return links
-            },
-          },
-        ],
-        order: [],
-      });
-
-      //Load Backups Table
-      $('#backupTableList').DataTable({
-        ajax: {
-          url: "../api/virtual-machine/list_instance_backups?id="+serverId+"&project="+project+"&name="+instance+"&recursion=1",
-          dataType: "json",
-          dataSrc: "metadata",
-          contentType: "application/json"
-        },
-        columns: [
-          { title: "Name", data: function (row, type, set) {
-              if (row.hasOwnProperty('name')) {
-                if (row.name) {
-                  if (row.backup_file_exists)
-                    return '<a href="backups/' + serverId + '/' + project + '/' + instance + '/' + row.name + '">' + row.name + '</a>'
-                  return row.name
-                }
-              }
-              return '-'
-            },
-          },
-          { title: "Instance Only", data: function (row, type, set) {
-              if (row.hasOwnProperty('instance_only')) {
-                // Boolean field
-                return row.instance_only
-              }
-              return '-'
-            },
-          },
-          { title: "Optimized Storage", data: function (row, type, set) {
-              if (row.hasOwnProperty('optimized_storage')) {
-                // Boolean field
-                return row.optimized_storage
-              }
-              return '-'
-            },
-          },
-
-          { title: "Created", data: function (row, type, set) {
-              if (row.hasOwnProperty('created_at')) {
-                if (row.created_at)
-                  return row.created_at
-              }
-              return '-'
-            },
-          },
-          { title: "Expires", data: function (row, type, set) {
-              if (row.hasOwnProperty('expires_at')) {
-                if (row.expires_at) {
-                  if (row.expires_at == '0000-12-31T19:03:58-04:56')
-                    return 'never'
-                  return row.expires_at
-                }
-              }
-              return '-'
-            },
-          },
-          { title: "File Size", data: function (row, type, set) {
-              if (row.hasOwnProperty('backup_file_exists') && row.hasOwnProperty('backup_file_size')) {
-                if (row.backup_file_exists && row.backup_file_size){
-                  if (type === 'display') {
-                    size = row.backup_file_size / 1024 / 1024
-                    return size.toFixed(2) + ' MiB'
-                  }
-                  return row.backup_file_exists
-                }
-              }
-              return '-'
-            },
-          },
-          { title: "Actions", data: function (row, type, set) {
-              links = ''
-              if (row.hasOwnProperty('name')) {
-                if (row.hasOwnProperty('backup_file_exists')) {
-                  if (row.backup_file_exists)
-                    links += '<a><i class="fas fa-file-export fa-lg" style="color:#f1f1f1" title="Export Backup" aria-hidden="true"></i></a>'
-                  else 
-                    links += '<a onclick=exportBackup(\''+row.name+'\')><i class="fas fa-file-export fa-lg" style="color:#ddd" title="Export Backup" aria-hidden="true"></i></a>'
-                  links += '&nbsp' + '&nbsp' 
-                }
-                links += '<a onclick=deleteBackup(\''+row.name+'\')><i class="fas fa-trash-alt fa-lg" style="color:#ddd" title="Delete" aria-hidden="true"></i></a>'
-              }
-              return links
-            },
-          },
-        ],
-        order: [],
-      });
-
       //Setup new data listener for Exec terminal
       execTerminal.onData( (data) => {
         if (execDataSocket.readyState === 1) {
@@ -1089,99 +680,112 @@
 
     }
 
-    // Loads the attachProfile modal and populates dynamic form options
-    function loadAttachProfileModal(){
-      //Reset and populate the Attach profile modal profile dropdown
-      $("#selectProfileInput").empty().append('<option value="">(not set)</option>');
-      $.getJSON("../api/profiles/list_profiles?id="+serverId+"&project="+project, function (data) {
-        data = data.metadata
-        for (var index = 0; index < data.length; index++) {
-          //When using projects other than default and no recursion, it gets like URL variable with "?"
-          optionText = data[index].split("?")
-          optionText = optionText[0].replace('/1.0/profiles/','');
-          $('#selectProfileInput').append('<option value="' + optionText + '">' + optionText + '</option>');
-        }
-        //Show modal
-        $("#attachProfileModal").modal('show');
-      })
+    function loadCpuPercentage() {
+      $.get("../api/virtual-machine/get_instance_cpu_percentage?id="+serverId+"&project="+project+"&name="+instance, function (data) {
+        percentage = parseFloat(data.percentage).toFixed(2);
+        $('#cpuPercentage').text(percentage)
+        $('#cpuPercentageBar').css('width', percentage + '%');
+        $('#cpuPercentageBar').attr('aria-valuenow', percentage + '%');
+        if (percentage > 90.00)
+          $('#cpuPercentageBar').attr('class', 'progress-bar bg-danger');
+        else
+          $('#cpuPercentageBar').attr('class', 'progress-bar bg-primary');
+      });
     }
 
-    // Loads the detachProfile modal and populates dynamic form options
-    function loadDetachProfileModal(){
-      //Reset and populate the Detach profile modal profile dropdown
-      $("#selectDetachProfileInput").empty().append('<option value="">(not set)</option>');
-      $.getJSON("../api/virtual-machine/get_instance?id="+serverId+"&project="+project+"&name="+instance+"&recursion=1", function (data) {
-        data = data.metadata
-        for (var index = 0; index < data.profiles.length; index++) {
-          optionText = data.profiles[index];
-          $('#selectDetachProfileInput').append('<option value="' + optionText + '">' + optionText + '</option>');
-        }
-        //Show modal
-        $("#detachProfileModal").modal('show');
-      })
+    function loadMemoryPercentage() {
+      $.get("../api/virtual-machine/get_instance_memory_percentage?id="+serverId+"&project="+project+"&name="+instance, function (data) {
+        percentage = parseFloat(data.percentage).toFixed(2);
+        $('#memPercentage').text(percentage)
+        $('#memPercentageBar').css('width', percentage + '%');
+        $('#memPercentageBar').attr('aria-valuenow', percentage + '%');
+        if (percentage > 90.00)
+          $('#memPercentageBar').attr('class', 'progress-bar bg-danger');
+        else
+          $('#memPercentageBar').attr('class', 'progress-bar bg-primary');
+      });
     }
 
-    // Loads the addNetworkDevice modal and populates dynamic form options
-    function loadAddNetworkDeviceModal(){
+    function loadInstanceData() {
+      $.get("../api/virtual-machine/get_instance?id="+serverId+"&project="+project+"&name="+instance+"&recursion=1", function (data) {
+        data = data.metadata;
+        dataConfig = data.config;
+        target_location = data.location
 
-      //Reset and populate the modal Network Device's Network dropdown
-      $("#networkNetworkInput").empty().append('<option value="">(not set)</option>');
-      $.getJSON("../api/networks/list_network_managed_devices?id="+serverId+"&project="+project, function (data) {
-        for (var index = 0; index < data.length; index++) {
-          optionText = data[index];
-          $('#networkNetworkInput').append('<option value="' + optionText + '">' + optionText + '</option>');
-        }
-        //Set correct options
-        changeParentTypeInput();
+        $.getJSON("../api/server/get_server_info?id="+encodeURI(serverId)+'&project='+encodeURI(project), function (data) {
+          data = data.metadata.environment;
+          server_name = data.server_name
+          server_clustered = data.server_clustered 
+          if (data.server_clustered && data.server_name != target_location) {
+            $('#startExecButton').prop('disabled', true);
+            $('#startConsoleButton').prop('disabled', true);
+            consoleTerminal.write("\r\n--- This instance is located on a differenct host within the cluster. Console is unavailable  --- \r\n");
+            execTerminal.write("\r\n--- This instance is located on a differenct host within the cluster. Exec is unavailable  --- \r\n");
+          }
+        });
 
-        //Show modal
-        $("#addNetworkDeviceModal").modal('show');
-      })
+        $("#name").text(data.name);
+        if (data.hasOwnProperty('description')) { $("#description").text(data.description); }
+        $("#status").text(data.status);
+        $("#profiles").text(data.profiles.join(', '));
+        if (dataConfig.hasOwnProperty('image.description')) { $("#image").text(dataConfig["image.description"]); }
+        $("#location").text(data.location);
+        $("#created").text(data.created_at.substring(0,10));
 
-      //Reset and populate the modal Network Device's Parent Network dropdown
-      $("#networkParentInput").empty().append('<option value="">(not set)</option>');
-      $.getJSON("../api/networks/list_networks?id="+serverId+"&project="+project, function (data) {
-        data = data.metadata
-        for (var index = 0; index < data.length; index++) {
-          optionText = data[index].replace('/1.0/networks/','');
-          $('#networkParentInput').append('<option value="' + optionText + '">' + optionText + '</option>');
-        }
-      })
+        if (dataConfig.hasOwnProperty('boot.autostart')) { $("#bootAutostart").text(dataConfig['boot.autostart']); } else { $("#bootAutostart").text("-"); }
+        if (dataConfig.hasOwnProperty('boot.autostart.delay')) { $("#bootAutostartDelay").text(dataConfig['boot.autostart.delay']); } else { $("#bootAutostartDelay").text("-"); }
+        if (dataConfig.hasOwnProperty('boot.autostart.priority')) { $("#bootAutostartPriority").text(dataConfig['boot.autostart.priority']); } else { $("#bootAutostartPriority").text("-"); }
+        if (dataConfig.hasOwnProperty('boot.host_shutdown_timeout')) { $("#bootHostShutdownTimeout").text(dataConfig['boot.host_shutdown_timeout']); } else { $("#bootHostShutdownTimeout").text("-"); }
+        if (dataConfig.hasOwnProperty('boot.stop.priority')) { $("#bootStopPriority").text(dataConfig['boot.stop.priority']); } else { $("#bootStopPriority").text("-"); }
 
+        if (dataConfig.hasOwnProperty('cloud-init.network-config')) { $("#cloudInitNetworkConfig").text(dataConfig['cloud-init.network-config']); } else { $("#cloudInitNetworkConfig").text("-"); }
+        if (dataConfig.hasOwnProperty('cloud-init.user-data')) { $("#cloudInitUserData").text(dataConfig['cloud-init.user-data']); } else { $("#cloudInitUserData").text("-"); }
+        if (dataConfig.hasOwnProperty('cloud-init.vendor-data')) { $("#cloudInitVendorData").text(dataConfig['cloud-init.vendor-data']); } else { $("#cloudInitVendorData").text("-"); }
+
+        if (dataConfig.hasOwnProperty('cluster.evacuate')) { $("#clusterEvacuate").text(dataConfig['cluster.evacuate']); } else { $("#clusterEvacuate").text("-"); }
+
+        if (dataConfig.hasOwnProperty('limits.cpu')) { $("#limitsCpu").text(dataConfig['limits.cpu']); } else { $("#limitsCpu").text("-"); }
+        if (dataConfig.hasOwnProperty('limits.disk.priority')) { $("#limitsDiskPriority").text(dataConfig['limits.disk.priority']); } else { $("#limitsDiskPriority").text("-"); }
+        if (dataConfig.hasOwnProperty('limits.memory')) { $("#limitsMemory").text(dataConfig['limits.memory']); } else { $("#limitsMemory").text("-"); }
+        if (dataConfig.hasOwnProperty('limits.memory.hugepages')) { $("#limitsMemoryHugepages").text(dataConfig['limits.memory.hugepages']); } else { $("#limitsMemoryHugepages").text("-"); }
+        if (dataConfig.hasOwnProperty('limits.network.priority')) { $("#limitsNetworkPriority").text(dataConfig['limits.network.priority']); } else { $("#limitsNetworkPriority").text("-"); }
+
+        if (dataConfig.hasOwnProperty('migration.stateful')) { $("#migrationStateful").text(dataConfig['migration.stateful']); } else { $("#migrationStateful").text("-"); }
+
+        if (dataConfig.hasOwnProperty('raw.apparmor')) { $("#rawApparmor").text(dataConfig['raw.apparmor']); } else { $("#rawApparmor").text("-"); }
+        if (dataConfig.hasOwnProperty('raw.qemu')) { $("#rawQemu").text(dataConfig['raw.qemu']); } else { $("#rawQemu").text("-"); }
+        if (dataConfig.hasOwnProperty('raw.qemu.conf')) { $("#rawQemuConf").text(dataConfig['raw.qemu.conf']); } else { $("#rawQemuConf").text("-"); }
+
+        if (dataConfig.hasOwnProperty('security.devlxd')) { $("#securityDevLxd").text(dataConfig['security.devlxd']); } else { $("#securityDevLxd").text("-"); }
+        if (dataConfig.hasOwnProperty('security.protection.delete')) { $("#securityProtectionDelete").text(dataConfig['security.protection.delete']); } else { $("#securityProtectionDelete").text("-"); }
+        if (dataConfig.hasOwnProperty('security.agent.metrics')) { $("#securityAgentMetrics").text(dataConfig['security.agent.metrics']); } else { $("#securityAgentMetrics").text("-"); }
+        if (dataConfig.hasOwnProperty('security.secureboot')) { $("#securitySecureboot").text(dataConfig['security.secureboot']); } else { $("#securitySecureboot").text("-"); }
+
+        if (dataConfig.hasOwnProperty('snapshots.schedule')) { $("#snapshotsSchedule").text(dataConfig['snapshots.schedule']); } else { $("#snapshotsSchedule").text("-"); }
+        if (dataConfig.hasOwnProperty('snapshots.schedule.stopped')) { $("#snapshotsScheduleStopped").text(dataConfig['snapshots.schedule.stopped']); } else { $("#snapshotsScheduleStopped").text("-"); }
+        if (dataConfig.hasOwnProperty('snapshots.pattern')) { $("#snapshotsPattern").text(dataConfig['snapshots.pattern']); } else { $("#snapshotsPattern").text("-"); }
+        if (dataConfig.hasOwnProperty('snapshots.expiry')) { $("#snapshotsExpiry").text(dataConfig['snapshots.expiry']); } else { $("#snapshotsExpiry").text("-"); }
+
+      });
+
+      
     }
-    
-    // Loads the addDiskDevice modal and populates dynamic form options
-    function loadAddDiskDeviceModal(){
-      //Reset and populate the modal Disk Device's Storage Pools dropdown
-      $("#diskPoolInput").empty().append('<option value="">(not set)</option>');
-      $.getJSON("../api/storage-pools/list_storage_pools?id="+serverId+"&project="+project, function (data) {
-        data = data.metadata
-        for (var index = 0; index < data.length; index++) {
-          optionText = data[index].replace('/1.0/storage-pools/','');
-          $('#diskPoolInput').append('<option value="' + optionText + '">' + optionText + '</option>');
-        }
-        //Show modal
-        $("#addDiskDeviceModal").modal('show');
-      })
+
+    function loadInstanceStateData() {
+      $.get("../api/virtual-machine/get_instance_state?id="+serverId+"&project="+project+"&name="+instance+"&recursion=1", function (data) {
+        data = data.metadata;
+        displayMenuOptions(data)
+        $("#cpu").text(parseFloat(parseInt(data.cpu.usage) / 1000000).toFixed(2)  + ' ms')
+        $("#memory").text(parseFloat(parseInt(data.memory.usage) / 1024 / 1024 / 1024).toFixed(2)  + ' GiB')
+        $("#swap").text(parseFloat(parseInt(data.memory.swap_usage) / 1024 / 1024 / 1024).toFixed(2)  + ' GiB')
+        $("#pid").text(data.pid)
+        $("#processes").text(data.processes)
+
+      });
     }
 
-    // Loads thes migrateInstanceModal and populates dynamic form options
-    function loadMigrateInstanceModal(){
-      //Reset and populate the modal Server dropdown
-      $("#selectClusterInput").empty().append('<option value="">(not set)</option>');
-      $.getJSON("../api/cluster-members/list_cluster_members?id="+serverId+"&project="+project, function (data) {
-        data = data.metadata
-        for (var index = 0; index < data.length; index++) {
-          optionText = data[index].replace('/1.0/cluster/members/','');
-          $('#selectClusterInput').append('<option value="' + optionText + '">' + optionText + '</option>');
-        }
-        //Show modal
-        $("#migrateInstanceModal").modal('show');
-      })
-    }
-
-    // Load the Interfaces table when expanded
-    $('#interfacesCard').on('expanded.lte.cardwidget', function () {
+    // ********************* HOME TAB TABLES **************************
+    function loadInterfaceTable(){
       if ( ! $.fn.DataTable.isDataTable( '#interfaceTableList' ) ) {
         //Load Interfaces Table
         $('#interfaceTableList').DataTable({
@@ -1239,10 +843,9 @@
       else {
         $('#interfaceTableList').DataTable().ajax.reload(null, false);
       }
-    })
+    }
 
-    // Load the Snapshots table when expanded
-    $('#snapshotsCard').on('expanded.lte.cardwidget', function () {
+    function loadSnapshotsTable() {
       if ( ! $.fn.DataTable.isDataTable( '#snapshotTableList' ) ) {
         //Load Snapshots Table
         $('#snapshotTableList').DataTable({
@@ -1320,358 +923,9 @@
       else {
         $('#snapshotTableList').DataTable().ajax.reload(null, false);
       }
-    })
+    }
 
-    // Load the Network Devices table when expanded
-    $('#networkDevicesCard').on('expanded.lte.cardwidget', function () {
-      if ( ! $.fn.DataTable.isDataTable( '#networkDeviceTableList' ) ) {
-        //Load Network Devices Table
-        $('#networkDeviceTableList').DataTable({
-          ajax: {
-            url: "../api/virtual-machine/get_instance_network_devices?id="+serverId+"&project="+project+"&name="+instance+"&recursion=1",
-            dataType: "json",
-            dataSrc: "data",
-            contentType: "application/json"
-          },
-          columns: [
-            { title: "Device", data: function (row, type, set) {
-                if (row.hasOwnProperty('device')) {
-                  if (row.device)
-                    return row.device
-                }
-                return '-'
-              },
-            },
-            { title: "NIC Type", data: function (row, type, set) {
-                if (row.hasOwnProperty('nictype')) {
-                  if (row.nictype)
-                    return row.nictype
-                }
-                return '-'
-              },
-            },
-            { title: "Parent Interface", data: function (row, type, set) {
-                if (row.hasOwnProperty('parent')) {
-                  if (row.parent)
-                    return row.parent
-                }
-                return '-'
-              },
-            },
-            { title: "Network", data: function (row, type, set) {
-                if (row.hasOwnProperty('network')) {
-                  if (row.network)
-                    return row.network
-                }
-                return '-'
-              },
-            },
-            { title: "Interface Name", data: function (row, type, set) {
-                if (row.hasOwnProperty('name')) {
-                  if (row.name)
-                    return row.name
-                }
-                return '-'
-              },
-            },
-            { title: "Actions", data: function (row, type, set) {
-              links = ''
-              if (row.hasOwnProperty('device')) {
-                links = '<a onclick=delete_device(\''+row.device+'\')><i class="fas fa-trash-alt fa-lg" style="color:#ddd" title="Delete" aria-hidden="true"></i></a>'
-              }
-              return links
-              },
-            },
-          ],
-          order: [],
-        });
-      }
-      else {
-        $('#networkDeviceTableList').DataTable().ajax.reload(null, false);
-      }
-    })
-  
-    // Load the Disk Devices table when expanded
-    $('#diskDevicesCard').on('expanded.lte.cardwidget', function () {
-      if ( ! $.fn.DataTable.isDataTable( '#diskDeviceTableList' ) ) {
-        //Load Disk Devices Table
-        $('#diskDeviceTableList').DataTable({
-          ajax: {
-            url: "../api/virtual-machine/get_instance_disk_devices?id="+serverId+"&project="+project+"&name="+instance+"&recursion=1",
-            dataType: "json",
-            dataSrc: "data",
-            contentType: "application/json"
-          },
-          columns: [
-            { title: "Device", data: function (row, type, set) {
-                if (row.hasOwnProperty('device')) {
-                  if (row.device)
-                    return row.device
-                }
-                return '-'
-              },
-            },
-            { title: "Path", data: function (row, type, set) {
-                if (row.hasOwnProperty('path')) {
-                  if (row.path)
-                    return row.path
-                }
-                return '-'
-              },
-            },
-            { title: "Pool", data: function (row, type, set) {
-                if (row.hasOwnProperty('pool')) {
-                  if (row.pool)
-                    return row.pool
-                }
-                return '-'
-              },
-            },
-            { title: "Usage", data: function (row, type, set) {
-                if (row.hasOwnProperty('usage')) {
-                  if (row.usage) {
-                    if (type === 'display')
-                      return (row.usage / 1024 / 1024).toFixed(2) + ' MiB'
-                    return row.usage
-                  }
-                }
-                return '-'
-              },
-            },
-            { title: "Actions", data: function (row, type, set) {
-              links = ''
-              if (row.hasOwnProperty('device')) {
-                links = '<a onclick=delete_device(\''+row.device+'\')><i class="fas fa-trash-alt fa-lg" style="color:#ddd" title="Delete" aria-hidden="true"></i></a>'
-              }
-              return links
-              },
-            },
-          ],
-          order: [],
-        });
-      }
-      else {
-        $('#diskDeviceTableList').DataTable().ajax.reload(null, false);
-      }
-    })
-
-    // Load the GPU Devices table when expanded
-    $('#gpuDevicesCard').on('expanded.lte.cardwidget', function () {
-      if ( ! $.fn.DataTable.isDataTable( '#gpuDeviceTableList' ) ) {
-        //Load GPU Devices Table
-        $('#gpuDeviceTableList').DataTable({
-          ajax: {
-            url: "../api/virtual-machine/get_instance_gpu_devices?id="+serverId+"&project="+project+"&name="+instance+"&recursion=1",
-            dataType: "json",
-            dataSrc: "data",
-            contentType: "application/json"
-          },
-          columns: [
-          { title: "Device", data: function (row, type, set) {
-                if (row.hasOwnProperty('device')) {
-                  if (row.device)
-                    return row.device
-                }
-                return '-'
-              },
-            },
-            { title: "Vendor ID", data: function (row, type, set) {
-                if (row.hasOwnProperty('vendorid')) {
-                  if (row.vendorid)
-                    return row.vendorid
-                }
-                return '-'
-              },
-            },
-            { title: "Product ID", data: function (row, type, set) {
-                if (row.hasOwnProperty('productid')) {
-                  if (row.productid)
-                    return row.productid
-                }
-                return '-'
-              },
-            },
-            { title: "ID", data: function (row, type, set) {
-                if (row.hasOwnProperty('id')) {
-                  if (row.id)
-                    return row.id
-                }
-                return '-'
-              },
-            },
-            { title: "PCI", data: function (row, type, set) {
-                if (row.hasOwnProperty('pci')) {
-                  if (row.pci)
-                    return row.pci
-                }
-                return '-'
-              },
-            },
-            { title: "Type", data: function (row, type, set) {
-                if (row.hasOwnProperty('type')) {
-                  if (row.type)
-                    return row.type
-                }
-                return '-'
-              },
-            },
-            { title: "Actions", data: function (row, type, set) {
-              links = ''
-              if (row.hasOwnProperty('device')) {
-                links = '<a onclick=delete_device(\''+row.device+'\')><i class="fas fa-trash-alt fa-lg" style="color:#ddd" title="Delete" aria-hidden="true"></i></a>'
-              }
-              return links
-              },
-            },
-          ],
-          order: [],
-        });
-      }
-      else {
-        $('#gpuDeviceTableList').DataTable().ajax.reload(null, false);
-      }
-    })
-
-    // Load the Proxy Devices table when expanded
-    $('#proxyDevicesCard').on('expanded.lte.cardwidget', function () {
-      if ( ! $.fn.DataTable.isDataTable( '#proxyDeviceTableList' ) ) {
-        //Load Proxy Devices Table
-        $('#proxyDeviceTableList').DataTable({
-          ajax: {
-            url: "../api/virtual-machine/get_instance_proxy_devices?id="+serverId+"&project="+project+"&name="+instance+"&recursion=1",
-            dataType: "json",
-            dataSrc: "data",
-            contentType: "application/json"
-          },
-          columns: [
-            { title: "Device", data: function (row, type, set) {
-                if (row.hasOwnProperty('device')) {
-                  if (row.device)
-                    return row.device
-                }
-                return '-'
-              },
-            },
-            { title: "Connect", data: function (row, type, set) {
-                if (row.hasOwnProperty('connect')) {
-                  if (row.connect)
-                    return row.connect
-                }
-                return '-'
-              },
-            },
-            { title: "Listen", data: function (row, type, set) {
-                if (row.hasOwnProperty('listen')) {
-                  if (row.listen)
-                    return row.listen
-                }
-                return '-'
-              },
-            },
-            { title: "Type", data: function (row, type, set) {
-                if (row.hasOwnProperty('type')) {
-                  if (row.type)
-                    return row.type
-                }
-                return '-'
-              },
-            },
-            { title: "Actions", data: function (row, type, set) {
-              links = ''
-              if (row.hasOwnProperty('device')) {
-                links = '<a onclick=delete_device(\''+row.device+'\')><i class="fas fa-trash-alt fa-lg" style="color:#ddd" title="Delete" aria-hidden="true"></i></a>'
-              }
-              return links
-              },
-            },
-          ],
-          order: [],
-        });
-      }
-      else {
-        $('#proxyDeviceTableList').DataTable().ajax.reload(null, false);
-      }
-    })
-
-    // Load the USB Devices table when expanded
-    $('#usbDevicesCard').on('expanded.lte.cardwidget', function () {
-      if ( ! $.fn.DataTable.isDataTable( '#usbDeviceTableList' ) ) {
-        //Load USB Devices Table
-        $('#usbDeviceTableList').DataTable({
-          ajax: {
-            url: "../api/virtual-machine/get_instance_usb_devices?id="+serverId+"&project="+project+"&name="+instance+"&recursion=1",
-            dataType: "json",
-            dataSrc: "data",
-            contentType: "application/json"
-          },
-          columns: [
-            { title: "Device", data: function (row, type, set) {
-                if (row.hasOwnProperty('device')) {
-                  if (row.device)
-                    return row.device
-                }
-                return '-'
-              },
-            },
-            { title: "Vendor ID", data: function (row, type, set) {
-                if (row.hasOwnProperty('vendorid')) {
-                  if (row.vendorid)
-                    return row.vendorid
-                }
-                return '-'
-              },
-            },
-            { title: "Product ID", data: function (row, type, set) {
-                if (row.hasOwnProperty('productid')) {
-                  if (row.productid)
-                    return row.productid
-                }
-                return '-'
-              },
-            },
-            { title: "Mode", data: function (row, type, set) {
-                if (row.hasOwnProperty('mode')) {
-                  if (row.mode)
-                    return row.mode
-                }
-                return '-'
-              },
-            },
-            { title: "Required", data: function (row, type, set) {
-                if (row.hasOwnProperty('required')) {
-                  if (row.required)
-                    return row.required
-                }
-                return '-'
-              },
-            },
-            { title: "Type", data: function (row, type, set) {
-                if (row.hasOwnProperty('type')) {
-                  if (row.type)
-                    return row.type
-                }
-                return '-'
-              },
-            },
-            { title: "Actions", data: function (row, type, set) {
-              lins = ''
-              if (row.hasOwnProperty('device')) {
-                links = '<a onclick=delete_device(\''+row.device+'\')><i class="fas fa-trash-alt fa-lg" style="color:#ddd" title="Delete" aria-hidden="true"></i></a>'
-              }
-              return links
-              },
-            },
-          ],
-          order: [],
-        });
-      }
-      else {
-        $('#usbDeviceTableList').DataTable().ajax.reload(null, false);
-      }
-    })
-
-    // Load the Backups table when expanded
-    $('#backupsCard').on('expanded.lte.cardwidget', function () {
+    function loadBackupsTable() {
       if ( ! $.fn.DataTable.isDataTable( '#backupTableList' ) ) {
         //Load Backups Table
         $('#backupTableList').DataTable({
@@ -1764,10 +1018,9 @@
       else {
         $('#backupTableList').DataTable().ajax.reload(null, false);
       }
-    })
+    }
 
-    // Load the Logs table when expanded
-    $('#logsCard').on('expanded.lte.cardwidget', function () {
+    function loadLogsTable() {
       if ( ! $.fn.DataTable.isDataTable( '#logTableList' ) ) {
         //Load Logs Table
         $('#logTableList').DataTable({
@@ -1799,7 +1052,486 @@
       else {
         $('#logTableList').DataTable().ajax.reload(null, false);
       }
+    }
+
+    // Load/Reload the Home tab content when selected
+    $('#nav-home-tab').on('show.bs.tab', function () {
+      loadInterfaceTable()
+      loadSnapshotsTable()
+      loadBackupsTable()
+      loadLogsTable()
     })
+
+    // ********************* DEVICES TAB TABLES **************************
+    function loadDiskDevicesTable() {
+      if ( ! $.fn.DataTable.isDataTable( '#diskDeviceTableList' ) ) {
+        //Load Disk Devices Table
+        $('#diskDeviceTableList').DataTable({
+          ajax: {
+            url: "../api/virtual-machine/get_instance_disk_devices?id="+serverId+"&project="+project+"&name="+instance+"&recursion=1",
+            dataType: "json",
+            dataSrc: "data",
+            contentType: "application/json"
+          },
+          columns: [
+            { title: "Device", data: function (row, type, set) {
+                if (row.hasOwnProperty('device')) {
+                  if (row.device)
+                    return row.device
+                }
+                return '-'
+              },
+            },
+            { title: "Path", data: function (row, type, set) {
+                if (row.hasOwnProperty('path')) {
+                  if (row.path)
+                    return row.path
+                }
+                return '-'
+              },
+            },
+            { title: "Pool", data: function (row, type, set) {
+                if (row.hasOwnProperty('pool')) {
+                  if (row.pool)
+                    return row.pool
+                }
+                return '-'
+              },
+            },
+            { title: "Usage", data: function (row, type, set) {
+                if (row.hasOwnProperty('usage')) {
+                  if (row.usage) {
+                    if (type === 'display')
+                      return (row.usage / 1024 / 1024).toFixed(2) + ' MiB'
+                    return row.usage
+                  }
+                }
+                return '-'
+              },
+            },
+            { title: "Actions", data: function (row, type, set) {
+              links = ''
+              if (row.hasOwnProperty('device')) {
+                links = '<a onclick=delete_device(\''+row.device+'\')><i class="fas fa-trash-alt fa-lg" style="color:#ddd" title="Delete" aria-hidden="true"></i></a>'
+              }
+              return links
+              },
+            },
+          ],
+          order: [],
+        });
+      }
+      else {
+        $('#diskDeviceTableList').DataTable().ajax.reload(null, false);
+      }
+    }
+
+    function loadGpuDevicesTable() {
+      if ( ! $.fn.DataTable.isDataTable( '#gpuDeviceTableList' ) ) {
+        //Load GPU Devices Table
+        $('#gpuDeviceTableList').DataTable({
+          ajax: {
+            url: "../api/virtual-machine/get_instance_gpu_devices?id="+serverId+"&project="+project+"&name="+instance+"&recursion=1",
+            dataType: "json",
+            dataSrc: "data",
+            contentType: "application/json"
+          },
+          columns: [
+          { title: "Device", data: function (row, type, set) {
+                if (row.hasOwnProperty('device')) {
+                  if (row.device)
+                    return row.device
+                }
+                return '-'
+              },
+            },
+            { title: "Vendor ID", data: function (row, type, set) {
+                if (row.hasOwnProperty('vendorid')) {
+                  if (row.vendorid)
+                    return row.vendorid
+                }
+                return '-'
+              },
+            },
+            { title: "Product ID", data: function (row, type, set) {
+                if (row.hasOwnProperty('productid')) {
+                  if (row.productid)
+                    return row.productid
+                }
+                return '-'
+              },
+            },
+            { title: "ID", data: function (row, type, set) {
+                if (row.hasOwnProperty('id')) {
+                  if (row.id)
+                    return row.id
+                }
+                return '-'
+              },
+            },
+            { title: "PCI", data: function (row, type, set) {
+                if (row.hasOwnProperty('pci')) {
+                  if (row.pci)
+                    return row.pci
+                }
+                return '-'
+              },
+            },
+            { title: "Type", data: function (row, type, set) {
+                if (row.hasOwnProperty('type')) {
+                  if (row.type)
+                    return row.type
+                }
+                return '-'
+              },
+            },
+            { title: "Actions", data: function (row, type, set) {
+              links = ''
+              if (row.hasOwnProperty('device')) {
+                links = '<a onclick=delete_device(\''+row.device+'\')><i class="fas fa-trash-alt fa-lg" style="color:#ddd" title="Delete" aria-hidden="true"></i></a>'
+              }
+              return links
+              },
+            },
+          ],
+          order: [],
+        });
+      }
+      else {
+        $('#gpuDeviceTableList').DataTable().ajax.reload(null, false);
+      }
+    }
+
+    function loadNetworkDevicesTable() {
+      if ( ! $.fn.DataTable.isDataTable( '#networkDeviceTableList' ) ) {
+        //Load Network Devices Table
+        $('#networkDeviceTableList').DataTable({
+          ajax: {
+            url: "../api/virtual-machine/get_instance_network_devices?id="+serverId+"&project="+project+"&name="+instance+"&recursion=1",
+            dataType: "json",
+            dataSrc: "data",
+            contentType: "application/json"
+          },
+          columns: [
+            { title: "Device", data: function (row, type, set) {
+                if (row.hasOwnProperty('device')) {
+                  if (row.device)
+                    return row.device
+                }
+                return '-'
+              },
+            },
+            { title: "NIC Type", data: function (row, type, set) {
+                if (row.hasOwnProperty('nictype')) {
+                  if (row.nictype)
+                    return row.nictype
+                }
+                return '-'
+              },
+            },
+            { title: "Parent Interface", data: function (row, type, set) {
+                if (row.hasOwnProperty('parent')) {
+                  if (row.parent)
+                    return row.parent
+                }
+                return '-'
+              },
+            },
+            { title: "Network", data: function (row, type, set) {
+                if (row.hasOwnProperty('network')) {
+                  if (row.network)
+                    return row.network
+                }
+                return '-'
+              },
+            },
+            { title: "Interface Name", data: function (row, type, set) {
+                if (row.hasOwnProperty('name')) {
+                  if (row.name)
+                    return row.name
+                }
+                return '-'
+              },
+            },
+            { title: "Actions", data: function (row, type, set) {
+              links = ''
+              if (row.hasOwnProperty('device')) {
+                links = '<a onclick=delete_device(\''+row.device+'\')><i class="fas fa-trash-alt fa-lg" style="color:#ddd" title="Delete" aria-hidden="true"></i></a>'
+              }
+              return links
+              },
+            },
+          ],
+          order: [],
+        });
+      }
+      else {
+        $('#networkDeviceTableList').DataTable().ajax.reload(null, false);
+      }
+    }
+
+    function loadProxyDevicesTable() {
+      if ( ! $.fn.DataTable.isDataTable( '#proxyDeviceTableList' ) ) {
+        //Load Proxy Devices Table
+        $('#proxyDeviceTableList').DataTable({
+          ajax: {
+            url: "../api/virtual-machine/get_instance_proxy_devices?id="+serverId+"&project="+project+"&name="+instance+"&recursion=1",
+            dataType: "json",
+            dataSrc: "data",
+            contentType: "application/json"
+          },
+          columns: [
+            { title: "Device", data: function (row, type, set) {
+                if (row.hasOwnProperty('device')) {
+                  if (row.device)
+                    return row.device
+                }
+                return '-'
+              },
+            },
+            { title: "Connect", data: function (row, type, set) {
+                if (row.hasOwnProperty('connect')) {
+                  if (row.connect)
+                    return row.connect
+                }
+                return '-'
+              },
+            },
+            { title: "Listen", data: function (row, type, set) {
+                if (row.hasOwnProperty('listen')) {
+                  if (row.listen)
+                    return row.listen
+                }
+                return '-'
+              },
+            },
+            { title: "Type", data: function (row, type, set) {
+                if (row.hasOwnProperty('type')) {
+                  if (row.type)
+                    return row.type
+                }
+                return '-'
+              },
+            },
+            { title: "Actions", data: function (row, type, set) {
+              links = ''
+              if (row.hasOwnProperty('device')) {
+                links = '<a onclick=delete_device(\''+row.device+'\')><i class="fas fa-trash-alt fa-lg" style="color:#ddd" title="Delete" aria-hidden="true"></i></a>'
+              }
+              return links
+              },
+            },
+          ],
+          order: [],
+        });
+      }
+      else {
+        $('#proxyDeviceTableList').DataTable().ajax.reload(null, false);
+      }
+    }
+
+    function loadUsbDevicesTable() {
+      if ( ! $.fn.DataTable.isDataTable( '#usbDeviceTableList' ) ) {
+        //Load USB Devices Table
+        $('#usbDeviceTableList').DataTable({
+          ajax: {
+            url: "../api/virtual-machine/get_instance_usb_devices?id="+serverId+"&project="+project+"&name="+instance+"&recursion=1",
+            dataType: "json",
+            dataSrc: "data",
+            contentType: "application/json"
+          },
+          columns: [
+            { title: "Device", data: function (row, type, set) {
+                if (row.hasOwnProperty('device')) {
+                  if (row.device)
+                    return row.device
+                }
+                return '-'
+              },
+            },
+            { title: "Vendor ID", data: function (row, type, set) {
+                if (row.hasOwnProperty('vendorid')) {
+                  if (row.vendorid)
+                    return row.vendorid
+                }
+                return '-'
+              },
+            },
+            { title: "Product ID", data: function (row, type, set) {
+                if (row.hasOwnProperty('productid')) {
+                  if (row.productid)
+                    return row.productid
+                }
+                return '-'
+              },
+            },
+            { title: "Mode", data: function (row, type, set) {
+                if (row.hasOwnProperty('mode')) {
+                  if (row.mode)
+                    return row.mode
+                }
+                return '-'
+              },
+            },
+            { title: "Required", data: function (row, type, set) {
+                if (row.hasOwnProperty('required')) {
+                  if (row.required)
+                    return row.required
+                }
+                return '-'
+              },
+            },
+            { title: "Type", data: function (row, type, set) {
+                if (row.hasOwnProperty('type')) {
+                  if (row.type)
+                    return row.type
+                }
+                return '-'
+              },
+            },
+            { title: "Actions", data: function (row, type, set) {
+              lins = ''
+              if (row.hasOwnProperty('device')) {
+                links = '<a onclick=delete_device(\''+row.device+'\')><i class="fas fa-trash-alt fa-lg" style="color:#ddd" title="Delete" aria-hidden="true"></i></a>'
+              }
+              return links
+              },
+            },
+          ],
+          order: [],
+        });
+      }
+      else {
+        $('#usbDeviceTableList').DataTable().ajax.reload(null, false);
+      }
+    }
+
+    // Load/Reload the Devices tab content when selected
+    $('#nav-devices-tab').on('show.bs.tab', function () {
+      loadDiskDevicesTable()
+      loadGpuDevicesTable()
+      loadNetworkDevicesTable()
+      loadProxyDevicesTable()
+      loadUsbDevicesTable()
+    })
+
+    // Load the Disk Devices table when selected
+    $('#v-pills-disk-devices-tab').on('show.bs.tab', function () {
+      loadDiskDevicesTable()
+    })
+
+    // Load the GPU Devices table when selected
+    $('#v-pills-gpu-devices-tab').on('show.bs.tab', function () {
+      loadGpuDevicesTable()
+    })
+
+    // Load the Network Devices table when selected
+    $('#v-pills-network-devices-tab').on('show.bs.tab', function () {
+      loadNetworkDevicesTable()
+    })
+
+    // Load the Proxy Devices table when selected
+    $('#v-pills-proxy-devices-tab').on('show.bs.tab', function () {
+      loadProxyDevicesTable()
+    })
+
+    // Load the USB Devices table when selected
+    $('#v-pills-usb-devices-tab').on('show.bs.tab', function () {
+      loadUsbDevicesTable()
+    })
+
+
+
+    // Loads the attachProfile modal and populates dynamic form options
+    function loadAttachProfileModal(){
+      //Reset and populate the Attach profile modal profile dropdown
+      $("#selectProfileInput").empty().append('<option value="">(not set)</option>');
+      $.getJSON("../api/profiles/list_profiles?id="+serverId+"&project="+project, function (data) {
+        data = data.metadata
+        for (var index = 0; index < data.length; index++) {
+          //When using projects other than default and no recursion, it gets like URL variable with "?"
+          optionText = data[index].split("?")
+          optionText = optionText[0].replace('/1.0/profiles/','');
+          $('#selectProfileInput').append('<option value="' + optionText + '">' + optionText + '</option>');
+        }
+        //Show modal
+        $("#attachProfileModal").modal('show');
+      })
+    }
+
+    // Loads the detachProfile modal and populates dynamic form options
+    function loadDetachProfileModal(){
+      //Reset and populate the Detach profile modal profile dropdown
+      $("#selectDetachProfileInput").empty().append('<option value="">(not set)</option>');
+      $.getJSON("../api/virtual-machine/get_instance?id="+serverId+"&project="+project+"&name="+instance+"&recursion=1", function (data) {
+        data = data.metadata
+        for (var index = 0; index < data.profiles.length; index++) {
+          optionText = data.profiles[index];
+          $('#selectDetachProfileInput').append('<option value="' + optionText + '">' + optionText + '</option>');
+        }
+        //Show modal
+        $("#detachProfileModal").modal('show');
+      })
+    }
+
+    // Loads the addNetworkDevice modal and populates dynamic form options
+    function loadAddNetworkDeviceModal(){
+
+      //Reset and populate the modal Network Device's Network dropdown
+      $("#networkNetworkInput").empty().append('<option value="">(not set)</option>');
+      $.getJSON("../api/networks/list_network_managed_devices?id="+serverId+"&project="+project, function (data) {
+        for (var index = 0; index < data.length; index++) {
+          optionText = data[index];
+          $('#networkNetworkInput').append('<option value="' + optionText + '">' + optionText + '</option>');
+        }
+        //Set correct options
+        changeParentTypeInput();
+
+        //Show modal
+        $("#addNetworkDeviceModal").modal('show');
+      })
+
+      //Reset and populate the modal Network Device's Parent Network dropdown
+      $("#networkParentInput").empty().append('<option value="">(not set)</option>');
+      $.getJSON("../api/networks/list_networks?id="+serverId+"&project="+project, function (data) {
+        data = data.metadata
+        for (var index = 0; index < data.length; index++) {
+          optionText = data[index].replace('/1.0/networks/','');
+          $('#networkParentInput').append('<option value="' + optionText + '">' + optionText + '</option>');
+        }
+      })
+
+    }
+    
+    // Loads the addDiskDevice modal and populates dynamic form options
+    function loadAddDiskDeviceModal(){
+      //Reset and populate the modal Disk Device's Storage Pools dropdown
+      $("#diskPoolInput").empty().append('<option value="">(not set)</option>');
+      $.getJSON("../api/storage-pools/list_storage_pools?id="+serverId+"&project="+project, function (data) {
+        data = data.metadata
+        for (var index = 0; index < data.length; index++) {
+          optionText = data[index].replace('/1.0/storage-pools/','');
+          $('#diskPoolInput').append('<option value="' + optionText + '">' + optionText + '</option>');
+        }
+        //Show modal
+        $("#addDiskDeviceModal").modal('show');
+      })
+    }
+
+    // Loads thes migrateInstanceModal and populates dynamic form options
+    function loadMigrateInstanceModal(){
+      //Reset and populate the modal Server dropdown
+      $("#selectClusterInput").empty().append('<option value="">(not set)</option>');
+      $.getJSON("../api/cluster-members/list_cluster_members?id="+serverId+"&project="+project, function (data) {
+        data = data.metadata
+        for (var index = 0; index < data.length; index++) {
+          optionText = data[index].replace('/1.0/cluster/members/','');
+          $('#selectClusterInput').append('<option value="' + optionText + '">' + optionText + '</option>');
+        }
+        //Show modal
+        $("#migrateInstanceModal").modal('show');
+      })
+    }
 
     // Create snapshot from modal data
     function createSnapshot(){

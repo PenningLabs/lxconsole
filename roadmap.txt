@@ -1,10 +1,5 @@
-# 0.3.0
-- Add network-zones
-- Add network-forwards
-- Add network-load-balancers
-- Add network peers
-
 # 0.4.0
+- Convert to bootstrap 5
 - Add dark theme option
 - Add bootstrap toast notifications
 - Add warnings
@@ -18,7 +13,7 @@
 - Add logs page
 
 # 0.7.0
-- Add expandable datatables rows where appropriate for additional information
+- Add offcanvas sidebars where appropriate for additional information
 - Include rename tasks in tables with edit form on new tab
 
 # 1.0.0
