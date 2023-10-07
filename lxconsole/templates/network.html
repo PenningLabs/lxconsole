@@ -295,8 +295,11 @@
       //Load Network State
       loadNetworkState()
 
-      //Load Home Tab Tables
+      //Load Tables
       loadDhcpLeasesTable()
+      loadLoadBalancersTable()
+      loadForwardsTable()
+      loadPeersTables()
 
       //Set reload page content
       pageReloadTimeout = setTimeout(() => { reloadPageContent(); }, reloadTime);
