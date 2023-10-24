@@ -9,7 +9,6 @@
   <div class="col-12 mt-n3">
     <div class="row">
 
-
       <div class="col-md-3 col-sm-6 col-12">
         <div class="info-box">
           <a href="#" class="stretched-link" id="containersLink"></a>
@@ -404,7 +403,7 @@
       });
 
       //Load Containers Info
-      $.getJSON("../api/containers/list_instances?id="+encodeURI(serverId)+'&project='+encodeURI(project)+'&recursion=1', function (data) {
+      $.getJSON("../api/instances/list_instances?id="+encodeURI(serverId)+'&project='+encodeURI(project)+'&filter=container'+'&recursion=1', function (data) {
         data = data.metadata;
         
         running_containers = 0
@@ -430,7 +429,7 @@
       });
 
       // Load Virtual Machine Info
-      $.getJSON("../api/virtual-machines/list_instances?id="+encodeURI(serverId)+'&project='+encodeURI(project)+'&recursion=1', function (data) {
+      $.getJSON("../api/instances/list_instances?id="+encodeURI(serverId)+'&project='+encodeURI(project)+'&filter=virtual-machine'+'&recursion=1', function (data) {
         data = data.metadata;
         
         running_virtual_machines = 0
@@ -516,8 +515,8 @@
       });
 
       //Set hyperlink references for cards
-      $("#containersLink").attr("href", "containers?id="+serverId+"&project="+project)
-      $("#virtualMachinesLink").attr("href", "virtual-machines?id="+serverId+"&project="+project)
+      $("#containersLink").attr("href", "instances?id="+serverId+"&project="+project)
+      $("#virtualMachinesLink").attr("href", "instances?id="+serverId+"&project="+project)
       $("#clusterMembersLink").attr("href", "cluster-members?id="+serverId+"&project="+project)
       $("#imagesLink").attr("href", "images?id="+serverId+"&project="+project)
       $("#profilesLink").attr("href", "profiles?id="+serverId+"&project="+project)

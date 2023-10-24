@@ -6,9 +6,9 @@
       <h1>{{ page_title | safe }}</h1>
     </div>
     <div class="col-sm-6">
-      <a class="btn btn-outline-primary float-sm-right mr-4" href="#" data-toggle="modal" data-target="#addModal" title="Add Access Control" aria-hidden="true">
+      <button class="btn btn-outline-primary float-sm-right mr-4" data-bs-toggle="modal" data-bs-target="#addModal" title="Add Access Control" aria-hidden="true">
         <i class="fas fa-plus fa-sm fa-fw"></i> Access Control
-      </a>
+      </button>
     </div>
   </div>
 {% endblock header %}
@@ -59,7 +59,10 @@
           url: "../api/access-controls/list_access_controls",
           dataType: "json",
           dataSrc: "data",
-          contentType: "application/json"
+          contentType: "application/json",
+          error: function (xhr, error, code) {
+            console.log(xhr, code);
+          }
         },
         columns: [
         { title: "Id", data: function (row, type, set) {

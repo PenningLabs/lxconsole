@@ -2,6 +2,7 @@ from flask import jsonify, request
 import json
 import requests
 import os
+import time
 from lxconsole import db
 from lxconsole.models import Server
 from datetime import datetime
@@ -16,7 +17,7 @@ def get_client_key():
   return 'certs/client.key'
 
 @login_required
-def api_container_endpoint(endpoint):
+def api_instance_endpoint(endpoint):
 
   if not privilege_check(endpoint, request.args.get('id')):
     return jsonify({'data': [], 'metadata':[], 'error': 'not authorized', 'error_code': 403})
@@ -27,7 +28,7 @@ def api_container_endpoint(endpoint):
     project = request.args.get('project')
     instance = request.args.get('instance')
     server = Server.query.filter_by(id=id).first()
-    url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/containers/' + instance + '?project=' + project
+    url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/instances/' + instance + '?project=' + project
     client_cert = get_client_crt()
     client_key = get_client_key()
     results = requests.get(url, verify=server.ssl_verify, cert=(client_cert, client_key))
@@ -71,7 +72,7 @@ def api_container_endpoint(endpoint):
     project = request.args.get('project')
     instance = request.args.get('instance')
     server = Server.query.filter_by(id=id).first()
-    url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/containers/' + instance + '?project=' + project
+    url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/instances/' + instance + '?project=' + project
     client_cert = get_client_crt()
     client_key = get_client_key()
     results = requests.get(url, verify=server.ssl_verify, cert=(client_cert, client_key))
@@ -107,7 +108,7 @@ def api_container_endpoint(endpoint):
     project = request.args.get('project')
     instance = request.args.get('instance')
     server = Server.query.filter_by(id=id).first()
-    url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/containers/' + instance + '?project=' + project
+    url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/instances/' + instance + '?project=' + project
     client_cert = get_client_crt()
     client_key = get_client_key()
     results = requests.get(url, verify=server.ssl_verify, cert=(client_cert, client_key))
@@ -171,7 +172,7 @@ def api_container_endpoint(endpoint):
     project = request.args.get('project')
     instance = request.args.get('instance')
     server = Server.query.filter_by(id=id).first()
-    url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/containers/' + instance + '?project=' + project
+    url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/instances/' + instance + '?project=' + project
     client_cert = get_client_crt()
     client_key = get_client_key()
     results = requests.get(url, verify=server.ssl_verify, cert=(client_cert, client_key))
@@ -207,7 +208,7 @@ def api_container_endpoint(endpoint):
     project = request.args.get('project')
     instance = request.args.get('instance')
     server = Server.query.filter_by(id=id).first()
-    url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/containers/' + instance + '?project=' + project
+    url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/instances/' + instance + '?project=' + project
     client_cert = get_client_crt()
     client_key = get_client_key()
     results = requests.get(url, verify=server.ssl_verify, cert=(client_cert, client_key))
@@ -241,7 +242,7 @@ def api_container_endpoint(endpoint):
     project = request.args.get('project')
     instance = request.args.get('instance')
     server = Server.query.filter_by(id=id).first()
-    url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/containers/' + instance + '?project=' + project
+    url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/instances/' + instance + '?project=' + project
     client_cert = get_client_crt()
     client_key = get_client_key()
     results = requests.get(url, verify=server.ssl_verify, cert=(client_cert, client_key))
@@ -272,7 +273,7 @@ def api_container_endpoint(endpoint):
     project = request.args.get('project')
     instance = request.args.get('instance')
     server = Server.query.filter_by(id=id).first()
-    url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/containers/' + instance + '?project=' + project
+    url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/instances/' + instance + '?project=' + project
     client_cert = get_client_crt()
     client_key = get_client_key()
     results = requests.get(url, verify=server.ssl_verify, cert=(client_cert, client_key))
@@ -296,7 +297,7 @@ def api_container_endpoint(endpoint):
     action = request.form.get('action')
     force = request.form.get('force')
     server = Server.query.filter_by(id=id).first()
-    url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/containers/' + instance + '/state?project=' + project
+    url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/instances/' + instance + '/state?project=' + project
     client_cert = get_client_crt()
     client_key = get_client_key()
     if force == 'true':
@@ -315,9 +316,9 @@ def api_container_endpoint(endpoint):
     location = request.args.get('location')
     #Target location is needed for clustered servers and not allowed on non-clustered servers
     if location == 'none':
-      url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/containers?project=' + project
+      url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/instances?project=' + project
     else:
-      url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/containers?target='+location+'&project=' + project
+      url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/instances?target='+location+'&project=' + project
     client_cert = get_client_crt()
     client_key = get_client_key()
     data = {}
@@ -336,7 +337,7 @@ def api_container_endpoint(endpoint):
     project = request.args.get('project')
     instance = request.args.get('instance')
     server = Server.query.filter_by(id=id).first()
-    url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/containers/' + instance + '/backups?project=' + project
+    url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/instances/' + instance + '/backups?project=' + project
     client_cert = get_client_crt()
     client_key = get_client_key()
     
@@ -379,7 +380,7 @@ def api_container_endpoint(endpoint):
     project = request.args.get('project')
     instance = request.args.get('instance')
     server = Server.query.filter_by(id=id).first()
-    url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/containers/' + instance + '/snapshots?project=' + project
+    url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/instances/' + instance + '/snapshots?project=' + project
     client_cert = get_client_crt()
     client_key = get_client_key()
     data = {}
@@ -400,9 +401,9 @@ def api_container_endpoint(endpoint):
     location = request.args.get('location')
     #Target location is needed for clustered servers and not allowed on non-clustered servers
     if location == 'none':
-      url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/containers?project=' + project
+      url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/instances?project=' + project
     else:
-      url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/containers?target='+location+'&project=' + project
+      url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/instances?target='+location+'&project=' + project
     client_cert = get_client_crt()
     client_key = get_client_key()
     data = {}
@@ -423,7 +424,7 @@ def api_container_endpoint(endpoint):
     instance = request.args.get('instance')
     backup = request.args.get('backup')
     server = Server.query.filter_by(id=id).first()
-    url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/containers/' + instance + '/backups/' + backup + '?project=' + project
+    url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/instances/' + instance + '/backups/' + backup + '?project=' + project
     client_cert = get_client_crt()
     client_key = get_client_key()
     if os.path.isfile('backups/' + str(server.id) + '/' + project + '/' + instance + '/' + backup):
@@ -438,7 +439,7 @@ def api_container_endpoint(endpoint):
     instance = request.args.get('instance')
     device = request.args.get('device')
     server = Server.query.filter_by(id=id).first()
-    url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/containers/' + instance + '?project=' + project
+    url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/instances/' + instance + '?project=' + project
     client_cert = get_client_crt()
     client_key = get_client_key()
     results = requests.get(url, verify=server.ssl_verify, cert=(client_cert, client_key))
@@ -455,7 +456,7 @@ def api_container_endpoint(endpoint):
     project = request.args.get('project')
     instance = request.form.get('instance')
     server = Server.query.filter_by(id=id).first()
-    url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/containers/' + instance + '?project=' + project
+    url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/instances/' + instance + '?project=' + project
     client_cert = get_client_crt()
     client_key = get_client_key()
     results = requests.delete(url, verify=server.ssl_verify, cert=(client_cert, client_key))
@@ -480,7 +481,7 @@ def api_container_endpoint(endpoint):
     instance = request.args.get('instance')
     snapshot = request.args.get('snapshot')
     server = Server.query.filter_by(id=id).first()
-    url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/containers/' + instance + '/snapshots/' + snapshot + '?project=' + project
+    url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/instances/' + instance + '/snapshots/' + snapshot + '?project=' + project
     client_cert = get_client_crt()
     client_key = get_client_key()
     results = requests.delete(url, verify=server.ssl_verify, cert=(client_cert, client_key))
@@ -493,7 +494,7 @@ def api_container_endpoint(endpoint):
     instance = request.args.get('instance')
     profile = request.args.get('profile')
     server = Server.query.filter_by(id=id).first()
-    url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/containers/' + instance + '?project=' + project
+    url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/instances/' + instance + '?project=' + project
     client_cert = get_client_crt()
     client_key = get_client_key()
     results = requests.get(url, verify=server.ssl_verify, cert=(client_cert, client_key))
@@ -527,7 +528,7 @@ def api_container_endpoint(endpoint):
     project = request.args.get('project')
     instance = request.args.get('instance')
     server = Server.query.filter_by(id=id).first()
-    url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/containers/' + instance + '/console?project=' + project
+    url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/instances/' + instance + '/console?project=' + project
     client_cert = get_client_crt()
     client_key = get_client_key()
     data = {}
@@ -550,7 +551,7 @@ def api_container_endpoint(endpoint):
     project = request.args.get('project')
     instance = request.args.get('instance')
     server = Server.query.filter_by(id=id).first()
-    url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/containers/' + instance + '/exec?project=' + project
+    url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/instances/' + instance + '/exec?project=' + project
     client_cert = get_client_crt()
     client_key = get_client_key()
     data = {}
@@ -584,7 +585,7 @@ def api_container_endpoint(endpoint):
     server = Server.query.filter_by(id=id).first()
     instance = request.args.get('instance')
     backup = request.args.get('backup')
-    url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/containers/' + instance + '/backups/' + backup + '/export?project=' + project
+    url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/instances/' + instance + '/backups/' + backup + '/export?project=' + project
     client_cert = get_client_crt()
     client_key = get_client_key()
     os.system('mkdir -p backups/' + str(server.id) + '/' + project + '/' + instance)
@@ -597,6 +598,114 @@ def api_container_endpoint(endpoint):
     return jsonify({"status": "Ok", "status_code": 200, "metadata": "{}"})
 
 
+  if endpoint == 'get_instance':
+    id = request.args.get('id')
+    project = request.args.get('project')
+    server = Server.query.filter_by(id=id).first()
+    name = request.args.get('name')
+    recursion = request.args.get('recursion')
+    if recursion == '1':
+      url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/instances/' + name + '?recursion=1&project=' + project
+    else:
+      url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/instances/' + name + '?project=' + project
+    client_cert = get_client_crt()
+    client_key = get_client_key()
+    results = requests.get(url, verify=server.ssl_verify, cert=(client_cert, client_key))
+    return jsonify(results.json())
+  
+  # Virtual Machine only
+  if endpoint == 'get_instance_cpu_percentage':
+    id = request.args.get('id')
+    project = request.args.get('project')
+    server = Server.query.filter_by(id=id).first()
+    name = request.args.get('name')    
+    client_cert = get_client_crt()
+    client_key = get_client_key()
+
+    first_cpu_time = 0
+    first_idle_time = 0
+    second_cpu_time = 0
+    second_idle_time = 0
+
+    # Unable to read /proc/stat directly on virtual machines use lxd files api...getting an EOF error
+    # So we will copy /proc/stat to /tmp/stat and then read that file as a work around
+    data = {}
+    data.update({'command': ['cp', '/proc/stat', '/tmp/stat1']})
+    data.update({'wait-for-websocket': False})
+    data.update({'interactive': False})
+    data.update({'width': 80 })
+    data.update({'height': 24 })
+    data.update({'user': 0 })
+    data.update({'group': 0 })
+    data.update({'cwd': "/" })
+    data.update({'record-output': False })
+    data.update({'environment': {} })
+    
+    url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/instances/' + name + '/exec?project=' + project
+    results = requests.post(url, verify=server.ssl_verify, cert=(client_cert, client_key), json=data)
+  
+    # Sleep to allow time for copy to complete
+    time.sleep(.5)
+
+    #Get first /proc/stat information but from /tmp/stat
+    url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/instances/' + name + '/files?project=' + project + '&path=/tmp/stat1'
+    results = requests.get(url, verify=server.ssl_verify, cert=(client_cert, client_key))
+    if 'cpu' in results.text:
+      results = results.text.split('\n')
+      for result in results:
+        stats = result.split()
+        if 'cpu' in stats:
+          user_time = int(stats[1])
+          system_time= int(stats[3])
+          idle_time = int(stats[4])
+          first_cpu_time = user_time + system_time + idle_time
+          first_idle_time = idle_time
+
+    # Sleep a second between reads
+    time.sleep(1)
+
+    # Copy /proc/stat to /tmp/stat and then read that file as a work around
+    data = {}
+    data.update({'command': ['cp', '/proc/stat', '/tmp/stat2']})
+    data.update({'wait-for-websocket': False})
+    data.update({'interactive': False})
+    data.update({'width': 80 })
+    data.update({'height': 24 })
+    data.update({'user': 0 })
+    data.update({'group': 0 })
+    data.update({'cwd': "/" })
+    data.update({'record-output': False })
+    data.update({'environment': {} })
+    
+    url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/instances/' + name + '/exec?project=' + project
+    results = requests.post(url, verify=server.ssl_verify, cert=(client_cert, client_key), json=data)
+
+    # Sleep to allow time for copy to complete
+    time.sleep(.5)
+
+    #Get second /proc/stat information
+    url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/instances/' + name + '/files?project=' + project + '&path=/tmp/stat2'
+    results = requests.get(url, verify=server.ssl_verify, cert=(client_cert, client_key))
+    if 'cpu' in results.text:
+      results = results.text.split('\n')
+      for result in results:
+        stats = result.split()
+        if 'cpu' in stats:
+          user_time = int(stats[1])
+          system_time= int(stats[3])
+          idle_time = int(stats[4])
+          second_cpu_time = user_time + system_time + idle_time
+          second_idle_time = idle_time
+
+    #Get CPU percentage
+    idle_time = second_idle_time - first_idle_time
+    total_time = second_cpu_time - first_cpu_time
+    if total_time == 0:
+      return jsonify({'percentage': 0, 'cpu1': first_cpu_time, 'cpu2': second_cpu_time, 'idle1': first_idle_time, 'idle2': second_idle_time})
+    percentage = 100 * (1 - idle_time / total_time)
+    return jsonify({'percentage': percentage, 'cpu1': first_cpu_time, 'cpu2': second_cpu_time, 'idle1': first_idle_time, 'idle2': second_idle_time})
+
+
   if endpoint == 'get_instance_cpu_usage':
 
     id = request.args.get('id')
@@ -606,8 +715,8 @@ def api_container_endpoint(endpoint):
     client_cert = get_client_crt()
     client_key = get_client_key()
 
-    #Get instance state to retrieve container cpu usage
-    url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/containers/' + name + '/state?project=' + project
+    #Get instance state to retrieve instance cpu usage
+    url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/instances/' + name + '/state?project=' + project
     results = requests.get(url, verify=server.ssl_verify, cert=(client_cert, client_key))
     results = json.dumps(results.json())
     results = json.loads(results)
@@ -622,7 +731,7 @@ def api_container_endpoint(endpoint):
       instance_cpu_time = 0
 
     #Get /proc/stat information
-    url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/containers/' + name + '/files?project=' + project + '&path=/proc/stat'
+    url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/instances/' + name + '/files?project=' + project + '&path=/proc/stat'
     results = requests.get(url, verify=server.ssl_verify, cert=(client_cert, client_key))
     if 'cpu' in results.text:
       results = results.text.split('\n')
@@ -644,22 +753,6 @@ def api_container_endpoint(endpoint):
     return jsonify({'instance_cpu_time':0,'host_cpu_time': 0})
   
 
-  if endpoint == 'get_instance':
-    id = request.args.get('id')
-    project = request.args.get('project')
-    server = Server.query.filter_by(id=id).first()
-    name = request.args.get('name')
-    recursion = request.args.get('recursion')
-    if recursion == '1':
-      url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/containers/' + name + '?recursion=1&project=' + project
-    else:
-      url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/containers/' + name + '?project=' + project
-    client_cert = get_client_crt()
-    client_key = get_client_key()
-    results = requests.get(url, verify=server.ssl_verify, cert=(client_cert, client_key))
-    return jsonify(results.json())
-  
-
   if endpoint == 'get_instance_disk_devices':
     id = request.args.get('id')
     project = request.args.get('project')
@@ -667,9 +760,9 @@ def api_container_endpoint(endpoint):
     name = request.args.get('name')
     recursion = request.args.get('recursion')
     if recursion == '1':
-      url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/containers/' + name + '?recursion=1&project=' + project
+      url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/instances/' + name + '?recursion=1&project=' + project
     else:
-      url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/containers/' + name + '?project=' + project
+      url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/instances/' + name + '?project=' + project
     client_cert = get_client_crt()
     client_key = get_client_key()
     results = requests.get(url, verify=server.ssl_verify, cert=(client_cert, client_key))
@@ -677,7 +770,7 @@ def api_container_endpoint(endpoint):
     instance = json.loads(instance)
     expanded_devices = instance['metadata']['expanded_devices']
     devices = []
-    instance_state_url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/containers/' + name + '/state?project=' + project
+    instance_state_url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/instances/' + name + '/state?project=' + project
     instance_state = requests.get(instance_state_url, verify=server.ssl_verify, cert=(client_cert, client_key))
     instance_state = json.dumps(instance_state.json())
     instance_state = json.loads(instance_state)
@@ -706,9 +799,9 @@ def api_container_endpoint(endpoint):
     name = request.args.get('name')
     recursion = request.args.get('recursion')
     if recursion == '1':
-      url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/containers/' + name + '?recursion=1&project=' + project
+      url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/instances/' + name + '?recursion=1&project=' + project
     else:
-      url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/containers/' + name + '?project=' + project
+      url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/instances/' + name + '?project=' + project
     client_cert = get_client_crt()
     client_key = get_client_key()
     results = requests.get(url, verify=server.ssl_verify, cert=(client_cert, client_key))
@@ -753,9 +846,9 @@ def api_container_endpoint(endpoint):
     name = request.args.get('name')
     recursion = request.args.get('recursion')
     if recursion == '1':
-      url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/containers/' + name + '/state?recursion=1&project=' + project
+      url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/instances/' + name + '/state?recursion=1&project=' + project
     else:
-      url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/containers/' + name + '/state?project=' + project
+      url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/instances/' + name + '/state?project=' + project
     client_cert = get_client_crt()
     client_key = get_client_key()
     results = requests.get(url, verify=server.ssl_verify, cert=(client_cert, client_key))
@@ -782,6 +875,50 @@ def api_container_endpoint(endpoint):
           interfaces.append(interface)
     return jsonify({ 'data': interfaces })
 
+  # Virtual Machine only
+  if endpoint == 'get_instance_memory_percentage':
+    id = request.args.get('id')
+    project = request.args.get('project')
+    server = Server.query.filter_by(id=id).first()
+    name = request.args.get('name')    
+    client_cert = get_client_crt()
+    client_key = get_client_key()
+
+    percentage = 0
+    mem_total = 0
+    mem_available = 0
+
+    # Unable to read /proc/meminfo directly on virtual machines use lxd files api...getting an EOF error
+    # So we will copy /proc/meminfo to /tmp/meminfo and then read that file as a work around
+    data = {}
+    data.update({'command': ['cp', '/proc/meminfo', '/tmp/meminfo']})
+    data.update({'wait-for-websocket': False})
+    data.update({'interactive': False})
+    data.update({'width': 80 })
+    data.update({'height': 24 })
+    data.update({'user': 0 })
+    data.update({'group': 0 })
+    data.update({'cwd': "/" })
+    data.update({'record-output': False })
+    data.update({'environment': {} })
+    
+    url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/instances/' + name + '/exec?project=' + project
+    results = requests.post(url, verify=server.ssl_verify, cert=(client_cert, client_key), json=data)
+  
+    # Sleep a second to give time to copy file
+    time.sleep(1)
+
+    #Get /proc/meminfo information but from /tmp/meminfo
+    url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/instances/' + name + '/files?project=' + project + '&path=/tmp/meminfo'
+    results = requests.get(url, verify=server.ssl_verify, cert=(client_cert, client_key))
+    if 'MemTotal' in results.text:
+      results = results.text.split('\n')
+      mem_total = results[0].split()
+      mem_available = results[2].split()
+      percentage = 100 * ( 1 - ( int(mem_available[1]) / int(mem_total[1]) ) )
+
+    return jsonify({'percentage': percentage, 'mem_total': mem_total, 'mem_available': mem_available})
+
 
   if endpoint == 'get_instance_network_devices':
     id = request.args.get('id')
@@ -790,9 +927,9 @@ def api_container_endpoint(endpoint):
     name = request.args.get('name')
     recursion = request.args.get('recursion')
     if recursion == '1':
-      url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/containers/' + name + '?recursion=1&project=' + project
+      url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/instances/' + name + '?recursion=1&project=' + project
     else:
-      url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/containers/' + name + '?project=' + project
+      url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/instances/' + name + '?project=' + project
     client_cert = get_client_crt()
     client_key = get_client_key()
     results = requests.get(url, verify=server.ssl_verify, cert=(client_cert, client_key))
@@ -825,9 +962,9 @@ def api_container_endpoint(endpoint):
     name = request.args.get('name')
     recursion = request.args.get('recursion')
     if recursion == '1':
-      url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/containers/' + name + '?recursion=1&project=' + project
+      url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/instances/' + name + '?recursion=1&project=' + project
     else:
-      url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/containers/' + name + '?project=' + project
+      url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/instances/' + name + '?project=' + project
     client_cert = get_client_crt()
     client_key = get_client_key()
     results = requests.get(url, verify=server.ssl_verify, cert=(client_cert, client_key))
@@ -856,15 +993,15 @@ def api_container_endpoint(endpoint):
     name = request.args.get('name')
     recursion = request.args.get('recursion')
     if recursion == '1':
-      url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/containers/' + name + '/state?recursion=1&project=' + project
+      url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/instances/' + name + '/state?recursion=1&project=' + project
     else:
-      url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/containers/' + name + '/state?project=' + project
+      url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/instances/' + name + '/state?project=' + project
     client_cert = get_client_crt()
     client_key = get_client_key()
     results = requests.get(url, verify=server.ssl_verify, cert=(client_cert, client_key))
     return jsonify(results.json())
 
-
+  # Container only
   if endpoint == 'get_instance_unix_devices':
     id = request.args.get('id')
     project = request.args.get('project')
@@ -872,9 +1009,9 @@ def api_container_endpoint(endpoint):
     name = request.args.get('name')
     recursion = request.args.get('recursion')
     if recursion == '1':
-      url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/containers/' + name + '?recursion=1&project=' + project
+      url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/instances/' + name + '?recursion=1&project=' + project
     else:
-      url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/containers/' + name + '?project=' + project
+      url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/instances/' + name + '?project=' + project
     client_cert = get_client_crt()
     client_key = get_client_key()
     results = requests.get(url, verify=server.ssl_verify, cert=(client_cert, client_key))
@@ -915,9 +1052,9 @@ def api_container_endpoint(endpoint):
     name = request.args.get('name')
     recursion = request.args.get('recursion')
     if recursion == '1':
-      url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/containers/' + name + '?recursion=1&project=' + project
+      url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/instances/' + name + '?recursion=1&project=' + project
     else:
-      url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/containers/' + name + '?project=' + project
+      url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/instances/' + name + '?project=' + project
     client_cert = get_client_crt()
     client_key = get_client_key()
     results = requests.get(url, verify=server.ssl_verify, cert=(client_cert, client_key))
@@ -960,9 +1097,9 @@ def api_container_endpoint(endpoint):
     name = request.args.get('name')
     recursion = request.args.get('recursion')
     if recursion == '1':
-      url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/containers/' + name + '/backups?recursion=1&project=' + project
+      url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/instances/' + name + '/backups?recursion=1&project=' + project
     else:
-      url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/containers/' + name + '/backups?project=' + project
+      url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/instances/' + name + '/backups?project=' + project
     client_cert = get_client_crt()
     client_key = get_client_key()
     results = requests.get(url, verify=server.ssl_verify, cert=(client_cert, client_key))
@@ -988,13 +1125,19 @@ def api_container_endpoint(endpoint):
     name = request.args.get('name')
     recursion = request.args.get('recursion')
     if recursion == '1':
-      url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/containers/' + name + '/logs?recursion=1&project=' + project
+      url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/instances/' + name + '/logs?recursion=1&project=' + project
     else:
-      url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/containers/' + name + '/logs?project=' + project
+      url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/instances/' + name + '/logs?project=' + project
     client_cert = get_client_crt()
     client_key = get_client_key()
     results = requests.get(url, verify=server.ssl_verify, cert=(client_cert, client_key))
-    return jsonify(results.json())
+    
+    # Newly created VMs will not have logs until it starts, causing a 404 error
+    results = json.dumps(results.json())
+    results = json.loads(results)
+    if results['metadata'] is None:
+      return jsonify({"metadata":[]})
+    return jsonify(results)
 
 
   if endpoint == 'list_instance_snapshots':
@@ -1004,9 +1147,9 @@ def api_container_endpoint(endpoint):
     name = request.args.get('name')
     recursion = request.args.get('recursion')
     if recursion == '1':
-      url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/containers/' + name + '/snapshots?recursion=1&project=' + project
+      url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/instances/' + name + '/snapshots?recursion=1&project=' + project
     else:
-      url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/containers/' + name + '/snapshots?project=' + project
+      url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/instances/' + name + '/snapshots?project=' + project
     client_cert = get_client_crt()
     client_key = get_client_key()
     results = requests.get(url, verify=server.ssl_verify, cert=(client_cert, client_key))
@@ -1019,7 +1162,7 @@ def api_container_endpoint(endpoint):
     instance = request.args.get('instance')
     server = Server.query.filter_by(id=id).first()
     location = request.args.get('location')
-    url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/containers/' + instance + '?target='+location+'&project=' + project
+    url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/instances/' + instance + '?target='+location+'&project=' + project
     client_cert = get_client_crt()
     client_key = get_client_key()
     data = {}
@@ -1088,7 +1231,7 @@ def api_container_endpoint(endpoint):
       project = request.args.get('project')
       instance = request.args.get('instance')
       server = Server.query.filter_by(id=id).first()
-      url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/containers/' + instance + '?project=' + project
+      url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/instances/' + instance + '?project=' + project
       client_cert = get_client_crt()
       client_key = get_client_key()
       data = {}
@@ -1102,7 +1245,7 @@ def api_container_endpoint(endpoint):
     project = request.args.get('project')
     instance = request.args.get('instance')
     server = Server.query.filter_by(id=id).first()
-    url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/containers/' + instance + '?project=' + project
+    url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/instances/' + instance + '?project=' + project
     client_cert = get_client_crt()
     client_key = get_client_key()
 
@@ -1118,7 +1261,7 @@ def api_container_endpoint(endpoint):
     project = request.args.get('project')
     instance = request.args.get('instance')
     server = Server.query.filter_by(id=id).first()
-    url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/containers/' + instance + '?project=' + project
+    url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/instances/' + instance + '?project=' + project
     client_cert = get_client_crt()
     client_key = get_client_key()
 

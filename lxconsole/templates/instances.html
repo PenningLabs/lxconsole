@@ -1,0 +1,632 @@
+{% extends "main.html" %}
+
+{% block header %}
+  <div class="row mb-2">
+    <div class="col-sm-6">
+      <h1>{{ page_title | safe }}</h1>
+    </div>
+    <div class="col-sm-6">
+      <button class="btn btn-outline-primary float-sm-right mr-4" data-bs-toggle="modal" data-bs-target="#addModal" title="Add Instance" aria-hidden="true">
+        <i class="fas fa-plus fa-sm fa-fw"></i> Instance
+      </button>
+    </div>
+  </div>
+{% endblock header %}
+
+{% block content %}
+  <div class="col-12">
+    <nav>
+      <div class="nav nav-tabs" id="nav-page-tab" role="tablist">
+        <button class="nav-link active" id="nav-containers-tab" data-bs-toggle="tab" data-bs-target="#nav-containers" type="button" role="tab" aria-controls="nav-containers" aria-selected="true">Containers</button>
+        <button class="nav-link" id="nav-virtual-machines-tab" data-bs-toggle="tab" data-bs-target="#nav-virtual-machines" type="button" role="tab" aria-controls="nav-virtual-machines" aria-selected="false">Virtual-Machines</button>
+      </div>
+    </nav>
+    <div class="tab-content" id="nav-page-content">
+      <div class="tab-pane fade show active" id="nav-containers" role="tabpanel" aria-labelledby="nav-containers-tab">
+        <br />
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Containers</h3>
+            <div class="card-tools">
+              <button type="button" class="btn btn-tool" onclick="reloadPageContent()" title="Refresh">
+              <i class="fas fa-sync"></i>
+              </button>
+            </div>
+          </div>
+          <div class="card-body">
+            <table class="table table-hover" id="containerDataTable" width="100%" cellspacing="0">
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="tab-pane fade" id="nav-virtual-machines" role="tabpanel" aria-labelledby="nav-virtual-machines-tab">
+        <br />
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Virtual Machines</h3>
+            <div class="card-tools">
+              <button type="button" class="btn btn-tool" onclick="reloadPageContent()" title="Refresh">
+              <i class="fas fa-sync"></i>
+              </button>
+            </div>
+          </div>
+          <div class="card-body">
+            <table class="table table-hover" id="virtualMachineDataTable" width="100%" cellspacing="0">
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+  </div>
+{% endblock content %}
+
+{% block modal %}
+  {% include 'modals/instances.html' %}
+{% endblock modal %}
+
+{% block script %}
+  <script>
+    var reloadTime = 10000;
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const serverId = urlParams.get('id');
+    const project = urlParams.get('project');
+    applySidebarStyles();
+    applySidebarLinks();
+    populateSidebarLinks();
+    populateNavbarLinks();
+
+    function reloadPageContent() {
+      //Clear the automatic page reload
+      clearTimeout(pageReloadTimeout);
+
+      //Reload the datatables content
+      loadContainersTable()
+      loadVirtualMachinesTable()
+
+      //Set the automatic page reload
+      pageReloadTimeout = setTimeout(() => { reloadPageContent(); }, reloadTime);
+    }
+
+    function loadPageContent(){
+
+      //Display the current project
+      $("#selectedProject").text(project);
+
+      //Populate the Server dropdown
+      $.getJSON("../api/servers/list_servers?id="+serverId, function (data) {
+        data = data.data
+        for (var index = 0; index < data.length; index++) {
+          if (data[index].name == '')
+            optionText = data[index].addr
+          else
+            optionText = data[index].name
+          if (data[index].id == serverId)
+            $('#serverListNav').append('<option value="' + data[index].id + '" selected="selected">' + optionText + '</option>');
+          else
+            $('#serverListNav').append('<option value="' + data[index].id + '">' + optionText + '</option>');
+        }
+      })
+
+      //Populate the Project dropdown
+      $.getJSON("../api/projects/list_projects?id="+serverId+"&project="+project, function (data) {
+        data = data.metadata
+        for (var index = 0; index < data.length; index++) {
+          optionText = data[index].replace('/1.0/projects/','');
+          if (optionText == project)
+            $('#projectListNav').append('<option value="' + optionText + '" selected="selected">' + optionText + '</option>');
+          else
+            $('#projectListNav').append('<option value="' + optionText + '">' + optionText + '</option>');
+        }
+      })
+
+      //Populate the modal Profile dropdown
+      $.getJSON("../api/profiles/list_profiles?id="+serverId+"&project="+project, function (data) {
+        data = data.metadata
+        for (var index = 0; index < data.length; index++) {
+          //When using projects other than default and no recursion, it gets like URL variable with "?"
+          optionText = data[index].split("?")
+          optionText = optionText[0].replace('/1.0/profiles/','');
+          if (optionText == 'default') {
+            $('#instanceProfileInput').append('<option value="' + optionText + '" selected="selected">' + optionText + '</option>');
+          }
+          else {
+            $('#instanceProfileInput').append('<option value="' + optionText + '">' + optionText + '</option>');
+          }
+        }
+      })
+
+      //Populate the modal Location dropdown
+      $.getJSON("../api/cluster-members/list_cluster_members?id="+serverId+"&project="+project, function (data) {
+        data = data.metadata
+        for (var index = 0; index < data.length; index++) {
+          optionText = data[index].replace('/1.0/cluster/members/','');
+          $('#instanceLocationInput').append('<option value="' + optionText + '">' + optionText + '</option>');
+        }
+      })
+
+      $.getJSON("../api/cluster-groups/list_cluster_groups?id="+serverId+"&project="+project, function (data) {
+        data = data.metadata
+        for (var index = 0; index < data.length; index++) {
+          optionText = data[index].replace('/1.0/cluster/groups/','');
+          $('#instanceLocationInput').append('<option value="@' + optionText + '">@' + optionText + '</option>');
+        }
+      })
+
+      loadContainersTable()
+      loadVirtualMachinesTable()
+
+      changeInstanceModalTypeOptions()
+
+      //Set reload page content
+      pageReloadTimeout = setTimeout(() => { reloadPageContent(); }, reloadTime);
+
+    }
+
+    function populateContainerImages() {
+      $("#instanceImageInput").empty().append('<option value="none">none</option>');
+      //Populate the modal Image dropdown
+      $.getJSON("../api/images/list_images?id="+serverId+"&project="+project+"&recursion=1", function (data) {
+        data = data.metadata
+        for (var index = 0; index < data.length; index++) {
+          // Earlier versions of LXD did not have type property. These only supported container type instances
+          if (data[index].hasOwnProperty('type')) {
+            if(data[index].type == 'container'){
+              $('#instanceImageInput').append('<option value="' + data[index].fingerprint + '">' + data[index].properties.description + '</option>');
+            }
+          }
+          else {
+            $('#instanceImageInput').append('<option value="' + data[index].fingerprint + '">' + data[index].properties.description + '</option>');
+          }
+        }
+      })
+    }
+
+    function populateVirtualMachineImages() {
+      $("#instanceImageInput").empty().append('<option value="none">none</option>');
+      //Populate the modal Image dropdown
+      $.getJSON("../api/images/list_images?id="+serverId+"&project="+project+"&recursion=1", function (data) {
+        data = data.metadata
+        for (var index = 0; index < data.length; index++) {
+          // Earlier versions of LXD did not have type property. These only supported container type instances
+          if (data[index].hasOwnProperty('type')) {
+            if(data[index].type == 'virtual-machine'){
+              $('#instanceImageInput').append('<option value="' + data[index].fingerprint + '">' + data[index].properties.description + '</option>');
+            }
+          }
+          else {
+            $('#instanceImageInput').append('<option value="' + data[index].fingerprint + '">' + data[index].properties.description + '</option>');
+          }
+        }
+      })
+    }
+
+    function loadContainersTable() {
+      if ( ! $.fn.DataTable.isDataTable( '#containerDataTable' ) ) {
+        // Configure Containers Datatable
+        $('#containerDataTable').DataTable({
+          ajax: {
+            url: "../api/instances/list_instances?id=" + serverId + "&filter=container" + "&project=" + project + "&recursion=2",
+            dataType: "json",
+            dataSrc: "metadata",
+            contentType: "application/json",
+            error: function (xhr, error, code) {
+              console.log(xhr, code);
+            }
+          },
+          columns: [
+            { title: "Name", data: function (row, type, set) {
+                if (row.hasOwnProperty('name')) {
+                  if (row.name)
+                    return '<a href="../instance?id=' + serverId + '&project=' + project + '&instance=' + row.name + '&type=container">' + row.name + '</a>';
+                }
+                return '-'
+              },
+            },
+            { title: "OS", data: function (row, type, set) {
+                if (row.hasOwnProperty('expanded_config')) {
+                  if (row.expanded_config.hasOwnProperty('image.os')) {
+                    if (row.expanded_config['image.os']){
+                      return row.expanded_config['image.os']
+                    }
+                  }
+                }
+                return '-'
+              },
+            },
+            { title: "Location", data: function (row, type, set) {
+                if (row.hasOwnProperty('location')) {
+                  if (row.location){
+                    return row.location
+                  }
+                }
+                return '-'
+              },
+            },
+            { title: "IPv4", data: function (row, type, set) {
+                if (row.hasOwnProperty('ipv4_addresses')) {
+                  if (row.ipv4_addresses.length > 0){
+                    return row.ipv4_addresses.join(', <br />')
+                  }
+                }
+                return '-'
+              },
+            },
+            { title: "IPv6", data: function (row, type, set) {
+                if (row.hasOwnProperty('ipv6_addresses')) {
+                  if (row.ipv6_addresses.length > 0){
+                    return row.ipv6_addresses.join(', <br />')
+                  }
+                }
+                return '-'
+              },
+            },
+            { title: "Memory", data: function (row, type, set) {
+                if (row.hasOwnProperty('memory')) {
+                  if (row.memory){
+                    if (type === 'display'){
+                      return (row.memory / 1024 / 1024).toFixed(2) + ' MiB'
+                    }
+                    return row.memory
+                  }
+                }
+                return '-'
+              },
+            },
+            { title: "Root Disk", data: function (row, type, set) {
+                if (row.hasOwnProperty('disk')) {
+                  if (row.disk){
+                    if (type === 'display'){
+                      return (row.disk / 1024 / 1024).toFixed(2) + ' MiB'
+                    }
+                    return row.disk
+                  }
+                }
+                return '-'
+              },
+            },
+            { title: "Status", data: function (row, type, set) {
+                if (row.hasOwnProperty('status')) {
+                  if (row.status){
+                    return row.status
+                  }
+                }
+                return '-'
+              },
+            },
+            { title: "Actions", data: function (row, type, set) {
+                links = ''
+                if (row.hasOwnProperty('name') && row.hasOwnProperty('status')) {
+                  if (row.name && row.status){
+                    if (row.status == 'Frozen')
+                      links += '<a href="#" onclick=changeItemState(\''+row.name+'\',\'unfreeze\')><i class="fas fa-pause fa-lg" style="color:#ddd" title="Edit" aria-hidden="true"></i></a>'
+                    else if (row.status == 'Stopped')
+                      links += '<a href="#" onclick=changeItemState(\''+row.name+'\',\'start\')><i class="fas fa-play fa-lg" style="color:#ddd" title="Edit" aria-hidden="true"></i></a>'
+                    else if (row.status == 'Running')
+                      links += '<a href="#" onclick=changeItemState(\''+row.name+'\',\'stop\')><i class="fas fa-stop fa-lg" style="color:#ddd" title="Edit" aria-hidden="true"></i></a>'
+                    links += '&nbsp' + '&nbsp' 
+                    links += '<a href="#" onclick=deleteInstance(\''+row.name+'\')><i class="fas fa-trash-alt fa-lg" style="color:#ddd" title="Delete" aria-hidden="true"></i></a>'
+                  }
+                }
+                return links
+              },
+            },
+          ],
+          order: [],
+        });
+      }
+      else {
+        $('#containerDataTable').DataTable().ajax.reload(null, false);
+      }
+    }
+
+    function loadVirtualMachinesTable() {
+      if ( ! $.fn.DataTable.isDataTable( '#virtualMachineDataTable' ) ) {
+        // Configure Datatable
+        $('#virtualMachineDataTable').DataTable({
+          ajax: {
+            url: "../api/instances/list_instances?id=" + serverId + "&filter=virtual-machine" + "&project=" + project + "&recursion=2",
+            dataType: "json",
+            dataSrc: "metadata",
+            contentType: "application/json",
+            error: function (xhr, error, code) {
+              console.log(xhr, code);
+            }
+          },
+          columns: [
+            { title: "Name", data: function (row, type, set) {
+                if (row.hasOwnProperty('name')) {
+                  if (row.name)
+                    return '<a href="../instance?id=' + serverId + '&project=' + project + '&instance=' + row.name + '&type=virtual-machine">' + row.name + '</a>';
+                }
+                return '-'
+              },
+            },
+            { title: "OS", data: function (row, type, set) {
+                if (row.hasOwnProperty('expanded_config')) {
+                  if (row.expanded_config.hasOwnProperty('image.os')) {
+                    if (row.expanded_config['image.os']){
+                      return row.expanded_config['image.os']
+                    }
+                  }
+                }
+                return '-'
+              },
+            },
+            { title: "Location", data: function (row, type, set) {
+                if (row.hasOwnProperty('location')) {
+                  if (row.location){
+                    return row.location
+                  }
+                }
+                return '-'
+              },
+            },
+            { title: "IPv4", data: function (row, type, set) {
+                if (row.hasOwnProperty('ipv4_addresses')) {
+                  if (row.ipv4_addresses.length > 0){
+                    return row.ipv4_addresses.join(', <br />')
+                  }
+                }
+                return '-'
+              },
+            },
+            { title: "IPv6", data: function (row, type, set) {
+                if (row.hasOwnProperty('ipv6_addresses')) {
+                  if (row.ipv6_addresses.length > 0){
+                    return row.ipv6_addresses.join(', <br />')
+                  }
+                }
+                return '-'
+              },
+            },
+            { title: "Memory", data: function (row, type, set) {
+                if (row.hasOwnProperty('memory')) {
+                  if (row.memory){
+                    if (type === 'display'){
+                      return (row.memory / 1024 / 1024).toFixed(2) + ' MiB'
+                    }
+                    return row.memory
+                  }
+                }
+                return '-'
+              },
+            },
+            { title: "Root Disk", data: function (row, type, set) {
+                if (row.hasOwnProperty('disk')) {
+                  if (row.disk){
+                    if (type === 'display'){
+                      return (row.disk / 1024 / 1024).toFixed(2) + ' MiB'
+                    }
+                    return row.disk
+                  }
+                }
+                return '-'
+              },
+            },
+            { title: "Status", data: function (row, type, set) {
+                if (row.hasOwnProperty('status')) {
+                  if (row.status){
+                    return row.status
+                  }
+                }
+                return '-'
+              },
+            },
+            { title: "Actions", data: function (row, type, set) {
+                links = ''
+                if (row.hasOwnProperty('name') && row.hasOwnProperty('status')) {
+                  if (row.name && row.status){
+                    if (row.status == 'Frozen')
+                      links += '<a href="#" onclick=changeItemState(\''+row.name+'\',\'unfreeze\')><i class="fas fa-pause fa-lg" style="color:#ddd" title="Edit" aria-hidden="true"></i></a>'
+                    else if (row.status == 'Stopped')
+                      links += '<a href="#" onclick=changeItemState(\''+row.name+'\',\'start\')><i class="fas fa-play fa-lg" style="color:#ddd" title="Edit" aria-hidden="true"></i></a>'
+                    else if (row.status == 'Running')
+                      links += '<a href="#" onclick=changeItemState(\''+row.name+'\',\'stop\')><i class="fas fa-stop fa-lg" style="color:#ddd" title="Edit" aria-hidden="true"></i></a>'
+                    links += '&nbsp' + '&nbsp' 
+                    links += '<a href="#" onclick=deleteInstance(\''+row.name+'\')><i class="fas fa-trash-alt fa-lg" style="color:#ddd" title="Delete" aria-hidden="true"></i></a>'
+                  }
+                }
+                return links
+              },
+            },
+          ],
+          order: [],
+        });
+      }
+      else {
+        $('#virtualMachineDataTable').DataTable().ajax.reload(null, false);
+      }
+    }
+
+
+    // Change state start/stop of instance
+    function changeItemState(name, action){
+      console.log("Info: starting instance " + name);
+      $.post("../api/instances/change_instance_state?id=" + serverId + "&project=" + project, { name: name, action: action }, function (data) {
+        console.log(data);
+        if (data.error_code >= 400){
+          alert(data.error);
+        }
+        //Async type
+        setTimeout(() => { reloadPageContent(); }, 2000);
+        operationStatusCheck()
+      });
+    }
+
+    // Add instance
+    function addItem(){
+      console.log("Info: adding new instance");
+      data = $('#addForm').serialize();
+      $.post("../api/instances/add_instance?id="+serverId+"&project="+project, data, function (data) {
+        console.log(data);
+        if (data.error_code >= 400){
+          alert(data.error);
+        }
+        //Aync type
+        setTimeout(() => { reloadPageContent(); }, 2000);
+        operationStatusCheck()
+      });
+    }
+
+    // Delete instance
+    function deleteInstance(name){
+      console.log("Info: confirming deletion of instance " + name);
+      if (confirm("Are you sure you want to delete instance " + name + "?") == true) {
+        console.log("Info: deleting instance " + name);
+        $.post("../api/instances/delete_instance?id=" + serverId + "&project=" + project, { name: name }, function (data) {
+          console.log(data);
+          if (data.error_code >= 400){
+            alert(data.error);
+          }
+          //Async type
+          setTimeout(() => { reloadPageContent(); }, 2000);
+          operationStatusCheck()
+        });
+      }
+    }
+
+    // Create instance from JSON
+    function createItemUsingJSON(){
+      var json = $("#jsonCreateInput").val();
+      console.log("Info: adding new instance");
+      $.post("../api/instances/add_instance?id="+serverId+"&project="+project, { json: json },  function (data) {
+        console.log(data);
+        if (data.error_code >= 400){
+          alert(data.error);
+        }
+        //Async type
+        setTimeout(() => { reloadPageContent(); }, 2000);
+        operationStatusCheck()
+      });
+    }
+
+    // Change properties options while adding network device
+    function changeInstanceModalTypeOptions(){
+      var instanceTypeInput = $("#instanceTypeInput").val()
+      if (instanceTypeInput == "container"){
+        populateContainerImages()
+        //Container options
+        $("#limitsCpuAllowance").attr("disabled", false);
+        $("#limitsCpuPriority").attr("disabled", false);
+        $("#limitsHugepages64KB").attr("disabled", false);
+        $("#limitsHugepages1MB").attr("disabled", false);
+        $("#limitsHugepages2MB").attr("disabled", false);
+        $("#limitsHugepages1GB").attr("disabled", false);
+        $("#limitsMemoryEnforce").attr("disabled", false);
+        $("#limitsMemorySwapPriority").attr("disabled", false);
+        $("#limitsMemorySwap").attr("disabled", false);
+        $("#limitsProcesses").attr("disabled", false);
+        $("#linuxKernel_modules").attr("disabled", false);
+        $("#migrationIncrementalMemory").attr("disabled", false);
+        $("#migrationIncrementalMemoryGoal").attr("disabled", false);
+        $("#migrationIncrementalMemoryIterations").attr("disabled", false);
+        $("#nvidiaDriverCapabilities").attr("disabled", false);
+        $("#nvidiaRuntime").attr("disabled", false);
+        $("#nvidiaRequireCuda").attr("disabled", false);
+        $("#nvidiaRequireDriver").attr("disabled", false);
+        $("#rawIdmap").attr("disabled", false);
+        $("#rawLxc").attr("disabled", false);
+        $("#rawSeccomp").attr("disabled", false);
+        $("#securityDevlxd").attr("disabled", false);
+        $("#securityDevlxdImages").attr("disabled", false);
+        $("#securityIdmapBase").attr("disabled", false);
+        $("#securityIdmapIsolated").attr("disabled", false);
+        $("#securityIdmapSize").attr("disabled", false);
+        $("#securityNesting").attr("disabled", false);
+        $("#securityPrivileged").attr("disabled", false);
+        $("#securityProtectionDelete").attr("disabled", false);
+        $("#securityProtectionShift").attr("disabled", false);
+        $("#securitySyscallsAllow").attr("disabled", false);
+        $("#securitySyscallsDeny").attr("disabled", false);
+        $("#securitySyscallsDeny_compat").attr("disabled", false);
+        $("#securitySyscallsDeny_default").attr("disabled", false);
+        $("#securitySyscallsInterceptBpf").attr("disabled", false);
+        $("#securitySyscallsInterceptBpfDevices").attr("disabled", false);
+        $("#securitySyscallsInterceptMknod").attr("disabled", false);
+        $("#securitySyscallsInterceptMount").attr("disabled", false);
+        $("#securitySyscallsInterceptMountAllowed").attr("disabled", false);
+        $("#securitySyscallsInterceptMountFuse").attr("disabled", false);
+        $("#securitySyscallsInterceptMountShift").attr("disabled", false);
+        $("#securitySyscallsInterceptSetxattr").attr("disabled", false);
+        //Virtual-machine options
+        $("#limitsMemoryHugepages").attr("disabled", true); $("#limitsMemoryHugepages").val('');
+        $("#migrationStateful").attr("disabled", true); $("#migrationStateful").val('');
+        $("#rawQemu").attr("disabled", true); $("#rawQemu").val('');
+        $("#rawQemuConf").attr("disabled", true); $("#rawQemuConf").val('');
+        $("#securityAgentMetrics").attr("disabled", true); $("#securityAgentMetrics").val('');
+        $("#securitySecureboot").attr("disabled", true); $("#securitySecureboot").val('');
+      }
+      if (instanceTypeInput == "virtual-machine"){
+        populateVirtualMachineImages()
+        //Container options
+        $("#limitsCpuAllowance").attr("disabled", true); $("#limitsCpuAllowance").val('');
+        $("#limitsCpuPriority").attr("disabled", true); $("#limitsCpuPriority").val('');
+        $("#limitsHugepages64KB").attr("disabled", true); $("#limitsHugepages64KB").val('');
+        $("#limitsHugepages1MB").attr("disabled", true); $("#limitsHugepages1MB").val('');
+        $("#limitsHugepages2MB").attr("disabled", true); $("#limitsHugepages2MB").val('');
+        $("#limitsHugepages1GB").attr("disabled", true); $("#limitsHugepages1GB").val('');
+        $("#limitsMemoryEnforce").attr("disabled", true); $("#limitsMemoryEnforce").val('');
+        $("#limitsMemorySwapPriority").attr("disabled", true); $("#limitsMemorySwapPriority").val('');
+        $("#limitsMemorySwap").attr("disabled", true); $("#limitsMemorySwap").val('');
+        $("#limitsProcesses").attr("disabled", true); $("#limitsProcesses").val('');
+        $("#linuxKernel_modules").attr("disabled", true); $("#linuxKernel_modules").val('');
+        $("#migrationIncrementalMemory").attr("disabled", true); $("#migrationIncrementalMemory").val('');
+        $("#migrationIncrementalMemoryGoal").attr("disabled", true); $("#migrationIncrementalMemoryGoal").val('');
+        $("#migrationIncrementalMemoryIterations").attr("disabled", true); $("#migrationIncrementalMemoryIterations").val('');
+        $("#nvidiaDriverCapabilities").attr("disabled", true); $("#nvidiaDriverCapabilities").val('');
+        $("#nvidiaRuntime").attr("disabled", true); $("#nvidiaRuntime").val('');
+        $("#nvidiaRequireCuda").attr("disabled", true); $("#nvidiaRequireCuda").val('');
+        $("#nvidiaRequireDriver").attr("disabled", true); $("#nvidiaRequireDriver").val('');
+        $("#rawIdmap").attr("disabled", true); $("#rawIdmap").val('');
+        $("#rawLxc").attr("disabled", true); $("#rawLxc").val('');
+        $("#rawSeccomp").attr("disabled", true); $("#rawSeccomp").val('');
+        $("#securityDevlxd").attr("disabled", true); $("#securityDevlxd").val('');
+        $("#securityDevlxdImages").attr("disabled", true); $("#securityDevlxdImages").val('');
+        $("#securityIdmapBase").attr("disabled", true); $("#securityIdmapBase").val('');
+        $("#securityIdmapIsolated").attr("disabled", true); $("#securityIdmapIsolated").val('');
+        $("#securityIdmapSize").attr("disabled", true); $("#securityIdmapSize").val('');
+        $("#securityNesting").attr("disabled", true); $("#securityNesting").val('');
+        $("#securityPrivileged").attr("disabled", true); $("#securityPrivileged").val('');
+        $("#securityProtectionDelete").attr("disabled", true); $("#securityProtectionDelete").val('');
+        $("#securityProtectionShift").attr("disabled", true); $("#securityProtectionShift").val('');
+        $("#securitySyscallsAllow").attr("disabled", true); $("#securitySyscallsAllow").val('');
+        $("#securitySyscallsDeny").attr("disabled", true); $("#securitySyscallsDeny").val('');
+        $("#securitySyscallsDeny_compat").attr("disabled", true); $("#securitySyscallsDeny_compat").val('');
+        $("#securitySyscallsDeny_default").attr("disabled", true); $("#securitySyscallsDeny_default").val('');
+        $("#securitySyscallsInterceptBpf").attr("disabled", true); $("#securitySyscallsInterceptBpf").val('');
+        $("#securitySyscallsInterceptBpfDevices").attr("disabled", true); $("#securitySyscallsInterceptBpfDevices").val('');
+        $("#securitySyscallsInterceptMknod").attr("disabled", true); $("#securitySyscallsInterceptMknod").val('');
+        $("#securitySyscallsInterceptMount").attr("disabled", true); $("#securitySyscallsInterceptMount").val('');
+        $("#securitySyscallsInterceptMountAllowed").attr("disabled", true); $("#securitySyscallsInterceptMountAllowed").val('');
+        $("#securitySyscallsInterceptMountFuse").attr("disabled", true); $("#securitySyscallsInterceptMountFuse").val('');
+        $("#securitySyscallsInterceptMountShift").attr("disabled", true); $("#securitySyscallsInterceptMountShift").val('');
+        $("#securitySyscallsInterceptSetxattr").attr("disabled", true); $("#securitySyscallsInterceptSetxattr").val('');
+        //Virtual-machine options
+        $("#limitsMemoryHugepages").attr("disabled", false);
+        $("#migrationStateful").attr("disabled", false);
+        $("#rawQemu").attr("disabled", false);
+        $("#rawQemuConf").attr("disabled", false);
+        $("#securityAgentMetrics").attr("disabled", false);
+        $("#securitySecureboot").attr("disabled", false);
+      }
+    }
+
+
+    $(document).ready(function(){
+
+      //If id or project variables are missing redirect to servers page
+      if (!serverId || !project) {
+        window.location.href = 'servers';
+      }
+      else {
+        loadPageContent()
+        operationStatusCheck()
+      }
+      
+    });
+
+  </script>
+{% endblock script %}

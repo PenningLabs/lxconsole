@@ -20,7 +20,7 @@
       </li>
       <li id="serverNavbarSelect" class="nav-item" style="display: none;">
         <div class="input-group">
-          <select class="form-control" id="serverListNav" style="width:150px;" onchange="changeServer(this.value)">
+          <select class="form-select" id="serverListNav" style="width:150px;" onchange="changeServer(this.value)">
           </select>
         </div>
       </li>
@@ -31,19 +31,19 @@
       </li>
       <li id="projectNavbarSelect" class="nav-item" style="display: none;">
         <div class="input-group">
-          <select class="form-control" id="projectListNav" style="width:150px;" onchange="changeProject(this.value)">
+          <select class="form-select" id="projectListNav" style="width:150px;" onchange="changeProject(this.value)">
           </select>
         </div>
       </li>
 
       <!-- Nav Item - User Information -->
-      <li class="nav-item dropdown">
-        <a class="nav-link" href="#" id="userDropdown" data-toggle="dropdown" aria-expanded="false">
+      <li class="nav-item dropdown border-start ml-3">
+        <a class="nav-link" href="#" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
           <i class="fas fa-user-circle"></i>
           <span id="username">{{ page_username }}</span>
         </a>
         <!-- Dropdown - User Information -->
-        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
+        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
           <a class="dropdown-item" href="#" onclick="loadAccountModal()">
             <i class="fas fa-user-circle fa-sm fa-fw mr-2"></i>
             Account
@@ -68,7 +68,7 @@
             <i class="fas fa-history fa-sm fa-fw mr-2"></i>
             Logs
           </a> -->
-          <a class="dropdown-item" href="#" data-toggle="modal" data-target="#aboutModal">
+          <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#aboutModal">
             <i class="fas fa-info-circle fa-sm fa-fw mr-2"></i>
             About
           </a>

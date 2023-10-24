@@ -4,7 +4,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">Create User</h5>
-        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+        <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">×</span>
         </button>
       </div>
@@ -75,7 +75,7 @@
             <label class="col-3 col-form-label text-right">Group: </label>
             <div class="col-7">
               <div class="form-group">
-                <select id="groupInput" class="form-control" required="required"  name="group_id">
+                <select id="groupInput" class="form-select" required="required"  name="group_id">
                   <option value="4">Auditor</option>
                 </select>
               </div>
@@ -89,8 +89,8 @@
 
       </div> <!-- End Modal Body-->
       <div class="modal-footer">
-        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-        <a class="btn btn-primary" href="#" onclick="addUser()" data-dismiss="modal">Submit</a>
+        <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+        <a class="btn btn-primary" href="#" onclick="addUser()" data-bs-dismiss="modal">Submit</a>
       </div>
     </div>
   </div>
@@ -102,20 +102,20 @@
     <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLabel">Edit User</h5>
-          <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+          <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">×</span>
           </button>
         </div>
         <div class="modal-body">
           <ul class="nav nav-tabs" id="myTab" role="tablist">
             <li class="nav-item">
-              <a class="nav-link active" id="user-tab" data-toggle="tab" href="#user-profile" role="tab" aria-controls="user-profile" aria-selected="true">Profile</a>
+              <a class="nav-link active" id="user-tab" data-bs-toggle="tab" href="#user-profile" role="tab" aria-controls="user-profile" aria-selected="true">Profile</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" id="group-tab" data-toggle="tab" href="#user-group" role="tab" aria-controls="user-group" aria-selected="false">Groups</a>
+              <a class="nav-link" id="group-tab" data-bs-toggle="tab" href="#user-group" role="tab" aria-controls="user-group" aria-selected="false">Groups</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" id="password-tab" data-toggle="tab" href="#user-password" role="tab" aria-controls="user-password" aria-selected="false">Password</a>
+              <a class="nav-link" id="password-tab" data-bs-toggle="tab" href="#user-password" role="tab" aria-controls="user-password" aria-selected="false">Password</a>
             </li>
           </ul>
           <div class="tab-content" id="myTabContent">
@@ -175,8 +175,8 @@
                 <input type="hidden" id="idEditInput" name="id">
               </form>
               <div class="modal-footer">
-                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                <a class="btn btn-primary" href="#" onclick="updateUser()" data-dismiss="modal">Update Profile</a>
+                <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+                <a class="btn btn-primary" href="#" onclick="updateUser()" data-bs-dismiss="modal">Update Profile</a>
               </div>
             </div>
 
@@ -188,7 +188,7 @@
                   <label class="col-3 col-form-label text-right">Action: </label>
                   <div class="col-7">
                     <div class="form-group">
-                      <select id="actionEditInput" onchange="changeActionInput()" class="form-control" required="required"  name="action">
+                      <select id="actionEditInput" onchange="changeActionInput()" class="form-select" required="required"  name="action">
                         <option value="add">Add</option>
                         <option value="remove">Remove</option>
                       </select>
@@ -203,7 +203,7 @@
                   <label class="col-3 col-form-label text-right">Group: </label>
                   <div class="col-7">
                     <div class="form-group">
-                      <select id="addGroupEditInput" class="form-control" required="required"  name="add_group">
+                      <select id="addGroupEditInput" class="form-select" required="required"  name="add_group">
                       </select>
                     </div>
                   </div>
@@ -216,7 +216,7 @@
                   <label class="col-3 col-form-label text-right">Group: </label>
                   <div class="col-7">
                     <div class="form-group">
-                      <select id="removeGroupEditInput" class="form-control" required="required"  name="remove_group">
+                      <select id="removeGroupEditInput" class="form-select" required="required"  name="remove_group">
                       </select>
                     </div>
                   </div>
@@ -229,8 +229,8 @@
               </form>
 
               <div class="modal-footer">
-                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                <a class="btn btn-primary" href="#" onclick="updateUserGroup()" data-dismiss="modal">Update Group</a>
+                <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+                <a class="btn btn-primary" href="#" onclick="updateUserGroup()" data-bs-dismiss="modal">Update Group</a>
               </div>
             </div>
 
@@ -265,8 +265,8 @@
               </form>
 
               <div class="modal-footer">
-                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                <a class="btn btn-primary" href="#" onclick="updateUserPassword()" data-dismiss="modal">Update Password</a>
+                <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+                <a class="btn btn-primary" href="#" onclick="updateUserPassword()" data-bs-dismiss="modal">Update Password</a>
               </div>
             </div>
 

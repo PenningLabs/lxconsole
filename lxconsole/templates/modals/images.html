@@ -4,17 +4,17 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLabel">Download Image</h5>
-          <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+          <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">×</span>
           </button>
         </div>
         <div class="modal-body">
           <ul class="nav nav-tabs" id="myTab" role="tablist">
             <li class="nav-item">
-              <a class="nav-link active" id="catalog-tab" data-toggle="tab" href="#catalog" role="tab" aria-controls="catalog" aria-selected="true">Catalog</a>
+              <a class="nav-link active" id="catalog-tab" data-bs-toggle="tab" href="#catalog" role="tab" aria-controls="catalog" aria-selected="true">Catalog</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" id="form-tab" data-toggle="tab" href="#form" role="tab" aria-controls="form" aria-selected="false">Form</a>
+              <a class="nav-link" id="form-tab" data-bs-toggle="tab" href="#form" role="tab" aria-controls="form" aria-selected="false">Form</a>
             </li>
           </ul>
           <div class="tab-content" id="myTabContent">
@@ -24,7 +24,7 @@
                 <label class="col-3 col-form-label text-right">Operating System: </label>
                 <div class="col-7">
                   <div class="form-group">
-                    <select id="operatingSystem" onchange="updateOSVersion()" class="form-control" name="operating_system">
+                    <select id="operatingSystem" onchange="updateOSVersion()" class="form-select" name="operating_system">
                       <option value="">unavailable</option>
                     </select>
                   </div>
@@ -38,7 +38,7 @@
                 <label class="col-3 col-form-label text-right">OS Version: </label>
                 <div class="col-7">
                   <div class="form-group">
-                    <select id="operatingSystemVersion" onchange="" class="form-control" name="version">
+                    <select id="operatingSystemVersion" onchange="" class="form-select" name="version">
                       <option value="">unavailable</option>
                     </select>
                   </div>
@@ -52,7 +52,7 @@
                 <label class="col-3 col-form-label text-right">Image Variant: </label>
                 <div class="col-7">
                   <div class="form-group">
-                    <select id="operatingSystemVariant" onchange="" class="form-control" name="variant">
+                    <select id="operatingSystemVariant" onchange="" class="form-select" name="variant">
                       <option value="">unavailable</option>
                     </select>
                   </div>
@@ -66,7 +66,7 @@
                 <label class="col-3 col-form-label text-right">Image Type: </label>
                 <div class="col-7">
                   <div class="form-group">
-                    <select id="operatingSystemType" onchange="" class="form-control" name="type">
+                    <select id="operatingSystemType" onchange="" class="form-select" name="type">
                       <option value="container">container</option>
                       <option value="virtual-machine">virtual-machine</option>
                     </select>
@@ -78,8 +78,8 @@
               </div>
 
               <div class="modal-footer">
-                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                <a class="btn btn-primary" href="#" onclick="addCatalogImage()" data-dismiss="modal">Ok</a>
+                <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+                <a class="btn btn-primary" href="#" onclick="addCatalogImage()" data-bs-dismiss="modal">Ok</a>
               </div>
 
             </div>
@@ -94,13 +94,13 @@
                     </div>
                   </div>
                   <div class="col-1">
-                    <i class="far fa-sm fa-question-circle" data-toggle="tooltip" data-html="true" title='(Required) - Enter in the repository specific name. For example, ubuntu/20.04 would be used for the images repository and simply 20.04 would be used for the ubuntu repositories.'></i>
+                    <i class="far fa-sm fa-question-circle" data-bs-toggle="tooltip" data-html="true" title='(Required) - Enter in the repository specific name. For example, ubuntu/20.04 would be used for the images repository and simply 20.04 would be used for the ubuntu repositories.'></i>
                   </div>
     
                   <label class="col-2 col-form-label text-right">Repository: </label>
                   <div class="col-8">
                     <div class="form-group">
-                      <select id="selectRepoInput" class="form-control" name="simplestreams_id">
+                      <select id="selectRepoInput" class="form-select" name="simplestreams_id">
                       </select>
                     </div>
                   </div>
@@ -111,7 +111,7 @@
                   <label class="col-2 col-form-label text-right">Image Type:</label>
                   <div class="col-8 text-right">
                     <div class="form-group">
-                      <select class="form-control" name="image_type">
+                      <select class="form-select" name="image_type">
                         <option value="container" selected>container</option>
                         <option value="virtual-machine">virtual-machine</option>
                       </select>
@@ -124,14 +124,14 @@
                 </div>
               </form>            
               <div class="modal-footer">
-                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                <a class="btn btn-primary" href="#" onclick="addItem()" data-dismiss="modal">Ok</a>
+                <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+                <a class="btn btn-primary" href="#" onclick="addItem()" data-bs-dismiss="modal">Ok</a>
               </div>
             </div>
           </div>
         </div>
         <div class="modal-footer text-center">
-          <!--<a href="#" data-toggle="modal" data-target="#trademarkNotices" title="Download Image" aria-hidden="true">Trademark notices</a>-->
+          <!--<a href="#" data-bs-toggle="modal" data-bs-target="#trademarkNotices" title="Download Image" aria-hidden="true">Trademark notices</a>-->
         </div>
       </div>
     </div>
@@ -143,7 +143,7 @@
       <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="exampleModalLabel">Edit Image</h5>
-            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+            <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">×</span>
             </button>
           </div>
@@ -160,8 +160,8 @@
             </div>
           </div>
           <div class="modal-footer">
-            <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-            <a class="btn btn-primary" href="#" onclick="updateImage()" data-dismiss="modal">Submit</a>
+            <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+            <a class="btn btn-primary" href="#" onclick="updateImage()" data-bs-dismiss="modal">Submit</a>
           </div>
       </div>
     </div>

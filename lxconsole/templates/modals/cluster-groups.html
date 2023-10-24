@@ -4,17 +4,17 @@
     <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLabel">Add Cluster Group</h5>
-          <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+          <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">×</span>
           </button>
         </div>
         <div class="modal-body">
           <ul class="nav nav-tabs" id="myTab" role="tablist">
             <li class="nav-item">
-              <a class="nav-link active" id="form-tab" data-toggle="tab" href="#form" role="tab" aria-controls="form" aria-selected="true">Form</a>
+              <a class="nav-link active" id="form-tab" data-bs-toggle="tab" href="#form" role="tab" aria-controls="form" aria-selected="true">Form</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" id="json-tab" data-toggle="tab" href="#json" role="tab" aria-controls="json" aria-selected="false">JSON</a>
+              <a class="nav-link" id="json-tab" data-bs-toggle="tab" href="#json" role="tab" aria-controls="json" aria-selected="false">JSON</a>
             </li>
           </ul>
           <div class="tab-content" id="myTabContent">
@@ -47,7 +47,7 @@
                   <label class="col-3 col-form-label text-right">Cluster Members: </label>
                   <div class="col-7">
                     <div class="form-group">
-                      <select id="clusterMembersInput" class="select form-control" multiple name="members">
+                      <select id="clusterMembersInput" class="select form-select" multiple name="members">
                       </select>
                     </div>
                   </div>
@@ -57,8 +57,8 @@
                 </div>
               </form>
               <div class="modal-footer">
-                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                <a class="btn btn-primary" href="#" onclick="addItem()" data-dismiss="modal">Submit</a>
+                <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+                <a class="btn btn-primary" href="#" onclick="addItem()" data-bs-dismiss="modal">Submit</a>
               </div>
             </div>
             <div class="tab-pane fade" id="json" role="tabpanel" aria-labelledby="json-tab">
@@ -73,8 +73,8 @@
                 </div>
               </div>
               <div class="modal-footer">
-                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                <a class="btn btn-primary" href="#" onclick="createItemUsingJSON()" data-dismiss="modal">Submit</a>
+                <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+                <a class="btn btn-primary" href="#" onclick="createItemUsingJSON()" data-bs-dismiss="modal">Submit</a>
               </div>
             </div>
           </div>
@@ -89,17 +89,17 @@
     <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLabel">Edit Cluster Group</h5>
-          <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+          <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">×</span>
           </button>
         </div>
         <div class="modal-body">
           <ul class="nav nav-tabs" id="myTab" role="tablist">
             <li class="nav-item">
-              <a class="nav-link active" id="json-edit-tab" data-toggle="tab" href="#json-edit" role="tab" aria-controls="json-edit" aria-selected="false">JSON</a>
+              <a class="nav-link active" id="json-edit-tab" data-bs-toggle="tab" href="#json-edit" role="tab" aria-controls="json-edit" aria-selected="false">JSON</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" id="rename-edit-tab" data-toggle="tab" href="#rename-edit" role="tab" aria-controls="rename-edit" aria-selected="true">Rename</a>
+              <a class="nav-link" id="rename-edit-tab" data-bs-toggle="tab" href="#rename-edit" role="tab" aria-controls="rename-edit" aria-selected="true">Rename</a>
             </li>
           </ul>
           <div class="tab-content" id="myTabContent">
@@ -116,8 +116,8 @@
                 </div>
               </div>
               <div class="modal-footer">
-                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                <a class="btn btn-primary" href="#" onclick="updateItem()" data-dismiss="modal">Submit</a>
+                <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+                <a class="btn btn-primary" href="#" onclick="updateItem()" data-bs-dismiss="modal">Submit</a>
               </div>
             </div>
             <div class="tab-pane fade" id="rename-edit" role="tabpanel" aria-labelledby="rename-edit-tab">
@@ -136,8 +136,8 @@
                 </div>
               </form>
               <div class="modal-footer">
-                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                <a class="btn btn-primary" href="#" onclick="renameItem()" data-dismiss="modal">Submit</a>
+                <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+                <a class="btn btn-primary" href="#" onclick="renameItem()" data-bs-dismiss="modal">Submit</a>
               </div>
             </div>
           </div>
@@ -152,7 +152,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">Delete Cluster Group</h5>
-        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+        <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">×</span>
         </button>
       </div>
@@ -163,8 +163,8 @@
         <input type="hidden" id="clusterGroup" class="form-control" name="server_name">
       </div>
       <div class="modal-footer">
-        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-        <a class="btn btn-primary" href="#" onclick="deleteItem()" data-dismiss="modal">Yes</a>
+        <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+        <a class="btn btn-primary" href="#" onclick="deleteItem()" data-bs-dismiss="modal">Yes</a>
       </div>
     </div>
   </div>

@@ -6,9 +6,9 @@
       <h1>{{ page_title | safe }}</h1>
     </div>
     <div class="col-sm-6">
-      <a class="btn btn-outline-primary float-sm-right mr-4" href="#" data-toggle="modal" data-target="#addModal" title="Add Profile" aria-hidden="true">
+      <button class="btn btn-outline-primary float-sm-right mr-4" data-bs-toggle="modal" data-bs-target="#addModal" title="Add Profile" aria-hidden="true">
         <i class="fas fa-plus fa-sm fa-fw"></i> Profile
-      </a>
+      </button>
     </div>
   </div>
 {% endblock header %}
@@ -98,7 +98,10 @@
           url: "../api/profiles/list_profiles?id="+serverId+"&project=" + project + "&recursion=1",
           dataType: "json",
           dataSrc: "metadata",
-          contentType: "application/json"
+          contentType: "application/json",
+          error: function (xhr, error, code) {
+            console.log(xhr, code);
+          }
         },
         columns: [
           { title: "Name", data: function (row, type, set) {

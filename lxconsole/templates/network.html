@@ -6,14 +6,13 @@
       <h1>{{ page_title | safe }} <span id="network_title"></span></h1>
     </div>
     <div class="col-sm-6">
-
-      <a class="btn btn-outline-primary dropdown-toggle float-sm-right ml-2 mr-4" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Actions">
+      <button class="btn btn-outline-primary dropdown-toggle float-sm-right ml-2 mr-4" type="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false" title="Actions">
         Network Actions
-      </a>
+      </button>
       <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
-        <a class="dropdown-item text-primary" href="#" data-toggle="modal" data-target="#addLoadBalancerModal" id="addLoadBalancer"><i class="fas fa-save fa-sm fa-fw mr-2"></i>Add Load Balancer</a>
-        <a class="dropdown-item text-primary" href="#" data-toggle="modal" data-target="#addForwardModal" id="addForward"><i class="fas fa-save fa-sm fa-fw mr-2"></i>Add Forward</a>
-        <a class="dropdown-item text-primary" href="#" data-toggle="modal" data-target="#addPeerModal" id="addPeer"><i class="fas fa-save fa-sm fa-fw mr-2"></i>Add Peer</a>
+        <a class="dropdown-item text-primary" href="#" data-bs-toggle="modal" data-bs-target="#addLoadBalancerModal" id="addLoadBalancer"><i class="fas fa-save fa-sm fa-fw mr-2"></i>Add Load Balancer</a>
+        <a class="dropdown-item text-primary" href="#" data-bs-toggle="modal" data-bs-target="#addForwardModal" id="addForward"><i class="fas fa-save fa-sm fa-fw mr-2"></i>Add Forward</a>
+        <a class="dropdown-item text-primary" href="#" data-bs-toggle="modal" data-bs-target="#addPeerModal" id="addPeer"><i class="fas fa-save fa-sm fa-fw mr-2"></i>Add Peer</a>
       </div>
 
     </div>
@@ -25,10 +24,10 @@
 
     <nav>
       <div class="nav nav-tabs" id="nav-page-tab" role="tablist">
-        <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Home</a>
-        <a class="nav-item nav-link" id="nav-forwards-tab" data-toggle="tab" href="#nav-forwards" role="tab" aria-controls="nav-forwards" aria-selected="false">Forwards</a>
-        <a class="nav-item nav-link" id="nav-load-balancers-tab" data-toggle="tab" href="#nav-load-balancers" role="tab" aria-controls="nav-load-balancers" aria-selected="false">Load Balancers</a>
-        <a class="nav-item nav-link" id="nav-peers-tab" data-toggle="tab" href="#nav-peers" role="tab" aria-controls="nav-peers" aria-selected="false">Peers</a>
+        <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Home</button>
+        <button class="nav-link" id="nav-forwards-tab" data-bs-toggle="tab" data-bs-target="#nav-forwards" type="button" role="tab" aria-controls="nav-forwards" aria-selected="false">Forwards</button>
+        <button class="nav-link" id="nav-load-balancers-tab" data-bs-toggle="tab" data-bs-target="#nav-load-balancers" type="button" role="tab" aria-controls="nav-load-balancers" aria-selected="false">Load Balancers</button>
+        <button class="nav-link" id="nav-peers-tab" data-bs-toggle="tab" data-bs-target="#nav-peers" type="button" role="tab" aria-controls="nav-peers" aria-selected="false">Peers</button>
       </div>
     </nav>
     <div class="tab-content" id="nav-page-content">
@@ -142,11 +141,11 @@
               </h3>
               <div class="card-tools">
                 <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
-                <button type="button" class="btn btn-tool" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <button type="button" class="btn btn-tool" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   <i class="fa fa-bars"></i>
                 </button>
                 <div class="dropdown-menu dropdown-menu-right">
-                  <a href="#" class="dropdown-item" data-toggle="modal" data-target="#addForwardModal" title="Create Forward">Create Forward</a>
+                  <a href="#" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#addForwardModal" title="Create Forward">Create Forward</a>
                 </div>
               </div>
             </div>
@@ -171,11 +170,11 @@
               </h3>
               <div class="card-tools">
                 <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
-                <button type="button" class="btn btn-tool" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <button type="button" class="btn btn-tool" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   <i class="fa fa-bars"></i>
                 </button>
                 <div class="dropdown-menu dropdown-menu-right">
-                  <a href="#" class="dropdown-item" data-toggle="modal" data-target="#addLoadBalancerModal" title="Create Load Balancer">Create Load Balancer</a>
+                  <a href="#" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#addLoadBalancerModal" title="Create Load Balancer">Create Load Balancer</a>
                 </div>
               </div>
             </div>
@@ -200,11 +199,11 @@
               </h3>
               <div class="card-tools">
                 <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-plus"></i></button>
-                <button type="button" class="btn btn-tool" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <button type="button" class="btn btn-tool" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   <i class="fa fa-bars"></i>
                 </button>
                 <div class="dropdown-menu dropdown-menu-right">
-                  <a href="#" class="dropdown-item" data-toggle="modal" data-target="#addPeerModal" title="Create Peer">Create Peer</a>
+                  <a href="#" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#addPeerModal" title="Create Peer">Create Peer</a>
                 </div>
               </div>
             </div>
@@ -351,7 +350,10 @@
             url: "../api/network/list_network_leases?id="+serverId+"&project="+project+"&name="+network,
             dataType: "json",
             dataSrc: "metadata",
-            contentType: "application/json"
+            contentType: "application/json",
+            error: function (xhr, error, code) {
+              console.log(xhr, code);
+            }
           },
           rowId: 'id',
           stateSave: true,
@@ -413,7 +415,10 @@
               url: "../api/network/list_network_load_balancers?id="+serverId+"&project="+project+"&name="+network+"&recursion=1",
               dataType: "json",
               dataSrc: "metadata",
-              contentType: "application/json"
+              contentType: "application/json",
+              error: function (xhr, error, code) {
+                console.log(xhr, code);
+              }
             },
             stateSave: true,
             columns: [
@@ -470,7 +475,10 @@
               url: "../api/network/list_network_forwards?id="+serverId+"&project="+project+"&name="+network+"&recursion=1",
               dataType: "json",
               dataSrc: "metadata",
-              contentType: "application/json"
+              contentType: "application/json",
+              error: function (xhr, error, code) {
+                console.log(xhr, code);
+              }
             },
             stateSave: true,
             columns: [
@@ -527,7 +535,10 @@
             url: "../api/network/list_network_peers?id="+serverId+"&project="+project+"&name="+network+"&recursion=1",
             dataType: "json",
             dataSrc: "metadata",
-            contentType: "application/json"
+            contentType: "application/json",
+            error: function (xhr, error, code) {
+              console.log(xhr, code);
+            }
           },
           rowId: 'id',
           stateSave: true,

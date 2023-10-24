@@ -1,3 +1,10 @@
+# 0.4.0
+ - Upgraded Bootstrap from version 4 to version 5
+ - Converted containers and virtual-machines endpoints to instances endpoint
+ - Combined containers and virtual-machines pages to instances page
+ - Datatable errors now display on console.log rather than the default alert
+ - Handled 404 Error on new virtual machine without logs
+
 # 0.3.0
  - Improved Dockerfile for quicker builds
  - Added version specific flask and werkzeug to requirements due to build error in dependencies

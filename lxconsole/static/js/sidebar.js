@@ -53,8 +53,7 @@ function populateNavbarLinks(){
 }
 
 function applySidebarLinks() {
-  $("#containersLinkSidebar").attr("href", "containers?id=" + encodeURI(serverId) + "&project=" + encodeURI(project));
-  $("#virtualMachinesLinkSidebar").attr("href", "virtual-machines?id=" + encodeURI(serverId) + "&project=" + encodeURI(project));
+  $("#instancesLinkSidebar").attr("href", "instances?id=" + encodeURI(serverId) + "&project=" + encodeURI(project));
 
   $("#imagesLinkSidebar").attr("href", "images?id=" + encodeURI(serverId) + "&project=" + encodeURI(project));
   $("#profilesLinkSidebar").attr("href", "profiles?id=" + encodeURI(serverId) + "&project=" + encodeURI(project));
@@ -71,9 +70,9 @@ function applySidebarLinks() {
 }
 
 function  applySidebarStyles() {
-    if (location.pathname == "/containers" || location.pathname == "/container"){
-      $('#containersSpan').css('color','#fff');
-      $('#containersIcon').css('color','#fff');
+    if (location.pathname == "/instances" || location.pathname == "/instance"){
+      $('#instancesSpan').css('color','#fff');
+      $('#instancesIcon').css('color','#fff');
     }
     if (location.pathname == "/images"){
       $('#imagesSpan').css('color','#fff');

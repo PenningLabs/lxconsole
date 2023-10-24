@@ -4,17 +4,17 @@
       <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="exampleModalLabel">Create Profile</h5>
-            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+            <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">×</span>
             </button>
           </div>
           <div class="modal-body">
             <ul class="nav nav-tabs" id="myTab" role="tablist">
               <li class="nav-item">
-                <a class="nav-link active" id="form-tab" data-toggle="tab" href="#form" role="tab" aria-controls="form" aria-selected="true">Form</a>
+                <a class="nav-link active" id="form-tab" data-bs-toggle="tab" href="#form" role="tab" aria-controls="form" aria-selected="true">Form</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" id="json-tab" data-toggle="tab" href="#json" role="tab" aria-controls="json" aria-selected="false">JSON</a>
+                <a class="nav-link" id="json-tab" data-bs-toggle="tab" href="#json" role="tab" aria-controls="json" aria-selected="false">JSON</a>
               </li>
             </ul>
             <div class="tab-content" id="myTabContent">
@@ -45,8 +45,8 @@
                   </div>
                 </form>
                 <div class="modal-footer">
-                  <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                  <a class="btn btn-primary" href="#" onclick="addItem()" data-dismiss="modal">Submit</a>
+                  <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+                  <a class="btn btn-primary" href="#" onclick="addItem()" data-bs-dismiss="modal">Submit</a>
                 </div>
               </div>
               <div class="tab-pane fade" id="json" role="tabpanel" aria-labelledby="json-tab">
@@ -61,8 +61,8 @@
                   </div>
                 </div>
                 <div class="modal-footer">
-                  <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                  <a class="btn btn-primary" href="#" onclick="createItemUsingJSON()" data-dismiss="modal">Submit</a>
+                  <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+                  <a class="btn btn-primary" href="#" onclick="createItemUsingJSON()" data-bs-dismiss="modal">Submit</a>
                 </div>
               </div>
             </div>
@@ -77,7 +77,7 @@
       <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="exampleModalLabel">Edit Profile</h5>
-            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+            <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">×</span>
             </button>
           </div>
@@ -94,8 +94,8 @@
             </div>
           </div>
           <div class="modal-footer">
-            <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-            <a class="btn btn-primary" href="#" onclick="updateItem()" data-dismiss="modal">Submit</a>
+            <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+            <a class="btn btn-primary" href="#" onclick="updateItem()" data-bs-dismiss="modal">Submit</a>
           </div>
       </div>
     </div>
@@ -107,7 +107,7 @@
       <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="renameItemModalLabel">Rename Profile</h5>
-            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+            <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">×</span>
             </button>
           </div>
@@ -126,8 +126,8 @@
             <input type="hidden" id="profileToRename" name="profileToRename">
           </div>
           <div class="modal-footer">
-            <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-            <a class="btn btn-primary" href="#" onclick="updateItemName()" data-dismiss="modal">Ok</a>
+            <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+            <a class="btn btn-primary" href="#" onclick="updateItemName()" data-bs-dismiss="modal">Ok</a>
           </div>
       </div>
     </div>

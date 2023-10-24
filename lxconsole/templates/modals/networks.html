@@ -4,17 +4,17 @@
     <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLabel">Create Network</h5>
-          <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+          <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">×</span>
           </button>
         </div>
         <div class="modal-body">
           <ul class="nav nav-tabs" id="myTab" role="tablist">
             <li class="nav-item">
-              <a class="nav-link active" id="form-tab" data-toggle="tab" href="#form" role="tab" aria-controls="form" aria-selected="true">Form</a>
+              <a class="nav-link active" id="form-tab" data-bs-toggle="tab" href="#form" role="tab" aria-controls="form" aria-selected="true">Form</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" id="json-tab" data-toggle="tab" href="#json" role="tab" aria-controls="json" aria-selected="false">JSON</a>
+              <a class="nav-link" id="json-tab" data-bs-toggle="tab" href="#json" role="tab" aria-controls="json" aria-selected="false">JSON</a>
             </li>
           </ul>
           <div class="tab-content" id="myTabContent">
@@ -36,7 +36,7 @@
                     <label class="col-3 col-form-label text-right">Network Type: <span class="text-danger">*</span></label>
                     <div class="col-7">
                       <div class="form-group">
-                        <select id="networkTypeInput" onchange="changeNetworkTypeInput()" class="form-control" name="type">
+                        <select id="networkTypeInput" onchange="changeNetworkTypeInput()" class="form-select" name="type">
                           <option value="bridge">bridge</option>
                           <option value="macvlan">macvlan</option>
                           <option value="ovn">ovn</option>
@@ -53,7 +53,7 @@
                     <label class="col-3 col-form-label text-right">Parent: <span class="text-danger">*</span></label>
                     <div class="col-7">
                       <div class="form-group">
-                        <select id="networkParentInput" onchange="" class="form-control" name="parent">
+                        <select id="networkParentInput" onchange="" class="form-select" name="parent">
                         </select>
                       </div>
                     </div>
@@ -65,7 +65,7 @@
                     <label class="col-3 col-form-label text-right">Network: <span class="text-danger">*</span></label>
                     <div class="col-7">
                       <div class="form-group">
-                        <select id="networkNetworkInput" onchange="" class="form-control" name="network">
+                        <select id="networkNetworkInput" onchange="" class="form-select" name="network">
                         </select>
                       </div>
                     </div>
@@ -87,7 +87,7 @@
                   <hr>
                   <div id="accordionConfigurationProperties">
                     <h2>
-                      <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#configurationProperties" aria-expanded="false" aria-controls="configurationProperties">
+                      <button class="btn btn-link collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#configurationProperties" aria-expanded="false" aria-controls="configurationProperties">
                         Configuration Properties
                       </button>
                     </h2> 
@@ -129,7 +129,7 @@
                         <label class="col-3 col-form-label text-right">Bridge Driver: </label>
                         <div class="col-7">
                           <div class="form-group">
-                            <select onchange="" class="form-control" name="bridge.driver">
+                            <select onchange="" class="form-select" name="bridge.driver">
                               <option value="">(not set)</option>
                               <option value="native">native</option>
                               <option value="openvswitch">openvswitch</option>
@@ -166,7 +166,7 @@
                         <label class="col-3 col-form-label text-right">Bridge Mode: </label>
                         <div class="col-7">
                           <div class="form-group">
-                            <select onchange="" class="form-control" name="bridge.mode">
+                            <select onchange="" class="form-select" name="bridge.mode">
                               <option value="">(not set)</option>
                               <option value="fan">fan</option>
                               <option value="standard">standard</option>
@@ -203,7 +203,7 @@
                         <label class="col-3 col-form-label text-right">DNS Mode: </label>
                         <div class="col-7">
                           <div class="form-group">
-                            <select onchange="" class="form-control" name="dns.mode">
+                            <select onchange="" class="form-select" name="dns.mode">
                               <option value="">(not set)</option>
                               <option value="dynamic">dynamic</option>
                               <option value="managed">managed</option>
@@ -241,7 +241,7 @@
                         <label class="col-3 col-form-label text-right">Fan Type: </label>
                         <div class="col-7">
                           <div class="form-group">
-                            <select onchange="" class="form-control" name="fan.type">
+                            <select onchange="" class="form-select" name="fan.type">
                               <option value="">(not set)</option>
                               <option value="ipip">ipip</option>
                               <option value="vxlan">vxlan</option>
@@ -278,7 +278,7 @@
                         <label class="col-3 col-form-label text-right">IPv4 DHCP: </label>
                         <div class="col-7">
                           <div class="form-group">
-                            <select onchange="" class="form-control" name="ipv4.dhcp">
+                            <select onchange="" class="form-select" name="ipv4.dhcp">
                               <option value="">(not set)</option>
                               <option value="true">true</option>
                               <option value="false">false</option>
@@ -326,7 +326,7 @@
                         <label class="col-3 col-form-label text-right">IPv4 Firewall: </label>
                         <div class="col-7">
                           <div class="form-group">
-                            <select onchange="" class="form-control" name="ipv4.firewall">
+                            <select onchange="" class="form-select" name="ipv4.firewall">
                               <option value="">(not set)</option>
                               <option value="true">true</option>
                               <option value="false">false</option>
@@ -352,7 +352,7 @@
                         <label class="col-3 col-form-label text-right">IPv4 NAT: </label>
                         <div class="col-7">
                           <div class="form-group">
-                            <select onchange="" class="form-control" name="ipv4.nat">
+                            <select onchange="" class="form-select" name="ipv4.nat">
                               <option value="">(not set)</option>
                               <option value="true">true</option>
                               <option value="false">false</option>
@@ -367,7 +367,7 @@
                         <label class="col-3 col-form-label text-right">IPv4 NAT Order: </label>
                         <div class="col-7">
                           <div class="form-group">
-                            <select onchange="" class="form-control" name="ipv4.nat.order">
+                            <select onchange="" class="form-select" name="ipv4.nat.order">
                               <option value="">(not set)</option>
                               <option value="after">after</option>
                               <option value="before">before</option>
@@ -404,7 +404,7 @@
                         <label class="col-3 col-form-label text-right">IPv4 Routes Anycast: </label>
                         <div class="col-7">
                           <div class="form-group">
-                            <select onchange="" class="form-control" name="ipv4.routes.anycast">
+                            <select onchange="" class="form-select" name="ipv4.routes.anycast">
                               <option value="">(not set)</option>
                               <option value="true">true</option>
                               <option value="false">false</option>
@@ -430,7 +430,7 @@
                         <label class="col-3 col-form-label text-right">IPv4 Routing: </label>
                         <div class="col-7">
                           <div class="form-group">
-                            <select onchange="" class="form-control" name="ipv4.routing">
+                            <select onchange="" class="form-select" name="ipv4.routing">
                               <option value="">(not set)</option>
                               <option value="true">true</option>
                               <option value="false">false</option>
@@ -456,7 +456,7 @@
                         <label class="col-3 col-form-label text-right">IPv6 DHCP: </label>
                         <div class="col-7">
                           <div class="form-group">
-                            <select onchange="" class="form-control" name="ipv6.dhcp">
+                            <select onchange="" class="form-select" name="ipv6.dhcp">
                               <option value="">(not set)</option>
                               <option value="true">true</option>
                               <option value="false">false</option>
@@ -493,7 +493,7 @@
                         <label class="col-3 col-form-label text-right">IPv6 DHCP Stateful: </label>
                         <div class="col-7">
                           <div class="form-group">
-                            <select onchange="" class="form-control" name="ipv6.dhcp.stateful">
+                            <select onchange="" class="form-select" name="ipv6.dhcp.stateful">
                               <option value="">(not set)</option>
                               <option value="true">true</option>
                               <option value="false">false</option>
@@ -508,7 +508,7 @@
                         <label class="col-3 col-form-label text-right">IPv6 Firewall: </label>
                         <div class="col-7">
                           <div class="form-group">
-                            <select onchange="" class="form-control" name="ipv6.firewall">
+                            <select onchange="" class="form-select" name="ipv6.firewall">
                               <option value="">(not set)</option>
                               <option value="true">true</option>
                               <option value="false">false</option>
@@ -534,7 +534,7 @@
                         <label class="col-3 col-form-label text-right">IPv6 NAT: </label>
                         <div class="col-7">
                           <div class="form-group">
-                            <select onchange="" class="form-control" name="ipv6.nat">
+                            <select onchange="" class="form-select" name="ipv6.nat">
                               <option value="">(not set)</option>
                               <option value="true">true</option>
                               <option value="false">false</option>
@@ -549,7 +549,7 @@
                         <label class="col-3 col-form-label text-right">IPv6 NAT Order: </label>
                         <div class="col-7">
                           <div class="form-group">
-                            <select onchange="" class="form-control" name="ipv6.nat.order">
+                            <select onchange="" class="form-select" name="ipv6.nat.order">
                               <option value="">(not set)</option>
                               <option value="after">after</option>
                               <option value="before">before</option>
@@ -586,7 +586,7 @@
                         <label class="col-3 col-form-label text-right">IPv6 Routes Anycast: </label>
                         <div class="col-7">
                           <div class="form-group">
-                            <select onchange="" class="form-control" name="ipv6.routes.anycast">
+                            <select onchange="" class="form-select" name="ipv6.routes.anycast">
                               <option value="">(not set)</option>
                               <option value="true">true</option>
                               <option value="false">false</option>
@@ -612,7 +612,7 @@
                         <label class="col-3 col-form-label text-right">IPv6 Routing: </label>
                         <div class="col-7">
                           <div class="form-group">
-                            <select onchange="" class="form-control" name="ipv6.routing">
+                            <select onchange="" class="form-select" name="ipv6.routing">
                               <option value="">(not set)</option>
                               <option value="true">true</option>
                               <option value="false">false</option>
@@ -660,7 +660,7 @@
                         <label class="col-3 col-form-label text-right">OVN Ingress Mode: </label>
                         <div class="col-7">
                           <div class="form-group">
-                            <select onchange="" class="form-control" name="ovn.ingress.mode">
+                            <select onchange="" class="form-select" name="ovn.ingress.mode">
                               <option value="">(not set)</option>
                               <option value="l2proxy">l2proxy</option>
                               <option value="routed">routed</option>
@@ -676,8 +676,8 @@
                 </form>
               </div>
               <div class="modal-footer">
-                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                <a class="btn btn-primary" href="#" onclick="addItem()" data-dismiss="modal">Submit</a>
+                <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+                <a class="btn btn-primary" href="#" onclick="addItem()" data-bs-dismiss="modal">Submit</a>
               </div>
             </div>
             <div class="tab-pane fade" id="json" role="tabpanel" aria-labelledby="json-tab">
@@ -692,8 +692,8 @@
                 </div>
               </div>
               <div class="modal-footer">
-                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                <a class="btn btn-primary" href="#" onclick="createNetworkUsingJSON()" data-dismiss="modal">Submit</a>
+                <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+                <a class="btn btn-primary" href="#" onclick="createNetworkUsingJSON()" data-bs-dismiss="modal">Submit</a>
               </div>
             </div>
           </div>
@@ -708,7 +708,7 @@
     <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLabel">Edit Network</h5>
-          <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+          <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">×</span>
           </button>
         </div>
@@ -725,8 +725,8 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-          <a class="btn btn-primary" href="#" onclick="updateNetwork()" data-dismiss="modal">Submit</a>
+          <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+          <a class="btn btn-primary" href="#" onclick="updateNetwork()" data-bs-dismiss="modal">Submit</a>
         </div>
     </div>
   </div>
@@ -738,7 +738,7 @@
     <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="renameNetworkModalLabel">Rename Network</h5>
-          <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+          <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">×</span>
           </button>
         </div>
@@ -757,8 +757,8 @@
           <input type="hidden" id ="networkToRename" name="networkToRename">
         </div>
         <div class="modal-footer">
-          <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-          <a class="btn btn-primary" href="#" onclick="updateNetworkName()" data-dismiss="modal">Ok</a>
+          <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+          <a class="btn btn-primary" href="#" onclick="updateNetworkName()" data-bs-dismiss="modal">Ok</a>
         </div>
     </div>
   </div>

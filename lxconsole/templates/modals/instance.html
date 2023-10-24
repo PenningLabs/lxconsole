@@ -1,11 +1,10 @@
-
   <!-- New Snapshot Modal-->
   <div class="modal fade" id="createSnapshotModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="exampleModalLabel">Create Snapshot</h5>
-            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+            <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">×</span>
             </button>
           </div>
@@ -25,7 +24,7 @@
               <label class="col-3 col-form-label text-right">Stateful:</label>
               <div class="col-7 text-right">
                 <div class="form-group">
-                  <select id="snapshotStateful" class="form-control" name="snapshotStateful">
+                  <select id="snapshotStateful" class="form-select" name="snapshotStateful">
                     <option value="false" selected>false</option>
                     <option value="true">true</option>
                   </select>
@@ -37,8 +36,8 @@
             </div>
           </div>
           <div class="modal-footer">
-            <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-            <a class="btn btn-primary" href="#" onclick="createSnapshot()" data-dismiss="modal">Submit</a>
+            <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+            <a class="btn btn-primary" href="#" onclick="createSnapshot()" data-bs-dismiss="modal">Submit</a>
           </div>
       </div>
     </div>
@@ -50,7 +49,7 @@
       <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="exampleModalLabel">Rename Instance</h5>
-            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+            <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">×</span>
             </button>
           </div>
@@ -68,8 +67,8 @@
             </div>
           </div>
           <div class="modal-footer">
-            <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-            <a class="btn btn-primary" href="#" onclick="renameInstance()" data-dismiss="modal">Submit</a>
+            <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+            <a class="btn btn-primary" href="#" onclick="renameInstance()" data-bs-dismiss="modal">Submit</a>
           </div>
       </div>
     </div>
@@ -81,7 +80,7 @@
       <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="exampleModalLabel">Migrate Instance</h5>
-            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+            <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">×</span>
             </button>
           </div>
@@ -90,7 +89,7 @@
               <label class="col-3 col-form-label text-right">Server: <span class="text-danger">*</span></label>
               <div class="col-7">
                 <div class="form-group">
-                  <select id="selectClusterInput" class="form-control" name="cluster">
+                  <select id="selectClusterInput" class="form-select" name="cluster">
                   </select>
                 </div>
               </div>
@@ -100,8 +99,8 @@
             </div>
           </div>
           <div class="modal-footer">
-            <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-            <a class="btn btn-primary" href="#" onclick="migrateInstance()" data-dismiss="modal">Submit</a>
+            <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+            <a class="btn btn-primary" href="#" onclick="migrateInstance()" data-bs-dismiss="modal">Submit</a>
           </div>
       </div>
     </div>
@@ -113,7 +112,7 @@
       <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="exampleModalLabel">Copy Instance</h5>
-            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+            <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">×</span>
             </button>
           </div>
@@ -131,8 +130,8 @@
             </div>
           </div>
           <div class="modal-footer">
-            <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-            <a class="btn btn-primary" href="#" onclick="copyInstance()" data-dismiss="modal">Submit</a>
+            <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+            <a class="btn btn-primary" href="#" onclick="copyInstance()" data-bs-dismiss="modal">Submit</a>
           </div>
       </div>
     </div>
@@ -144,7 +143,7 @@
       <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="exampleModalLabel">Create Instance from Snapshot</h5>
-            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+            <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">×</span>
             </button>
           </div>
@@ -163,8 +162,8 @@
             </div>
           </div>
           <div class="modal-footer">
-            <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-            <a class="btn btn-primary" href="#" onclick="createSnapshotInstance()" data-dismiss="modal">Submit</a>
+            <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+            <a class="btn btn-primary" href="#" onclick="createSnapshotInstance()" data-bs-dismiss="modal">Submit</a>
           </div>
       </div>
     </div>
@@ -176,7 +175,7 @@
       <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="exampleModalLabel">Publish Image from Snapshot</h5>
-            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+            <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">×</span>
             </button>
           </div>
@@ -218,7 +217,7 @@
               <label class="col-3 col-form-label text-right">Public:</label>
               <div class="col-7">
                 <div class="form-group">
-                  <select id="publishSnapshotPublicInput" class="form-control" name="public">
+                  <select id="publishSnapshotPublicInput" class="form-select" name="public">
                     <option value="false" selected>false</option>
                     <option value="true">true</option>
                   </select>
@@ -231,8 +230,8 @@
             <input type="hidden" id="publishSnapshotHiddenName">
           </div>
           <div class="modal-footer">
-            <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-            <a class="btn btn-primary" href="#" onclick="publishSnapshot()" data-dismiss="modal">Submit</a>
+            <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+            <a class="btn btn-primary" href="#" onclick="publishSnapshot()" data-bs-dismiss="modal">Submit</a>
           </div>
       </div>
     </div>
@@ -244,7 +243,7 @@
       <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="exampleModalLabel">Backup Instance</h5>
-            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+            <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">×</span>
             </button>
           </div>
@@ -264,7 +263,7 @@
               <label class="col-3 col-form-label text-right">Instance Only:</label>
               <div class="col-7 text-right">
                 <div class="form-group">
-                  <select id="backupInstanceOnly" class="form-control" name="backupInstanceOnly">
+                  <select id="backupInstanceOnly" class="form-select" name="backupInstanceOnly">
                     <option value="false" selected>false</option>
                     <option value="true">true</option>
                   </select>
@@ -278,7 +277,7 @@
               <label class="col-3 col-form-label text-right">Optimized Storage:</label>
               <div class="col-7 text-right">
                 <div class="form-group">
-                  <select id="backupOptimizedStorage" class="form-control" name="backupOptimizedStorage">
+                  <select id="backupOptimizedStorage" class="form-select" name="backupOptimizedStorage">
                     <option value="false" selected>false</option>
                     <option value="true">true</option>
                   </select>
@@ -292,7 +291,7 @@
               <label class="col-3 col-form-label text-right">Compression:</label>
               <div class="col-7">
                 <div class="form-group">
-                  <select id="backupCompressionAlgorithm" class="form-control" name="backupCompressionAlgorithm">
+                  <select id="backupCompressionAlgorithm" class="form-select" name="backupCompressionAlgorithm">
                     <option value="bzip2">bzip2</option>
                     <option value="gzip" selected>gzip</option>
                     <option value="lzma">lzma</option>
@@ -308,8 +307,8 @@
             </div>
           </div>
           <div class="modal-footer">
-            <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-            <a class="btn btn-primary" href="#" onclick="createBackup()" data-dismiss="modal">Submit</a>
+            <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+            <a class="btn btn-primary" href="#" onclick="createBackup()" data-bs-dismiss="modal">Submit</a>
           </div>
       </div>
     </div>
@@ -321,14 +320,14 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLabel">Delete Instance</h5>
-          <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+          <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">×</span>
           </button>
         </div>
         <div class="modal-body">Are you sure you want to delete this instance?</div>
         <div class="modal-footer">
-          <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-          <a class="btn btn-primary" href="#" onclick="deleteInstance()" data-dismiss="modal">Yes</a>
+          <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+          <a class="btn btn-primary" href="#" onclick="deleteInstance()" data-bs-dismiss="modal">Yes</a>
         </div>
       </div>
     </div>
@@ -340,7 +339,7 @@
       <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="exampleModalLabel">Attach Profile</h5>
-            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+            <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">×</span>
             </button>
           </div>
@@ -349,7 +348,7 @@
               <label class="col-3 col-form-label text-right">Profile:</label>
               <div class="col-7">
                 <div class="form-group">
-                  <select id="selectProfileInput" class="form-control" name="profile">
+                  <select id="selectProfileInput" class="form-select" name="profile">
                   </select>
                 </div>
               </div>
@@ -359,8 +358,8 @@
             </div>
           </div>
           <div class="modal-footer">
-            <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-            <a class="btn btn-primary" href="#" onclick="attachProfile()" data-dismiss="modal">Submit</a>
+            <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+            <a class="btn btn-primary" href="#" onclick="attachProfile()" data-bs-dismiss="modal">Submit</a>
           </div>
       </div>
     </div>
@@ -372,7 +371,7 @@
       <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="exampleModalLabel">Detach Profile</h5>
-            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+            <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">×</span>
             </button>
           </div>
@@ -381,7 +380,7 @@
               <label class="col-3 col-form-label text-right">Profile:</label>
               <div class="col-7">
                 <div class="form-group">
-                  <select id="selectDetachProfileInput" class="form-control" name="profile">
+                  <select id="selectDetachProfileInput" class="form-select" name="profile">
                   </select>
                 </div>
               </div>
@@ -391,8 +390,8 @@
             </div>
           </div>
           <div class="modal-footer">
-            <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-            <a class="btn btn-primary" href="#" onclick="detachProfile()" data-dismiss="modal">Submit</a>
+            <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+            <a class="btn btn-primary" href="#" onclick="detachProfile()" data-bs-dismiss="modal">Submit</a>
           </div>
       </div>
     </div>
@@ -404,7 +403,7 @@
       <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="exampleModalLabel">Add Disk Device</h5>
-            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+            <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">×</span>
             </button>
           </div>
@@ -424,7 +423,7 @@
               <label class="col-3 col-form-label text-right">Pool:</label>
               <div class="col-7">
                 <div class="form-group">
-                  <select id="diskPoolInput" onchange="changeStorageVolumeInput()" class="form-control" name="diskPoolInput">
+                  <select id="diskPoolInput" onchange="changeStorageVolumeInput()" class="form-select" name="diskPoolInput">
                     <option value="">(not set)</option>
                   </select>
                 </div>
@@ -438,7 +437,7 @@
               <div class="col-7">
                 <div class="form-group">
                   <input type="text" id="diskSourceInput" class="form-control" placeholder="" name="diskSourceInput">
-                  <select style="display:none;" id="diskSourceSelectInput" class="form-control" name="diskSourceSelectInput">
+                  <select style="display:none;" id="diskSourceSelectInput" class="form-select" name="diskSourceSelectInput">
                     <option value="">(not set)</option>
                   </select>
                 </div>
@@ -463,7 +462,7 @@
 
             <div id="accordionDiskProperties">
               <h2>
-                <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#additionalDiskProperties" aria-expanded="false" aria-controls="additionalDiskProperties">
+                <button class="btn btn-link collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#additionalDiskProperties" aria-expanded="false" aria-controls="additionalDiskProperties">
                   Additional Properties
                 </button>
               </h2> 
@@ -505,7 +504,7 @@
                   <label class="col-3 col-form-label text-right">Required:</label>
                   <div class="col-7">
                     <div class="form-group">
-                      <select id="diskRequiredInput" onchange="" class="form-control" name="diskRequiredInput">
+                      <select id="diskRequiredInput" onchange="" class="form-select" name="diskRequiredInput">
                         <option value="">(not set)</option>
                         <option value="true">true</option>
                         <option value="false">false</option>
@@ -520,7 +519,7 @@
                   <label class="col-3 col-form-label text-right">Read Only:</label>
                   <div class="col-7">
                     <div class="form-group">
-                      <select id="diskReadOnlyInput" onchange="" class="form-control" name="diskReadOnlyInput">
+                      <select id="diskReadOnlyInput" onchange="" class="form-select" name="diskReadOnlyInput">
                         <option value="">(not set)</option>
                         <option value="true">true</option>
                         <option value="false">false</option>
@@ -557,7 +556,7 @@
                   <label class="col-3 col-form-label text-right">Recursive:</label>
                   <div class="col-7">
                     <div class="form-group">
-                      <select id="diskRecursiveInput" onchange="" class="form-control" name="diskRecursiveInput">
+                      <select id="diskRecursiveInput" onchange="" class="form-select" name="diskRecursiveInput">
                         <option value="">(not set)</option>
                         <option value="true">true</option>
                         <option value="false">false</option>
@@ -572,7 +571,7 @@
                   <label class="col-3 col-form-label text-right">Propagation:</label>
                   <div class="col-7">
                     <div class="form-group">
-                      <select id="diskPropagationInput" onchange="" class="form-control" name="diskPropagationInput">
+                      <select id="diskPropagationInput" onchange="" class="form-select" name="diskPropagationInput">
                         <option value="">(not set)</option>
                         <option value="private">private</option>
                         <option value="rprivate">rprivate</option>
@@ -593,7 +592,7 @@
                   <label class="col-3 col-form-label text-right">Shift:</label>
                   <div class="col-7">
                     <div class="form-group">
-                      <select id="diskShiftInput" onchange="" class="form-control" name="diskShiftInput">
+                      <select id="diskShiftInput" onchange="" class="form-select" name="diskShiftInput">
                         <option value="">(not set)</option>
                         <option value="true">true</option>
                         <option value="false">false</option>
@@ -654,8 +653,8 @@
 
           </div>
           <div class="modal-footer">
-            <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-            <a class="btn btn-primary" href="#" onclick="addInstanceDiskDevice()" data-dismiss="modal">Submit</a>
+            <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+            <a class="btn btn-primary" href="#" onclick="addInstanceDiskDevice()" data-bs-dismiss="modal">Submit</a>
           </div>
       </div>
     </div>
@@ -667,7 +666,7 @@
       <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="exampleModalLabel">Add GPU Device</h5>
-            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+            <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">×</span>
             </button>
           </div>
@@ -687,7 +686,7 @@
               <label class="col-3 col-form-label text-right">GPU Type:</label>
               <div class="col-7">
                 <div class="form-group">
-                  <select id="gpuTypeInput" class="form-control" name="gpuTypeInput">
+                  <select id="gpuTypeInput" class="form-select" name="gpuTypeInput">
                     <option value="">(not set)</option>
                     <option value="physical">physical</option>
                     <option value="mig">mig</option>
@@ -747,7 +746,7 @@
 
             <div id="accordionProxyProperties">
               <h2>
-                <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#additionalProxyProperties" aria-expanded="false" aria-controls="additionalProxyProperties">
+                <button class="btn btn-link collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#additionalProxyProperties" aria-expanded="false" aria-controls="additionalProxyProperties">
                   Additional Properties
                 </button>
               </h2> 
@@ -814,8 +813,8 @@
 
           </div>
           <div class="modal-footer">
-            <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-            <a class="btn btn-primary" href="#" onclick="addInstanceGPUDevice()" data-dismiss="modal">Submit</a>
+            <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+            <a class="btn btn-primary" href="#" onclick="addInstanceGPUDevice()" data-bs-dismiss="modal">Submit</a>
           </div>
       </div>
     </div>
@@ -827,7 +826,7 @@
       <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="exampleModalLabel">Add Network Device</h5>
-            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+            <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">×</span>
             </button>
           </div>
@@ -847,7 +846,7 @@
               <label class="col-3 col-form-label text-right">Property Set: <span class="text-danger">*</span></label>
               <div class="col-7">
                 <div class="form-group">
-                  <select id="networkPropertySetInput" onchange="changePropertySetInput()" onchange="" class="form-control" name="networkPropertySetInput">
+                  <select id="networkPropertySetInput" onchange="changePropertySetInput()" onchange="" class="form-select" name="networkPropertySetInput">
                     <option value="network">network</option>
                     <option value="nictype">nictype</option>
                   </select>
@@ -861,7 +860,7 @@
               <label class="col-3 col-form-label text-right">NIC Type: <span class="text-danger">*</span></label>
               <div class="col-7">
                 <div class="form-group">
-                  <select id="networkNicTypeInput" onchange="changeNicTypeInput()" onchange="" class="form-control" name="networkNicTypeInput">
+                  <select id="networkNicTypeInput" onchange="changeNicTypeInput()" onchange="" class="form-select" name="networkNicTypeInput">
                     <option value="">(not set)</option>
                     <option value="bridged">bridged</option>
                     <option value="ipvlan">ipvlan</option>
@@ -881,7 +880,7 @@
               <label class="col-3 col-form-label text-right">Parent Type: <span class="text-danger">*</span></label>
               <div class="col-7">
                 <div class="form-group">
-                  <select id="networkParentTypeInput" onchange="changeParentTypeInput()" class="form-control" name="networkParentTypeInput">
+                  <select id="networkParentTypeInput" onchange="changeParentTypeInput()" class="form-select" name="networkParentTypeInput">
                     <option value="">(not set)</option>
                     <option value="bridge">bridge</option>
                     <option value="macvlan">macvlan</option>
@@ -898,7 +897,7 @@
               <label class="col-3 col-form-label text-right">Parent: <span class="text-danger">*</span></label>
               <div class="col-7">
                 <div class="form-group">
-                  <select id="networkParentInput" class="form-control" name="networkParentInput">
+                  <select id="networkParentInput" class="form-select" name="networkParentInput">
                     <option value="">(not set)</option>
                   </select>
                 </div>
@@ -911,7 +910,7 @@
               <label class="col-3 col-form-label text-right">Network: <span class="text-danger">*</span></label>
               <div class="col-7">
                 <div class="form-group">
-                  <select id="networkNetworkInput" class="form-control" name="networkNetworkInput">
+                  <select id="networkNetworkInput" class="form-select" name="networkNetworkInput">
                     <option value="">(not set)</option>
                   </select>
                 </div>
@@ -936,7 +935,7 @@
 
             <div id="accordionNetworkProperties">
               <h2>
-                <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#additionalNetworkProperties" aria-expanded="false" aria-controls="additionalNetworkProperties">
+                <button class="btn btn-link collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#additionalNetworkProperties" aria-expanded="false" aria-controls="additionalNetworkProperties">
                   Additional Properties
                 </button>
               </h2> 
@@ -956,7 +955,7 @@
                   <label class="col-3 col-form-label text-right">Mode:</label>
                   <div class="col-7">
                     <div class="form-group">
-                      <select id="networkModeInput" onchange="" class="form-control" name="networkModeInput">
+                      <select id="networkModeInput" onchange="" class="form-select" name="networkModeInput">
                         <option value="">(not set)</option>
                         <option value="l2">l2</option>
                         <option value="l3s">l3s</option>
@@ -1158,7 +1157,7 @@
                   <label class="col-3 col-form-label text-right">Security.MAC.Filtering:</label>
                   <div class="col-7">
                     <div class="form-group">
-                      <select id="networkSecurityMacFilteringInput" onchange="" class="form-control" name="networkSecurityMacFilteringInput">
+                      <select id="networkSecurityMacFilteringInput" onchange="" class="form-select" name="networkSecurityMacFilteringInput">
                         <option value="">(not set)</option>
                         <option value="true">true</option>
                         <option value="false">false</option>
@@ -1173,7 +1172,7 @@
                   <label class="col-3 col-form-label text-right">Security.IPv4.Filtering:</label>
                   <div class="col-7">
                     <div class="form-group">
-                      <select id="networkSecurityIpv4FilteringInput" onchange="" class="form-control" name="networkSecurityIpv4FilteringInput">
+                      <select id="networkSecurityIpv4FilteringInput" onchange="" class="form-select" name="networkSecurityIpv4FilteringInput">
                         <option value="">(not set)</option>
                         <option value="true">true</option>
                         <option value="false">false</option>
@@ -1188,7 +1187,7 @@
                   <label class="col-3 col-form-label text-right">Security.IPv6.Filtering:</label>
                   <div class="col-7">
                     <div class="form-group">
-                      <select id="networkSecurityIpv6FilteringInput" onchange="" class="form-control" name="networkSecurityIpv6FilteringInput">
+                      <select id="networkSecurityIpv6FilteringInput" onchange="" class="form-select" name="networkSecurityIpv6FilteringInput">
                         <option value="">(not set)</option>
                         <option value="true">true</option>
                         <option value="false">false</option>
@@ -1258,7 +1257,7 @@
                   <label class="col-3 col-form-label text-right">Security Port Isolation:</label>
                   <div class="col-7">
                     <div class="form-group">
-                      <select id="networkSecurityPortIsolationInput" onchange="" class="form-control" name="networkSecurityPortIsolationInput">
+                      <select id="networkSecurityPortIsolationInput" onchange="" class="form-select" name="networkSecurityPortIsolationInput">
                         <option value="">(not set)</option>
                         <option value="true">true</option>
                         <option value="false">false</option>
@@ -1273,7 +1272,7 @@
                   <label class="col-3 col-form-label text-right">GVRP:</label>
                   <div class="col-7">
                     <div class="form-group">
-                      <select id="networkGvrpInput" onchange="" class="form-control" name="networkGvrpInput">
+                      <select id="networkGvrpInput" onchange="" class="form-select" name="networkGvrpInput">
                         <option value="">(not set)</option>
                         <option value="true">true</option>
                         <option value="false">false</option>
@@ -1299,7 +1298,7 @@
                   <label class="col-3 col-form-label text-right">Security ACLs Default Ingress Action:</label>
                   <div class="col-7">
                     <div class="form-group">
-                      <select id="networkSecurityAclsDefaultIngressActionInput" onchange="" class="form-control" name="networkSecurityAclsDefaultIngressActionInput">
+                      <select id="networkSecurityAclsDefaultIngressActionInput" onchange="" class="form-select" name="networkSecurityAclsDefaultIngressActionInput">
                         <option value="">(not set)</option>
                         <option value="allow">allow</option>
                         <option value="reject">reject</option>
@@ -1315,7 +1314,7 @@
                   <label class="col-3 col-form-label text-right">Security ACLs Default Egress Action:</label>
                   <div class="col-7">
                     <div class="form-group">
-                      <select id="networkSecurityAclsDefaultEgressActionInput" onchange="" class="form-control" name="networkSecurityAclsDefaultEgressActionInput">
+                      <select id="networkSecurityAclsDefaultEgressActionInput" onchange="" class="form-select" name="networkSecurityAclsDefaultEgressActionInput">
                         <option value="">(not set)</option>
                         <option value="allow">allow</option>
                         <option value="reject">reject</option>
@@ -1331,7 +1330,7 @@
                   <label class="col-3 col-form-label text-right">Security ACLs Default Ingress Logged:</label>
                   <div class="col-7">
                     <div class="form-group">
-                      <select id="networkSecurityAclsDefaultIngressLoggedInput" onchange="" class="form-control" name="networkSecurityAclsDefaultIngressLoggedInput">
+                      <select id="networkSecurityAclsDefaultIngressLoggedInput" onchange="" class="form-select" name="networkSecurityAclsDefaultIngressLoggedInput">
                         <option value="">(not set)</option>
                         <option value="true">true</option>
                         <option value="false">false</option>
@@ -1346,7 +1345,7 @@
                   <label class="col-3 col-form-label text-right">Security ACLs Default Egress Logged:</label>
                   <div class="col-7">
                     <div class="form-group">
-                      <select id="networkSecurityAclsDefaultEgressLoggedInput" onchange="" class="form-control" name="networkSecurityAclsDefaultEgressLoggedInput">
+                      <select id="networkSecurityAclsDefaultEgressLoggedInput" onchange="" class="form-select" name="networkSecurityAclsDefaultEgressLoggedInput">
                         <option value="">(not set)</option>
                         <option value="true">true</option>
                         <option value="false">false</option>
@@ -1363,8 +1362,8 @@
 
           </div>
           <div class="modal-footer">
-            <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-            <a class="btn btn-primary" href="#" onclick="addNetworkDevice()" data-dismiss="modal">Submit</a>
+            <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+            <a class="btn btn-primary" href="#" onclick="addNetworkDevice()" data-bs-dismiss="modal">Submit</a>
           </div>
       </div>
     </div>
@@ -1376,7 +1375,7 @@
       <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="exampleModalLabel">Add Proxy Device</h5>
-            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+            <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">×</span>
             </button>
           </div>
@@ -1419,7 +1418,7 @@
 
             <div id="accordionProxyProperties">
               <h2>
-                <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#additionalProxyProperties" aria-expanded="false" aria-controls="additionalProxyProperties">
+                <button class="btn btn-link collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#additionalProxyProperties" aria-expanded="false" aria-controls="additionalProxyProperties">
                   Additional Properties
                 </button>
               </h2> 
@@ -1428,7 +1427,7 @@
                   <label class="col-3 col-form-label text-right">Bind:</label>
                   <div class="col-7">
                     <div class="form-group">
-                      <select id="proxyBindInput" onchange="" class="form-control" name="proxyBindInput">
+                      <select id="proxyBindInput" onchange="" class="form-select" name="proxyBindInput">
                         <option value="">(not set)</option>
                         <option value="host">host</option>
                         <option value="instance">instance</option>
@@ -1476,7 +1475,7 @@
                   <label class="col-3 col-form-label text-right">NAT:</label>
                   <div class="col-7">
                     <div class="form-group">
-                      <select id="proxyNatInput" onchange="" class="form-control" name="proxyNatInput">
+                      <select id="proxyNatInput" onchange="" class="form-select" name="proxyNatInput">
                         <option value="">(not set)</option>
                         <option value="true">true</option>
                         <option value="false">false</option>
@@ -1491,7 +1490,7 @@
                   <label class="col-3 col-form-label text-right">Proxy Protocol:</label>
                   <div class="col-7">
                     <div class="form-group">
-                      <select id="proxyProxyProtocolInput" onchange="" class="form-control" name="proxyProxyProtocolInput">
+                      <select id="proxyProxyProtocolInput" onchange="" class="form-select" name="proxyProxyProtocolInput">
                         <option value="">(not set)</option>
                         <option value="true">true</option>
                         <option value="false">false</option>
@@ -1529,8 +1528,8 @@
 
           </div>
           <div class="modal-footer">
-            <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-            <a class="btn btn-primary" href="#" onclick="addInstanceProxyDevice()" data-dismiss="modal">Submit</a>
+            <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+            <a class="btn btn-primary" href="#" onclick="addInstanceProxyDevice()" data-bs-dismiss="modal">Submit</a>
           </div>
       </div>
     </div>
@@ -1542,7 +1541,7 @@
       <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="exampleModalLabel">Add Unix Device</h5>
-            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+            <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">×</span>
             </button>
           </div>
@@ -1562,7 +1561,7 @@
               <label class="col-3 col-form-label text-right">Type: <span class="text-danger">*</span></label>
               <div class="col-7">
                 <div class="form-group">
-                  <select id="unixTypeInput" class="form-control" name="unixTypeInput">
+                  <select id="unixTypeInput" class="form-select" name="unixTypeInput">
                     <option value="unix-block">unix-block</option>
                     <option value="unix-char">unix-char</option>
                   </select>
@@ -1599,7 +1598,7 @@
 
             <div id="accordionProxyProperties">
               <h2>
-                <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#additionalProxyProperties" aria-expanded="false" aria-controls="additionalProxyProperties">
+                <button class="btn btn-link collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#additionalProxyProperties" aria-expanded="false" aria-controls="additionalProxyProperties">
                   Additional Properties
                 </button>
               </h2> 
@@ -1663,7 +1662,7 @@
                   <label class="col-3 col-form-label text-right">Required:</label>
                   <div class="col-7">
                     <div class="form-group">
-                      <select id="unixRequiredInput" class="form-control" name="unixRequiredInput">
+                      <select id="unixRequiredInput" class="form-select" name="unixRequiredInput">
                         <option value="">(not set)</option>
                         <option value="true">True</option>
                         <option value="false">False</option>
@@ -1680,8 +1679,8 @@
 
           </div>
           <div class="modal-footer">
-            <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-            <a class="btn btn-primary" href="#" onclick="addInstanceUnixDevice()" data-dismiss="modal">Submit</a>
+            <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+            <a class="btn btn-primary" href="#" onclick="addInstanceUnixDevice()" data-bs-dismiss="modal">Submit</a>
           </div>
       </div>
     </div>
@@ -1693,7 +1692,7 @@
       <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="exampleModalLabel">Add USB Device</h5>
-            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+            <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">×</span>
             </button>
           </div>
@@ -1736,7 +1735,7 @@
 
             <div id="accordionProxyProperties">
               <h2>
-                <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#additionalProxyProperties" aria-expanded="false" aria-controls="additionalProxyProperties">
+                <button class="btn btn-link collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#additionalProxyProperties" aria-expanded="false" aria-controls="additionalProxyProperties">
                   Additional Properties
                 </button>
               </h2> 
@@ -1781,8 +1780,8 @@
 
           </div>
           <div class="modal-footer">
-            <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-            <a class="btn btn-primary" href="#" onclick="addInstanceUSBDevice()" data-dismiss="modal">Submit</a>
+            <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+            <a class="btn btn-primary" href="#" onclick="addInstanceUSBDevice()" data-bs-dismiss="modal">Submit</a>
           </div>
       </div>
     </div>
@@ -1794,7 +1793,7 @@
       <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="exampleModalLabel">Publish Image from Instance</h5>
-            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+            <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">×</span>
             </button>
           </div>
@@ -1836,7 +1835,7 @@
               <label class="col-3 col-form-label text-right">Public:</label>
               <div class="col-7">
                 <div class="form-group">
-                  <select id="publishInstancePublicInput" class="form-control" name="public">
+                  <select id="publishInstancePublicInput" class="form-select" name="public">
                     <option value="false" selected>false</option>
                     <option value="true">true</option>
                   </select>
@@ -1848,8 +1847,8 @@
             </div>
           </div>
           <div class="modal-footer">
-            <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-            <a class="btn btn-primary" href="#" onclick="publishInstance()" data-dismiss="modal">Submit</a>
+            <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+            <a class="btn btn-primary" href="#" onclick="publishInstance()" data-bs-dismiss="modal">Submit</a>
           </div>
       </div>
     </div>
@@ -1861,7 +1860,7 @@
       <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="exampleModalLabel">Log Contents</h5>
-            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+            <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">×</span>
             </button>
           </div>
@@ -1878,7 +1877,7 @@
             </div>
           </div>
           <div class="modal-footer">
-            <button class="btn btn-secondary" type="button" data-dismiss="modal">Close</button>
+            <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
           </div>
       </div>
     </div>
@@ -1889,18 +1888,18 @@
     <div class="modal-dialog modal-xl" role="document">
       <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Edit Container</h5>
-            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+            <h5 class="modal-title" id="exampleModalLabel">Edit Instance</h5>
+            <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">×</span>
             </button>
           </div>
           <div class="modal-body">
             <ul class="nav nav-tabs" id="myTab" role="tablist">
               <li class="nav-item">
-                <a class="nav-link active" id="form-tab" data-toggle="tab" href="#form" role="tab" aria-controls="form" aria-selected="true">Form</a>
+                <a class="nav-link active" id="form-tab" data-bs-toggle="tab" href="#form" role="tab" aria-controls="form" aria-selected="true">Form</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" id="json-tab" data-toggle="tab" href="#json" role="tab" aria-controls="json" aria-selected="false">JSON</a>
+                <a class="nav-link" id="json-tab" data-bs-toggle="tab" href="#json" role="tab" aria-controls="json" aria-selected="false">JSON</a>
               </li>
             </ul>
             <div class="tab-content" id="myTabContent">
@@ -1912,25 +1911,25 @@
                     <label class="col-3 col-form-label text-right">Description: </label>
                     <div class="col-7">
                       <div class="form-group">
-                        <input type="text" id="containerDescriptionInput" class="form-control" required="required" name="description">
+                        <input type="text" id="instanceDescriptionInput" class="form-control" required="required" name="description">
                       </div>
                     </div>
                     <div class="col-1">
-                      <i class="far fa-sm fa-question-circle" title='Enter in a description for this container'></i>
+                      <i class="far fa-sm fa-question-circle" title='Enter in a description for this instance'></i>
                     </div>
                   </div>
                   <hr>
                   <nav>
                     <div class="nav nav-pills justify-content-center" id="nav-tab" role="tablist">
-                      <a class="nav-link active" id="nav-boot-tab" data-toggle="tab" href="#nav-boot" role="tab" aria-controls="nav-boot" aria-selected="true">Boot</a>
-                      <a class="nav-link" id="nav-cloud-init-tab" data-toggle="tab" href="#nav-cloud-init" role="tab" aria-controls="nav-cloud-init" aria-selected="true">Cloud-init</a>
-                      <a class="nav-link" id="nav-limits-tab" data-toggle="tab" href="#nav-limits" role="tab" aria-controls="nav-limits" aria-selected="false">Limits</a>
-                      <a class="nav-link" id="nav-migration-tab" data-toggle="tab" href="#nav-migration" role="tab" aria-controls="nav-migration" aria-selected="false">Migration</a>
-                      <a class="nav-link" id="nav-nvidia-tab" data-toggle="tab" href="#nav-nvidia" role="tab" aria-controls="nav-nvidia" aria-selected="false">Nvidia</a>
-                      <a class="nav-link" id="nav-other-tab" data-toggle="tab" href="#nav-other" role="tab" aria-controls="nav-other" aria-selected="false">Other</a>
-                      <a class="nav-link" id="nav-raw-tab" data-toggle="tab" href="#nav-raw" role="tab" aria-controls="nav-raw" aria-selected="false">Raw</a>
-                      <a class="nav-link" id="nav-security-tab" data-toggle="tab" href="#nav-security" role="tab" aria-controls="nav-security" aria-selected="false">Security</a>
-                      <a class="nav-link" id="nav-snapshots-config-tab" data-toggle="tab" href="#nav-snapshots-config" role="tab" aria-controls="nav-snapshots-config" aria-selected="false">Snapshots</a>
+                      <a class="nav-link active" id="nav-boot-tab" data-bs-toggle="tab" href="#nav-boot" role="tab" aria-controls="nav-boot" aria-selected="true">Boot</a>
+                      <a class="nav-link" id="nav-cloud-init-tab" data-bs-toggle="tab" href="#nav-cloud-init" role="tab" aria-controls="nav-cloud-init" aria-selected="true">Cloud-init</a>
+                      <a class="nav-link" id="nav-limits-tab" data-bs-toggle="tab" href="#nav-limits" role="tab" aria-controls="nav-limits" aria-selected="false">Limits</a>
+                      <a class="nav-link" id="nav-migration-tab" data-bs-toggle="tab" href="#nav-migration" role="tab" aria-controls="nav-migration" aria-selected="false">Migration</a>
+                      <a class="nav-link" id="nav-nvidia-tab" data-bs-toggle="tab" href="#nav-nvidia" role="tab" aria-controls="nav-nvidia" aria-selected="false">Nvidia</a>
+                      <a class="nav-link" id="nav-other-tab" data-bs-toggle="tab" href="#nav-other" role="tab" aria-controls="nav-other" aria-selected="false">Other</a>
+                      <a class="nav-link" id="nav-raw-tab" data-bs-toggle="tab" href="#nav-raw" role="tab" aria-controls="nav-raw" aria-selected="false">Raw</a>
+                      <a class="nav-link" id="nav-security-tab" data-bs-toggle="tab" href="#nav-security" role="tab" aria-controls="nav-security" aria-selected="false">Security</a>
+                      <a class="nav-link" id="nav-snapshots-config-tab" data-bs-toggle="tab" href="#nav-snapshots-config" role="tab" aria-controls="nav-snapshots-config" aria-selected="false">Snapshots</a>
                     </div>
                   </nav>
                   <hr class="mt-2">
@@ -1941,7 +1940,7 @@
                         <label class="col-4 col-form-label text-right">Autostart: </label>
                         <div class="col-6">
                           <div class="form-group">
-                            <select id="boot.autostart" onchange="" class="form-control" name="boot.autostart">
+                            <select id="boot.autostart" onchange="" class="form-select" name="boot.autostart">
                               <option value="">(not set)</option>
                               <option value="true">true</option>
                               <option value="false">false</option>
@@ -1949,51 +1948,51 @@
                           </div>
                         </div>
                         <div class="col-1">
-                          <i class="far fa-sm fa-question-circle" title='Select whether to automatically start the container with LXD starts. If not set, defaults to container last state.'></i>
+                          <i class="far fa-sm fa-question-circle" title='Select whether to automatically start the instance with LXD starts. If not set, defaults to instance last state.'></i>
                         </div>
                       </div>
                       <div class="row">
                         <label class="col-4 col-form-label text-right">Autostart Delay: </label>
                         <div class="col-6">
                           <div class="form-group">
-                            <input type="number" id="containerBootAutostartDelayInput" class="form-control" placeholder="" name="boot.autostart.delay">
+                            <input type="number" id="instanceBootAutostartDelayInput" class="form-control" placeholder="" name="boot.autostart.delay">
                           </div>
                         </div>
                         <div class="col-1">
-                          <i class="far fa-sm fa-question-circle" title='Enter in the number of seconds to wait after the container starts to boot up the next container. Default: 0.'></i>
+                          <i class="far fa-sm fa-question-circle" title='Enter in the number of seconds to wait after the instance starts to boot up the next instance. Default: 0.'></i>
                         </div>
                       </div>
                       <div class="row">
                         <label class="col-4 col-form-label text-right">Autostart Priority: </label>
                         <div class="col-6">
                           <div class="form-group">
-                            <input type="number" id="containerBootAutostartPriorityInput" class="form-control" placeholder="" name="boot.autostart.priority">
+                            <input type="number" id="instanceBootAutostartPriorityInput" class="form-control" placeholder="" name="boot.autostart.priority">
                           </div>
                         </div>
                         <div class="col-1">
-                          <i class="far fa-sm fa-question-circle" title='Enter in a number to determine the order the container boots, higher numbers being first. Default: 0.'></i>
+                          <i class="far fa-sm fa-question-circle" title='Enter in a number to determine the order the instance boots, higher numbers being first. Default: 0.'></i>
                         </div>
                       </div>
                       <div class="row">
                         <label class="col-4 col-form-label text-right">Host Shutdown Timeout: </label>
                         <div class="col-6">
                           <div class="form-group">
-                            <input type="number" id="containerBootHostShutdownTimeoutInput" class="form-control" placeholder="" name="boot.host_shutdown_timeout">
+                            <input type="number" id="instanceBootHostShutdownTimeoutInput" class="form-control" placeholder="" name="boot.host_shutdown_timeout">
                           </div>
                         </div>
                         <div class="col-1">
-                          <i class="far fa-sm fa-question-circle" title='Enter in a the number of seconds to wait on host shutdown before forcefull shutdown of container. Default: 30.'></i>
+                          <i class="far fa-sm fa-question-circle" title='Enter in a the number of seconds to wait on host shutdown before forcefull shutdown of instance. Default: 30.'></i>
                         </div>
                       </div>
                       <div class="row">
                         <label class="col-4 col-form-label text-right">Stop Priority: </label>
                         <div class="col-6">
                           <div class="form-group">
-                            <input type="number" id="containerBootStopPriorityInput" class="form-control" placeholder="" name="boot.stop.priority">
+                            <input type="number" id="instanceBootStopPriorityInput" class="form-control" placeholder="" name="boot.stop.priority">
                           </div>
                         </div>
                         <div class="col-1">
-                          <i class="far fa-sm fa-question-circle" title='Enter in a number to determine the order the container shutsdown, higher numbers being first. Default: 0.'></i>
+                          <i class="far fa-sm fa-question-circle" title='Enter in a number to determine the order the instance shutsdown, higher numbers being first. Default: 0.'></i>
                         </div>
                       </div>
                     </div>
@@ -2039,51 +2038,51 @@
                         <label class="col-4 col-form-label text-right">CPU: </label>
                         <div class="col-6">
                           <div class="form-group">
-                            <input type="text" id="containerLimitsCpuInput" class="form-control" placeholder="" name="limits.cpu">
+                            <input type="text" id="instanceLimitsCpuInput" class="form-control" placeholder="" name="limits.cpu">
                           </div>
                         </div>
                         <div class="col-1">
-                          <i class="far fa-sm fa-question-circle" title='Enter in the number or range of CPUs to expose to the container.'></i>
+                          <i class="far fa-sm fa-question-circle" title='Enter in the number or range of CPUs to expose to the instance.'></i>
                         </div>
                       </div>
                       <div class="row">
                         <label class="col-4 col-form-label text-right">CPU Allowance: </label>
                         <div class="col-6">
                           <div class="form-group">
-                            <input type="text" id="containerLimitsCpuAllowanceInput" class="form-control" placeholder="" name="limits.cpu.allowance">
+                            <input type="text" id="instanceLimitsCpuAllowanceInput" class="form-control" placeholder="" name="limits.cpu.allowance">
                           </div>
                         </div>
                         <div class="col-1">
-                          <i class="far fa-sm fa-question-circle" title='Enter in the amount of Host CPU allowed to the container. This can be a percentage or a chunk of time. For example, 50% or 25ms/100ms. Default: 100%) '></i>
+                          <i class="far fa-sm fa-question-circle" title='Enter in the amount of Host CPU allowed to the instance. This can be a percentage or a chunk of time. For example, 50% or 25ms/100ms. Default: 100%) '></i>
                         </div>
                       </div>
                       <div class="row">
                         <label class="col-4 col-form-label text-right">CPU Priority: </label>
                         <div class="col-6">
                           <div class="form-group">
-                            <input type="number" id="containerLimitsCpuPriorityInput" class="form-control" placeholder="" name="limits.cpu.priority">
+                            <input type="number" id="instanceLimitsCpuPriorityInput" class="form-control" placeholder="" name="limits.cpu.priority">
                           </div>
                         </div>
                         <div class="col-1">
-                          <i class="far fa-sm fa-question-circle" title='Enter in an integer between 0 (min) and 10 (max) to schedule the CPU priority compared to other containers. Default: 10.'></i>
+                          <i class="far fa-sm fa-question-circle" title='Enter in an integer between 0 (min) and 10 (max) to schedule the CPU priority compared to other instances. Default: 10.'></i>
                         </div>
                       </div>
                       <div class="row">
                         <label class="col-4 col-form-label text-right">Disk Priority: </label>
                         <div class="col-6">
                           <div class="form-group">
-                            <input type="number" id="containerLimitsDiskPriorityInput" class="form-control" placeholder="" name="limits.disk.priority">
+                            <input type="number" id="instanceLimitsDiskPriorityInput" class="form-control" placeholder="" name="limits.disk.priority">
                           </div>
                         </div>
                         <div class="col-1">
-                          <i class="far fa-sm fa-question-circle" title='Enter in an integer between 0 (min) and 10 (max) to schedule disk I/O request priority compared to other containers. Default: 5.'></i>
+                          <i class="far fa-sm fa-question-circle" title='Enter in an integer between 0 (min) and 10 (max) to schedule disk I/O request priority compared to other instances. Default: 5.'></i>
                         </div>
                       </div>
                       <div class="row">
                         <label class="col-4 col-form-label text-right">Hugepages - 64KB: </label>
                         <div class="col-6">
                           <div class="form-group">
-                            <input type="number" id="containerLimitsHugepages64KBInput" class="form-control" placeholder="" name="limits.hugepages.64KB">
+                            <input type="number" id="instanceLimitsHugepages64KBInput" class="form-control" placeholder="" name="limits.hugepages.64KB">
                           </div>
                         </div>
                         <div class="col-1">
@@ -2094,7 +2093,7 @@
                         <label class="col-4 col-form-label text-right">Hugepages - 1MB: </label>
                         <div class="col-6">
                           <div class="form-group">
-                            <input type="number" id="containerLimitsHugepages1MBInput" class="form-control" placeholder="" name="limits.hugepages.1MB">
+                            <input type="number" id="instanceLimitsHugepages1MBInput" class="form-control" placeholder="" name="limits.hugepages.1MB">
                           </div>
                         </div>
                         <div class="col-1">
@@ -2105,7 +2104,7 @@
                         <label class="col-4 col-form-label text-right">Hugepages - 2MB: </label>
                         <div class="col-6">
                           <div class="form-group">
-                            <input type="number" id="containerLimitsHugepages2MBInput" class="form-control" placeholder="" name="limits.hugepages.2MB">
+                            <input type="number" id="instanceLimitsHugepages2MBInput" class="form-control" placeholder="" name="limits.hugepages.2MB">
                           </div>
                         </div>
                         <div class="col-1">
@@ -2116,7 +2115,7 @@
                         <label class="col-4 col-form-label text-right">Hugepages - 1GB: </label>
                         <div class="col-6">
                           <div class="form-group">
-                            <input type="number" id="containerLimitsHugepages1GBInput" class="form-control" placeholder="" name="limits.hugepages.1GB">
+                            <input type="number" id="instanceLimitsHugepages1GBInput" class="form-control" placeholder="" name="limits.hugepages.1GB">
                           </div>
                         </div>
                         <div class="col-1">
@@ -2127,7 +2126,7 @@
                         <label class="col-4 col-form-label text-right">Memory: </label>
                         <div class="col-6">
                           <div class="form-group">
-                            <input type="text" id="containerLimitsMemoryInput" class="form-control" placeholder="" name="limits.memory">
+                            <input type="text" id="instanceLimitsMemoryInput" class="form-control" placeholder="" name="limits.memory">
                           </div>
                         </div>
                         <div class="col-1">
@@ -2138,7 +2137,7 @@
                         <label class="col-4 col-form-label text-right">Memory Enforce: </label>
                         <div class="col-6">
                           <div class="form-group">
-                            <select id="containerLimitsMemoryEnforceInput" onchange="" class="form-control" name="limits.memory.enforce">
+                            <select id="instanceLimitsMemoryEnforceInput" onchange="" class="form-select" name="limits.memory.enforce">
                               <option value="">(not set)</option>
                               <option value="hard">hard</option>
                               <option value="soft">soft</option>
@@ -2150,10 +2149,10 @@
                         </div>
                       </div>
                       <div class="row">
-                        <label class="col-4 col-form-label text-right">Memory Swap: </label>
+                        <label class="col-4 col-form-label text-right">Memory Hugepages: </label>
                         <div class="col-6">
                           <div class="form-group">
-                            <select id="containerLimitsMemorySwapInput" onchange="" class="form-control" name="limits.memory.swap">
+                            <select class="form-select" id="instanceLimitsMemoryHugepagesInput" name="limits.memory.hugepages">
                               <option value="">(not set)</option>
                               <option value="true">true</option>
                               <option value="false">false</option>
@@ -2161,40 +2160,55 @@
                           </div>
                         </div>
                         <div class="col-1">
-                          <i class="far fa-sm fa-question-circle" title="Select whether to encorage swapping less used pages for the container. Default: true."></i>
+                          <i class="far fa-sm fa-question-circle" title="Select whether to back the instance using hugepages rather than regular system memory. Default: false."></i>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <label class="col-4 col-form-label text-right">Memory Swap: </label>
+                        <div class="col-6">
+                          <div class="form-group">
+                            <select id="instanceLimitsMemorySwapInput" onchange="" class="form-select" name="limits.memory.swap">
+                              <option value="">(not set)</option>
+                              <option value="true">true</option>
+                              <option value="false">false</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="col-1">
+                          <i class="far fa-sm fa-question-circle" title="Select whether to encorage swapping less used pages for the instance. Default: true."></i>
                         </div>
                       </div>
                       <div class="row">
                         <label class="col-4 col-form-label text-right">Memory Swap Priority: </label>
                         <div class="col-6">
                           <div class="form-group">
-                            <input type="number" id="containerLimitsMemorySwapPriorityInput" class="form-control" placeholder="" name="limits.memory.swap.priority">
+                            <input type="number" id="instanceLimitsMemorySwapPriorityInput" class="form-control" placeholder="" name="limits.memory.swap.priority">
                           </div>
                         </div>
                         <div class="col-1">
-                          <i class="far fa-sm fa-question-circle" title="Enter in the priority that the container will be less likely to swap to disk, with 10 being the maxium less likeliness. Default 10."></i>
+                          <i class="far fa-sm fa-question-circle" title="Enter in the priority that the instance will be less likely to swap to disk, with 10 being the maxium less likeliness. Default 10."></i>
                         </div>
                       </div>
                       <div class="row">
                         <label class="col-4 col-form-label text-right">Network Priority: </label>
                         <div class="col-6">
                           <div class="form-group">
-                            <input type="number" id="containerLimitsNetworkPriorityInput" class="form-control" placeholder="" name="limits.network.priority">
+                            <input type="number" id="instanceLimitsNetworkPriorityInput" class="form-control" placeholder="" name="limits.network.priority">
                           </div>
                         </div>
                         <div class="col-1">
-                          <i class="far fa-sm fa-question-circle" title="Enter in the priority for the container network when the host is under, with 10 being the priority. Default 0."></i>
+                          <i class="far fa-sm fa-question-circle" title="Enter in the priority for the instance network when the host is under, with 10 being the priority. Default 0."></i>
                         </div>
                       </div>
                       <div class="row">
                         <label class="col-4 col-form-label text-right">Processes: </label>
                         <div class="col-6">
                           <div class="form-group">
-                            <input type="number" id="containerLimitsProcessesInput" class="form-control" placeholder="" name="limits.processes">
+                            <input type="number" id="instanceLimitsProcessesInput" class="form-control" placeholder="" name="limits.processes">
                           </div>
                         </div>
                         <div class="col-1">
-                          <i class="far fa-sm fa-question-circle" title="Enter in the maximum number of processes that can run in an container. Default (not set)."></i>
+                          <i class="far fa-sm fa-question-circle" title="Enter in the maximum number of processes that can run in an instance. Default (not set)."></i>
                         </div>
                       </div>
                     </div>
@@ -2204,7 +2218,7 @@
                         <label class="col-4 col-form-label text-right">Incremental Memory: </label>
                         <div class="col-6">
                           <div class="form-group">
-                            <select id="containerMigrationIncrementalMemoryInput" onchange="" class="form-control" name="migration.incremental.memory">
+                            <select id="instanceMigrationIncrementalMemoryInput" onchange="" class="form-select" name="migration.incremental.memory">
                               <option value="">(not set)</option>
                               <option value="true">true</option>
                               <option value="false">false</option>
@@ -2212,29 +2226,44 @@
                           </div>
                         </div>
                         <div class="col-1">
-                          <i class="far fa-sm fa-question-circle" title="Select whether to allow incremental memory transfer of the container's memory to reduce downtime. Default: false."></i>
+                          <i class="far fa-sm fa-question-circle" title="Select whether to allow incremental memory transfer of the instance's memory to reduce downtime. Default: false."></i>
                         </div>
                       </div>
                       <div class="row">
                         <label class="col-4 col-form-label text-right">Incremental Memory Goal: </label>
                         <div class="col-6">
                           <div class="form-group">
-                            <input type="number" id="containerMigrationIncrementalMemoryGoalInput" class="form-control" placeholder="" name="migration.incremental.memory.goal">
+                            <input type="number" id="instanceMigrationIncrementalMemoryGoalInput" class="form-control" placeholder="" name="migration.incremental.memory.goal">
                           </div>
                         </div>
                         <div class="col-1">
-                          <i class="far fa-sm fa-question-circle" title="Enter in the percentage number of memory to have in sync before stopping the container. Default: 70."></i>
+                          <i class="far fa-sm fa-question-circle" title="Enter in the percentage number of memory to have in sync before stopping the instance. Default: 70."></i>
                         </div>
                       </div>
                       <div class="row">
                         <label class="col-4 col-form-label text-right">Incremental Memory Iterations: </label>
                         <div class="col-6">
                           <div class="form-group">
-                            <input type="number" id="containerMigrationIncrementalMemoryIterationsInput" class="form-control" placeholder="" name="migration.incremental.memory.iterations">
+                            <input type="number" id="instanceMigrationIncrementalMemoryIterationsInput" class="form-control" placeholder="" name="migration.incremental.memory.iterations">
                           </div>
                         </div>
                         <div class="col-1">
-                          <i class="far fa-sm fa-question-circle" title="Enter in the maximum number of transfer operations to go through before stopping the container. Default: 10."></i>
+                          <i class="far fa-sm fa-question-circle" title="Enter in the maximum number of transfer operations to go through before stopping the instance. Default: 10."></i>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <label class="col-4 col-form-label text-right">Stateful: </label>
+                        <div class="col-6">
+                          <div class="form-group">
+                            <select class="form-select" id="instanceMigrationStatefulInput" name="migration.stateful">
+                              <option value="">(not set)</option>
+                              <option value="true">true</option>
+                              <option value="false">false</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="col-1">
+                          <i class="far fa-sm fa-question-circle" title="Select whether to allow for stateful stop/start and snapshots. This will prevent the use of some features that are incompatible with it. Default: false."></i>
                         </div>
                       </div>
                     </div>
@@ -2244,18 +2273,18 @@
                         <label class="col-4 col-form-label text-right">Driver Capabilities: </label>
                         <div class="col-6">
                           <div class="form-group">
-                            <input type="text" id="containerNvidiaDriverCapabilitiesInput" class="form-control" placeholder="" name="nvidia.driver.capabilities">
+                            <input type="text" id="instanceNvidiaDriverCapabilitiesInput" class="form-control" placeholder="" name="nvidia.driver.capabilities">
                           </div>
                         </div>
                         <div class="col-1">
-                          <i class="far fa-sm fa-question-circle" title="Enter in what driver capabilities the container needs (sets libnvidia-container NVIDIA_DRIVER_CAPABILITIES). Default: compute,utility."></i>
+                          <i class="far fa-sm fa-question-circle" title="Enter in what driver capabilities the instance needs (sets libnvidia-container NVIDIA_DRIVER_CAPABILITIES). Default: compute,utility."></i>
                         </div>
                       </div>
                       <div class="row">
                         <label class="col-4 col-form-label text-right">Runtime: </label>
                         <div class="col-6">
                           <div class="form-group">
-                            <select id="containerNvidiaRuntimeInput" onchange="" class="form-control" name="nvidia.runtime">
+                            <select id="instanceNvidiaRuntimeInput" onchange="" class="form-select" name="nvidia.runtime">
                               <option value="">(not set)</option>
                               <option value="true">true</option>
                               <option value="false">false</option>
@@ -2263,14 +2292,14 @@
                           </div>
                         </div>
                         <div class="col-1">
-                          <i class="far fa-sm fa-question-circle" title="Select whether to pass the host NVIDIA and CUDA runtime libraries into the container. Default: false."></i>
+                          <i class="far fa-sm fa-question-circle" title="Select whether to pass the host NVIDIA and CUDA runtime libraries into the instance. Default: false."></i>
                         </div>
                       </div>
                       <div class="row">
                         <label class="col-4 col-form-label text-right">Require Cuda: </label>
                         <div class="col-6">
                           <div class="form-group">
-                            <input type="text" id="containerNvidiaRequireCudaInput" class="form-control" placeholder="" name="nvidia.require.cuda">
+                            <input type="text" id="instanceNvidiaRequireCudaInput" class="form-control" placeholder="" name="nvidia.require.cuda">
                           </div>
                         </div>
                         <div class="col-1">
@@ -2281,7 +2310,7 @@
                         <label class="col-4 col-form-label text-right">Require Driver: </label>
                         <div class="col-6">
                           <div class="form-group">
-                            <input type="text" id="containerNvidiaRequireDriverInput" class="form-control" placeholder="" name="nvidia.require.driver">
+                            <input type="text" id="instanceNvidiaRequireDriverInput" class="form-control" placeholder="" name="nvidia.require.driver">
                           </div>
                         </div>
                         <div class="col-1">
@@ -2295,7 +2324,7 @@
                         <label class="col-4 col-form-label text-right">Cluster Evacuate: </label>
                         <div class="col-6">
                           <div class="form-group">
-                            <select id="containerClusterEvacuateInput" onchange="" class="form-control" name="cluster.evacuate">
+                            <select id="instanceClusterEvacuateInput" onchange="" class="form-select" name="cluster.evacuate">
                               <option value="">(not set)</option>
                               <option value="auto">auto</option>
                               <option value="migrate">migrate</option>
@@ -2304,18 +2333,18 @@
                           </div>
                         </div>
                         <div class="col-1">
-                          <i class="far fa-sm fa-question-circle" title='Select what to do when evacuating the container. Default: auto'></i>
+                          <i class="far fa-sm fa-question-circle" title='Select what to do when evacuating the instance. Default: auto'></i>
                         </div>
                       </div>
                       <div class="row">
                         <label class="col-4 col-form-label text-right">Kernel Modules: </label>
                         <div class="col-6">
                           <div class="form-group">
-                            <input type="text" id="containerLinuxKernelModulesInput" class="form-control" placeholder="" name="linux.kernel_modules">
+                            <input type="text" id="instanceLinuxKernelModulesInput" class="form-control" placeholder="" name="linux.kernel_modules">
                           </div>
                         </div>
                         <div class="col-1">
-                          <i class="far fa-sm fa-question-circle" title="Enter in a comma separated list of kernel modules to load before starting the container. Default (not set)."></i>
+                          <i class="far fa-sm fa-question-circle" title="Enter in a comma separated list of kernel modules to load before starting the instance. Default (not set)."></i>
                         </div>
                       </div>
 
@@ -2326,7 +2355,7 @@
                         <label class="col-4 col-form-label text-right">Apparmor: </label>
                         <div class="col-6">
                           <div class="form-group">
-                            <input type="text" id="containerRawApparmorInput" class="form-control" placeholder="" name="raw.apparmor">
+                            <input type="text" id="instanceRawApparmorInput" class="form-control" placeholder="" name="raw.apparmor">
                           </div>
                         </div>
                         <div class="col-1">
@@ -2337,7 +2366,7 @@
                         <label class="col-4 col-form-label text-right">Idmap: </label>
                         <div class="col-6">
                           <div class="form-group">
-                            <input type="text" id="containerRawIdmapInput" class="form-control" placeholder="" name="raw.idmap">
+                            <input type="text" id="instanceRawIdmapInput" class="form-control" placeholder="" name="raw.idmap">
                           </div>
                         </div>
                         <div class="col-1">
@@ -2348,7 +2377,7 @@
                         <label class="col-4 col-form-label text-right">Lxc: </label>
                         <div class="col-6">
                           <div class="form-group">
-                            <input type="text" id="containerRawLxcInput" class="form-control" placeholder="" name="raw.lxc">
+                            <input type="text" id="instanceRawLxcInput" class="form-control" placeholder="" name="raw.lxc">
                           </div>
                         </div>
                         <div class="col-1">
@@ -2359,11 +2388,33 @@
                         <label class="col-4 col-form-label text-right">Seccomp: </label>
                         <div class="col-6">
                           <div class="form-group">
-                            <input type="text" id="containerRawSeccompInput" class="form-control" placeholder="" name="raw.seccomp">
+                            <input type="text" id="instanceRawSeccompInput" class="form-control" placeholder="" name="raw.seccomp">
                           </div>
                         </div>
                         <div class="col-1">
                           <i class="far fa-sm fa-question-circle" title="Enter in a raw Seccomp configuration. Default: (not set)."></i>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <label class="col-4 col-form-label text-right">Qemu: </label>
+                        <div class="col-6">
+                          <div class="form-group">
+                            <input type="text" class="form-select" id="instanceRawQemuInput" name="raw.qemu">
+                          </div>
+                        </div>
+                        <div class="col-1">
+                          <i class="far fa-sm fa-question-circle" title="Enter raw QEMU configuration to be appended to the generated command line. Default: (not set)."></i>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <label class="col-4 col-form-label text-right">Qemu.conf: </label>
+                        <div class="col-6">
+                          <div class="form-group">
+                            <input type="text" class="form-select" id="instanceRawQemuConfInput" name="raw.qemu.conf">
+                          </div>
+                        </div>
+                        <div class="col-1">
+                          <i class="far fa-sm fa-question-circle" title="Enter in addition/override to the generated qemu.conf file. Default: (not set)."></i>
                         </div>
                       </div>
 
@@ -2371,10 +2422,10 @@
                     <div class="tab-pane fade" id="nav-security" role="tabpanel" aria-labelledby="nav-security-tab">
                       <br>
                       <div class="row">
-                        <label class="col-4 col-form-label text-right">Devlxd: </label>
+                        <label class="col-4 col-form-label text-right">Agent Metrics: </label>
                         <div class="col-6">
                           <div class="form-group">
-                            <select id="containerSecurityDevLxdInput" onchange="" class="form-control" name="security.devlxd">
+                            <select class="form-select" id="instanceSecurityAgentMetricsInput" name="security.agent.metrics">
                               <option value="">(not set)</option>
                               <option value="true">true</option>
                               <option value="false">false</option>
@@ -2382,14 +2433,29 @@
                           </div>
                         </div>
                         <div class="col-1">
-                          <i class="far fa-sm fa-question-circle" title="Select whether to control the presence of /dev/lxd in the container. Default: true."></i>
+                          <i class="far fa-sm fa-question-circle" title="Select whether the lxd-agent is queried for state information and metrics. Default: true."></i>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <label class="col-4 col-form-label text-right">Devlxd: </label>
+                        <div class="col-6">
+                          <div class="form-group">
+                            <select id="instanceSecurityDevLxdInput" onchange="" class="form-select" name="security.devlxd">
+                              <option value="">(not set)</option>
+                              <option value="true">true</option>
+                              <option value="false">false</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="col-1">
+                          <i class="far fa-sm fa-question-circle" title="Select whether to control the presence of /dev/lxd in the instance. Default: true."></i>
                         </div>
                       </div>
                       <div class="row">
                         <label class="col-4 col-form-label text-right">Devlxd Images: </label>
                         <div class="col-6">
                           <div class="form-group">
-                            <select id="containerSecurityDevLxdImagesInput" onchange="" class="form-control" name="security.devlxd.images">
+                            <select id="instanceSecurityDevLxdImagesInput" onchange="" class="form-select" name="security.devlxd.images">
                               <option value="">(not set)</option>
                               <option value="true">true</option>
                               <option value="false">false</option>
@@ -2404,7 +2470,7 @@
                         <label class="col-4 col-form-label text-right">Idmap Base: </label>
                         <div class="col-6">
                           <div class="form-group">
-                            <input type="number" id="containerSecurityIdmapBaseInput" class="form-control" placeholder="" name="security.idmap.base">
+                            <input type="number" id="instanceSecurityIdmapBaseInput" class="form-control" placeholder="" name="security.idmap.base">
                           </div>
                         </div>
                         <div class="col-1">
@@ -2415,7 +2481,7 @@
                         <label class="col-4 col-form-label text-right">Idmap Isolated: </label>
                         <div class="col-6">
                           <div class="form-group">
-                            <select id="containerSecurityIdmapIsolatedInput" onchange="" class="form-control" name="security.idmap.isolated">
+                            <select id="instanceSecurityIdmapIsolatedInput" onchange="" class="form-select" name="security.idmap.isolated">
                               <option value="">(not set)</option>
                               <option value="true">true</option>
                               <option value="false">false</option>
@@ -2423,14 +2489,14 @@
                           </div>
                         </div>
                         <div class="col-1">
-                          <i class="far fa-sm fa-question-circle" title="Select whether to use an idmap for the container that is unique amoung containers with isolate enabled. Default: false."></i>
+                          <i class="far fa-sm fa-question-circle" title="Select whether to use an idmap for the instance that is unique amoung instances with isolate enabled. Default: false."></i>
                         </div>
                       </div>
                       <div class="row">
                         <label class="col-4 col-form-label text-right">Idmap Size: </label>
                         <div class="col-6">
                           <div class="form-group">
-                            <input type="number" id="containerSecurityIdmapSizeInput" class="form-control" placeholder="" name="security.idmap.size">
+                            <input type="number" id="instanceSecurityIdmapSizeInput" class="form-control" placeholder="" name="security.idmap.size">
                           </div>
                         </div>
                         <div class="col-1">
@@ -2441,7 +2507,7 @@
                         <label class="col-4 col-form-label text-right">Nesting: </label>
                         <div class="col-6">
                           <div class="form-group">
-                            <select id="containerSecurityNestingInput" onchange="" class="form-control" name="security.nesting">
+                            <select id="instanceSecurityNestingInput" onchange="" class="form-select" name="security.nesting">
                               <option value="">(not set)</option>
                               <option value="true">true</option>
                               <option value="false">false</option>
@@ -2449,14 +2515,14 @@
                           </div>
                         </div>
                         <div class="col-1">
-                          <i class="far fa-sm fa-question-circle" title="Select whether to support running LXD inside the container. Default: false."></i>
+                          <i class="far fa-sm fa-question-circle" title="Select whether to support running LXD inside the instance. Default: false."></i>
                         </div>
                       </div>
                       <div class="row">
                         <label class="col-4 col-form-label text-right">Privileged: </label>
                         <div class="col-6">
                           <div class="form-group">
-                            <select id="containerSecurityPrivilegedInput" onchange="" class="form-control" name="security.privileged">
+                            <select id="instanceSecurityPrivilegedInput" onchange="" class="form-select" name="security.privileged">
                               <option value="">(not set)</option>
                               <option value="true">true</option>
                               <option value="false">false</option>
@@ -2464,14 +2530,14 @@
                           </div>
                         </div>
                         <div class="col-1">
-                          <i class="far fa-sm fa-question-circle" title="Select whether to run the container in privileged mode. Default: false."></i>
+                          <i class="far fa-sm fa-question-circle" title="Select whether to run the instance in privileged mode. Default: false."></i>
                         </div>
                       </div>
                       <div class="row">
                         <label class="col-4 col-form-label text-right">Protection Delete: </label>
                         <div class="col-6">
                           <div class="form-group">
-                            <select id="containerSecurityProtectionDeleteInput" onchange="" class="form-control" name="security.protection.delete">
+                            <select id="instanceSecurityProtectionDeleteInput" onchange="" class="form-select" name="security.protection.delete">
                               <option value="">(not set)</option>
                               <option value="true">true</option>
                               <option value="false">false</option>
@@ -2479,14 +2545,14 @@
                           </div>
                         </div>
                         <div class="col-1">
-                          <i class="far fa-sm fa-question-circle" title="Select whether to prevent the container from being deleted. Default: false."></i>
+                          <i class="far fa-sm fa-question-circle" title="Select whether to prevent the instance from being deleted. Default: false."></i>
                         </div>
                       </div>
                       <div class="row">
                         <label class="col-4 col-form-label text-right">Protection Shift: </label>
                         <div class="col-6">
                           <div class="form-group">
-                            <select id="containerSecurityProtectionShiftInput" onchange="" class="form-control" name="security.protection.shift">
+                            <select id="instanceSecurityProtectionShiftInput" onchange="" class="form-select" name="security.protection.shift">
                               <option value="">(not set)</option>
                               <option value="true">true</option>
                               <option value="false">false</option>
@@ -2494,14 +2560,29 @@
                           </div>
                         </div>
                         <div class="col-1">
-                          <i class="far fa-sm fa-question-circle" title="Select whether to prevent the container filesystem from being uid/gid shifted on startup. Default: false."></i>
+                          <i class="far fa-sm fa-question-circle" title="Select whether to prevent the instance filesystem from being uid/gid shifted on startup. Default: false."></i>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <label class="col-4 col-form-label text-right">Secureboot: </label>
+                        <div class="col-6">
+                          <div class="form-group">
+                            <select class="form-select" id="instanceSecuritySecurebootInput" name="security.secureboot">
+                              <option value="">(not set)</option>
+                              <option value="true">true</option>
+                              <option value="false">false</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="col-1">
+                          <i class="far fa-sm fa-question-circle" title="Select whether whether UEFI secure boot is enabled with the default Microsoft keys. Default: true."></i>
                         </div>
                       </div>
                       <div class="row">
                         <label class="col-4 col-form-label text-right">Syscalls Allow: </label>
                         <div class="col-6">
                           <div class="form-group">
-                            <input type="text" id="containerSecuritySyscallsAllowInput" class="form-control" placeholder="" name="security.syscalls.allow">
+                            <input type="text" id="instanceSecuritySyscallsAllowInput" class="form-control" placeholder="" name="security.syscalls.allow">
                           </div>
                         </div>
                         <div class="col-1">
@@ -2512,7 +2593,7 @@
                         <label class="col-4 col-form-label text-right">Syscalls Deny: </label>
                         <div class="col-6">
                           <div class="form-group">
-                            <input type="text" id="containerSecuritySyscallsDenyInput" class="form-control" placeholder="" name="security.syscalls.deny">
+                            <input type="text" id="instanceSecuritySyscallsDenyInput" class="form-control" placeholder="" name="security.syscalls.deny">
                           </div>
                         </div>
                         <div class="col-1">
@@ -2523,7 +2604,7 @@
                         <label class="col-4 col-form-label text-right">Syscalls Deny Compat: </label>
                         <div class="col-6">
                           <div class="form-group">
-                            <select id="containerSecuritySyscallsDenyCompatInput" onchange="" class="form-control" name="security.syscalls.deny_compat">
+                            <select id="instanceSecuritySyscallsDenyCompatInput" onchange="" class="form-select" name="security.syscalls.deny_compat">
                               <option value="">(not set)</option>
                               <option value="true">true</option>
                               <option value="false">false</option>
@@ -2538,7 +2619,7 @@
                         <label class="col-4 col-form-label text-right">Syscalls Deny Default: </label>
                         <div class="col-6">
                           <div class="form-group">
-                            <select id="containerSecuritySyscallsDenyDefaultInput" onchange="" class="form-control" name="security.syscalls.deny_default">
+                            <select id="instanceSecuritySyscallsDenyDefaultInput" onchange="" class="form-select" name="security.syscalls.deny_default">
                               <option value="">(not set)</option>
                               <option value="true">true</option>
                               <option value="false">false</option>
@@ -2553,7 +2634,7 @@
                         <label class="col-4 col-form-label text-right">Syscalls Intercept Bpf: </label>
                         <div class="col-6">
                           <div class="form-group">
-                            <select id="containerSecuritySyscallsInterceptBpfInput" onchange="" class="form-control" name="security.syscalls.intercept.bpf">
+                            <select id="instanceSecuritySyscallsInterceptBpfInput" onchange="" class="form-select" name="security.syscalls.intercept.bpf">
                               <option value="">(not set)</option>
                               <option value="true">true</option>
                               <option value="false">false</option>
@@ -2568,7 +2649,7 @@
                         <label class="col-4 col-form-label text-right">Syscalls Intercept Bpf Devices: </label>
                         <div class="col-6">
                           <div class="form-group">
-                            <select id="containerSecuritySyscallsInterceptBpfDevicesInput" onchange="" class="form-control" name="security.syscalls.intercept.bpf.devices">
+                            <select id="instanceSecuritySyscallsInterceptBpfDevicesInput" onchange="" class="form-select" name="security.syscalls.intercept.bpf.devices">
                               <option value="">(not set)</option>
                               <option value="true">true</option>
                               <option value="false">false</option>
@@ -2583,7 +2664,7 @@
                         <label class="col-4 col-form-label text-right">Syscalls Intercept Mknod: </label>
                         <div class="col-6">
                           <div class="form-group">
-                            <select id="containerSecuritySyscallsInterceptMknodInput" onchange="" class="form-control" name="security.syscalls.intercept.mknod">
+                            <select id="instanceSecuritySyscallsInterceptMknodInput" onchange="" class="form-select" name="security.syscalls.intercept.mknod">
                               <option value="">(not set)</option>
                               <option value="true">true</option>
                               <option value="false">false</option>
@@ -2598,7 +2679,7 @@
                         <label class="col-4 col-form-label text-right">Syscalls Intercept Mount: </label>
                         <div class="col-6">
                           <div class="form-group">
-                            <select id="containerSecuritySyscallsInterceptMountInput" onchange="" class="form-control" name="security.syscalls.intercept.mount">
+                            <select id="instanceSecuritySyscallsInterceptMountInput" onchange="" class="form-select" name="security.syscalls.intercept.mount">
                               <option value="">(not set)</option>
                               <option value="true">true</option>
                               <option value="false">false</option>
@@ -2613,18 +2694,18 @@
                         <label class="col-4 col-form-label text-right">Syscalls Intercept Mount Allowed: </label>
                         <div class="col-6">
                           <div class="form-group">
-                            <input type="text" id="containerSecuritySyscallsInterceptMountAllowedInput" class="form-control" placeholder="" name="security.syscalls.intercept.mount.allowed">
+                            <input type="text" id="instanceSecuritySyscallsInterceptMountAllowedInput" class="form-control" placeholder="" name="security.syscalls.intercept.mount.allowed">
                           </div>
                         </div>
                         <div class="col-1">
-                          <i class="far fa-sm fa-question-circle" title="Enter in a comma-separated list of filesystems that are safe to mount for processes within the container. Default: (not set)."></i>
+                          <i class="far fa-sm fa-question-circle" title="Enter in a comma-separated list of filesystems that are safe to mount for processes within the instance. Default: (not set)."></i>
                         </div>
                       </div>
                       <div class="row">
                         <label class="col-4 col-form-label text-right">Syscalls Intercept Mount Fuse: </label>
                         <div class="col-6">
                           <div class="form-group">
-                            <input type="text" id="containerSecuritySyscallsInterceptMountFuseInput" class="form-control" placeholder="" name="security.syscalls.intercept.mount.fuse">
+                            <input type="text" id="instanceSecuritySyscallsInterceptMountFuseInput" class="form-control" placeholder="" name="security.syscalls.intercept.mount.fuse">
                           </div>
                         </div>
                         <div class="col-1">
@@ -2635,7 +2716,7 @@
                         <label class="col-4 col-form-label text-right">Syscalls Intercept Mount Shift: </label>
                         <div class="col-6">
                           <div class="form-group">
-                            <select id="containerSecuritySyscallsInterceptMountShiftInput" onchange="" class="form-control" name="security.syscalls.intercept.mount.shift">
+                            <select id="instanceSecuritySyscallsInterceptMountShiftInput" onchange="" class="form-select" name="security.syscalls.intercept.mount.shift">
                               <option value="">(not set)</option>
                               <option value="true">true</option>
                               <option value="false">false</option>
@@ -2650,7 +2731,7 @@
                         <label class="col-4 col-form-label text-right">Syscalls Intercept Mount Setxattr: </label>
                         <div class="col-6">
                           <div class="form-group">
-                            <select id="containerSecuritySyscallsInterceptSetxattrInput" onchange="" class="form-control" name="security.syscalls.intercept.setxattr">
+                            <select id="instanceSecuritySyscallsInterceptSetxattrInput" onchange="" class="form-select" name="security.syscalls.intercept.setxattr">
                               <option value="">(not set)</option>
                               <option value="true">true</option>
                               <option value="false">false</option>
@@ -2668,7 +2749,7 @@
                         <label class="col-4 col-form-label text-right">Schedule: </label>
                         <div class="col-6">
                           <div class="form-group">
-                            <input type="text" id="containerSnapshotsScheduleInput" class="form-control" placeholder="" name="snapshots.schedule">
+                            <input type="text" id="instanceSnapshotsScheduleInput" class="form-control" placeholder="" name="snapshots.schedule">
                           </div>
                         </div>
                         <div class="col-1">
@@ -2679,7 +2760,7 @@
                         <label class="col-4 col-form-label text-right">Schedule Stopped: </label>
                         <div class="col-6">
                           <div class="form-group">
-                            <select id="containerSnapshotsScheduleStoppedInput" onchange="" class="form-control" name="snapshots.schedule.stopped">
+                            <select id="instanceSnapshotsScheduleStoppedInput" onchange="" class="form-control" name="snapshots.schedule.stopped">
                               <option value="">(not set)</option>
                               <option value="true">true</option>
                               <option value="false">false</option>
@@ -2687,14 +2768,14 @@
                           </div>
                         </div>
                         <div class="col-1">
-                          <i class="far fa-sm fa-question-circle" title="Select whether stopped containers are to be snapshoted automatically. Default: false."></i>
+                          <i class="far fa-sm fa-question-circle" title="Select whether stopped instances are to be snapshoted automatically. Default: false."></i>
                         </div>
                       </div>
                       <div class="row">
                         <label class="col-4 col-form-label text-right">Pattern: </label>
                         <div class="col-6">
                           <div class="form-group">
-                            <input type="text" id="containerSnapshotsPatternInput" class="form-control" placeholder="" name="snapshots.pattern">
+                            <input type="text" id="instanceSnapshotsPatternInput" class="form-control" placeholder="" name="snapshots.pattern">
                           </div>
                         </div>
                         <div class="col-1">
@@ -2705,7 +2786,7 @@
                         <label class="col-4 col-form-label text-right">Expiry: </label>
                         <div class="col-6">
                           <div class="form-group">
-                            <input type="text" id="containerSnapshotsExpiryInput" class="form-control" placeholder="" name="snapshots.expiry">
+                            <input type="text" id="instanceSnapshotsExpiryInput" class="form-control" placeholder="" name="snapshots.expiry">
                           </div>
                         </div>
                         <div class="col-1">
@@ -2717,8 +2798,8 @@
                   </div>
                 </form>
                 <div class="modal-footer">
-                  <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                  <a class="btn btn-primary" href="#" id="editFormSubmit" onclick="updateInstanceForm()" data-dismiss="modal">Submit</a>
+                  <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+                  <a class="btn btn-primary" href="#" id="editFormSubmit" onclick="updateInstanceForm()" data-bs-dismiss="modal">Submit</a>
                 </div>
               </div>
              
@@ -2735,8 +2816,8 @@
                   </div>
                 </div>
                 <div class="modal-footer">
-                  <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                  <a class="btn btn-primary" href="#" onclick="updateInstanceJson()" data-dismiss="modal">Save</a>
+                  <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+                  <a class="btn btn-primary" href="#" onclick="updateInstanceJson()" data-bs-dismiss="modal">Save</a>
                 </div>
               </div>
             </div>
@@ -2751,7 +2832,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLabel">WebSocket Connection Error</h5>
-          <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+          <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">×</span>
           </button>
         </div>
@@ -2763,7 +2844,7 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button class="btn btn-secondary" type="button" data-dismiss="modal">Dismiss</button>
+          <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Dismiss</button>
         </div>
       </div>
     </div>

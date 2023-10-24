@@ -4,7 +4,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">Add LXD Server</h5>
-        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+        <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">×</span>
         </button>
       </div>
@@ -54,7 +54,7 @@
           <label class="col-3 col-form-label text-right">SSL Verify: </label>
           <div class="col-7">
             <div class="form-group">                  
-              <select id="addModalSSLVerifyInput" class="form-control" name="addModalSSLVerifyInput">
+              <select id="addModalSSLVerifyInput" class="form-select" name="addModalSSLVerifyInput">
                 <option value="true">True</option>
                 <option value="false" selected>False</option>
               </select>
@@ -67,8 +67,8 @@
 
       </div> <!-- End Modal Body-->
       <div class="modal-footer">
-        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-        <a class="btn btn-primary" href="#" onclick="addServer()" data-dismiss="modal">Submit</a>
+        <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+        <a class="btn btn-primary" href="#" onclick="addServer()" data-bs-dismiss="modal">Submit</a>
       </div>
     </div>
   </div>
@@ -80,7 +80,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">Edit Server</h5>
-        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+        <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">×</span>
         </button>
       </div>
@@ -126,7 +126,7 @@
           <label class="col-3 col-form-label text-right">SSL Verify: </label>
           <div class="col-7">
             <div class="form-group">                  
-              <select id="editModalSSLVerifyInput" class="form-control" name="editModalSSLVerifyInput">
+              <select id="editModalSSLVerifyInput" class="form-select" name="editModalSSLVerifyInput">
                 <option value="true">True</option>
                 <option value="false" selected>False</option>
               </select>
@@ -141,8 +141,8 @@
 
       </div> <!-- End Modal Body-->
       <div class="modal-footer">
-        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-        <a class="btn btn-primary" href="#" onclick="updateServer()" data-dismiss="modal">Submit</a>
+        <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+        <a class="btn btn-primary" href="#" onclick="updateServer()" data-bs-dismiss="modal">Submit</a>
       </div>
     </div>
   </div>
@@ -154,7 +154,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">Instructions</h5>
-        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+        <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">×</span>
         </button>
       </div>
@@ -177,7 +177,7 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button class="btn btn-secondary" type="button" data-dismiss="modal">Dismiss</button>
+        <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Dismiss</button>
       </div>
     </div>
   </div>
@@ -189,7 +189,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">LXD Client Certificate</h5>
-        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+        <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">×</span>
         </button>
       </div>
@@ -201,7 +201,7 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button class="btn btn-secondary" type="button" data-dismiss="modal">Dismiss</button>
+        <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Dismiss</button>
       </div>
     </div>
   </div>
@@ -213,14 +213,14 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">Remove Server</h5>
-        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+        <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">×</span>
         </button>
       </div>
       <div class="modal-body">Are you sure you want to remove this server?</div>
       <div class="modal-footer">
-        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-        <a class="btn btn-primary" href="#" onclick="deleteServer()" data-dismiss="modal">Yes</a>
+        <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+        <a class="btn btn-primary" href="#" onclick="deleteServer()" data-bs-dismiss="modal">Yes</a>
       </div>
     </div>
   </div>

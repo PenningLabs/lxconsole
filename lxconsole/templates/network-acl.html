@@ -6,9 +6,9 @@
       <h1>{{ page_title | safe }}</h1>
     </div>
     <div class="col-sm-6">
-      <a class="btn btn-outline-primary float-sm-right mr-4" href="#" data-toggle="modal" data-target="#addModal" title="Add Network ACL Rule" aria-hidden="true">
+      <button class="btn btn-outline-primary float-sm-right mr-4" data-bs-toggle="modal" data-bs-target="#addModal" title="Add Network ACL Rule" aria-hidden="true">
         <i class="fas fa-plus fa-sm fa-fw"></i> Network ACL Rule
-      </a>
+      </button>
     </div>
   </div>
 {% endblock header %}
@@ -17,10 +17,10 @@
   <div class="col-12">
     <ul class="nav nav-tabs" id="myTab" role="tablist">
       <li class="nav-item">
-        <a class="nav-link active" id="ingress-tab" data-toggle="tab" href="#ingress" role="tab" aria-controls="ingress" aria-selected="true">Ingress</a>
+        <a class="nav-link active" id="ingress-tab" data-bs-toggle="tab" href="#ingress" role="tab" aria-controls="ingress" aria-selected="true">Ingress</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" id="egress-tab" data-toggle="tab" href="#egress" role="tab" aria-controls="egress" aria-selected="false">Egress</a>
+        <a class="nav-link" id="egress-tab" data-bs-toggle="tab" href="#egress" role="tab" aria-controls="egress" aria-selected="false">Egress</a>
       </li>
     </ul>
 
@@ -136,7 +136,10 @@
           url: "../api/network-acl/list_network_acls?id="+serverId+"&project=" + project + "&acl=" + acl,
           dataType: "json",
           dataSrc: "metadata.ingress",
-          contentType: "application/json"
+          contentType: "application/json",
+          error: function (xhr, error, code) {
+            console.log(xhr, code);
+          }
         },
         columns: [
           { title: "Index", data: function (row, type, set) {
@@ -237,7 +240,10 @@
           url: "../api/network-acl/list_network_acls?id="+serverId+"&project=" + project + "&acl=" + acl,
           dataType: "json",
           dataSrc: "metadata.egress",
-          contentType: "application/json"
+          contentType: "application/json",
+          error: function (xhr, error, code) {
+            console.log(xhr, code);
+          }
         },
         columns: [
           { title: "Index", data: function (row, type, set) {

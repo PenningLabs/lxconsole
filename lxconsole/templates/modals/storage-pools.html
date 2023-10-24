@@ -4,17 +4,17 @@
     <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLabel">Create Storage Pool</h5>
-          <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+          <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">×</span>
           </button>
         </div>
         <div class="modal-body">
           <ul class="nav nav-tabs" id="myTab" role="tablist">
             <li class="nav-item">
-              <a class="nav-link active" id="form-tab" data-toggle="tab" href="#form" role="tab" aria-controls="form" aria-selected="true">Form</a>
+              <a class="nav-link active" id="form-tab" data-bs-toggle="tab" href="#form" role="tab" aria-controls="form" aria-selected="true">Form</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" id="json-tab" data-toggle="tab" href="#json" role="tab" aria-controls="json" aria-selected="false">JSON</a>
+              <a class="nav-link" id="json-tab" data-bs-toggle="tab" href="#json" role="tab" aria-controls="json" aria-selected="false">JSON</a>
             </li>
           </ul>
           <div class="tab-content" id="myTabContent">
@@ -47,7 +47,7 @@
                   <label class="col-3 col-form-label text-right">Driver: <span class="text-danger">*</span></label>
                   <div class="col-7">
                     <div class="form-group">
-                      <select id="storagePoolDriverInput" class="form-control" onclick="changeStoragePoolDriverInput()" name="driver">
+                      <select id="storagePoolDriverInput" class="form-select" onclick="changeStoragePoolDriverInput()" name="driver">
                         <option value="btrfs">btrfs</option>
                         <option value="ceph">ceph</option>
                         <option value="cephfs">cephfs</option>
@@ -86,7 +86,7 @@
                 <hr>
                 <div id="accordionConfigurationProperties">
                   <h2>
-                    <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#configurationProperties" aria-expanded="false" aria-controls="configurationProperties">
+                    <button class="btn btn-link collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#configurationProperties" aria-expanded="false" aria-controls="configurationProperties">
                       Configuration Properties
                     </button>
                   </h2> 
@@ -118,7 +118,7 @@
                       <label class="col-4 col-form-label text-right">ceph.osd.force_reuse: </label>
                       <div class="col-6">
                         <div class="form-group">
-                          <select onchange="" class="form-control" name="ceph.osd.force_reuse">
+                          <select onchange="" class="form-select" name="ceph.osd.force_reuse">
                             <option value="">(not set)</option>
                             <option value="true">true</option>
                             <option value="false">false</option>
@@ -166,7 +166,7 @@
                       <label class="col-4 col-form-label text-right">ceph.rbd.clone_copy: </label>
                       <div class="col-6">
                         <div class="form-group">
-                          <select onchange="" class="form-control" name="ceph.rbd.clone_copy">
+                          <select onchange="" class="form-select" name="ceph.rbd.clone_copy">
                             <option value="">(not set)</option>
                             <option value="true">true</option>
                             <option value="false">false</option>
@@ -247,7 +247,7 @@
                       <label class="col-4 col-form-label text-right">lvm.use_thinpool: </label>
                       <div class="col-6">
                         <div class="form-group">
-                          <select onchange="" class="form-control" name="lvm.use_thinpool">
+                          <select onchange="" class="form-select" name="lvm.use_thinpool">
                             <option value="">(not set)</option>
                             <option value="true">true</option>
                             <option value="false">false</option>
@@ -273,7 +273,7 @@
                       <label class="col-4 col-form-label text-right">lvm.vg.force_reuse: </label>
                       <div class="col-6">
                         <div class="form-group">
-                          <select onchange="" class="form-control" name="lvm.vg.force_reuse">
+                          <select onchange="" class="form-select" name="lvm.vg.force_reuse">
                             <option value="">(not set)</option>
                             <option value="true">true</option>
                             <option value="false">false</option>
@@ -321,7 +321,7 @@
                       <label class="col-4 col-form-label text-right">rsync.compression: </label>
                       <div class="col-6">
                         <div class="form-group">
-                          <select onchange="" class="form-control" name="rsync.compression">
+                          <select onchange="" class="form-select" name="rsync.compression">
                             <option value="">(not set)</option>
                             <option value="true">true</option>
                             <option value="false">false</option>
@@ -347,7 +347,7 @@
                       <label class="col-4 col-form-label text-right">volatile.pool.pristine: </label>
                       <div class="col-6">
                         <div class="form-group">
-                          <select onchange="" class="form-control" name="volatile.pool.pristine">
+                          <select onchange="" class="form-select" name="volatile.pool.pristine">
                             <option value="">(not set)</option>
                             <option value="true">true</option>
                             <option value="false">false</option>
@@ -395,7 +395,7 @@
                       <label class="col-4 col-form-label text-right">volume.zfs.remove_snapshots: </label>
                       <div class="col-6">
                         <div class="form-group">
-                          <select onchange="" class="form-control" name="volume.zfs.remove_snapshots">
+                          <select onchange="" class="form-select" name="volume.zfs.remove_snapshots">
                             <option value="">(not set)</option>
                             <option value="true">true</option>
                             <option value="false">false</option>
@@ -410,7 +410,7 @@
                       <label class="col-4 col-form-label text-right">volume.zfs.use_refquota: </label>
                       <div class="col-6">
                         <div class="form-group">
-                          <select onchange="" class="form-control" name="volume.zfs.use_refquota ">
+                          <select onchange="" class="form-select" name="volume.zfs.use_refquota ">
                             <option value="">(not set)</option>
                             <option value="true">true</option>
                             <option value="false">false</option>
@@ -425,7 +425,7 @@
                       <label class="col-4 col-form-label text-right">zfs.clone_copy: </label>
                       <div class="col-6">
                         <div class="form-group">
-                          <select onchange="" class="form-control" name="zfs.clone_copy">
+                          <select onchange="" class="form-select" name="zfs.clone_copy">
                             <option value="">(not set)</option>
                             <option value="true">true</option>
                             <option value="false">false</option>
@@ -452,8 +452,8 @@
                 </div>
               </form>
               <div class="modal-footer">
-                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                <a class="btn btn-primary" href="#" onclick="addItem()" data-dismiss="modal">Submit</a>
+                <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+                <a class="btn btn-primary" href="#" onclick="addItem()" data-bs-dismiss="modal">Submit</a>
               </div>
             </div>
             <div class="tab-pane fade" id="json" role="tabpanel" aria-labelledby="json-tab">
@@ -468,8 +468,8 @@
                 </div>
               </div>
               <div class="modal-footer">
-                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                <a class="btn btn-primary" href="#" onclick="createStoragePoolUsingJSON()" data-dismiss="modal">Submit</a>
+                <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+                <a class="btn btn-primary" href="#" onclick="createStoragePoolUsingJSON()" data-bs-dismiss="modal">Submit</a>
               </div>
             </div>
           </div>
@@ -484,7 +484,7 @@
     <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLabel">Edit Storage Pool</h5>
-          <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+          <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">×</span>
           </button>
         </div>
@@ -501,8 +501,8 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-          <a class="btn btn-primary" href="#" onclick="updateStoragePool()" data-dismiss="modal">Submit</a>
+          <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+          <a class="btn btn-primary" href="#" onclick="updateStoragePool()" data-bs-dismiss="modal">Submit</a>
         </div>
     </div>
   </div>
