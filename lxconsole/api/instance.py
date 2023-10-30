@@ -614,7 +614,7 @@ def api_instance_endpoint(endpoint):
     return jsonify(results.json())
   
   # Virtual Machine only
-  if endpoint == 'get_instance_cpu_percentage':
+  if endpoint == 'copy_instance_proc_stat':
     id = request.args.get('id')
     project = request.args.get('project')
     server = Server.query.filter_by(id=id).first()
@@ -622,15 +622,62 @@ def api_instance_endpoint(endpoint):
     client_cert = get_client_crt()
     client_key = get_client_key()
 
-    first_cpu_time = 0
-    first_idle_time = 0
-    second_cpu_time = 0
-    second_idle_time = 0
+    # Unable to read /proc/stat directly on virtual machines use lxd files api...getting an EOF error
+    # So we will copy /proc/stat to /tmp/stat and then read that file as a work around
+    data = {}
+    #data.update({'command': ['/bin/sh', '-c', 'cat /proc/stat \u003e /tmp/stat' ]})
+    data.update({'command': ['cp', '/proc/stat', '/tmp/stat']})
+    data.update({'wait-for-websocket': False})
+    data.update({'interactive': False})
+    data.update({'width': 80 })
+    data.update({'height': 24 })
+    data.update({'user': 0 })
+    data.update({'group': 0 })
+    data.update({'cwd': "/" })
+    data.update({'record-output': False })
+    data.update({'environment': {} })
+    
+    url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/instances/' + name + '/exec?project=' + project
+    results = requests.post(url, verify=server.ssl_verify, cert=(client_cert, client_key), json=data)
+    return jsonify(results.json())
+
+  # Virtual Machine only
+  if endpoint == 'get_instance_proc_stat':
+    id = request.args.get('id')
+    project = request.args.get('project')
+    server = Server.query.filter_by(id=id).first()
+    name = request.args.get('name')    
+    client_cert = get_client_crt()
+    client_key = get_client_key()
+
+    #Get /proc/stat information but from /tmp/stat
+    url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/instances/' + name + '/files?project=' + project + '&path=/tmp/stat'
+    results = requests.get(url, verify=server.ssl_verify, cert=(client_cert, client_key))
+    if 'cpu' in results.text:
+      results = results.text.split('\n')
+      for result in results:
+        stats = result.split()
+        if 'cpu' in stats:
+          user_time = int(stats[1])
+          system_time= int(stats[3])
+          idle_time = int(stats[4])
+          return jsonify({'user_time':user_time, 'system_time':system_time, 'idle_time':idle_time})
+    return jsonify({'user_time':0, 'system_time':0, 'idle_time':1})
+
+  # Virtual Machine only
+  if endpoint == 'copy_instance_proc_meminfo':
+    id = request.args.get('id')
+    project = request.args.get('project')
+    server = Server.query.filter_by(id=id).first()
+    name = request.args.get('name')    
+    client_cert = get_client_crt()
+    client_key = get_client_key()
 
     # Unable to read /proc/stat directly on virtual machines use lxd files api...getting an EOF error
     # So we will copy /proc/stat to /tmp/stat and then read that file as a work around
     data = {}
-    data.update({'command': ['cp', '/proc/stat', '/tmp/stat1']})
+    #data.update({'command': ['/bin/sh', '-c', 'cat /proc/meminfo \u003e /tmp/meminfo' ]})
+    data.update({'command': ['cp', '/proc/meminfo', '/tmp/meminfo']})
     data.update({'wait-for-websocket': False})
     data.update({'interactive': False})
     data.update({'width': 80 })
@@ -643,71 +690,30 @@ def api_instance_endpoint(endpoint):
     
     url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/instances/' + name + '/exec?project=' + project
     results = requests.post(url, verify=server.ssl_verify, cert=(client_cert, client_key), json=data)
-  
-    # Sleep to allow time for copy to complete
-    time.sleep(.5)
+    return jsonify(results.json())
 
-    #Get first /proc/stat information but from /tmp/stat
-    url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/instances/' + name + '/files?project=' + project + '&path=/tmp/stat1'
+  # Virtual Machine only
+  if endpoint == 'get_instance_proc_meminfo':
+    id = request.args.get('id')
+    project = request.args.get('project')
+    server = Server.query.filter_by(id=id).first()
+    name = request.args.get('name')    
+    client_cert = get_client_crt()
+    client_key = get_client_key()
+
+    #Get /proc/meminfo information but from /tmp/meminfo
+    url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/instances/' + name + '/files?project=' + project + '&path=/tmp/meminfo'
     results = requests.get(url, verify=server.ssl_verify, cert=(client_cert, client_key))
-    if 'cpu' in results.text:
+    if 'MemTotal' in results.text:
       results = results.text.split('\n')
-      for result in results:
-        stats = result.split()
-        if 'cpu' in stats:
-          user_time = int(stats[1])
-          system_time= int(stats[3])
-          idle_time = int(stats[4])
-          first_cpu_time = user_time + system_time + idle_time
-          first_idle_time = idle_time
-
-    # Sleep a second between reads
-    time.sleep(1)
-
-    # Copy /proc/stat to /tmp/stat and then read that file as a work around
-    data = {}
-    data.update({'command': ['cp', '/proc/stat', '/tmp/stat2']})
-    data.update({'wait-for-websocket': False})
-    data.update({'interactive': False})
-    data.update({'width': 80 })
-    data.update({'height': 24 })
-    data.update({'user': 0 })
-    data.update({'group': 0 })
-    data.update({'cwd': "/" })
-    data.update({'record-output': False })
-    data.update({'environment': {} })
-    
-    url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/instances/' + name + '/exec?project=' + project
-    results = requests.post(url, verify=server.ssl_verify, cert=(client_cert, client_key), json=data)
-
-    # Sleep to allow time for copy to complete
-    time.sleep(.5)
-
-    #Get second /proc/stat information
-    url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/instances/' + name + '/files?project=' + project + '&path=/tmp/stat2'
-    results = requests.get(url, verify=server.ssl_verify, cert=(client_cert, client_key))
-    if 'cpu' in results.text:
-      results = results.text.split('\n')
-      for result in results:
-        stats = result.split()
-        if 'cpu' in stats:
-          user_time = int(stats[1])
-          system_time= int(stats[3])
-          idle_time = int(stats[4])
-          second_cpu_time = user_time + system_time + idle_time
-          second_idle_time = idle_time
-
-    #Get CPU percentage
-    idle_time = second_idle_time - first_idle_time
-    total_time = second_cpu_time - first_cpu_time
-    if total_time == 0:
-      return jsonify({'percentage': 0, 'cpu1': first_cpu_time, 'cpu2': second_cpu_time, 'idle1': first_idle_time, 'idle2': second_idle_time})
-    percentage = 100 * (1 - idle_time / total_time)
-    return jsonify({'percentage': percentage, 'cpu1': first_cpu_time, 'cpu2': second_cpu_time, 'idle1': first_idle_time, 'idle2': second_idle_time})
+      mem_total = results[0].split()
+      mem_available = results[2].split()
+      percentage = 100 * ( 1 - ( int(mem_available[1]) / int(mem_total[1]) ) )
+      return jsonify({'mem_total':int(mem_total[1]), 'mem_available':int(mem_available[1]), 'percentage':percentage})
+    return jsonify({'mem_total':0, 'mem_available':0, 'percentage':0})
 
 
   if endpoint == 'get_instance_cpu_usage':
-
     id = request.args.get('id')
     project = request.args.get('project')
     server = Server.query.filter_by(id=id).first()
@@ -874,50 +880,6 @@ def api_instance_endpoint(endpoint):
               interface['ipv6_addresses'] += [ address['address'] ]
           interfaces.append(interface)
     return jsonify({ 'data': interfaces })
-
-  # Virtual Machine only
-  if endpoint == 'get_instance_memory_percentage':
-    id = request.args.get('id')
-    project = request.args.get('project')
-    server = Server.query.filter_by(id=id).first()
-    name = request.args.get('name')    
-    client_cert = get_client_crt()
-    client_key = get_client_key()
-
-    percentage = 0
-    mem_total = 0
-    mem_available = 0
-
-    # Unable to read /proc/meminfo directly on virtual machines use lxd files api...getting an EOF error
-    # So we will copy /proc/meminfo to /tmp/meminfo and then read that file as a work around
-    data = {}
-    data.update({'command': ['cp', '/proc/meminfo', '/tmp/meminfo']})
-    data.update({'wait-for-websocket': False})
-    data.update({'interactive': False})
-    data.update({'width': 80 })
-    data.update({'height': 24 })
-    data.update({'user': 0 })
-    data.update({'group': 0 })
-    data.update({'cwd': "/" })
-    data.update({'record-output': False })
-    data.update({'environment': {} })
-    
-    url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/instances/' + name + '/exec?project=' + project
-    results = requests.post(url, verify=server.ssl_verify, cert=(client_cert, client_key), json=data)
-  
-    # Sleep a second to give time to copy file
-    time.sleep(1)
-
-    #Get /proc/meminfo information but from /tmp/meminfo
-    url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/instances/' + name + '/files?project=' + project + '&path=/tmp/meminfo'
-    results = requests.get(url, verify=server.ssl_verify, cert=(client_cert, client_key))
-    if 'MemTotal' in results.text:
-      results = results.text.split('\n')
-      mem_total = results[0].split()
-      mem_available = results[2].split()
-      percentage = 100 * ( 1 - ( int(mem_available[1]) / int(mem_total[1]) ) )
-
-    return jsonify({'percentage': percentage, 'mem_total': mem_total, 'mem_available': mem_available})
 
 
   if endpoint == 'get_instance_network_devices':

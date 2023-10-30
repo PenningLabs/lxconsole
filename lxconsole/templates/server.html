@@ -367,7 +367,7 @@
         $("#totalMemory").text(memory + ' ' + unit + ' MEMORY');
         $('#memoryPercentageProgressBar').css('width', memoryPercentage + '%');
         $('#memoryPercentageProgressBar').attr('aria-valuenow', memoryPercentage + '%');
-        if (memory > 90.00)
+        if (memoryPercentage > 90)
           $('#memoryPercentageProgressBar').attr('class', 'progress-bar bg-danger');
         else
           $('#memoryPercentageProgressBar').attr('class', 'progress-bar bg-primary');

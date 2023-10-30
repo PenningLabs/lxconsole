@@ -3,7 +3,9 @@
  - Converted containers and virtual-machines endpoints to instances endpoint
  - Combined containers and virtual-machines pages to instances page
  - Datatable errors now display on console.log rather than the default alert
- - Handled 404 Error on new virtual machine without logs
+ - Handled 404 error for logs on a new virtual machine
+ - Fixed several undefined value errors that may occur
+ - Updated virtual-machine cpu and memory functions to no longer use sleep
 
 # 0.3.0
  - Improved Dockerfile for quicker builds

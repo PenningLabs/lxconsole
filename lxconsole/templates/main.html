@@ -163,13 +163,13 @@
                 // Many of the operations will indicate which resource the operation is being perfomed on
                 if (data.metadata.running[i].hasOwnProperty('resources') && data.metadata.running[i].resources != null) {
                   if (data.metadata.running[i].resources.hasOwnProperty('instances') && data.metadata.running[i].resources.instances != null) {
-                    notification += " " + data.metadata.running[i].resources.instances[i].replace("/1.0/instances/","")
+                    notification += " " + data.metadata.running[i].resources.instances[0].replace("/1.0/instances/","")
                   }
                   else if (data.metadata.running[i].resources.hasOwnProperty('containers') && data.metadata.running[i].resources.containers != null) {
-                    notification += " " + data.metadata.running[i].resources.containers[i].replace("/1.0/containers/","")
+                    notification += " " + data.metadata.running[i].resources.containers[0].replace("/1.0/containers/","")
                   }
                   else if (data.metadata.running[i].resources.hasOwnProperty('virtual-machines') && data.metadata.running[i].resources.virtual-machines != null) {
-                    notification += " " + data.metadata.running[i].resources.virtual-machines[i].replace("/1.0/virtual-machines/","")
+                    notification += " " + data.metadata.running[i].resources.virtual-machines[0].replace("/1.0/virtual-machines/","")
                   }
                 }
 

@@ -193,7 +193,8 @@ def api_instances_endpoint(endpoint):
 
         # Set disk information if exists
         if 'disk' in instance['state'].keys():
-          if 'root' in instance['state']['disk'].keys():
+          # instance['state']['disk'] may exists but have have any .keys()
+          if instance['state']['disk'] and 'root' in instance['state']['disk'].keys():
             if 'usage' in instance['state']['disk']['root'].keys():
               disk = instance['state']['disk']['root']['usage']
               if disk:  

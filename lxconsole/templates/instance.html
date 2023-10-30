@@ -713,6 +713,9 @@
       //Load Instance State Data and Configuration
       loadInstanceStateData()
 
+      sessionStorage.removeItem("instance_user_time");
+      sessionStorage.removeItem("instance_system_time");
+      sessionStorage.removeItem("instance_idle_time");
       loadCpuPercentage()
 
       //Load Home Tab Tables
@@ -759,6 +762,70 @@
 
       //Set reload page content
       pageReloadTimeout = setTimeout(() => { reloadPageContent(); }, reloadTime);
+
+    }
+
+    function getInstanceProcMeminfo() {
+      $.get("../api/instance/get_instance_proc_meminfo?id="+serverId+"&project="+project+"&name="+instance, function (data) {
+        if (data.mem_total > 0){
+          percentage = parseFloat(100 * ( 1 - parseInt(data.mem_available) / parseInt(data.mem_total))).toFixed(2)
+        }
+        else {
+          percentage = parseFloat(0).toFixed(2)
+        }
+
+        //Update Memory progress bar
+        $('#memPercentage').text(percentage)
+        $('#memPercentageBar').css('width', percentage + '%');
+        $('#memPercentageBar').attr('aria-valuenow', percentage + '%');
+        if (percentage > 90.00)
+          $('#memPercentageBar').attr('class', 'progress-bar bg-danger');
+        else
+          $('#memPercentageBar').attr('class', 'progress-bar bg-primary');
+      });
+    }
+    
+    function getInstanceProcStat() {
+      $.get("../api/instance/get_instance_proc_stat?id="+serverId+"&project="+project+"&name="+instance, function (data) {
+
+        session_user_time = sessionStorage.getItem('instance_user_time')
+        session_system_time = sessionStorage.getItem('instance_system_time')
+        session_idle_time = sessionStorage.getItem('instance_idle_time')
+
+        // If we have existing session values, find the difference else just use data values
+        if (session_user_time + session_system_time + session_idle_time > 0){
+          // If difference between data and session values is greater than zero then calculate
+          if (data.user_time - session_user_time + data.system_time - session_system_time + data.idle_time - session_idle_time > 0) {
+            percentage = parseFloat(100 * (1 - (data.idle_time - session_idle_time) / (data.user_time - session_user_time + data.system_time - session_system_time + data.idle_time - session_idle_time))).toFixed(2)
+          }
+          else {
+            percentage = parseFloat(0).toFixed(2)
+          }
+        }
+        else {
+          //If data values are greating than zero then calculate
+          if (data.user_time + data.system_time + data.idle_time > 0){
+            percentage = parseFloat(100 * ( 1 - data.idle_time / (data.user_time + data.system_time + data.idle_time))).toFixed(2)
+          }
+          else {
+            percentage = parseFloat(0).toFixed(2)
+          }
+        }
+
+        //Store stats for page reload
+        sessionStorage.setItem('instance_user_time', data.user_time)
+        sessionStorage.setItem('instance_system_time', data.system_time)
+        sessionStorage.setItem('instance_idle_time', data.idle_time)
+
+        //Update CPU progress bar
+        $('#cpuPercentage').text(percentage)
+        $('#cpuPercentageBar').css('width', percentage + '%');
+        $('#cpuPercentageBar').attr('aria-valuenow', percentage + '%');
+        if (percentage > 90.00)
+          $('#cpuPercentageBar').attr('class', 'progress-bar bg-danger');
+        else
+          $('#cpuPercentageBar').attr('class', 'progress-bar bg-primary');
+      });
 
     }
 
@@ -829,15 +896,9 @@
         })
       }
       if (instanceType == "virtual-machine"){
-        $.get("../api/instance/get_instance_cpu_percentage?id="+serverId+"&project="+project+"&name="+instance, function (data) {
-          percentage = parseFloat(data.percentage).toFixed(2);
-          $('#cpuPercentage').text(percentage)
-          $('#cpuPercentageBar').css('width', percentage + '%');
-          $('#cpuPercentageBar').attr('aria-valuenow', percentage + '%');
-          if (percentage > 90.00)
-            $('#cpuPercentageBar').attr('class', 'progress-bar bg-danger');
-          else
-            $('#cpuPercentageBar').attr('class', 'progress-bar bg-primary');
+        $.get("../api/instance/copy_instance_proc_stat?id="+serverId+"&project="+project+"&name="+instance, function (data) {
+          // Get instance /proc/stat data
+          setTimeout(() => { getInstanceProcStat(); }, reloadTime / 2);
         });
       }
 
@@ -985,15 +1046,9 @@
           }
         }
         if (instanceType == 'virtual-machine') {
-          $.get("../api/instance/get_instance_memory_percentage?id="+serverId+"&project="+project+"&name="+instance, function (data) {
-            percentage = parseFloat(data.percentage).toFixed(2);
-            $('#memPercentage').text(percentage)
-            $('#memPercentageBar').css('width', percentage + '%');
-            $('#memPercentageBar').attr('aria-valuenow', percentage + '%');
-            if (percentage > 90.00)
-              $('#memPercentageBar').attr('class', 'progress-bar bg-danger');
-            else
-              $('#memPercentageBar').attr('class', 'progress-bar bg-primary');
+          $.get("../api/instance/copy_instance_proc_meminfo?id="+serverId+"&project="+project+"&name="+instance, function (data) {
+            //Get instance /proc/meminfo
+            setTimeout(() => { getInstanceProcMeminfo(); }, reloadTime / 2);
           });
         }
       });
