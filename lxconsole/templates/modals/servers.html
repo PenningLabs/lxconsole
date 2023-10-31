@@ -3,14 +3,14 @@
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Add LXD Server</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Add LXD/Incus Server</h5>
         <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">×</span>
         </button>
       </div>
       <div class="modal-body">
         <p class="ml-4 mb-4">
-          Before adding an LXD server, it must first trust your client certificate. <br />
+          Before adding an LXD/Incus server, it must first trust your client certificate. <br />
           Click <a href="#" onclick="loadInstructionsModal()">here</a> for instructions on trusting certificates.
         </p>
         
@@ -22,7 +22,7 @@
             </div>
           </div>
           <div class="col-1">
-            <i class="far fa-sm fa-question-circle" title='(Required) - Enter in the IP address or FQDN of the LXD server'></i>
+            <i class="far fa-sm fa-question-circle" title='(Required) - Enter in the IP address or FQDN of the LXD/Incus server'></i>
           </div>
         </div>
 
@@ -34,7 +34,7 @@
             </div>
           </div>
           <div class="col-1">
-            <i class="far fa-sm fa-question-circle" title='(Required) - Enter in the network port to connect to the LXD server. Default: 8443'></i>
+            <i class="far fa-sm fa-question-circle" title='(Required) - Enter in the network port to connect to the LXD/Incus server. Default: 8443'></i>
           </div>
         </div>
 
@@ -61,7 +61,7 @@
             </div>
           </div>
           <div class="col-1">
-            <i class="far fa-sm fa-question-circle" title='Select whether or not the SSL/TLS certificate of the LXC server must be verified. By default LXD servers use a self-signed certificate. Default value: False'></i>
+            <i class="far fa-sm fa-question-circle" title='Select whether or not the SSL/TLS certificate of the LXC server must be verified. By default LXD/Incus servers use a self-signed certificate. Default value: False'></i>
           </div>
         </div>
 
@@ -94,7 +94,7 @@
             </div>
           </div>
           <div class="col-1">
-            <i class="far fa-sm fa-question-circle" title='(Required) - This field defines the IP address or FQDN used to connect to the rest API of an LXD server'></i>
+            <i class="far fa-sm fa-question-circle" title='(Required) - This field defines the IP address or FQDN used to connect to the rest API of an LXD/Incus server'></i>
           </div>
         </div>
 
@@ -106,7 +106,7 @@
             </div>
           </div>
           <div class="col-1">
-            <i class="far fa-sm fa-question-circle" title='(Required) - Enter in the network port to connect to the LXD server. Default: 8443'></i>
+            <i class="far fa-sm fa-question-circle" title='(Required) - Enter in the network port to connect to the LXD/Incus server. Default: 8443'></i>
           </div>
         </div>
 
@@ -133,7 +133,7 @@
             </div>
           </div>
           <div class="col-1">
-            <i class="far fa-sm fa-question-circle" title='Select whether or not the SSL/TLS certificate of the LXC server must be verified. By default LXD servers use a self-signed certificate. Default value: False'></i>
+            <i class="far fa-sm fa-question-circle" title='Select whether or not the SSL/TLS certificate of the LXC/Incus server must be verified. By default LXD/Incus servers use a self-signed certificate. Default value: False'></i>
           </div>
         </div>
 
@@ -163,15 +163,17 @@
           <div class="col-12">
             <p>
               Copy the client certificate
-              and paste it into a new file on your remote LXD server such as <strong><em>lxconsole.crt</em></strong>. <br />
+              and paste it into a new file on your remote LXD/Incus server such as <strong><em>lxconsole.crt</em></strong>. <br />
               <pre id="instructionsClientCert">{{ client_crt }}</pre>
             </p> 
-            <p>Import the certificate file on your remote LXD server by running the command:<br /> 
-              <code class="text-danger">lxc config trust add lxconsole.crt</code>
+            <p>Import the certificate file on your remote LXD/Incus server by running the command:<br /> 
+              LXD: <code class="text-danger">lxc config trust add lxconsole.crt</code><br/>
+              Incus: <code class="text-danger">incus config trust add-certificate lxconsole.crt</code>
             </p>
             <p>
-              For LXD servers that are not part of a cluster, use a command to listen for incoming connections, such as:<br />
-              <code class="text-danger">lxc config set core.https_address [::]</code>
+              For LXD/Incus servers that are not part of a cluster, use a command to listen for incoming connections, such as:<br />
+              LXD: <code class="text-danger">lxc config set core.https_address [::]</code><br/>
+              Incus: <code class="text-danger">incus config set core.https_address=[::]:8443</code>
             </p>
           </div>
         </div>
@@ -188,7 +190,7 @@
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">LXD Client Certificate</h5>
+        <h5 class="modal-title" id="exampleModalLabel">LXD/Incus Client Certificate</h5>
         <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">×</span>
         </button>

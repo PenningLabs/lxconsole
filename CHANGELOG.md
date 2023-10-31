@@ -1,6 +1,6 @@
 # 0.4.0
  - Upgraded Bootstrap from version 4 to version 5
- - Converted containers and virtual-machines endpoints to instances endpoint
+ - Converted containers and virtual-machines endpoints to instances endpoint to support Incus
  - Combined containers and virtual-machines pages to instances page
  - Datatable errors now display on console.log rather than the default alert
  - Handled 404 error for logs on a new virtual machine
