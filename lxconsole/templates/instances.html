@@ -73,6 +73,7 @@
     const urlParams = new URLSearchParams(queryString);
     const serverId = urlParams.get('id');
     const project = urlParams.get('project');
+    const hash = document.location.hash;
     applySidebarStyles();
     applySidebarLinks();
     populateSidebarLinks();
@@ -622,6 +623,15 @@
         window.location.href = 'servers';
       }
       else {
+        if (hash == '#virtual-machines'){
+          $('#nav-virtual-machines-tab').tab('show')
+        }
+        $('button[data-bs-toggle="tab"]').on('shown.bs.tab', function (e) {
+          if (e.target.id == 'nav-virtual-machines-tab')
+            window.location.hash = 'virtual-machines'
+          else
+            window.location.hash = 'containers'
+        })
         loadPageContent()
         operationStatusCheck()
       }
