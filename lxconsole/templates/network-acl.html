@@ -103,33 +103,10 @@
       //Display the current project
       $("#selectedProject").text(project);
 
-      //Populate the Server dropdown
-      $.getJSON("../api/servers/list_servers?id="+serverId, function (data) {
-        data = data.data
-        for (var index = 0; index < data.length; index++) {
-          if (data[index].name == '')
-            optionText = data[index].addr
-          else
-            optionText = data[index].name
-          if (data[index].id == serverId)
-            $('#serverListNav').append('<option value="' + data[index].id + '" selected="selected">' + optionText + '</option>');
-          else
-            $('#serverListNav').append('<option value="' + data[index].id + '">' + optionText + '</option>');
-        }
-      })
-
-      //Populate the Project dropdown
-      $.getJSON("../api/projects/list_projects?id="+serverId+"&project="+project, function (data) {
-        data = data.metadata
-        for (var index = 0; index < data.length; index++) {
-          optionText = data[index].replace('/1.0/projects/','');
-          if (optionText == project)
-            $('#projectListNav').append('<option value="' + optionText + '" selected="selected">' + optionText + '</option>');
-          else
-            $('#projectListNav').append('<option value="' + optionText + '">' + optionText + '</option>');
-        }
-      })
-
+      //Loaded from main.html template
+      populateServerSelectDropdown()
+      populateProjectSelectDropdown()
+      
       //Get data using jquery call datatable within function, set data: data.ingress for one table and data.exgress for the other
       $('#myDataTable').DataTable({
         ajax: {

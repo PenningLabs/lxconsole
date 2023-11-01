@@ -139,14 +139,6 @@
         }
       })
 
-      // //Populate the Server dropdown in the modal
-      // $.getJSON("../api/servers/list_servers", function (data) {
-      //   data = data.data
-      //   for (var index = 0; index < data.length; index++) {
-      //     $('#serverInput').append('<option value="' + data[index].id + '">' + data[index].name + '</option>');
-      //   }
-      // })
-
       //Populate the Role dropdown in the modal
       $.getJSON("../api/roles/list_roles", function (data) {
         data = data.data
