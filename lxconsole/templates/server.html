@@ -340,6 +340,7 @@
         $("#serverName").text(data.server_name);
         $("#storage").text(data.storage);
         $("#storageVersion").text(data.storage_version);
+        $("#addressList").text("")
         addresses = data.addresses;
         addresses.forEach(element => {
           $("#addressList").append('<li>'+element+'</li>');
@@ -388,11 +389,13 @@
           $('#memoryPercentageProgressBar').attr('class', 'progress-bar bg-primary');
         $("#memoryPercentage").text(memoryPercentage + '% of host memory used')
 
+        $("#socketList").text("")
         sockets = data.cpu.sockets;
         sockets.forEach(element => {
           $("#socketList").append('<li>Socket '+element.socket+': '+element.name+'</li>');
         });
 
+        $('#diskList').text("");
         disks = data.storage.disks;
         disks.forEach(element => {
           if (element.type == "cdrom"){

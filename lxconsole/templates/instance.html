@@ -740,26 +740,6 @@
       pageReloadTimeout = setTimeout(() => { reloadPageContent(); }, reloadTime);
 
     }
-
-    function getInstanceProcMeminfo() {
-      $.get("../api/instance/get_instance_proc_meminfo?id="+serverId+"&project="+project+"&name="+instance, function (data) {
-        if (data.mem_total > 0){
-          percentage = parseFloat(100 * ( 1 - parseInt(data.mem_available) / parseInt(data.mem_total))).toFixed(2)
-        }
-        else {
-          percentage = parseFloat(0).toFixed(2)
-        }
-
-        //Update Memory progress bar
-        $('#memPercentage').text(percentage)
-        $('#memPercentageBar').css('width', percentage + '%');
-        $('#memPercentageBar').attr('aria-valuenow', percentage + '%');
-        if (percentage > 90.00)
-          $('#memPercentageBar').attr('class', 'progress-bar bg-danger');
-        else
-          $('#memPercentageBar').attr('class', 'progress-bar bg-primary');
-      });
-    }
     
     function getInstanceProcStat() {
       $.get("../api/instance/get_instance_proc_stat?id="+serverId+"&project="+project+"&name="+instance, function (data) {
@@ -770,6 +750,10 @@
 
         // If we have existing session values, find the difference else just use data values
         if (session_user_time + session_system_time + session_idle_time > 0){
+          //If session values equal data values end function
+          if (data.user_time == session_user_time && data.system_time == session_system_time && data.idle_time == session_idle_time) {
+            return
+          }
           // If difference between data and session values is greater than zero then calculate
           if (data.user_time - session_user_time + data.system_time - session_system_time + data.idle_time - session_idle_time > 0) {
             percentage = parseFloat(100 * (1 - (data.idle_time - session_idle_time) / (data.user_time - session_user_time + data.system_time - session_system_time + data.idle_time - session_idle_time))).toFixed(2)
@@ -980,53 +964,23 @@
         $("#swap").text(parseFloat(parseInt(data.memory.swap_usage) / 1024 / 1024 / 1024).toFixed(2)  + ' GiB')
         $("#pid").text(data.pid)
         $("#processes").text(data.processes)
+
+        if (data.memory.usage && data.memory.total && data.memory.total > 0){
+          percentage = parseFloat(100 * (data.memory.usage / data.memory.total)).toFixed(2)
+        }
+        else {
+          percentage = parseFloat(0).toFixed(2)
+        }
+       
+        $('#memPercentage').text(percentage)
+        $('#memPercentageBar').css('width', percentage + '%');
+        $('#memPercentageBar').attr('aria-valuenow', percentage + '%');
+        if (percentage > 90.00)
+          $('#memPercentageBar').attr('class', 'progress-bar bg-danger');
+        else
+          $('#memPercentageBar').attr('class', 'progress-bar bg-primary');
         
-        //Update Memory Bar based on container or virtual-machine
-        if (instanceType == "container") {
-          instance_memory = parseInt(data.memory.usage)
-          //Set host_memory in sessionStorage if it has not yet been set else read from sessionstorage
-          if (sessionStorage.getItem("host_memory") === null) {
-            $.get("../api/server/get_server_resources?id="+serverId, function (data) {
-              data = data.metadata
-              host_memory = parseInt(data['memory']['total'])
-              //Store stats for page reload
-              sessionStorage.setItem('host_memory', host_memory)
-              percentage = parseFloat(100 * (instance_memory / host_memory)).toFixed(2)
-              $('#memPercentage').text(percentage)
-              $('#memPercentageBar').css('width', percentage + '%');
-              $('#memPercentageBar').attr('aria-valuenow', percentage + '%');
-              if (percentage > 90.00)
-                $('#memPercentageBar').attr('class', 'progress-bar bg-danger');
-              else
-                $('#memPercentageBar').attr('class', 'progress-bar bg-primary');
-            })
-          }
-          else {
-            host_memory = parseInt(sessionStorage.getItem('host_memory'))
-            if (host_memory <= 0){
-              $.get("../api/server/get_server_resources?id="+serverId, function (data) {
-                data = data.metadata
-                host_memory = parseInt(data['memory']['total'])
-                //Store stats for page reload
-                sessionStorage.setItem('host_memory', host_memory)
-              })
-            }
-            percentage = parseFloat(100 * (instance_memory / host_memory)).toFixed(2)
-            $('#memPercentage').text(percentage)
-            $('#memPercentageBar').css('width', percentage + '%');
-            $('#memPercentageBar').attr('aria-valuenow', percentage + '%');
-            if (percentage > 90.00)
-              $('#memPercentageBar').attr('class', 'progress-bar bg-danger');
-            else
-              $('#memPercentageBar').attr('class', 'progress-bar bg-primary');
-          }
-        }
-        if (instanceType == 'virtual-machine') {
-          $.get("../api/instance/copy_instance_proc_meminfo?id="+serverId+"&project="+project+"&name="+instance, function (data) {
-            //Get instance /proc/meminfo
-            setTimeout(() => { getInstanceProcMeminfo(); }, reloadTime / 2);
-          });
-        }
+
       });
 
     }

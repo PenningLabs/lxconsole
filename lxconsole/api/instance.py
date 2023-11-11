@@ -625,8 +625,9 @@ def api_instance_endpoint(endpoint):
     # Unable to read /proc/stat directly on virtual machines use lxd files api...getting an EOF error
     # So we will copy /proc/stat to /tmp/stat and then read that file as a work around
     data = {}
-    #data.update({'command': ['/bin/sh', '-c', 'cat /proc/stat \u003e /tmp/stat' ]})
-    data.update({'command': ['cp', '/proc/stat', '/tmp/stat']})
+    data.update({'command': ['/bin/sh', '-c', 'cat /proc/stat \u003e /tmp/stat' ]})
+    #data.update({'command': ['cat', '/proc/stat']})
+    #data.update({'command': ['cp', '/proc/stat', '/tmp/stat']})
     data.update({'wait-for-websocket': False})
     data.update({'interactive': False})
     data.update({'width': 80 })
@@ -639,6 +640,25 @@ def api_instance_endpoint(endpoint):
     
     url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/instances/' + name + '/exec?project=' + project
     results = requests.post(url, verify=server.ssl_verify, cert=(client_cert, client_key), json=data)
+
+    #Using record-output no longer appears to work, but it looks like lxd has code to use a new method of recording logs with exec-output as an option in the near future
+    #Set record-output: true in command
+    #exec_rtn = json.dumps(results.json())
+    #exec_rtn = json.loads(exec_rtn)
+    #Use operation to check for return value and get log output information 
+    #operation = exec_rtn['operation']
+    #Check the logs/exec-ouput with get request to see if log exists /1.0/instances/{name}/logs/exec-output
+    #url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/instances/' + name + '/logs/exec-output?project=' + project
+    #results = requests.get(url, verify=server.ssl_verify, cert=(client_cert, client_key))
+    #results return a list of urls of exec-output files. Should be able to match operation to a file in the list
+    #example url: url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/instances/test/logs/exec-output/exec_fea46679-fdaa-48f4-9079-502a090c4fb5.stdout'
+    #results = requests.get(url, verify=server.ssl_verify, cert=(client_cert, client_key))
+    #The returned value should be text: return results.text
+    #Check stdout log with get request "/1.0/instances/foo/logs/exec-output/exec_d0a89537-0617-4ed6-a79b-c2e88a970965.stdout",
+    #return results.text
+    #Check stderr log with get request "/1.0/instances/foo/logs/exec-output/exec_d0a89537-0617-4ed6-a79b-c2e88a970965.stderr",
+    #Else delete to delete log at /1.0/instances/{name}/logs/exec-output/{filename}
+
     return jsonify(results.json())
 
   # Virtual Machine only
@@ -662,55 +682,7 @@ def api_instance_endpoint(endpoint):
           system_time= int(stats[3])
           idle_time = int(stats[4])
           return jsonify({'user_time':user_time, 'system_time':system_time, 'idle_time':idle_time})
-    return jsonify({'user_time':0, 'system_time':0, 'idle_time':1})
-
-  # Virtual Machine only
-  if endpoint == 'copy_instance_proc_meminfo':
-    id = request.args.get('id')
-    project = request.args.get('project')
-    server = Server.query.filter_by(id=id).first()
-    name = request.args.get('name')    
-    client_cert = get_client_crt()
-    client_key = get_client_key()
-
-    # Unable to read /proc/stat directly on virtual machines use lxd files api...getting an EOF error
-    # So we will copy /proc/stat to /tmp/stat and then read that file as a work around
-    data = {}
-    #data.update({'command': ['/bin/sh', '-c', 'cat /proc/meminfo \u003e /tmp/meminfo' ]})
-    data.update({'command': ['cp', '/proc/meminfo', '/tmp/meminfo']})
-    data.update({'wait-for-websocket': False})
-    data.update({'interactive': False})
-    data.update({'width': 80 })
-    data.update({'height': 24 })
-    data.update({'user': 0 })
-    data.update({'group': 0 })
-    data.update({'cwd': "/" })
-    data.update({'record-output': False })
-    data.update({'environment': {} })
-    
-    url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/instances/' + name + '/exec?project=' + project
-    results = requests.post(url, verify=server.ssl_verify, cert=(client_cert, client_key), json=data)
-    return jsonify(results.json())
-
-  # Virtual Machine only
-  if endpoint == 'get_instance_proc_meminfo':
-    id = request.args.get('id')
-    project = request.args.get('project')
-    server = Server.query.filter_by(id=id).first()
-    name = request.args.get('name')    
-    client_cert = get_client_crt()
-    client_key = get_client_key()
-
-    #Get /proc/meminfo information but from /tmp/meminfo
-    url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/instances/' + name + '/files?project=' + project + '&path=/tmp/meminfo'
-    results = requests.get(url, verify=server.ssl_verify, cert=(client_cert, client_key))
-    if 'MemTotal' in results.text:
-      results = results.text.split('\n')
-      mem_total = results[0].split()
-      mem_available = results[2].split()
-      percentage = 100 * ( 1 - ( int(mem_available[1]) / int(mem_total[1]) ) )
-      return jsonify({'mem_total':int(mem_total[1]), 'mem_available':int(mem_available[1]), 'percentage':percentage})
-    return jsonify({'mem_total':0, 'mem_available':0, 'percentage':0})
+    return jsonify({'user_time':0, 'system_time':0, 'idle_time':0})
 
 
   if endpoint == 'get_instance_cpu_usage':
