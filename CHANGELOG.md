@@ -1,3 +1,12 @@
+# 0.4.0
+ - Upgraded Bootstrap from version 4 to version 5
+ - Converted containers and virtual-machines endpoints to instances endpoint to support Incus
+ - Combined containers and virtual-machines pages to instances page
+ - Datatable errors now display on console.log rather than the default alert
+ - Handled 404 error for logs on a new virtual machine
+ - Fixed several undefined value errors that may occur
+ - Updated virtual-machine cpu and memory functions to no longer use sleep
+
 # 0.3.0
  - Improved Dockerfile for quicker builds
  - Added version specific flask and werkzeug to requirements due to build error in dependencies

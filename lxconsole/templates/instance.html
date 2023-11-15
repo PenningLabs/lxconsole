@@ -1,0 +1,3337 @@
+{% extends "main.html" %}
+
+{% block header %}
+  <div class="row mb-2">
+    <div class="col-sm-6">
+      <h1>{{ page_title | safe }} <span id="instance_title"></span></h1>
+    </div>
+    <div class="col-sm-6">
+      <button class="btn btn-outline-primary dropdown-toggle float-sm-right ml-2 mr-4" type="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false" title="Actions">
+        Instance Actions
+      </button>
+      <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
+        <!--<div class="dropdown-header">Options:</div>-->
+        <a class="dropdown-item text-primary" style="display: none;" onclick="changeItemState(instance, 'start')" id="startLink"><i class="fas fa-play fa-sm fa-fw mr-2"></i>Start</a>
+        <a class="dropdown-item text-primary" style="display: none;" onclick="changeItemState(instance, 'stop')" id="stopLink"><i class="fas fa-stop fa-sm fa-fw mr-2"></i>Stop</a>
+        <a class="dropdown-item text-primary" style="display: none;" onclick="changeItemState(instance, 'unfreeze')" id="unfreezeLink"><i class="fas fa-pause fa-sm fa-fw mr-2"></i>UnFreeze</a>
+        <div class="dropdown-divider"></div> 
+        <a class="dropdown-item" onclick="editInstance()" id="editInstanceOption"><i class="fas fa-edit fa-sm fa-fw mr-2"></i>Edit</a>
+        <a class="dropdown-item" onclick="changeItemState(instance, 'restart')" id="restartInstanceOption"><i class="fas fa-redo fa-sm fa-fw mr-2"></i>Restart</a>
+        <a class="dropdown-item" onclick="changeItemState(instance, 'stop', true)" id="stopInstanceForcefullyOption"><i class="fas fa-plug fa-sm fa-fw mr-2"></i>Force Stop</a>
+        <a class="dropdown-item" onclick="changeItemState(instance, 'freeze')" id="freezeInstanceOption"><i class="fas fa-pause fa-sm fa-fw mr-2"></i>Freeze</a>
+        <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#createSnapshotModal" id="snapshotInstanceOption"><i class="fas fa-clone fa-sm fa-fw mr-2"></i>Snapshot</a>
+        <a class="dropdown-item" onclick="loadAttachProfileModal()" id="attachProfileOption"><i class="fas fa-address-card fa-sm fa-fw mr-2"></i>Attach Profile</a>
+        <a class="dropdown-item" onclick="loadDetachProfileModal()" id="detachProfileOption"><i class="fas fa-address-card fa-sm fa-fw mr-2"></i>Detach Profile</a>
+        <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#renameInstanceModal" id="renameInstanceOption"><i class="fas fa-edit fa-sm fa-fw mr-2"></i>Rename</a>
+        <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#copyInstanceModal" id="copyInstanceOption"><i class="fas fa-copy fa-sm fa-fw mr-2"></i>Copy</a>
+        <a class="dropdown-item" onclick="loadMigrateInstanceModal()" id="migrateInstanceOption"><i class="fas fa-suitcase fa-sm fa-fw mr-2"></i>Migrate</a>
+        <a class="dropdown-item text-primary" href="#" data-bs-toggle="modal" data-bs-target="#backupInstanceModal" id="backupInstanceOption"><i class="fas fa-save fa-sm fa-fw mr-2"></i>Backup</a>
+        <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#publishInstanceModal" id="publishInstanceOption"><i class="fas fa-box-open fa-sm fa-fw mr-2"></i>Publish</a>
+        <a class="dropdown-item" onclick="deleteInstance()" id="deleteInstanceOption"><i class="fas fa-trash-alt fa-sm fa-fw mr-2"></i>Delete</a>
+      </div>
+
+      <a class="btn btn-outline-primary float-sm-right" href="#" role="button" id="startLinkButton" onclick="changeItemState(instance, 'start')" style="display:none;" title="Start">
+        <i class="fas fa-play fa-fw"></i>
+      </a>
+      <a class="btn btn-outline-primary float-sm-right" href="#" role="button" id="stopLinkButton" onclick="changeItemState(instance, 'stop')" style="display:none;" title="Stop">
+        <i class="fas fa-stop fa-fw"></i>
+      </a>
+      <a class="btn btn-outline-primary float-sm-right" href="#" role="button" id="unfreezeLinkButton" onclick="changeItemState(instance, 'unfreeze')" style="display:none;" title="UnFreeze">
+        <i class="fas fa-pause fa-fw"></i>
+      </a>
+
+    </div>
+  </div>
+{% endblock header %}
+
+{% block content %}
+  <div class="col-12">
+    <nav>
+      <div class="nav nav-tabs" id="nav-page-tab" role="tablist">
+        <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Home</button>
+        <button class="nav-link" id="nav-configuration-tab" data-bs-toggle="tab" data-bs-target="#nav-configuration" type="button" role="tab" aria-controls="nav-configuration" aria-selected="false">Configuration</button>
+        <button class="nav-link" id="nav-devices-tab" data-bs-toggle="tab" data-bs-target="#nav-devices" type="button" role="tab" aria-controls="nav-devices" aria-selected="false">Devices</button>
+        <button class="nav-link" id="nav-console-tab" data-bs-toggle="tab" data-bs-target="#nav-console" type="button" role="tab" aria-controls="nav-console" aria-selected="false">Console</button>
+        <button class="nav-link" id="nav-exec-tab" data-bs-toggle="tab" data-bs-target="#nav-exec" type="button" role="tab" aria-controls="nav-exec" aria-selected="false">Exec</button>
+      </div>
+    </nav>
+    <div class="tab-content" id="nav-page-content">
+      <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+        <br />
+        <div class="row">
+          <div class="col-9">
+      
+            <!-- Interfaces Card-->
+            <div class="card" id="interfacesCard">
+              <div class="card-header">
+                <h3 class="card-title text-primary">
+                    Interfaces
+                </h3>
+              </div>
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table class="table table-hover" id="interfaceTableList" width="100%" cellspacing="0">
+                  </table>
+                </div>
+              </div>
+            </div>
+    
+            <!-- Snapshots Card-->
+            <div class="card" id="snapshotsCard">
+              <div class="card-header">
+                <h3 class="card-title text-primary">
+                  Snapshots
+                </h3>
+                <div class="card-tools">
+                  <button type="button" class="btn btn-tool" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fa fa-bars"></i>
+                  </button>
+                  <div class="dropdown-menu dropdown-menu-right">
+                    <a href="#" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#createSnapshotModal" title="Create Snapshot">Create Snapshot</a>
+                  </div>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table class="table table-hover" id="snapshotTableList" width="100%" cellspacing="0">
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <!-- Backups Card-->
+            <div class="card" id="backupsCard">
+              <div class="card-header">
+                <h3 class="card-title text-primary">
+                  Backups
+                </h3>
+                <div class="card-tools">
+                  <button type="button" class="btn btn-tool" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fa fa-bars"></i>
+                  </button>
+                  <div class="dropdown-menu dropdown-menu-right">
+                    <a href="#" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#backupInstanceModal" title="Create Backup">Create Backup</a>
+                  </div>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table class="table table-hover" id="backupTableList" width="100%" cellspacing="0">
+                  </table>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Logs Card-->
+            <div class="card" id="logsCard">
+              <div class="card-header">
+                <h3 class="card-title text-primary">
+                  Logs
+                </h3>
+              </div>
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table class="table table-hover" id="logTableList" width="100%" cellspacing="0">
+                  </table>
+                </div>
+              </div>
+            </div>
+    
+          </div>
+
+          <div class="col-3">
+      
+            <div class="accordion" id="accordionExample">
+      
+              <!-- General Data Card-->
+              <div class="card">
+                <div class="card-header">
+                  <h3 class="card-title text-primary" data-card-widget="collapse">
+                    General Data
+                  </h3>
+                  <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
+                  </div>
+                </div>
+                <div class="card-body">
+                  <div class="d-flex justify-content-between">
+                    <div>CPU</div>
+                    <div><span id="cpuPercentage">0</span>%</div>
+                  </div>
+                  <div class="progress">
+                    <div class="progress-bar bg-primary" id="cpuPercentageBar" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                  </div>
+                  <br />
+                  <div class="d-flex justify-content-between">
+                    <div>Memory</div>
+                    <div><span id="memPercentage">0</span>%</div>
+                  </div>
+                  <div class="progress">
+                    <div class="progress-bar bg-primary" id="memPercentageBar" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                  </div>
+                  <br /><br />
+                  <table class="table table-sm h6">
+                    <tr><td class="pr-3">Status:</td> <td><span id="status"></span></td></tr>
+                    <tr><td class="pr-3">Profiles:</td> <td><span id="profiles"></span></td></tr>
+                    <tr><td class="pr-3">Image:</td> <td><span id="image"></span></td></tr>
+                    <tr><td class="pr-3">Location:</td> <td><span id="location"></span></td></tr>
+                    <tr><td class="pr-3">Created:</td> <td><span id="created"></span></td></tr>
+                    <tr><td class="pr-3">CPU:</td> <td><span id="cpu"></span></td></tr>
+                    <tr><td class="pr-3">Memory:</td> <td><span id="memory"></span></td></tr>
+                    <tr><td class="pr-3">Swap:</td> <td><span id="swap"></span></td></tr>
+                    <tr><td class="pr-3">PID:</td> <td><span id="pid"></span></td></tr>
+                    <tr><td class="pr-3">Processes:</td> <td><span id="processes"></span></td></tr>
+                  </table>
+                </div>
+              </div>
+            
+            </div>
+          </div>
+
+        </div>
+      </div>
+      <div class="tab-pane fade" id="nav-configuration" role="tabpanel" aria-labelledby="nav-configuration-tab">
+        <br />
+        
+        <div class="row">
+
+          <div class="col-auto border-end pr-4 mr-4 ml-4 d-flex align-items-start">
+            <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+              <button class="nav-link active" id="v-pills-boot-configuration-tab" data-bs-toggle="pill" data-bs-target="#v-pills-boot-configuration" type="button" role="tab" aria-controls="v-pills-boot-configuration" aria-selected="true">Boot</button>
+              <button class="nav-link" id="v-pills-cloud-init-configuration-tab" data-bs-toggle="pill" data-bs-target="#v-pills-cloud-init-configuration" type="button" role="tab" aria-controls="v-pills-cloud-init-configuration" aria-selected="false">Cloud-init</button>
+              <button class="nav-link" id="v-pills-limits-configuration-tab" data-bs-toggle="pill" data-bs-target="#v-pills-limits-configuration" type="button" role="tab" aria-controls="v-pills-limits-configuration" aria-selected="false">Limits</button>
+              <button class="nav-link" id="v-pills-migration-configuration-tab" data-bs-toggle="pill" data-bs-target="#v-pills-migration-configuration" type="button" role="tab" aria-controls="v-pills-migration-configuration" aria-selected="false">Migration</button>
+              <button class="nav-link" id="v-pills-nvidia-configuration-tab" data-bs-toggle="pill" data-bs-target="#v-pills-nvidia-configuration" type="button" role="tab" aria-controls="v-pills-nvidia-configuration" aria-selected="false">NVIDIA</button>
+              <button class="nav-link" id="v-pills-other-configuration-tab" data-bs-toggle="pill" data-bs-target="#v-pills-other-configuration" type="button" role="tab" aria-controls="v-pills-other-configuration" aria-selected="false">Other</button>
+              <button class="nav-link" id="v-pills-raw-configuration-tab" data-bs-toggle="pill" data-bs-target="#v-pills-raw-configuration" type="button" role="tab" aria-controls="v-pills-raw-configuration" aria-selected="false">Raw</button>
+              <button class="nav-link" id="v-pills-security-configuration-tab" data-bs-toggle="pill" data-bs-target="#v-pills-security-configuration" type="button" role="tab" aria-controls="v-pills-security-configuration" aria-selected="false">Security</button>
+              <button class="nav-link" id="v-pills-snapshots-configuration-tab" data-bs-toggle="pill" data-bs-target="#v-pills-snapshot-configuration" type="button" role="tab" aria-controls="v-pills-snapshot-configuration" aria-selected="false">Snapshot</button>
+            </div>
+          </div>
+          <div class="col">
+            <div class="tab-content" id="v-pills-configurationContent">
+
+              <div class="tab-pane fade show active" id="v-pills-boot-configuration" role="tabpanel" aria-labelledby="v-pills-boot-configuration-tab">
+                <!-- Boot Configuration Card-->
+                <table class="table w-auto">
+                  <tr><td class="pr-3">Autostart:</td> <td><span id="bootAutostart"></span></td></tr>
+                  <tr><td class="pr-3">Autostart Delay:</td> <td><span id="bootAutostartDelay"></span></td></tr>
+                  <tr><td class="pr-3">Autostart Priority:</td> <td><span id="bootAutostartPriority"></span></td></tr>
+                  <tr><td class="pr-3">Host Shutdown Timeout:</td> <td><span id="bootHostShutdownTimeout"></span></td></tr>
+                  <tr><td class="pr-3">Stop Priority:</td> <td><span id="bootStopPriority"></span></td></tr>
+                </table>
+              </div>
+
+              <div class="tab-pane fade" id="v-pills-cloud-init-configuration" role="tabpanel" aria-labelledby="v-pills-cloud-init-configuration-tab">
+                <!-- Cloud-init Configuration Card-->
+                <table class="table w-auto">
+                  <tr><td class="pr-3">Network-Config:</td> <td><span id="cloudInitNetworkConfig"></span></td></tr>
+                  <tr><td class="pr-3">User-Data:</td> <td><span id="cloudInitUserData"></span></td></tr>
+                  <tr><td class="pr-3">Vendor-Data:</td> <td><span id="cloudInitVendorData"></span></td></tr>
+                </table>
+              </div>
+
+              <div class="tab-pane fade" id="v-pills-limits-configuration" role="tabpanel" aria-labelledby="v-pills-limits-configuration-tab">
+                <!-- Limits Configuration Card-->
+                <table class="table w-auto">
+                  <tr><td class="pr-3">CPU:</td> <td><span id="limitsCpu"></span></td></tr>
+                  <tr><td class="pr-3">CPU Allowance:</td> <td><span id="limitsCpuAllowance"></span></td></tr>
+                  <tr><td class="pr-3">CPU Priority:</td> <td><span id="limitsCpuPriority"></span></td></tr>
+                  <tr><td class="pr-3">Disk Priority:</td> <td><span id="limitsDiskPriority"></span></td></tr>
+                  <tr><td class="pr-3">64KB:</td> <td><span id="limitsHugepages64KB"></span></td></tr>
+                  <tr><td class="pr-3">1MB:</td> <td><span id="limitsHugepages1MB"></span></td></tr>
+                  <tr><td class="pr-3">2MB:</td> <td><span id="limitsHugepages2MB"></span></td></tr>
+                  <tr><td class="pr-3">1GB:</td> <td><span id="limitsHugepages1GB"></span></td></tr>
+                  <tr><td class="pr-3">Memory:</td> <td><span id="limitsMemory"></span></td></tr>
+                  <tr><td class="pr-3">Memory Enforce:</td> <td><span id="limitsMemoryEnforce"></span></td></tr>
+                  <tr><td class="pr-3">Memory Hugepages:</td> <td><span id="limitsMemoryHugepages"></span></td></tr>
+                  <tr><td class="pr-3">Memory Swap:</td> <td><span id="limitsMemorySwap"></span></td></tr>
+                  <tr><td class="pr-3">Memory Swap Priority:</td> <td><span id="limitsMemorySwapPriority"></span></td></tr>
+                  <tr><td class="pr-3">Network Priority:</td> <td><span id="limitsNetworkPriority"></span></td></tr>
+                  <tr><td class="pr-3">Processes:</td> <td><span id="limitsProcesses"></span></td></tr>
+                </table>
+              </div>
+
+              <div class="tab-pane fade" id="v-pills-migration-configuration" role="tabpanel" aria-labelledby="v-pills-migration-configuration-tab">
+                <!-- Migration Configuration Card-->
+                <table class="table w-auto">
+                  <tr><td class="pr-3">Incremental Memory:</td> <td><span id="migrationIncrementalMemory"></span></td></tr>
+                  <tr><td class="pr-3">Incremental Memory Goal:</td> <td><span id="migrationIncrementalMemoryGoal"></span></td></tr>
+                  <tr><td class="pr-3">Incremental Memory Iterations:</td> <td><span id="migrationIncrementalMemoryIterations"></span></td></tr>
+                  <tr><td class="pr-3">Stateful:</td> <td><span id="migrationStateful"></span></td></tr>
+                </table>
+              </div>
+
+              <div class="tab-pane fade" id="v-pills-nvidia-configuration" role="tabpanel" aria-labelledby="v-pills-nvidia-configuration-tab">
+                <!-- NVIDIA Configuration Card-->
+                <table class="table w-auto">
+                  <tr><td class="pr-3">Driver Capabilities:</td> <td><span id="nvidiaDriverCapabilities"></span></td></tr>
+                  <tr><td class="pr-3">Runtime:</td> <td><span id="nvidiaRuntime"></span></td></tr>
+                  <tr><td class="pr-3">Require Cuda:</td> <td><span id="nvidiaRequireCuda"></span></td></tr>
+                  <tr><td class="pr-3">Require Driver:</td> <td><span id="nvidiaRequireDriver"></span></td></tr>
+                </table>
+              </div>
+
+              <div class="tab-pane fade" id="v-pills-other-configuration" role="tabpanel" aria-labelledby="v-pills-other-configuration-tab">
+                <!-- Other Configuration Card-->
+                <table class="table w-auto">
+                  <tr><td class="pr-3">Cluster Evacuate:</td> <td><span id="clusterEvacuate"></span></td></tr>
+                  <tr><td class="pr-3">Kernel Modules:</td> <td><span id="linuxKernelModules"></span></td></tr>
+                </table>
+              </div>
+
+              <div class="tab-pane fade" id="v-pills-raw-configuration" role="tabpanel" aria-labelledby="v-pills-raw-configuration-tab">
+                <!-- Raw Configuration Card-->
+                <table class="table w-auto">
+                  <tr><td class="pr-3">Apparmor:</td> <td><span id="rawApparmor"></span></td></tr>
+                  <tr><td class="pr-3">Idmap:</td> <td><span id="rawIdmap"></span></td></tr>
+                  <tr><td class="pr-3">Lxc:</td> <td><span id="rawLxc"></span></td></tr>
+                  <tr><td class="pr-3">Seccomp:</td> <td><span id="rawSeccomp"></span></td></tr>
+                  <tr><td class="pr-3">Qemu:</td> <td><span id="rawQemu"></span></td></tr>
+                  <tr><td class="pr-3">Qemu.conf:</td> <td><span id="rawQemuConf"></span></td></tr>
+                </table>
+              </div>
+
+              <div class="tab-pane fade" id="v-pills-security-configuration" role="tabpanel" aria-labelledby="v-pills-security-configuration-tab">
+                <!-- Security Configuration Card-->
+                <table class="table w-auto">
+                  <tr><td class="pr-3">Agent Metrics:</td> <td><span id="securityAgentMetrics"></span></td></tr>
+                  <tr><td class="pr-3">Devlxd:</td> <td><span id="securityDevLxd"></span></td></tr>
+                  <tr><td class="pr-3">Devlxd Images:</td> <td><span id="securityDevLxdImages"></span></td></tr>
+                  <tr><td class="pr-3">Idmap Base:</td> <td><span id="securityIdmapBase"></span></td></tr>
+                  <tr><td class="pr-3">Idmap Isolated:</td> <td><span id="securityIdmapIsolated"></span></td></tr>
+                  <tr><td class="pr-3">Idmap Size:</td> <td><span id="securityIdmapSize"></span></td></tr>
+                  <tr><td class="pr-3">Nesting:</td> <td><span id="securityNesting"></span></td></tr>
+                  <tr><td class="pr-3">Privileged:</td> <td><span id="securityPrivileged"></span></td></tr>
+                  <tr><td class="pr-3">Protection Delete:</td> <td><span id="securityProtectionDelete"></span></td></tr>
+                  <tr><td class="pr-3">Protection Shift:</td> <td><span id="securityProtectionShift"></span></td></tr>
+                  <tr><td class="pr-3">Secureboot:</td> <td><span id="securitySecureboot"></span></td></tr>
+                  <tr><td class="pr-3">Syscalls Allow:</td> <td><span id="securitySyscallsAllow"></span></td></tr>
+                  <tr><td class="pr-3">Syscalls Deny:</td> <td><span id="securitySyscallsDeny"></span></td></tr>
+                  <tr><td class="pr-3">Syscalls Deny Compat:</td> <td><span id="securitySyscallsDenyCompat"></span></td></tr>
+                  <tr><td class="pr-3">Syscalls Deny Default:</td> <td><span id="securitySyscallsDenyDefault"></span></td></tr>
+                  <tr><td class="pr-3">Syscalls Intercept Bpf:</td> <td><span id="securitySyscallsInterceptBpf"></span></td></tr>
+                  <tr><td class="pr-3">Syscalls Intercept Bpf Devices:</td> <td><span id="securitySyscallsInterceptBpfDevices"></span></td></tr>
+                  <tr><td class="pr-3">Syscalls Intercept Mknod:</td> <td><span id="securitySyscallsInterceptMknod"></span></td></tr>
+                  <tr><td class="pr-3">Syscalls Intercept Mount:</td> <td><span id="securitySyscallsInterceptMount"></span></td></tr>
+                  <tr><td class="pr-3">Syscalls Intercept Mount Allowed:</td> <td><span id="securitySyscallsInterceptMountAllowed"></span></td></tr>
+                  <tr><td class="pr-3">Syscalls Intercept Mount Fuse:</td> <td><span id="securitySyscallsInterceptMountFuse"></span></td></tr>
+                  <tr><td class="pr-3">Syscalls Intercept Mount Shift:</td> <td><span id="securitySyscallsInterceptMountShift"></span></td></tr>
+                  <tr><td class="pr-3">Syscalls Intercept Setxattr:</td> <td><span id="securitySyscallsInterceptSetxattr"></span></td></tr>
+                </table>
+              </div>
+
+              <div class="tab-pane fade" id="v-pills-snapshot-configuration" role="tabpanel" aria-labelledby="v-pills-snapshot-configuration-tab">
+                <!-- Snapshot Configuration Card-->
+                <table class="table w-auto">
+                  <tr><td class="pr-3">Schedule:</td> <td><span id="snapshotsSchedule"></span></td></tr>
+                  <tr><td class="pr-3">Schedule Stopped:</td> <td><span id="snapshotsScheduleStopped"></span></td></tr>
+                  <tr><td class="pr-3">Pattern:</td> <td><span id="snapshotsPattern"></span></td></tr>
+                  <tr><td class="pr-3">Expiry:</td> <td><span id="snapshotsExpiry"></span></td></tr>
+                </table>
+              </div>
+          
+            </div>
+          </div>
+
+        </div>
+      </div>
+      <div class="tab-pane fade" id="nav-devices" role="tabpanel" aria-labelledby="nav-devices-tab">
+        <br />
+        <div class="row">
+
+          <div class="col-auto border-end pr-4 mr-4 ml-4 d-flex align-items-start">
+            <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+              <button class="nav-link active" id="v-pills-disk-devices-tab" data-bs-toggle="pill" data-bs-target="#v-pills-disk-devices" type="button" role="tab" aria-controls="v-pills-disk-devices" aria-selected="true">Disk</button>
+              <button class="nav-link" id="v-pills-gpu-devices-tab" data-bs-toggle="pill" data-bs-target="#v-pills-gpu-devices" type="button" role="tab" aria-controls="v-pills-gpu-devices" aria-selected="false">GPU</button>
+              <button class="nav-link" id="v-pills-network-devices-tab" data-bs-toggle="pill" data-bs-target="#v-pills-network-devices" type="button" role="tab" aria-controls="v-pills-network-devices" aria-selected="false">Network</button>
+              <button class="nav-link" id="v-pills-proxy-devices-tab" data-bs-toggle="pill" data-bs-target="#v-pills-proxy-devices" type="button" role="tab" aria-controls="v-pills-proxy-devices" aria-selected="false">Proxy</button>
+              <button class="nav-link" id="v-pills-unix-devices-tab" data-bs-toggle="pill" data-bs-target="#v-pills-unix-devices" type="button" role="tab" aria-controls="v-pills-unix-devices" aria-selected="false">Unix</button>
+              <button class="nav-link" id="v-pills-usb-devices-tab" data-bs-toggle="pill" data-bs-target="#v-pills-usb-devices" type="button" role="tab" aria-controls="v-pills-usb-devices" aria-selected="false">USB</button>
+            </div>
+          </div>
+          <div class="col">
+            <div class="tab-content" id="v-pills-deviceContent">
+
+              <div class="tab-pane fade show active" id="v-pills-disk-devices" role="tabpanel" aria-labelledby="v-pills-disk-devices-tab">
+                <!-- Disk Devices Card-->
+                <div class="card" id="diskDevicesCard">
+                  <div class="card-header">
+                    <h3 class="card-title text-primary">
+                      Disk Devices
+                    </h3>
+                    <div class="card-tools">
+                      <button type="button" class="btn btn-tool" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fa fa-bars"></i>
+                      </button>
+                      <div class="dropdown-menu dropdown-menu-right">
+                        <a class="dropdown-item" onclick="loadAddDiskDeviceModal()" title="Add Disk Device">Add Disk Device</a>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card-body">
+                    <div class="table-responsive">
+                      <table class="table table-hover" id="diskDeviceTableList" width="100%" cellspacing="0">
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="tab-pane fade" id="v-pills-gpu-devices" role="tabpanel" aria-labelledby="v-pills-gpu-devices-tab">
+                <!-- GPU Devices Card-->
+                <div class="card" id="gpuDevicesCard">
+                  <div class="card-header">
+                    <h3 class="card-title text-primary">
+                      GPU Devices
+                    </h3>
+                    <div class="card-tools">
+                      <button type="button" class="btn btn-tool" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fa fa-bars"></i>
+                      </button>
+                      <div class="dropdown-menu dropdown-menu-right">
+                        <a href="#" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#addGPUDeviceModal" title="Add GPU Device">Add GPU Device</a>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card-body">
+                    <div class="table-responsive">
+                      <table class="table table-hover" id="gpuDeviceTableList" width="100%" cellspacing="0">
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="tab-pane fade" id="v-pills-network-devices" role="tabpanel" aria-labelledby="v-pills-network-devices-tab">
+                <!-- Network Devices Card-->
+                <div class="card" id="networkDevicesCard">
+                  <div class="card-header">
+                    <h3 class="card-title text-primary">
+                      Network Devices
+                    </h3>
+                    <div class="card-tools">
+                      <button type="button" class="btn btn-tool" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fa fa-bars"></i>
+                      </button>
+                      <div class="dropdown-menu dropdown-menu-right">
+                        <a class="dropdown-item" onclick="loadAddNetworkDeviceModal()" title="Add Network Device">Add Network Device</a>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card-body">
+                    <div class="table-responsive">
+                      <table class="table table-hover" id="networkDeviceTableList" width="100%" cellspacing="0">
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="tab-pane fade" id="v-pills-proxy-devices" role="tabpanel" aria-labelledby="v-pills-proxy-devices-tab">
+                <!-- Proxy Devices Card-->
+                <div class="card" id="proxyDevicesCard">
+                  <div class="card-header">
+                    <h3 class="card-title text-primary">
+                      Proxy Devices
+                    </h3>
+                    <div class="card-tools">
+                      <button type="button" class="btn btn-tool" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fa fa-bars"></i>
+                      </button>
+                      <div class="dropdown-menu dropdown-menu-right">
+                        <a href="#" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#addProxyDeviceModal" title="Add Proxy Device">Add Proxy Device</a>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card-body">
+                    <div class="table-responsive">
+                      <table class="table table-hover" id="proxyDeviceTableList" width="100%" cellspacing="0">
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="tab-pane fade" id="v-pills-unix-devices" role="tabpanel" aria-labelledby="v-pills-unix-devices-tab">
+                <!-- Unix Devices Card-->
+                <div class="card" id="unixDevicesCard">
+                  <div class="card-header">
+                    <h3 class="card-title text-primary">
+                      Unix Devices
+                    </h3>
+                    <div class="card-tools">
+                      <button type="button" class="btn btn-tool" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fa fa-bars"></i>
+                      </button>
+                      <div class="dropdown-menu dropdown-menu-right">
+                        <a href="#" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#addUnixDeviceModal" title="Add Unix Device">Add Unix Device</a>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card-body">
+                    <div class="table-responsive">
+                      <table class="table table-hover" id="unixDeviceTableList" width="100%" cellspacing="0">
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="tab-pane fade" id="v-pills-usb-devices" role="tabpanel" aria-labelledby="v-pills-usb-devices-tab">
+                <!-- USB Devices Card-->
+                <div class="card" id="usbDevicesCard">
+                  <div class="card-header">
+                    <h3 class="card-title text-primary">
+                      USB Devices
+                    </h3>
+                    <div class="card-tools">
+                      <button type="button" class="btn btn-tool" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fa fa-bars"></i>
+                      </button>
+                      <div class="dropdown-menu dropdown-menu-right">
+                        <a href="#" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#addUSBDeviceModal" title="Add USB Device">Add USB Device</a>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card-body">
+                    <div class="table-responsive">
+                      <table class="table table-hover" id="usbDeviceTableList" width="100%" cellspacing="0">
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+          
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+      <div class="tab-pane fade" id="nav-console" role="tabpanel" aria-labelledby="nav-console-tab">
+        <br />
+        <!-- Console Card -->
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title text-primary">Console</h3>
+            <div class="card-tools">
+              <div class="dropdown no-arrow">
+                <button type="button btn-tool" class="mr-2 btn btn-sm btn-outline-primary" id="startConsoleButton" title="Start Console Terminal" onclick="establishInstanceWebSocketConsoleConnection()">Start Console</button>
+                <button type="button btn-tool" class="mr-2 btn btn-sm btn-outline-primary" id="stopConsoleButton" style="display: none;"  title="Stop Console Terminal" onclick="closeWebSocketConsoleConnection()">Stop Console</button>
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+            <div id="terminal-console"></div>
+          </div>
+        </div>
+        <!-- Console Card  -->
+      </div>
+      <div class="tab-pane fade" id="nav-exec" role="tabpanel" aria-labelledby="nav-exec-tab">
+        <br />
+        <!-- Exec Card -->
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title text-primary">Exec</h3>
+            <div class="card-tools">
+              <div class="dropdown no-arrow">
+                <button type="button btn-tool" class="mr-2 btn btn-sm btn-outline-primary" id="startExecButton" title="Start Exec Terminal" onclick="establishInstanceWebSocketExecConnection()">Start Exec</button>
+                <button type="button btn-tool" class="mr-2 btn btn-sm btn-outline-primary"  style="display: none;" id="stopExecButton" title="Stop Exec Terminal" onclick="closeWebSocketExecConnection()">Stop Exec</button>
+                <select id="execShellInput" class="dropdown-toggle mr-2 btn btn-sm btn-tool" name="execShellInput">
+                  <option value="bash" selected>/bin/bash</option>
+                  <option value="sh">/bin/sh</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+            <div id="terminal-exec"></div>
+          </div>
+        </div>
+        <!-- Exec Card  -->
+      </div>
+    </div>
+  </div>
+{% endblock content %}
+
+{% block modal %}
+  {% include 'modals/instance.html' %}
+{% endblock modal %}
+
+{% block script %}
+  
+  <!-- xterm -->
+  <script src="../static/js/xterm/xterm.js"></script> 
+
+  <script>
+    
+    var reloadTime = 10000;
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const serverId = urlParams.get('id');
+    const project = urlParams.get('project');
+    const instance = urlParams.get('instance');
+    const instanceType = urlParams.get('type');
+    var target_location 
+    var server_name
+    var server_clustered
+    var execControlSocket
+    var execDataSocket
+    var resizeTimer
+    populateSidebarLinks();
+    populateNavbarLinks();
+
+    //Initialize xterm for Exec
+    const execTerminal = new Terminal({
+      cursorBlink: "block",
+      fontSize: 15,
+      convertEol: true,
+      rendererType: 'dom',
+      cols: parseInt(($("#page-container").width() - 40) / 9),
+      rows: 35
+    });
+
+    //Initialize xterm for Console
+    const consoleTerminal = new Terminal({
+      cursorBlink: "block",
+      fontSize: 15,
+      convertEol: true,
+      rendererType: 'dom',
+      cols: parseInt(($("#page-container").width() - 40) / 9),
+      rows: 35
+    });
+    
+    // Resize the terminal and websocket connection on element resize
+    function terminalResize() {
+      execTerminal.resize(parseInt(($("#page-container").width() - 40) / 9), 35);
+      consoleTerminal.resize(parseInt(($("#page-container").width() - 40) / 9), 35);
+
+      resize_command = {
+        command: "window-resize",
+        args: {
+          width: parseInt(($("#page-container").width() - 40) / 9).toString(),
+          height: "35"
+        },
+      }
+      
+      if (typeof execControlSocket == 'object')
+        execControlSocket.send(convertString2ArrayBuffer(JSON.stringify(resize_command)))
+      if (typeof consoleControlSocket == 'object')
+        consoleControlSocket.send(convertString2ArrayBuffer(JSON.stringify(resize_command)))
+    }
+    
+    // Listen for console and exec terminal size changes on page resize
+    $(window).resize(function(){
+      // Using a Timeout to prevent rapid resize calls and improve performance
+      clearTimeout(resizeTimer)
+      resizeTimer = setTimeout(() => { terminalResize(); }, 500);
+    })
+
+    // Listen for console and exec terminal size changes on toggled sidebar
+    try {
+      ro = new ResizeObserver(() => {
+        // Using a Timeout to prevent rapid resize calls and improve performance
+        clearTimeout(resizeTimer)
+        resizeTimer = setTimeout(() => { terminalResize(); }, 500);
+      }).observe(document.getElementById("terminal-exec"))
+    } catch (error) {
+      console.log(error);
+    }
+
+    applySidebarStyles();
+    applySidebarLinks();
+
+    function reloadPageContent() {
+  
+      //Clear the automatic page reload timer
+      clearTimeout(pageReloadTimeout);
+
+      //Reload Instance Data and Configuration
+      loadInstanceData()
+
+      //Reload Instance State Data and Configuration
+      loadInstanceStateData()
+
+      //Reload the HOME tab tables if active
+      if ($('#nav-home-tab').hasClass('active')) {
+        loadInterfacesTable()
+        loadSnapshotsTable()
+        loadBackupsTable()
+        loadLogsTable()
+      }
+
+      //Reload the DEVICES tab tables if active
+      if ($('#nav-devices-tab').hasClass('active')) {
+        loadDiskDevicesTable()
+        loadGpuDevicesTable()
+        loadNetworkDevicesTable()
+        loadProxyDevicesTable()
+        loadUnixDevicesTable()
+        loadUsbDevicesTable()
+      }
+
+      loadCpuPercentage()
+
+      //Set the automatic page reload
+      pageReloadTimeout = setTimeout(() => { reloadPageContent(); }, reloadTime);
+    }
+
+    function loadPageContent(){
+      
+      //Loaded from main.html template
+      populateServerSelectDropdown()
+      populateProjectSelectDropdown()
+      
+      //Load Instance Data and Configuration
+      loadInstanceData()
+
+      //Load Instance State Data and Configuration
+      loadInstanceStateData()
+
+      sessionStorage.removeItem("instance_user_time");
+      sessionStorage.removeItem("instance_system_time");
+      sessionStorage.removeItem("instance_idle_time");
+      loadCpuPercentage()
+
+      //Load Home Tab Tables
+      loadInterfacesTable()
+      loadSnapshotsTable()
+      loadBackupsTable()
+      loadLogsTable()
+
+      //Disable edit options based on container or virtual-machine
+      changeInstanceModalTypeOptions()
+
+      //Setup new data listener for Exec terminal
+      execTerminal.onData( (data) => {
+        if (execDataSocket.readyState === 1) {
+          execDataSocket.send(convertString2ArrayBuffer(data))
+        }
+      });
+
+      //Setup new data listener for Console terminal
+      consoleTerminal.onData( (data) => {
+        if (consoleDataSocket.readyState === 1) {
+          consoleDataSocket.send(convertString2ArrayBuffer(data))
+        }
+      });
+
+      //Open Exec terminal
+      execTerminal.open(document.getElementById("terminal-exec"));
+
+      //Open Console terminal
+      consoleTerminal.open(document.getElementById("terminal-console"));
+
+      //On clustered servers, check that instance is running from connected host for console or exec connection
+      $.getJSON("../api/server/get_server_info?id="+encodeURI(serverId)+'&project='+encodeURI(project), function (data) {
+        data = data.metadata.environment;
+        server_name = data.server_name
+        server_clustered = data.server_clustered 
+        if (data.server_clustered && data.server_name != target_location) {
+          $('#startExecButton').prop('disabled', true);
+          $('#startConsoleButton').prop('disabled', true);
+          consoleTerminal.write("\r\n--- This instance is located on a differenct host within the cluster. Console is unavailable  --- \r\n");
+          execTerminal.write("\r\n--- This instance is located on a differenct host within the cluster. Exec is unavailable  --- \r\n");
+        }
+      });
+
+      //Set reload page content
+      pageReloadTimeout = setTimeout(() => { reloadPageContent(); }, reloadTime);
+
+    }
+    
+    function getInstanceProcStat() {
+      $.get("../api/instance/get_instance_proc_stat?id="+serverId+"&project="+project+"&name="+instance, function (data) {
+
+        session_user_time = sessionStorage.getItem('instance_user_time')
+        session_system_time = sessionStorage.getItem('instance_system_time')
+        session_idle_time = sessionStorage.getItem('instance_idle_time')
+
+        // If we have existing session values, find the difference else just use data values
+        if (session_user_time + session_system_time + session_idle_time > 0){
+          //If session values equal data values end function
+          if (data.user_time == session_user_time && data.system_time == session_system_time && data.idle_time == session_idle_time) {
+            return
+          }
+          // If difference between data and session values is greater than zero then calculate
+          if (data.user_time - session_user_time + data.system_time - session_system_time + data.idle_time - session_idle_time > 0) {
+            percentage = parseFloat(100 * (1 - (data.idle_time - session_idle_time) / (data.user_time - session_user_time + data.system_time - session_system_time + data.idle_time - session_idle_time))).toFixed(2)
+          }
+          else {
+            percentage = parseFloat(0).toFixed(2)
+          }
+        }
+        else {
+          //If data values are greating than zero then calculate
+          if (data.user_time + data.system_time + data.idle_time > 0){
+            percentage = parseFloat(100 * ( 1 - data.idle_time / (data.user_time + data.system_time + data.idle_time))).toFixed(2)
+          }
+          else {
+            percentage = parseFloat(0).toFixed(2)
+          }
+        }
+
+        //Store stats for page reload
+        sessionStorage.setItem('instance_user_time', data.user_time)
+        sessionStorage.setItem('instance_system_time', data.system_time)
+        sessionStorage.setItem('instance_idle_time', data.idle_time)
+
+        //Update CPU progress bar
+        $('#cpuPercentage').text(percentage)
+        $('#cpuPercentageBar').css('width', percentage + '%');
+        $('#cpuPercentageBar').attr('aria-valuenow', percentage + '%');
+        if (percentage > 90.00)
+          $('#cpuPercentageBar').attr('class', 'progress-bar bg-danger');
+        else
+          $('#cpuPercentageBar').attr('class', 'progress-bar bg-primary');
+      });
+
+    }
+
+    // Loads the CPU bar for container or virtual-machine
+    function loadCpuPercentage() {
+      if (instanceType == "container"){
+        $.get("../api/instance/get_instance_cpu_usage?id="+serverId+"&project="+project+"&name="+instance, function (data) {
+          //Reload using stored CPU data
+          if (sessionStorage.getItem('host_cpu_time') && sessionStorage.getItem('instance_cpu_time')) {
+            host_cpu_time = parseInt(data.host_cpu_time);
+            instance_cpu_time = parseInt(data.instance_cpu_time)
+            previous_host_cpu_time = parseInt(sessionStorage.getItem('host_cpu_time'))
+            previous_instance_cpu_time = parseInt(sessionStorage.getItem('instance_cpu_time'))
+            clk_tck = 100
+
+            //Store stats for page reload
+            sessionStorage.setItem('host_cpu_time', host_cpu_time)
+            sessionStorage.setItem('instance_cpu_time', instance_cpu_time)
+
+            if (previous_host_cpu_time == 0 || previous_instance_cpu_time == 0 || host_cpu_time == previous_host_cpu_time)
+              percentage = 0
+            else
+              percentage = parseFloat(100 * ( (instance_cpu_time - previous_instance_cpu_time) / ((host_cpu_time - previous_host_cpu_time) * 1000000000 / clk_tck) )).toFixed(2)
+
+            //Set CPU stats
+            $('#cpuPercentage').text(percentage);
+            $('#cpuPercentageBar').css('width', percentage + '%');
+            $('#cpuPercentageBar').attr('aria-valuenow', percentage + '%');
+            if (percentage > 90.00)
+              $('#cpuPercentageBar').attr('class', 'progress-bar bg-danger');
+            else
+              $('#cpuPercentageBar').attr('class', 'progress-bar bg-primary');
+          }
+          else {
+            //Get initial set of cpu times
+            initial_host_cpu_time = parseInt(data.host_cpu_time);
+            initial_instance_cpu_time = parseInt(data.instance_cpu_time)
+
+            //Wait a second to get a second set of cpu times
+            setTimeout(function(){ 
+              $.get("../api/instance/get_instance_cpu_usage?id="+serverId+"&project="+project+"&name="+instance, function (data) {
+                host_cpu_time = parseInt(data.host_cpu_time);
+                instance_cpu_time = parseInt(data.instance_cpu_time)
+
+                //Store stats for page reload
+                sessionStorage.setItem('host_cpu_time', host_cpu_time)
+                sessionStorage.setItem('instance_cpu_time', instance_cpu_time)
+
+                //Determine instance percentage of cpu time, divide host cpu by clk_tck (100) to convert to seconds, multiple host cpu by 1000000000 to convert to nanoseconds
+                clk_tck = 100
+                if (host_cpu_time == initial_host_cpu_time)
+                  percentage = 0
+                else
+                  percentage = parseFloat(100 * ( (instance_cpu_time - initial_instance_cpu_time) / ((host_cpu_time - initial_host_cpu_time) * 1000000000 / clk_tck) )).toFixed(2)
+
+                //Set CPU stats
+                $('#cpuPercentage').text(percentage)
+                $('#cpuPercentageBar').css('width', percentage + '%');
+                $('#cpuPercentageBar').attr('aria-valuenow', percentage + '%');
+                if (percentage > 90.00)
+                  $('#cpuPercentageBar').attr('class', 'progress-bar bg-danger');
+                else
+                  $('#cpuPercentageBar').attr('class', 'progress-bar bg-primary');
+
+              })
+            }, 1000); 
+          }
+        })
+      }
+      if (instanceType == "virtual-machine"){
+        $.get("../api/instance/copy_instance_proc_stat?id="+serverId+"&project="+project+"&name="+instance, function (data) {
+          // Get instance /proc/stat data
+          setTimeout(() => { getInstanceProcStat(); }, reloadTime / 2);
+        });
+      }
+
+    }
+
+    // Loads the Instance Data
+    function loadInstanceData() {
+      $.get("../api/instance/get_instance?id="+serverId+"&project="+project+"&name="+instance+"&recursion=1", function (data) {
+
+        data = data.metadata;
+        dataConfig = data.config;
+        target_location = data.location
+
+        $("#name").text(data.name);
+        if (data.hasOwnProperty('description')) { $("#description").text(data.description); }
+        $("#status").text(data.status);
+        $("#profiles").text(data.profiles.join(', '));
+        if (dataConfig.hasOwnProperty('image.description')) { $("#image").text(dataConfig["image.description"]); }
+        $("#location").text(data.location);
+        $("#created").text(data.created_at.substring(0,10));
+
+        if (dataConfig.hasOwnProperty('boot.autostart')) { $("#bootAutostart").text(dataConfig['boot.autostart']); } else { $("#bootAutostart").text("-"); }
+        if (dataConfig.hasOwnProperty('boot.autostart.delay')) { $("#bootAutostartDelay").text(dataConfig['boot.autostart.delay']); } else { $("#bootAutostartDelay").text("-"); }
+        if (dataConfig.hasOwnProperty('boot.autostart.priority')) { $("#bootAutostartPriority").text(dataConfig['boot.autostart.priority']); } else { $("#bootAutostartPriority").text("-"); }
+        if (dataConfig.hasOwnProperty('boot.host_shutdown_timeout')) { $("#bootHostShutdownTimeout").text(dataConfig['boot.host_shutdown_timeout']); } else { $("#bootHostShutdownTimeout").text("-"); }
+        if (dataConfig.hasOwnProperty('boot.stop.priority')) { $("#bootStopPriority").text(dataConfig['boot.stop.priority']); } else { $("#bootStopPriority").text("-"); }
+
+        if (dataConfig.hasOwnProperty('cloud-init.network-config')) { $("#cloudInitNetworkConfig").text(dataConfig['cloud-init.network-config']); } else { $("#cloudInitNetworkConfig").text("-"); }
+        if (dataConfig.hasOwnProperty('cloud-init.user-data')) { $("#cloudInitUserData").text(dataConfig['cloud-init.user-data']); } else { $("#cloudInitUserData").text("-"); }
+        if (dataConfig.hasOwnProperty('cloud-init.vendor-data')) { $("#cloudInitVendorData").text(dataConfig['cloud-init.vendor-data']); } else { $("#cloudInitVendorData").text("-"); }
+
+        if (dataConfig.hasOwnProperty('cluster.evacuate')) { $("#clusterEvacuate").text(dataConfig['cluster.evacuate']); } else { $("#clusterEvacuate").text("-"); }
+
+        if (dataConfig.hasOwnProperty('limits.cpu')) { $("#limitsCpu").text(dataConfig['limits.cpu']); } else { $("#limitsCpu").text("-"); }
+        if (dataConfig.hasOwnProperty('limits.cpu.allowance')) { $("#limitsCpuAllowance").text(dataConfig['limits.cpu.allowance']); } else { $("#limitsCpuAllowance").text("-"); }
+        if (dataConfig.hasOwnProperty('limits.cpu.priority')) { $("#limitsCpuPriority").text(dataConfig['limits.cpu.priority']); } else { $("#limitsCpuPriority").text("-"); }
+        if (dataConfig.hasOwnProperty('limits.disk.priority')) { $("#limitsDiskPriority").text(dataConfig['limits.disk.priority']); } else { $("#limitsDiskPriority").text("-"); }
+        if (dataConfig.hasOwnProperty('limits.hugepages.64KB')) { $("#limitsHugepages64KB").text(dataConfig['limits.hugepages.64KB']); } else { $("#limitsHugepages64KB").text("-"); }
+        if (dataConfig.hasOwnProperty('limits.hugepages.1MB')) { $("#limitsHugepages1MB").text(dataConfig['limits.hugepages.1MB']); } else { $("#limitsHugepages1MB").text("-"); }
+        if (dataConfig.hasOwnProperty('limits.hugepages.2MB')) { $("#limitsHugepages2MB").text(dataConfig['limits.hugepages.2MB']); } else { $("#limitsHugepages2MB").text("-"); }
+        if (dataConfig.hasOwnProperty('limits.hugepages.1GB')) { $("#limitsHugepages1GB").text(dataConfig['limits.hugepages.1GB']); } else { $("#limitsHugepages1GB").text("-"); }
+        if (dataConfig.hasOwnProperty('limits.memory')) { $("#limitsMemory").text(dataConfig['limits.memory']); } else { $("#limitsMemory").text("-"); }
+        if (dataConfig.hasOwnProperty('limits.memory.enforce')) { $("#limitsMemoryEnforce").text(dataConfig['limits.memory.enforce']); } else { $("#limitsMemoryEnforce").text("-"); }
+        if (dataConfig.hasOwnProperty('limits.memory.swap')) { $("#limitsMemorySwap").text(dataConfig['limits.memory.swap']); } else { $("#limitsMemorySwap").text("-"); }
+        if (dataConfig.hasOwnProperty('limits.memory.swap.priority')) { $("#limitsMemorySwapPriority").text(dataConfig['limits.memory.swap.priority']); } else { $("#limitsMemorySwapPriority").text("-"); }
+        if (dataConfig.hasOwnProperty('limits.network.priority')) { $("#limitsNetworkPriority").text(dataConfig['limits.network.priority']); } else { $("#limitsNetworkPriority").text("-"); }
+        if (dataConfig.hasOwnProperty('limits.processes')) { $("#limitsProcesses").text(dataConfig['limits.processes']); } else { $("#limitsProcesses").text("-"); }
+
+        if (dataConfig.hasOwnProperty('linux.kernel_modules')) { $("#linuxKernelModules").text(dataConfig['linux.kernel_modules']); } else { $("#linuxKernelModules").text("-"); }
+
+        if (dataConfig.hasOwnProperty('migration.incremental.memory')) { $("#migrationIncrementalMemory").text(dataConfig['migration.incremental.memory']); } else { $("#migrationIncrementalMemory").text("-"); }
+        if (dataConfig.hasOwnProperty('migration.incremental.memory.goal')) { $("#migrationIncrementalMemoryGoal").text(dataConfig['migration.incremental.memory.goal']); } else { $("#migrationIncrementalMemoryGoal").text("-"); }
+        if (dataConfig.hasOwnProperty('migration.incremental.memory.iterations')) { $("#migrationIncrementalMemoryIterations").text(dataConfig['migration.incremental.memory.iterations']); } else { $("#migrationIncrementalMemoryIterations").text("-"); }
+
+        if (dataConfig.hasOwnProperty('nvidia.driver.capabilities')) { $("#nvidiaDriverCapabilities").text(dataConfig['nvidia.driver.capabilities']); } else { $("#nvidiaDriverCapabilities").text("-"); }
+        if (dataConfig.hasOwnProperty('nvidia.runtime')) { $("#nvidiaRuntime").text(dataConfig['nvidia.runtime']); } else { $("#nvidiaRuntime").text("-"); }
+        if (dataConfig.hasOwnProperty('nvidia.require.cuda')) { $("#nvidiaRequireCuda").text(dataConfig['nvidia.require.cuda']); } else { $("#nvidiaRequireCuda").text("-"); }
+        if (dataConfig.hasOwnProperty('nvidia.require.driver')) { $("#nvidiaRequireDriver").text(dataConfig['nvidia.require.driver']); } else { $("#nvidiaRequireDriver").text("-"); }
+
+        if (dataConfig.hasOwnProperty('raw.apparmor')) { $("#rawApparmor").text(dataConfig['raw.apparmor']); } else { $("#rawApparmor").text("-"); }
+        if (dataConfig.hasOwnProperty('raw.idmap')) { $("#rawIdmap").text(dataConfig['raw.idmap']); } else { $("#rawIdmap").text("-"); }
+        if (dataConfig.hasOwnProperty('raw.lxc')) { $("#rawLxc").text(dataConfig['raw.lxc']); } else { $("#rawLxc").text("-"); }
+        if (dataConfig.hasOwnProperty('raw.seccomp')) { $("#rawSeccomp").text(dataConfig['raw.seccomp']); } else { $("#rawSeccomp").text("-"); }
+
+        if (dataConfig.hasOwnProperty('security.devlxd')) { $("#securityDevLxd").text(dataConfig['security.devlxd']); } else { $("#securityDevLxd").text("-"); }
+        if (dataConfig.hasOwnProperty('security.devlxd.images')) { $("#securityDevLxdImages").text(dataConfig['security.devlxd.images']); } else { $("#securityDevLxdImages").text("-"); }
+        if (dataConfig.hasOwnProperty('security.idmap.base')) { $("#securityIdmapBase").text(dataConfig['security.idmap.base']); } else { $("#securityIdmapBase").text("-"); }
+        if (dataConfig.hasOwnProperty('security.idmap.isolated')) { $("#securityIdmapIsolated").text(dataConfig['security.idmap.isolated']); } else { $("#securityIdmapIsolated").text("-"); }
+        if (dataConfig.hasOwnProperty('security.idmap.size')) { $("#securityIdmapSize").text(dataConfig['security.idmap.size']); } else { $("#securityIdmapSize").text("-"); }
+        if (dataConfig.hasOwnProperty('security.nesting')) { $("#securityNesting").text(dataConfig['security.nesting']); } else { $("#securityNesting").text("-"); }
+        if (dataConfig.hasOwnProperty('security.privileged')) { $("#securityPrivileged").text(dataConfig['security.privileged']); } else { $("#securityPrivileged").text("-"); }
+        if (dataConfig.hasOwnProperty('security.protection.delete')) { $("#securityProtectionDelete").text(dataConfig['security.protection.delete']); } else { $("#securityProtectionDelete").text("-"); }
+        if (dataConfig.hasOwnProperty('security.protection.shift')) { $("#securityProtectionShift").text(dataConfig['security.protection.shift']); } else { $("#securityProtectionShift").text("-"); }
+        if (dataConfig.hasOwnProperty('security.syscalls.allow')) { $("#securitySyscallsAllow").text(dataConfig['security.syscalls.allow']); } else { $("#securitySyscallsAllow").text("-"); }
+        if (dataConfig.hasOwnProperty('security.syscalls.deny')) { $("#securitySyscallsDeny").text(dataConfig['security.syscalls.deny']); } else { $("#securitySyscallsDeny").text("-"); }
+        if (dataConfig.hasOwnProperty('security.syscalls.deny_compat')) { $("#securitySyscallsDenyCompat").text(dataConfig['security.syscalls.deny_compat']); } else { $("#securitySyscallsDenyCompat").text("-"); }
+        if (dataConfig.hasOwnProperty('security.syscalls.deny_default')) { $("#securitySyscallsDenyDefault").text(dataConfig['security.syscalls.deny_default']); } else { $("#securitySyscallsDenyDefault").text("-"); }
+        if (dataConfig.hasOwnProperty('security.syscalls.intercept.bpf')) { $("#securitySyscallsInterceptBpf").text(dataConfig['security.syscalls.intercept.bpf']); } else { $("#securitySyscallsInterceptBpf").text("-"); }
+        if (dataConfig.hasOwnProperty('security.syscalls.intercept.bpf.devices')) { $("#securitySyscallsInterceptBpfDevices").text(dataConfig['security.syscalls.intercept.bpf.devices']); } else { $("#securitySyscallsInterceptBpfDevices").text("-"); }
+        if (dataConfig.hasOwnProperty('security.syscalls.intercept.mknod')) { $("#securitySyscallsInterceptMknod").text(dataConfig['security.syscalls.intercept.mknod']); } else { $("#securitySyscallsInterceptMknod").text("-"); }
+        if (dataConfig.hasOwnProperty('security.syscalls.intercept.mount')) { $("#securitySyscallsInterceptMount").text(dataConfig['security.syscalls.intercept.mount']); } else { $("#securitySyscallsInterceptMount").text("-"); }
+        if (dataConfig.hasOwnProperty('security.syscalls.intercept.mount.allowed')) { $("#securitySyscallsInterceptMountAllowed").text(dataConfig['security.syscalls.intercept.mount.allowed']); } else { $("#securitySyscallsInterceptMountAllowed").text("-"); }
+        if (dataConfig.hasOwnProperty('security.syscalls.intercept.mount.fuse')) { $("#securitySyscallsInterceptMountFuse").text(dataConfig['security.syscalls.intercept.mount.fuse']); } else { $("#securitySyscallsInterceptMountFuse").text("-"); }
+        if (dataConfig.hasOwnProperty('security.syscalls.intercept.mount.shift')) { $("#securitySyscallsInterceptMountShift").text(dataConfig['security.syscalls.intercept.mount.shift']); } else { $("#securitySyscallsInterceptMountShift").text("-"); }
+        if (dataConfig.hasOwnProperty('security.syscalls.intercept.setxattr')) { $("#securitySyscallsInterceptSetxattr").text(dataConfig['security.syscalls.intercept.setxattr']); } else { $("#securitySyscallsInterceptSetxattr").text("-"); }
+
+        if (dataConfig.hasOwnProperty('snapshots.schedule')) { $("#snapshotsSchedule").text(dataConfig['snapshots.schedule']); } else { $("#snapshotsSchedule").text("-"); }
+        if (dataConfig.hasOwnProperty('snapshots.schedule.stopped')) { $("#snapshotsScheduleStopped").text(dataConfig['snapshots.schedule.stopped']); } else { $("#snapshotsScheduleStopped").text("-"); }
+        if (dataConfig.hasOwnProperty('snapshots.pattern')) { $("#snapshotsPattern").text(dataConfig['snapshots.pattern']); } else { $("#snapshotsPattern").text("-"); }
+        if (dataConfig.hasOwnProperty('snapshots.expiry')) { $("#snapshotsExpiry").text(dataConfig['snapshots.expiry']); } else { $("#snapshotsExpiry").text("-"); }
+
+      });
+    }
+
+    // Loads the Instance State Data
+    function loadInstanceStateData() {
+
+      $.get("../api/instance/get_instance_state?id="+serverId+"&project="+project+"&name="+instance+"&recursion=1", function (data) {
+        data = data.metadata;
+        displayMenuOptions(data)
+        $("#cpu").text(parseFloat(parseInt(data.cpu.usage) / 1000000).toFixed(2)  + ' ms')
+        $("#memory").text(parseFloat(parseInt(data.memory.usage) / 1024 / 1024 / 1024).toFixed(2)  + ' GiB')
+        $("#swap").text(parseFloat(parseInt(data.memory.swap_usage) / 1024 / 1024 / 1024).toFixed(2)  + ' GiB')
+        $("#pid").text(data.pid)
+        $("#processes").text(data.processes)
+
+        if (data.memory.usage && data.memory.total && data.memory.total > 0){
+          percentage = parseFloat(100 * (data.memory.usage / data.memory.total)).toFixed(2)
+        }
+        else {
+          percentage = parseFloat(0).toFixed(2)
+        }
+       
+        $('#memPercentage').text(percentage)
+        $('#memPercentageBar').css('width', percentage + '%');
+        $('#memPercentageBar').attr('aria-valuenow', percentage + '%');
+        if (percentage > 90.00)
+          $('#memPercentageBar').attr('class', 'progress-bar bg-danger');
+        else
+          $('#memPercentageBar').attr('class', 'progress-bar bg-primary');
+        
+
+      });
+
+    }
+
+    // ********************* HOME TAB TABLES **************************
+    function loadInterfacesTable(){
+      if ( ! $.fn.DataTable.isDataTable( '#interfaceTableList' ) ) {
+        //Load Interfaces Table
+        $('#interfaceTableList').DataTable({
+          ajax: {
+            url: "../api/instance/get_instance_interfaces?id="+serverId+"&project="+project+"&name="+instance+"&recursion=1",
+            dataType: "json",
+            dataSrc: "data",
+            contentType: "application/json",
+            error: function (xhr, error, code) {
+            console.log(xhr, code);
+          }
+          },
+          columns: [
+            { title: "Name", data: function (row, type, set) {
+                if (row.hasOwnProperty('name')) {
+                  if (row.name)
+                    return row.name
+                }
+                return '-'
+              },
+            },
+            { title: "HW Addr", data: function (row, type, set) {
+                if (row.hasOwnProperty('hwaddr')) {
+                  if (row.hwaddr)
+                    return row.hwaddr
+                }
+                return '-'
+              },
+            },
+            { title: "IPv4", data: function (row, type, set) {
+                if (row.hasOwnProperty('ipv4_addresses')) {
+                  if (row.ipv4_addresses.length > 0)
+                    return row.ipv4_addresses.join(', <br />')
+                }
+                return '-'
+              },
+            },
+            { title: "IPv6", data: function (row, type, set) {
+                if (row.hasOwnProperty('ipv6_addresses')) {
+                  if (row.ipv6_addresses.length > 0)
+                    return row.ipv6_addresses.join(', <br />')
+                }
+                return '-'
+              },
+            },
+            { title: "State", data: function (row, type, set) {
+                if (row.hasOwnProperty('state')) {
+                  if (row.state)
+                    return row.state
+                }
+                return '-'
+              },
+            },
+          ],
+          order: [],
+        });
+      }
+      else {
+        $('#interfaceTableList').DataTable().ajax.reload(null, false);
+      }
+    }
+
+    function loadSnapshotsTable() {
+      if ( ! $.fn.DataTable.isDataTable( '#snapshotTableList' ) ) {
+        //Load Snapshots Table
+        $('#snapshotTableList').DataTable({
+          ajax: {
+            url: "../api/instance/list_instance_snapshots?id="+serverId+"&project="+project+"&name="+instance+"&recursion=1",
+            dataType: "json",
+            dataSrc: "metadata",
+            contentType: "application/json",
+            error: function (xhr, error, code) {
+            console.log(xhr, code);
+          }
+          },
+          columns: [
+            { title: "Name", data: function (row, type, set) {
+                if (row.hasOwnProperty('name')) {
+                  if (row.name)
+                    return row.name
+                }
+                return '-'
+              },
+            },
+            { title: "Stateful", data: function (row, type, set) {
+                if (row.hasOwnProperty('stateful')) {
+                  // Boolean field
+                  return row.stateful
+                }
+                return '-'
+              },
+            },
+            { title: "Size", data: function (row, type, set) {
+                if (row.hasOwnProperty('size')) {
+                  if (row.size){
+                    if (type === 'display') {
+                      return (row.size / 1024 / 1024).toFixed(2) + ' MiB'
+                    }
+                    return row.size
+                  }
+                }
+                return '-'
+              },
+            },
+            { title: "Created", data: function (row, type, set) {
+                if (row.hasOwnProperty('created_at')) {
+                  if (row.created_at)
+                    return row.created_at
+                }
+                return '-'
+              },
+            },
+            { title: "Expires", data: function (row, type, set) {
+                if (row.hasOwnProperty('expires_at')) {
+                  if (row.expires_at)
+                    if (row.expires_at == '0001-01-01T00:00:00Z')
+                      return 'never'
+                    return row.expires_at
+                }
+                return '-'
+              },
+            },
+            { title: "Actions", data: function (row, type, set) {
+                links = ''
+                if (row.hasOwnProperty('name')) {
+                  links += '<a onclick=restoreInstanceSnapshot(\''+row.name+'\')><i class="fas fa-window-restore fa-lg" style="color:#ddd" title="Restore Snapshot" aria-hidden="true"></i></a>'
+                  links += '&nbsp' + '&nbsp' 
+                  links += '<a onclick=loadCreateInstanceFromSnapshotModal(\''+row.name+'\')><i class="fas fa-cube fa-lg" style="color:#ddd" title="Create Instance" aria-hidden="true"></i></a>'
+                  links += '&nbsp' + '&nbsp'
+                  links += '<a onclick=loadPublishImageFromSnapshotModal(\''+row.name+'\')><i class="fas fa-box-open fa-lg" style="color:#ddd" title="Publish Image" aria-hidden="true"></i></a>'
+                  links += '&nbsp' + '&nbsp' 
+                  links += '<a onclick=deleteSnapshot(\''+row.name+'\')><i class="fas fa-trash-alt fa-lg" style="color:#ddd" title="Delete" aria-hidden="true"></i></a>'
+                }
+                return links
+              },
+            },
+          ],
+          order: [],
+        });
+      }
+      else {
+        $('#snapshotTableList').DataTable().ajax.reload(null, false);
+      }
+    }
+
+    function loadBackupsTable() {
+      if ( ! $.fn.DataTable.isDataTable( '#backupTableList' ) ) {
+        //Load Backups Table
+        $('#backupTableList').DataTable({
+          ajax: {
+            url: "../api/instance/list_instance_backups?id="+serverId+"&project="+project+"&name="+instance+"&recursion=1",
+            dataType: "json",
+            dataSrc: "metadata",
+            contentType: "application/json",
+            error: function (xhr, error, code) {
+            console.log(xhr, code);
+          }
+          },
+          columns: [
+            { title: "Name", data: function (row, type, set) {
+                if (row.hasOwnProperty('name')) {
+                  if (row.name) {
+                    if (row.backup_file_exists)
+                      return '<a href="backups/' + serverId + '/' + project + '/' + instance + '/' + row.name + '">' + row.name + '</a>'
+                    return row.name
+                  }
+                }
+                return '-'
+              },
+            },
+            { title: "Instance Only", data: function (row, type, set) {
+                if (row.hasOwnProperty('instance_only')) {
+                  // Boolean field
+                  return row.instance_only
+                }
+                return '-'
+              },
+            },
+            { title: "Optimized Storage", data: function (row, type, set) {
+                if (row.hasOwnProperty('optimized_storage')) {
+                  // Boolean field
+                  return row.optimized_storage
+                }
+                return '-'
+              },
+            },
+
+            { title: "Created", data: function (row, type, set) {
+                if (row.hasOwnProperty('created_at')) {
+                  if (row.created_at)
+                    return row.created_at
+                }
+                return '-'
+              },
+            },
+            { title: "Expires", data: function (row, type, set) {
+                if (row.hasOwnProperty('expires_at')) {
+                  if (row.expires_at) {
+                    if (row.expires_at == '0000-12-31T19:03:58-04:56')
+                      return 'never'
+                    return row.expires_at
+                  }
+                }
+                return '-'
+              },
+            },
+            { title: "File Size", data: function (row, type, set) {
+                if (row.hasOwnProperty('backup_file_exists') && row.hasOwnProperty('backup_file_size')) {
+                  if (row.backup_file_exists && row.backup_file_size){
+                    if (type === 'display') {
+                      size = row.backup_file_size / 1024 / 1024
+                      return size.toFixed(2) + ' MiB'
+                    }
+                    return row.backup_file_exists
+                  }
+                }
+                return '-'
+              },
+            },
+            { title: "Actions", data: function (row, type, set) {
+                links = ''
+                if (row.hasOwnProperty('name')) {
+                  if (row.hasOwnProperty('backup_file_exists')) {
+                    if (row.backup_file_exists)
+                      links += '<a><i class="fas fa-file-export fa-lg" style="color:#f1f1f1" title="Export Backup" aria-hidden="true"></i></a>'
+                    else 
+                      links += '<a onclick=exportBackup(\''+row.name+'\')><i class="fas fa-file-export fa-lg" style="color:#ddd" title="Export Backup" aria-hidden="true"></i></a>'
+                    links += '&nbsp' + '&nbsp' 
+                  }
+                  links += '<a onclick=deleteBackup(\''+row.name+'\')><i class="fas fa-trash-alt fa-lg" style="color:#ddd" title="Delete" aria-hidden="true"></i></a>'
+                }
+                return links
+              },
+            },
+          ],
+          order: [],
+        });
+      }
+      else {
+        $('#backupTableList').DataTable().ajax.reload(null, false);
+      }
+    }
+  
+    function loadLogsTable() {
+      if ( ! $.fn.DataTable.isDataTable( '#logTableList' ) ) {
+        //Load Logs Table
+        $('#logTableList').DataTable({
+          ajax: {
+            url: "../api/instance/list_instance_logs?id="+serverId+"&project="+project+"&name="+instance+"&recursion=1",
+            dataType: "json",
+            dataSrc: "metadata",
+            contentType: "application/json",
+            error: function (xhr, error, code) {
+            console.log(xhr, code);
+          }
+          },
+          columns: [
+            { title: "Log", data: function (row, type, set) {
+                if (row)
+                  return row
+                else
+                  return '-'
+              },
+            },
+            { title: "Actions", data: function (row, type, set) {
+              links = '<a onclick=displayLog(\''+row+'\')><i class="fas fa-file fa-lg" style="color:#ddd" title="Display Log" aria-hidden="true"></i></a>'
+              links += '&nbsp' + '&nbsp' 
+              links += '<a onclick=deleteLog(\''+row+'\')><i class="fas fa-trash-alt fa-lg" style="color:#ddd" title="Delete" aria-hidden="true"></i></a>'
+              return links
+              },
+            },
+          ],
+          order: [],
+        });
+      }
+      else {
+        $('#logTableList').DataTable().ajax.reload(null, false);
+      }
+    }
+
+    // Load/Reload the Home tab content when selected
+    $('#nav-home-tab').on('show.bs.tab', function () {
+      loadInterfacesTable()
+      loadSnapshotsTable()
+      loadBackupsTable()
+      loadLogsTable()
+    })
+
+    // ********************* DEVICES TAB TABLES **************************
+    function loadDiskDevicesTable() {
+      if ( ! $.fn.DataTable.isDataTable( '#diskDeviceTableList' ) ) {
+        //Load Disk Devices Table
+        $('#diskDeviceTableList').DataTable({
+          ajax: {
+            url: "../api/instance/get_instance_disk_devices?id="+serverId+"&project="+project+"&name="+instance+"&recursion=1",
+            dataType: "json",
+            dataSrc: "data",
+            contentType: "application/json",
+            error: function (xhr, error, code) {
+            console.log(xhr, code);
+          }
+          },
+          columns: [
+            { title: "Device", data: function (row, type, set) {
+                if (row.hasOwnProperty('device')) {
+                  if (row.device)
+                    return row.device
+                }
+                return '-'
+              },
+            },
+            { title: "Path", data: function (row, type, set) {
+                if (row.hasOwnProperty('path')) {
+                  if (row.path)
+                    return row.path
+                }
+                return '-'
+              },
+            },
+            { title: "Pool", data: function (row, type, set) {
+                if (row.hasOwnProperty('pool')) {
+                  if (row.pool)
+                    return row.pool
+                }
+                return '-'
+              },
+            },
+            { title: "Usage", data: function (row, type, set) {
+                if (row.hasOwnProperty('usage')) {
+                  if (row.usage) {
+                    if (type === 'display')
+                      return (row.usage / 1024 / 1024).toFixed(2) + ' MiB'
+                    return row.usage
+                  }
+                }
+                return '-'
+              },
+            },
+            { title: "Actions", data: function (row, type, set) {
+              links = ''
+              if (row.hasOwnProperty('device')) {
+                links = '<a onclick=delete_device(\''+row.device+'\')><i class="fas fa-trash-alt fa-lg" style="color:#ddd" title="Delete" aria-hidden="true"></i></a>'
+              }
+              return links
+              },
+            },
+          ],
+          order: [],
+        });
+      }
+      else {
+        $('#diskDeviceTableList').DataTable().ajax.reload(null, false);
+      }
+    }
+
+    function loadGpuDevicesTable() {
+      if ( ! $.fn.DataTable.isDataTable( '#gpuDeviceTableList' ) ) {
+        //Load GPU Devices Table
+        $('#gpuDeviceTableList').DataTable({
+          ajax: {
+            url: "../api/instance/get_instance_gpu_devices?id="+serverId+"&project="+project+"&name="+instance+"&recursion=1",
+            dataType: "json",
+            dataSrc: "data",
+            contentType: "application/json",
+            error: function (xhr, error, code) {
+            console.log(xhr, code);
+          }
+          },
+          columns: [
+            { title: "Device", data: function (row, type, set) {
+                if (row.hasOwnProperty('device')) {
+                  if (row.device)
+                    return row.device
+                }
+                return '-'
+              },
+            },
+            { title: "Vendor ID", data: function (row, type, set) {
+                if (row.hasOwnProperty('vendorid')) {
+                  if (row.vendorid)
+                    return row.vendorid
+                }
+                return '-'
+              },
+            },
+            { title: "Product ID", data: function (row, type, set) {
+                if (row.hasOwnProperty('productid')) {
+                  if (row.productid)
+                    return row.productid
+                }
+                return '-'
+              },
+            },
+            { title: "ID", data: function (row, type, set) {
+                if (row.hasOwnProperty('id')) {
+                  if (row.id)
+                    return row.id
+                }
+                return '-'
+              },
+            },
+            { title: "PCI", data: function (row, type, set) {
+                if (row.hasOwnProperty('pci')) {
+                  if (row.pci)
+                    return row.pci
+                }
+                return '-'
+              },
+            },
+            { title: "Type", data: function (row, type, set) {
+                if (row.hasOwnProperty('type')) {
+                  if (row.type)
+                    return row.type
+                }
+                return '-'
+              },
+            },
+            { title: "Actions", data: function (row, type, set) {
+              links = ''
+              if (row.hasOwnProperty('device')) {
+                links = '<a onclick=delete_device(\''+row.device+'\')><i class="fas fa-trash-alt fa-lg" style="color:#ddd" title="Delete" aria-hidden="true"></i></a>'
+              }
+              return links
+              },
+            },
+          ],
+          order: [],
+        });
+      }
+      else {
+        $('#gpuDeviceTableList').DataTable().ajax.reload(null, false);
+      }
+    }
+
+    function loadNetworkDevicesTable() {
+      if ( ! $.fn.DataTable.isDataTable( '#networkDeviceTableList' ) ) {
+        //Load Network Devices Table
+        $('#networkDeviceTableList').DataTable({
+          ajax: {
+            url: "../api/instance/get_instance_network_devices?id="+serverId+"&project="+project+"&name="+instance+"&recursion=1",
+            dataType: "json",
+            dataSrc: "data",
+            contentType: "application/json",
+            error: function (xhr, error, code) {
+            console.log(xhr, code);
+          }
+          },
+          columns: [
+            { title: "Device", data: function (row, type, set) {
+                if (row.hasOwnProperty('device')) {
+                  if (row.device)
+                    return row.device
+                }
+                return '-'
+              },
+            },
+            { title: "NIC Type", data: function (row, type, set) {
+                if (row.hasOwnProperty('nictype')) {
+                  if (row.nictype)
+                    return row.nictype
+                }
+                return '-'
+              },
+            },
+            { title: "Parent Interface", data: function (row, type, set) {
+                if (row.hasOwnProperty('parent')) {
+                  if (row.parent)
+                    return row.parent
+                }
+                return '-'
+              },
+            },
+            { title: "Network", data: function (row, type, set) {
+                if (row.hasOwnProperty('network')) {
+                  if (row.network)
+                    return row.network
+                }
+                return '-'
+              },
+            },
+            { title: "Interface Name", data: function (row, type, set) {
+                if (row.hasOwnProperty('name')) {
+                  if (row.name)
+                    return row.name
+                }
+                return '-'
+              },
+            },
+            { title: "Actions", data: function (row, type, set) {
+              links = ''
+              if (row.hasOwnProperty('device')) {
+                links = '<a onclick=delete_device(\''+row.device+'\')><i class="fas fa-trash-alt fa-lg" style="color:#ddd" title="Delete" aria-hidden="true"></i></a>'
+              }
+              return links
+              },
+            },
+          ],
+          order: [],
+        });
+      }
+      else {
+        $('#networkDeviceTableList').DataTable().ajax.reload(null, false);
+      }
+    }
+
+    function loadProxyDevicesTable() {
+      if ( ! $.fn.DataTable.isDataTable( '#proxyDeviceTableList' ) ) {
+        //Load Proxy Devices Table
+        $('#proxyDeviceTableList').DataTable({
+          ajax: {
+            url: "../api/instance/get_instance_proxy_devices?id="+serverId+"&project="+project+"&name="+instance+"&recursion=1",
+            dataType: "json",
+            dataSrc: "data",
+            contentType: "application/json",
+            error: function (xhr, error, code) {
+            console.log(xhr, code);
+          }
+          },
+          columns: [
+            { title: "Device", data: function (row, type, set) {
+                if (row.hasOwnProperty('device')) {
+                  if (row.device)
+                    return row.device
+                }
+                return '-'
+              },
+            },
+            { title: "Connect", data: function (row, type, set) {
+                if (row.hasOwnProperty('connect')) {
+                  if (row.connect)
+                    return row.connect
+                }
+                return '-'
+              },
+            },
+            { title: "Listen", data: function (row, type, set) {
+                if (row.hasOwnProperty('listen')) {
+                  if (row.listen)
+                    return row.listen
+                }
+                return '-'
+              },
+            },
+            { title: "Type", data: function (row, type, set) {
+                if (row.hasOwnProperty('type')) {
+                  if (row.type)
+                    return row.type
+                }
+                return '-'
+              },
+            },
+            { title: "Actions", data: function (row, type, set) {
+              links = ''
+              if (row.hasOwnProperty('device')) {
+                links = '<a onclick=delete_device(\''+row.device+'\')><i class="fas fa-trash-alt fa-lg" style="color:#ddd" title="Delete" aria-hidden="true"></i></a>'
+              }
+              return links
+              },
+            },
+          ],
+          order: [],
+        });
+      }
+      else {
+        $('#proxyDeviceTableList').DataTable().ajax.reload(null, false);
+      }
+    }
+
+    function loadUnixDevicesTable() {
+      if ( ! $.fn.DataTable.isDataTable( '#unixDeviceTableList' ) ) {
+        //Load Unix Devices Table
+        $('#unixDeviceTableList').DataTable({
+          ajax: {
+            url: "../api/instance/get_instance_unix_devices?id="+serverId+"&project="+project+"&name="+instance+"&recursion=1",
+            dataType: "json",
+            dataSrc: "data",
+            contentType: "application/json",
+            error: function (xhr, error, code) {
+            console.log(xhr, code);
+          }
+          },
+          columns: [
+            { title: "Device", data: function (row, type, set) {
+                if (row.hasOwnProperty('device')) {
+                  if (row.device)
+                    return row.device
+                }
+                return '-'
+              },
+            },
+            { title: "Source", data: function (row, type, set) {
+                if (row.hasOwnProperty('source')) {
+                  if (row.source)
+                    return row.source
+                }
+                return '-'
+              },
+            },
+            { title: "Path", data: function (row, type, set) {
+                if (row.hasOwnProperty('path')) {
+                  if (row.path)
+                    return row.path
+                }
+                return '-'
+              },
+            },
+            { title: "Mode", data: function (row, type, set) {
+                if (row.hasOwnProperty('mode')) {
+                  if (row.mode)
+                    return row.mode
+                }
+                return '-'
+              },
+            },
+            { title: "Required", data: function (row, type, set) {
+                if (row.hasOwnProperty('required')) {
+                  if (row.required)
+                    return row.required
+                }
+                return '-'
+              },
+            },
+            { title: "Type", data: function (row, type, set) {
+                if (row.hasOwnProperty('type')) {
+                  if (row.type)
+                    return row.type
+                }
+                return '-'
+              },
+            },
+            { title: "Actions", data: function (row, type, set) {
+              links = ''
+              if (row.hasOwnProperty('device')) {
+                links = '<a onclick=delete_device(\''+row.device+'\')><i class="fas fa-trash-alt fa-lg" style="color:#ddd" title="Delete" aria-hidden="true"></i></a>'
+              }
+              return links
+              },
+            },
+          ],
+          order: [],
+        });
+      }
+      else {
+        $('#unixDeviceTableList').DataTable().ajax.reload(null, false);
+      }
+    }
+
+    function loadUsbDevicesTable() {
+      if ( ! $.fn.DataTable.isDataTable( '#usbDeviceTableList' ) ) {
+        //Load USB Devices Table
+        $('#usbDeviceTableList').DataTable({
+          ajax: {
+            url: "../api/instance/get_instance_usb_devices?id="+serverId+"&project="+project+"&name="+instance+"&recursion=1",
+            dataType: "json",
+            dataSrc: "data",
+            contentType: "application/json",
+            error: function (xhr, error, code) {
+            console.log(xhr, code);
+          }
+          },
+          columns: [
+            { title: "Device", data: function (row, type, set) {
+                if (row.hasOwnProperty('device')) {
+                  if (row.device)
+                    return row.device
+                }
+                return '-'
+              },
+            },
+            { title: "Vendor ID", data: function (row, type, set) {
+                if (row.hasOwnProperty('vendorid')) {
+                  if (row.vendorid)
+                    return row.vendorid
+                }
+                return '-'
+              },
+            },
+            { title: "Product ID", data: function (row, type, set) {
+                if (row.hasOwnProperty('productid')) {
+                  if (row.productid)
+                    return row.productid
+                }
+                return '-'
+              },
+            },
+            { title: "Mode", data: function (row, type, set) {
+                if (row.hasOwnProperty('mode')) {
+                  if (row.mode)
+                    return row.mode
+                }
+                return '-'
+              },
+            },
+            { title: "Required", data: function (row, type, set) {
+                if (row.hasOwnProperty('required')) {
+                  if (row.required)
+                    return row.required
+                }
+                return '-'
+              },
+            },
+            { title: "Type", data: function (row, type, set) {
+                if (row.hasOwnProperty('type')) {
+                  if (row.type)
+                    return row.type
+                }
+                return '-'
+              },
+            },
+            { title: "Actions", data: function (row, type, set) {
+              lins = ''
+              if (row.hasOwnProperty('device')) {
+                links = '<a onclick=delete_device(\''+row.device+'\')><i class="fas fa-trash-alt fa-lg" style="color:#ddd" title="Delete" aria-hidden="true"></i></a>'
+              }
+              return links
+              },
+            },
+          ],
+          order: [],
+        });
+      }
+      else {
+        $('#usbDeviceTableList').DataTable().ajax.reload(null, false);
+      }
+    }
+
+    // Load/Reload the Devices tab content when selected
+    $('#nav-devices-tab').on('show.bs.tab', function () {
+      loadDiskDevicesTable()
+      loadGpuDevicesTable()
+      loadNetworkDevicesTable()
+      loadProxyDevicesTable()
+      loadUnixDevicesTable()
+      loadUsbDevicesTable()
+    })
+
+    // Load the Disk Devices table when selected
+    $('#v-pills-disk-devices-tab').on('show.bs.tab', function () {
+      loadDiskDevicesTable()
+    })
+
+    // Load the GPU Devices table when selected
+    $('#v-pills-gpu-devices-tab').on('show.bs.tab', function () {
+      loadGpuDevicesTable()
+    })
+
+    // Load the Network Devices table when selected
+    $('#v-pills-network-devices-tab').on('show.bs.tab', function () {
+      loadNetworkDevicesTable()
+    })
+
+    // Load the Proxy Devices table when selected
+    $('#v-pills-proxy-devices-tab').on('show.bs.tab', function () {
+      loadProxyDevicesTable()
+    })
+
+    // Load the Unix Devices table when selected
+    $('#v-pills-unix-devices-tab').on('show.bs.tab', function () {
+      loadUnixDevicesTable()      
+    })
+
+    // Load the USB Devices table when selected
+    $('#v-pills-usb-devices-tab').on('show.bs.tab', function () {
+      loadUsbDevicesTable()
+    })
+
+
+    // Loads the attachProfile modal and populates dynamic form options
+    function loadAttachProfileModal(){
+      //Reset and populate the Attach profile modal profile dropdown
+      $("#selectProfileInput").empty().append('<option value="">(not set)</option>');
+      $.getJSON("../api/profiles/list_profiles?id="+serverId+"&project="+project, function (data) {
+        data = data.metadata
+        for (var index = 0; index < data.length; index++) {
+          //When using projects other than default and no recursion, it gets like URL variable with "?"
+          optionText = data[index].split("?")
+          optionText = optionText[0].replace('/1.0/profiles/','');
+          $('#selectProfileInput').append('<option value="' + optionText + '">' + optionText + '</option>');
+        }
+        //Show modal
+        $("#attachProfileModal").modal('show');
+      })
+    }
+
+    // Loads the detachProfile modal and populates dynamic form options
+    function loadDetachProfileModal(){
+      //Reset and populate the Detach profile modal profile dropdown
+      $("#selectDetachProfileInput").empty().append('<option value="">(not set)</option>');
+      $.getJSON("../api/instance/get_instance?id="+serverId+"&project="+project+"&name="+instance+"&recursion=1", function (data) {
+        data = data.metadata
+        for (var index = 0; index < data.profiles.length; index++) {
+          optionText = data.profiles[index];
+          $('#selectDetachProfileInput').append('<option value="' + optionText + '">' + optionText + '</option>');
+        }
+        //Show modal
+        $("#detachProfileModal").modal('show');
+      })
+    }
+
+    // Loads the addNetworkDevice modal and populates dynamic form options
+    function loadAddNetworkDeviceModal(){
+
+      //Reset and populate the modal Network Device's Network dropdown
+      $("#networkNetworkInput").empty().append('<option value="">(not set)</option>');
+      $.getJSON("../api/networks/list_network_managed_devices?id="+serverId+"&project="+project, function (data) {
+        for (var index = 0; index < data.length; index++) {
+          optionText = data[index];
+          $('#networkNetworkInput').append('<option value="' + optionText + '">' + optionText + '</option>');
+        }
+        //Set correct options
+        changeParentTypeInput();
+
+        //Show modal
+        $("#addNetworkDeviceModal").modal('show');
+      })
+
+      //Reset and populate the modal Network Device's Parent Network dropdown
+      $("#networkParentInput").empty().append('<option value="">(not set)</option>');
+      $.getJSON("../api/networks/list_networks?id="+serverId+"&project="+project, function (data) {
+        data = data.metadata
+        for (var index = 0; index < data.length; index++) {
+          optionText = data[index].replace('/1.0/networks/','');
+          $('#networkParentInput').append('<option value="' + optionText + '">' + optionText + '</option>');
+        }
+      })
+
+    }
+    
+    // Loads the addDiskDevice modal and populates dynamic form options
+    function loadAddDiskDeviceModal(){
+      //Reset and populate the modal Disk Device's Storage Pools dropdown
+      $("#diskPoolInput").empty().append('<option value="">(not set)</option>');
+      $.getJSON("../api/storage-pools/list_storage_pools?id="+serverId+"&project="+project, function (data) {
+        data = data.metadata
+        for (var index = 0; index < data.length; index++) {
+          optionText = data[index].replace('/1.0/storage-pools/','');
+          $('#diskPoolInput').append('<option value="' + optionText + '">' + optionText + '</option>');
+        }
+        //Show modal
+        $("#addDiskDeviceModal").modal('show');
+      })
+    }
+
+    // Loads thes migrateInstanceModal and populates dynamic form options
+    function loadMigrateInstanceModal(){
+      //Reset and populate the modal Server dropdown
+      $("#selectClusterInput").empty().append('<option value="">(not set)</option>');
+      $.getJSON("../api/cluster-members/list_cluster_members?id="+serverId+"&project="+project, function (data) {
+        data = data.metadata
+        for (var index = 0; index < data.length; index++) {
+          optionText = data[index].replace('/1.0/cluster/members/','');
+          $('#selectClusterInput').append('<option value="' + optionText + '">' + optionText + '</option>');
+        }
+        //Show modal
+        $("#migrateInstanceModal").modal('show');
+      })
+    }
+    
+    // Create snapshot from modal data
+    function createSnapshot(){
+      var snapshotName = $("#snapshotName").val();
+      var snapshotStateful = $("#snapshotStateful").val();
+      console.log("Info: creating snapshot " + snapshotName);
+      $.post("../api/instance/create_instance_snapshot?id="+serverId+"&project="+project+"&instance="+instance, { name: snapshotName, stateful: snapshotStateful},  function (data) {
+        console.log(data);
+        if (data.error_code >= 400){
+          alert(data.error);
+        }
+        //Async type
+        setTimeout(() => { reloadPageContent(); }, 2000);
+        operationStatusCheck()
+      });
+    }
+
+    // Create instance from snapshot
+    function createSnapshotInstance(){
+      var copyName = $("#instanceNameForSnapshotCreate").val();
+      var snapName = $("#snapNameForSnapshotCreate").val();
+      console.log("Info: creating snapshot " + snapshotName);
+      $.post("../api/instance/create_instance_snapshot_instance?id="+serverId+"&project="+project+"&instance="+instance+"&location="+target_location, { name: copyName, snapshot: snapName },  function (data) {
+        console.log(data);
+        if (data.error_code >= 400){
+          alert(data.error);
+        }
+        //Async type
+        setTimeout(() => { reloadPageContent(); }, 2000);
+        operationStatusCheck()
+        
+      });
+    }
+
+    // Load the create instance from snapshot modal
+    function loadCreateInstanceFromSnapshotModal(snap){
+      $("#snapNameForSnapshotCreate").val(snap);
+      $("#createSnapshotInstanceModal").modal('show');
+    } 
+
+    // Restore an instance from snapshot
+    function restoreInstanceSnapshot(snapshotName){
+      console.log("Info: restoring snapshot " + snapshotName + " to instance " + instance);
+      $.post("../api/instance/restore_instance_snapshot?id="+serverId+"&project="+project+"&instance="+instance, { name: snapshotName },  function (data) {
+        console.log(data);
+        if (data.error_code >= 400){
+          alert(data.error);
+        }
+        //Async type
+        setTimeout(() => { reloadPageContent(); }, 2000);
+        operationStatusCheck()
+      });
+    }
+
+    // Publish an image from snapshot
+    function publishSnapshot(){
+      var description = $("#publishSnapshotDescriptionInput").val();
+      var public = $("#publishSnapshotPublicInput").val();
+      var os = $("#publishSnapshotOsInput").val();
+      var release = $("#publishSnapshotReleaseInput").val();
+      var snapName = $("#publishSnapshotHiddenName").val();
+      console.log("Info: publishing image " + description + " from snapshot " + instance + "/" + snapName);
+      $.post("../api/instance/publish_instance_snapshot?id="+serverId+"&project="+project+"&instance="+instance+"&snapshot="+snapName, { description: description, os: os, release: release, public:public },  function (data) {
+        console.log(data);
+        if (data.error_code >= 400){
+          alert(data.error);
+        }
+        //Async type
+        setTimeout(() => { reloadPageContent(); }, 2000);
+        operationStatusCheck()
+      });
+    }
+
+    // Load the publish image from snapshot modal
+    function loadPublishImageFromSnapshotModal(snap){
+      $("#publishSnapshotHiddenName").val(snap);
+      $("#publishSnapshotModal").modal('show');
+    }
+
+    // Delete Instance
+    function deleteInstance(){
+      console.log("Info: confirming deletion of instance " + instance);
+      if (confirm("Are you sure you want to delete instance " + instance + "?") == true) {
+        console.log("Info: deleting instance " + instance);
+        $.post("../api/instance/delete_instance?id=" + serverId + "&project=" + project, { instance: instance }, function (data) {
+          console.log(data);
+          if (data.error_code >= 400){
+            alert(data.error);
+          }
+          // Change window to instances page
+          window.location.replace("instances?id="+serverId+"&project="+project);
+        });
+      }
+    }
+
+    // Delete snapshot
+    function deleteSnapshot(snapshot){
+      console.log("Info: confirming deletion of snapshot " + snapshot);
+      if (confirm("Are you sure you want to delete snapshot " + snapshot + "?") == true) {
+        console.log("Info: deleting snapshot " + snapshot + " from instance " + instance);
+        $.get("../api/instance/delete_instance_snapshot?id="+serverId+"&project="+project+"&instance="+instance+"&snapshot="+snapshot, function (data) {
+          console.log(data);
+          if (data.error_code >= 400){
+            alert(data.error);
+          }
+          //Async type
+          setTimeout(() => { reloadPageContent(); }, 2000);
+          operationStatusCheck()
+        });
+      }
+    }
+
+    // Attach profile to instance
+    function attachProfile(){
+      profile = $("#selectProfileInput").val()
+      console.log("Info: attaching profile " + profile + " to instance " + instance);
+      $.post("../api/instance/attach_instance_profile?id="+serverId+"&project="+project+"&instance="+instance, { name: profile, },  function (data) {
+        console.log(data);
+        if (data.error_code >= 400){
+          alert(data.error);
+        }
+        //Sync type
+        setTimeout(() => { reloadPageContent(); }, 1000);
+        operationStatusCheck()
+      });
+    }
+
+    // Detach profile from instance
+    function detachProfile(){
+      profile = $("#selectDetachProfileInput").val()
+      console.log("Info: removing profile " + profile + " from instance " + instance);
+      $.get("../api/instance/detach_instance_profile?id="+serverId+"&project="+project+"&instance="+instance+"&profile="+profile, function (data) {
+        console.log(data);
+        if (data.error_code >= 400){
+          alert(data.error);
+        }
+        //Async type
+        setTimeout(() => { reloadPageContent(); }, 2000);
+        operationStatusCheck()
+      });
+    }
+
+    // Add a disk device to instance
+    function addInstanceDiskDevice(){
+      diskDevice = $("#diskNameInput").val()
+      console.log("Info: adding disk device " + diskDevice + " to instance " + instance);
+      if ($("#diskPoolInput").val() != '') {
+        source = $("#diskSourceSelectInput").val();
+      }
+      else {
+        source = $("#diskSourceInput").val();
+      }
+      $.post("../api/instance/add_instance_disk_device?id="+serverId+"&project="+project+"&instance="+instance, { 
+        name: $("#diskNameInput").val(), 
+        pool: $("#diskPoolInput").val(),
+        source: source,
+        path: $("#diskPathInput").val(),
+        limits_read: $("#diskLimitsReadInput").val(),
+        limits_write: $("#diskLimitsWriteInput").val(),
+        limits_max: $("#diskLimitsMaxInput").val(),
+        required: $("#diskRequiredInput").val(),
+        read_only: $("#diskReadOnlyInput").val(),
+        size: $("#diskSizeInput").val(),
+        size_state: $("#diskSizeStateInput").val(),
+        recursive: $("#diskRecursiveInput").val(),
+        propagation: $("#diskPropagationInput").val(),
+        shift: $("#diskShiftInput").val(),
+        raw_mount_options: $("#diskRawMountOptionsInput").val(),
+        ceph_user_name: $("#diskCephUserNameInput").val(),
+        ceph_cluster_name: $("#diskCephClusterNameInput").val(),
+        boot_priority: $("#diskBootPriorityInput").val()
+      },  function (data) {
+        console.log(data);
+        if (data.error_code >= 400){
+          alert(data.error);
+        }
+        //Sync type
+        setTimeout(() => { reloadPageContent(); }, 1000);
+        operationStatusCheck()
+      });
+    }
+
+    // Add a GPU device to instance
+    function addInstanceGPUDevice(){
+      gpuDevice = $("#gpuDeviceNameInput").val()
+      console.log("Info: adding gpu device " + gpuDevice + " to instance " + instance);
+      $.post("../api/instance/add_instance_gpu_device?id="+serverId+"&project="+project+"&instance="+instance, { 
+        name: $("#gpuDeviceNameInput").val(), 
+        type: $("#gpuTypeInput").val(),
+        vendorid: $("#gpuVendoridInput").val(),
+        productid: $("#gpuProductidInput").val(),
+        id: $("#gpuIdInput").val(),
+        pci: $("#gpuPciInput").val(),
+        uid: $("#gpuUidInput").val(),
+        gid: $("#gpuGidInput").val(),
+        mode: $("#gpuModeInput").val(),
+        mig_ci: $("#gpuMigCiInput").val(),
+        mig_gi: $("#gpuMigGiInput").val(),
+      },  function (data) {
+        console.log(data);
+        if (data.error_code >= 400){
+          alert(data.error);
+        }
+        //Sync type
+        setTimeout(() => { reloadPageContent(); }, 1000);
+        operationStatusCheck()
+      });
+    }
+
+    // Add a network device to instance
+    function addNetworkDevice(){
+      networkDevice = $("#networkNameInput").val()
+      console.log("Info: adding network device " + networkDevice + " to instance " + instance);
+      $.post("../api/instance/add_instance_network_device?id="+serverId+"&project="+project+"&instance="+instance, { 
+        name: $("#networkNameInput").val(), 
+        nictype: $("#networkNicTypeInput").val(),
+        parent: $("#networkParentInput").val(),
+        network: $("#networkNetworkInput").val(),
+        interface_name: $("#networkInterfaceNameInput").val(),
+        mtu: $("#networkMtuInput").val(),
+        mode: $("#networkModeInput").val(),
+        hwaddr: $("#networkHwaddrInput").val(),
+        host_name: $("#networkHostNameInput").val(),
+        limits_ingress: $("#networkLimitsIngressInput").val(),
+        limits_egress: $("#networkLimitsEgressInput").val(),
+        limits_max: $("#networkLimitsMaxInput").val(),
+        ipv4_address: $("#networkIpv4AddressInput").val(),
+        ipv4_gateway: $("#networkIpv4GatewayInput").val(),
+        ipv4_host_table: $("#networkIpv4HostTableInput").val(),
+        ipv4_host_address: $("#networkIpv4HostAddressInput").val(),
+        ipv4_routes: $("#networkIpv4RoutesInput").val(),
+        ipv4_routes_external: $("#networkIpv4RoutesExternalInput").val(),
+        ipv6_address: $("#networkIpv6AddressInput").val(),
+        ipv6_gateway: $("#networkIpv6GatewayInput").val(),
+        ipv6_host_table: $("#networkIpv6HostTableInput").val(),
+        ipv6_host_address: $("#networkIpv6HostAddressInput").val(),
+        ipv6_routes: $("#networkIpv6RoutesInput").val(),
+        ipv6_routes_external: $("#networkIpv6RoutesExternalInput").val(),
+        security_mac_filtering: $("#networkSecurityMacFilteringInput").val(),
+        security_ipv4_filtering: $("#networkSecurityIpv4FilteringInput").val(),
+        security_ipv6_filtering: $("#networkSecurityIpv6FilteringInput").val(),
+        maas_subnet_ipv4: $("#networkMaasSubnetIpv4Input").val(),
+        maas_subnet_ipv6: $("#networkMaasSubnetIpv6Input").val(),
+        boot_priority: $("#networkBootPriorityInput").val(),
+        vlan: $("#networkVlanInput").val(),
+        vlan_tagged: $("#networkVlanTaggedInput").val(),
+        security_port_isolation: $("#networkSecurityPortIsolationInput").val(),
+        gvrp: $("#networkGvrpInput").val(),
+        security_acls: $("#networkSecurityAclsInput").val(),
+        security_acls_default_ingress_action: $("#networkSecurityAclsDefaultIngressActionInput").val(),
+        security_acls_default_egress_action: $("#networkSecurityAclsDefaultEgressActionInput").val(),
+        security_acls_default_ingress_logged: $("#networkSecurityAclsDefaultIngressLoggedInput").val(),
+        security_acls_default_egress_logged: $("#networkSecurityAclsDefaultEgressLoggedInput").val()
+      },  function (data) {
+        console.log(data);
+        if (data.error_code >= 400){
+          alert(data.error);
+        }
+        //Sync type
+        setTimeout(() => { reloadPageContent(); }, 1000);
+        operationStatusCheck()
+      });
+    }
+
+    // Add a proxy device to instance
+    function addInstanceProxyDevice(){
+      proxyDevice = $("#proxyDeviceNameInput").val()
+      console.log("Info: adding proxy device " + proxyDevice + " to instance " + instance);
+      $.post("../api/instance/add_instance_proxy_device?id="+serverId+"&project="+project+"&instance="+instance, { 
+        name: $("#proxyDeviceNameInput").val(), 
+        listen: $("#proxyListenInput").val(),
+        connect: $("#proxyConnectInput").val(),
+        bind: $("#proxyBindInput").val(),
+        uid: $("#proxyUidInput").val(),
+        gid: $("#proxyGidInput").val(),
+        mode: $("#proxyModeInput").val(),
+        nat: $("#proxyNatInput").val(),
+        proxy_protocol: $("#proxyProxyProtocolInput").val(),
+        security_uid: $("#proxySecurityUidInput").val(),
+        security_gid: $("#proxySecurityGidInput").val(),
+      },  function (data) {
+        console.log(data);
+        if (data.error_code >= 400){
+          alert(data.error);
+        }
+        //Sync type
+        setTimeout(() => { reloadPageContent(); }, 1000);
+        operationStatusCheck()
+      });
+    }
+
+    // Add a Unix device to instance
+    function addInstanceUnixDevice(){
+      unixDevice = $("#unixDeviceNameInput").val()
+      console.log("Info: adding Unix device " + unixDevice + " to instance " + instance);
+      $.post("../api/instance/add_instance_unix_device?id="+serverId+"&project="+project+"&instance="+instance, { 
+        name: $("#unixDeviceNameInput").val(), 
+        type: $("#unixTypeInput").val(),
+        source: $("#unixSourceInput").val(),
+        path: $("#unixPathInput").val(),
+        major: $("#unixMajorInput").val(),
+        minor: $("#unixMinorInput").val(),
+        uid: $("#unixUidInput").val(),
+        gid: $("#unixGidInput").val(),
+        mode: $("#unixModeInput").val(),
+        required: $("#unixRequiredInput").val(),
+
+      },  function (data) {
+        console.log(data);
+        if (data.error_code >= 400){
+          alert(data.error);
+        }
+        //Sync type
+        setTimeout(() => { reloadPageContent(); }, 1000);
+        operationStatusCheck()
+      });
+    }
+
+    // Add a USB device to instance
+    function addInstanceUSBDevice(){
+      usbDevice = $("#usbDeviceNameInput").val()
+      console.log("Info: adding USB device " + usbDevice + " to instance " + instance);
+      $.post("../api/instance/add_instance_usb_device?id="+serverId+"&project="+project+"&instance="+instance, { 
+        name: $("#usbDeviceNameInput").val(), 
+        vendorid: $("#usbVendoridInput").val(),
+        productid: $("#usbProductidInput").val(),
+        uid: $("#usbUidInput").val(),
+        gid: $("#usbGidInput").val(),
+        mode: $("#usbModeInput").val(),
+      },  function (data) {
+        console.log(data);
+        if (data.error_code >= 400){
+          alert(data.error);
+        }
+        //Sync type
+        setTimeout(() => { reloadPageContent(); }, 1000);
+        operationStatusCheck()
+      });     
+    }
+
+    // Create a backup of instance
+    function createBackup(){
+      backup = $("#backupName").val()
+      console.log("Info: creating backup " + backup + " for instance " + instance);
+      $.post("../api/instance/create_instance_backup?id="+serverId+"&project="+project+"&instance="+instance, { 
+        name: $("#backupName").val(), 
+        instance_only: $("#backupInstanceOnly").val(),
+        optimized_storage: $("#backupOptimizedStorage").val(),
+        compression_algorithm: $("#backupCompressionAlgorithm").val(),
+      },  function (data) {
+        console.log(data);
+        if (data.error_code >= 400){
+          alert(data.error);
+        }
+        //Async type
+        setTimeout(() => { reloadPageContent(); }, 2000);
+        operationStatusCheck()
+      }); 
+    }
+
+    // Delete a backup of instance
+    function deleteBackup(backup){
+      console.log("Info: confirming deletion of backup " + backup);
+      if (confirm("Are you sure you want to delete backup " + backup + "?") == true) {
+        console.log("Info: deleting backup " + backup + " from instance " + instance);
+        $.get("../api/instance/delete_instance_backup?id="+serverId+"&project="+project+"&instance="+instance+"&backup="+backup, function (data) {
+          console.log(data);
+          if (data.error_code >= 400){
+            alert(data.error);
+          }
+          //Async type
+          setTimeout(() => { reloadPageContent(); }, 2000);
+          operationStatusCheck()
+        });
+      }
+    }
+
+    // Export a backup to app
+    function exportBackup(backup){
+      console.log("Info: exporting backup " + backup + " from instance " + instance);
+      $.get("../api/instance/export_instance_backup?id="+serverId+"&project="+project+"&instance="+instance+"&backup="+backup, function (data) {
+        console.log(data);
+        if (data.error_code >= 400){
+          alert(data.error);
+        }
+        //Async type
+        setTimeout(() => { reloadPageContent(); }, 2000);
+        operationStatusCheck()
+      });
+    }
+
+    // Display log file in modal
+    function displayLog(logPath){
+      console.log("Info: displaying log " + logPath);
+      $.get("../api/instance/display_instance_log?id="+serverId+"&project="+project+"&log="+logPath, function (data) {
+        console.log(data);
+        if (data.error_code >= 400){
+          alert(data.error);
+        }
+        $("#logNameInput").text(logPath);
+        $("#logDataInput").val(data);
+        $("#loadLogModal").modal('show');
+      });
+    }
+
+    // Delete log file
+    function deleteLog(logPath){
+      console.log("Info: confirming deletion of log " + logPath);
+      if (confirm("Are you sure you want to delete log " + logPath + "?") == true) {
+        console.log("Info: deleting log " + logPath + " from instance " + instance);
+        $.get("../api/instance/delete_instance_log?id="+serverId+"&project="+project+"&log="+logPath, function (data) {
+          console.log(data);
+          if (data.error_code >= 400){
+            alert(data.error);
+          }
+          //Async type
+          setTimeout(() => { reloadPageContent(); }, 2000);
+          operationStatusCheck()
+        });
+      }
+    }
+
+    // Delete an instance device
+    function delete_device(device){
+      console.log("Info: confirming removal of device " + device);
+      if (confirm("Are you sure you want to remove device " + device + "?") == true) {
+        console.log("Info: removing device " + device + " from instance " + instance);
+        $.get("../api/instance/delete_instance_device?id="+serverId+"&project="+project+"&instance="+instance+"&device="+device, function (data) {
+          console.log(data);
+          if (data.error_code >= 400){
+            alert(data.error);
+          }
+          //Async type
+          setTimeout(() => { reloadPageContent(); }, 2000);
+          operationStatusCheck()
+        });
+      }
+    }
+
+    // Change properties options while adding network device
+    function changePropertySetInput(){
+      var networkPropertySetInput = $("#networkPropertySetInput").val()
+      if (networkPropertySetInput == "network"){
+        $("#networkNetworkRow").show();
+        $("#networkParentTypeRow").show();
+        $("#networkNicTypeRow").hide(); $("#networkNicTypeInput").val('');
+        $("#networkParentTypeInput").val('bridge');
+        changeParentTypeInput();
+      }
+      if (networkPropertySetInput == "nictype"){
+        $("#networkNetworkRow").hide(); $("#networkNetworkInput").val('');
+        $("#networkParentTypeRow").hide(); $("#networkParentTypeInput").val('');
+        $("#networkNicTypeRow").show();
+        $("#networkNicTypeInput").val('bridged');
+        changeNicTypeInput();
+      }
+    }
+
+    // Change options based on network type while adding network device
+    function changeNicTypeInput(){
+      var networkNicTypeInput = $("#networkNicTypeInput").val();
+      if (networkNicTypeInput == "bridged"){
+        $("#networkParentRow").show()
+        $("#networkNetworkRow").hide(); $("#networkNetworkInput").val('');
+        $("#networkInterfaceNameRow").show()
+        $("#networkMtuRow").show()
+        $("#networkHwaddrRow").show()
+        $("#networkHostNameRow").show()
+        $("#networkLimitsIngressRow").show()
+        $("#networkLimitsEgressRow").show()
+        $("#networkLimitsMaxRow").show()
+        $("#networkIpv4AddressRow").show()
+        $("#networkIpv6AddressRow").show()
+        $("#networkIpv4RoutesRow").show()
+        $("#networkIpv6RoutesRow").show()
+        $("#networkSecurityMacFilteringRow").show()
+        $("#networkSecurityIpv4FilteringRow").show()
+        $("#networkSecurityIpv6FilteringRow").show()
+        $("#networkMaasSubnetIpv4Row").show()
+        $("#networkMaasSubnetIpv6Row").show()
+        $("#networkBootPriorityRow").show()
+        $("#networkVlanRow").show()
+        $("#networkVlanTaggedRow").show()
+        $("#networkSecurityPortIsolationRow").show()
+        $("#networkGvrpRow").hide(); $("#networkGvrpInput").val('');
+        $("#networkModeRow").hide(); $("#networkModeInput").val('');
+        $("#networkIpv4GatewayRow").hide(); $("#networkIpv4GatewayInput").val('');
+        $("#networkIpv4HostTableRow").hide(); $("#networkIpv4HostTableInput").val('');
+        $("#networkIpv6GatewayRow").hide(); $("#networkIpv6GatewayInput").val('');
+        $("#networkIpv6HostTableRow").hide(); $("#networkIpv6HostTableInput").val('');;
+        $("#networkIpv4HostAddressRow").hide(); $("#networkIpv4HostAddressInput").val('');
+        $("#networkIpv6HostAddressRow").hide(); $("#networkIpv6HostAddressInput").val('');
+        $("#networkIpv4RoutesExternalRow").hide(); $("#networkIpv4RoutesExternalInput").val('');
+        $("#networkIpv6RoutesExternalRow").hide(); $("#networkIpv6RoutesExternalInput").val('');
+        $("#networkSecurityAclsRow").hide(); $("#networkSecurityAclsInput").val('');
+        $("#networkSecurityAclsDefaultIngressActionRow").hide();$("#networkSecurityAclsDefaultIngressActionInput").val('');
+        $("#networkSecurityAclsDefaultEgressActionRow").hide(); $("#networkSecurityAclsDefaultEgressActionInput").val('');
+        $("#networkSecurityAclsDefaultIngressLoggedRow").hide(); $("#networkSecurityAclsDefaultIngressLoggedInput").val('');
+        $("#networkSecurityAclsDefaultEgressLoggedRow").hide(); $("#networkSecurityAclsDefaultEgressLoggedInput").val('');
+      }
+      if (networkNicTypeInput == "macvlan"){
+        $("#networkParentRow").show()
+        $("#networkNetworkRow").hide(); $("#networkNetworkInput").val('');
+        $("#networkInterfaceNameRow").show()
+        $("#networkMtuRow").show()
+        $("#networkHwaddrRow").show()
+        $("#networkHostNameRow").hide(); $("#networkHostNameInput").val('');
+        $("#networkLimitsIngressRow").hide(); $("#networkLimitsIngressInput").val('');
+        $("#networkLimitsEgressRow").hide(); $("#networkLimitsEgressInput").val('');
+        $("#networkLimitsMaxRow").hide(); $("#networkLimitsMaxInput").val('');
+        $("#networkIpv4AddressRow").hide(); $("#networkIpv4AddressInput").val('');
+        $("#networkIpv6AddressRow").hide(); $("#networkIpv6AddressInput").val('');
+        $("#networkIpv4RoutesRow").hide(); $("#networkIpv4RoutesInput").val('');
+        $("#networkIpv6RoutesRow").hide(); $("#networkIpv6RoutesInput").val('');
+        $("#networkSecurityMacFilteringRow").hide(); $("#networkSecurityMacFilteringInput").val('');
+        $("#networkSecurityIpv4FilteringRow").hide(); $("#networkSecurityIpv4FilteringInput").val('');
+        $("#networkSecurityIpv6FilteringRow").hide(); $("#networkSecurityIpv6FilteringInput").val('');
+        $("#networkMaasSubnetIpv4Row").show()
+        $("#networkMaasSubnetIpv6Row").show()
+        $("#networkBootPriorityRow").show()
+        $("#networkVlanRow").show()
+        $("#networkVlanTaggedRow").hide(); $("#networkVlanTaggedInput").val('');
+        $("#networkSecurityPortIsolationRow").hide(); $("#networkSecurityPortIsolationInput").val('');
+        $("#networkGvrpRow").show()
+        $("#networkModeRow").hide(); $("#networkModeInput").val('');
+        $("#networkIpv4GatewayRow").hide(); $("#networkIpv4GatewayInput").val('');
+        $("#networkIpv4HostTableRow").hide(); $("#networkIpv4HostTableInput").val('');
+        $("#networkIpv6GatewayRow").hide(); $("#networkIpv6GatewayInput").val('');
+        $("#networkIpv6HostTableRow").hide(); $("#networkIpv6HostTableInput").val('');
+        $("#networkIpv4HostAddressRow").hide(); $("#networkIpv4HostAddressInput").val('');
+        $("#networkIpv6HostAddressRow").hide(); $("#networkIpv6HostAddressInput").val('');
+        $("#networkIpv4RoutesExternalRow").hide(); $("#networkIpv4RoutesExternalInput").val('');
+        $("#networkIpv6RoutesExternalRow").hide(); $("#networkIpv6RoutesExternalInput").val('');
+        $("#networkSecurityAclsRow").hide(); $("#networkSecurityAclsInput").val('');
+        $("#networkSecurityAclsDefaultIngressActionRow").hide(); $("#networkSecurityAclsDefaultIngressActionInput").val('');
+        $("#networkSecurityAclsDefaultEgressActionRow").hide(); $("#networkSecurityAclsDefaultEgressActionInput").val('');
+        $("#networkSecurityAclsDefaultIngressLoggedRow").hide(); $("#networkSecurityAclsDefaultIngressLoggedInput").val('');
+        $("#networkSecurityAclsDefaultEgressLoggedRow").hide(); $("#networkSecurityAclsDefaultEgressLoggedInput").val('');
+      }
+      if (networkNicTypeInput == "sriov"){
+        $("#networkParentRow").show()
+        $("#networkNetworkRow").hide(); $("#networkNetworkInput").val('');
+        $("#networkInterfaceNameRow").show()
+        $("#networkMtuRow").show()
+        $("#networkHwaddrRow").show()
+        $("#networkHostNameRow").hide(); $("#networkHostNameInput").val('');
+        $("#networkLimitsIngressRow").hide(); $("#networkLimitsIngressInput").val('');
+        $("#networkLimitsEgressRow").hide(); $("#networkLimitsEgressInput").val('');
+        $("#networkLimitsMaxRow").hide(); $("#networkLimitsMaxInput").val('');
+        $("#networkIpv4AddressRow").hide(); $("#networkIpv4AddressInput").val('');
+        $("#networkIpv6AddressRow").hide(); $("#networkIpv6AddressInput").val('');
+        $("#networkIpv4RoutesRow").hide(); $("#networkIpv4RoutesInput").val('');
+        $("#networkIpv6RoutesRow").hide(); $("#networkIpv6RoutesInput").val('');
+        $("#networkSecurityMacFilteringRow").show()
+        $("#networkSecurityIpv4FilteringRow").hide(); $("#networkSecurityIpv4FilteringInput").val('');
+        $("#networkSecurityIpv6FilteringRow").hide(); $("#networkSecurityIpv6FilteringInput").val('');
+        $("#networkMaasSubnetIpv4Row").show()
+        $("#networkMaasSubnetIpv6Row").show()
+        $("#networkBootPriorityRow").show()
+        $("#networkVlanRow").show()
+        $("#networkVlanTaggedRow").hide(); $("#networkVlanTaggedInput").val('');
+        $("#networkSecurityPortIsolationRow").hide(); $("#networkSecurityPortIsolationInput").val('');
+        $("#networkGvrpRow").hide(); $("#networkGvrpInput").val('');
+        $("#networkModeRow").hide(); $("#networkModeInput").val('');
+        $("#networkIpv4GatewayRow").hide(); $("#networkIpv4GatewayInput").val('');
+        $("#networkIpv4HostTableRow").hide(); $("#networkIpv4HostTableInput").val('');
+        $("#networkIpv6GatewayRow").hide(); $("#networkIpv6GatewayInput").val('');
+        $("#networkIpv6HostTableRow").hide(); $("#networkIpv6HostTableInput").val('');
+        $("#networkIpv4HostAddressRow").hide(); $("#networkIpv4HostAddressInput").val('');
+        $("#networkIpv6HostAddressRow").hide(); $("#networkIpv6HostAddressInput").val('');
+        $("#networkIpv4RoutesExternalRow").hide(); $("#networkIpv4RoutesExternalInput").val('');
+        $("#networkIpv6RoutesExternalRow").hide(); $("#networkIpv6RoutesExternalInput").val('');
+        $("#networkSecurityAclsRow").hide(); $("#networkSecurityAclsInput").val('');
+        $("#networkSecurityAclsDefaultIngressActionRow").hide(); $("#networkSecurityAclsDefaultIngressActionInput").val('');
+        $("#networkSecurityAclsDefaultEgressActionRow").hide(); $("#networkSecurityAclsDefaultEgressActionInput").val('');
+        $("#networkSecurityAclsDefaultIngressLoggedRow").hide(); $("#networkSecurityAclsDefaultIngressLoggedInput").val('');
+        $("#networkSecurityAclsDefaultEgressLoggedRow").hide(); $("#networkSecurityAclsDefaultEgressLoggedInput").val('');
+      }
+      if (networkNicTypeInput == "physical"){
+        $("#networkParentRow").show()
+        $("#networkNetworkRow").hide(); $("#networkNetworkInput").val('');
+        $("#networkInterfaceNameRow").show()
+        $("#networkMtuRow").show()
+        $("#networkHwaddrRow").show()
+        $("#networkHostNameRow").hide(); $("#networkHostNameInput").val('');
+        $("#networkLimitsIngressRow").hide(); $("#networkLimitsIngressInput").val('');
+        $("#networkLimitsEgressRow").hide(); $("#networkLimitsEgressInput").val('');
+        $("#networkLimitsMaxRow").hide(); $("#networkLimitsMaxInput").val('');
+        $("#networkIpv4AddressRow").hide(); $("#networkIpv4AddressInput").val('');
+        $("#networkIpv6AddressRow").hide(); $("#networkIpv6AddressInput").val('');
+        $("#networkIpv4RoutesRow").hide(); $("#networkIpv4RoutesInput").val('');
+        $("#networkIpv6RoutesRow").hide(); $("#networkIpv6RoutesInput").val('');
+        $("#networkSecurityMacFilteringRow").hide(); $("#networkSecurityMacFilteringInput").val('');
+        $("#networkSecurityIpv4FilteringRow").hide(); $("#networkSecurityIpv4FilteringInput").val('');
+        $("#networkSecurityIpv6FilteringRow").hide(); $("#networkSecurityIpv6FilteringInput").val('');
+        $("#networkMaasSubnetIpv4Row").show()
+        $("#networkMaasSubnetIpv6Row").show()
+        $("#networkBootPriorityRow").show()
+        $("#networkVlanRow").show()
+        $("#networkVlanTaggedRow").hide(); $("#networkVlanTaggedInput").val('');
+        $("#networkSecurityPortIsolationRow").hide(); $("#networkSecurityPortIsolationInput").val('');
+        $("#networkGvrpRow").show()
+        $("#networkModeRow").hide(); $("#networkModeInput").val('');
+        $("#networkIpv4GatewayRow").hide(); $("#networkIpv4GatewayInput").val('');
+        $("#networkIpv4HostTableRow").hide(); $("#networkIpv4HostTableInput").val('');
+        $("#networkIpv6GatewayRow").hide(); $("#networkIpv6GatewayInput").val('');
+        $("#networkIpv6HostTableRow").hide(); $("#networkIpv6HostTableInput").val('');
+        $("#networkIpv4HostAddressRow").hide(); $("#networkIpv4HostAddressInput").val('');
+        $("#networkIpv6HostAddressRow").hide(); $("#networkIpv6HostAddressInput").val('');
+        $("#networkIpv4RoutesExternalRow").hide(); $("#networkIpv4RoutesExternalInput").val('');
+        $("#networkIpv6RoutesExternalRow").hide(); $("#networkIpv6RoutesExternalInput").val('');
+        $("#networkSecurityAclsRow").hide(); $("#networkSecurityAclsInput").val('');
+        $("#networkSecurityAclsDefaultIngressActionRow").hide(); $("#networkSecurityAclsDefaultIngressActionInput").val('');
+        $("#networkSecurityAclsDefaultEgressActionRow").hide(); $("#networkSecurityAclsDefaultEgressActionInput").val('');
+        $("#networkSecurityAclsDefaultIngressLoggedRow").hide(); $("#networkSecurityAclsDefaultIngressLoggedInput").val('');
+        $("#networkSecurityAclsDefaultEgressLoggedRow").hide(); $("#networkSecurityAclsDefaultEgressLoggedInput").val('');
+      }
+      if (networkNicTypeInput == "ipvlan"){
+        $("#networkParentRow").show()
+        $("#networkNetworkRow").hide(); $("#networkNetworkInput").val('');
+        $("#networkInterfaceNameRow").show()
+        $("#networkMtuRow").show()
+        $("#networkHwaddrRow").show()
+        $("#networkHostNameRow").hide(); $("#networkHostNameInput").val('');
+        $("#networkLimitsIngressRow").hide(); $("#networkLimitsIngressInput").val('');
+        $("#networkLimitsEgressRow").hide(); $("#networkLimitsEgressInput").val('');
+        $("#networkLimitsMaxRow").hide(); $("#netnetworkLimitsMaxRowworkModeInput").val('');
+        $("#networkIpv4AddressRow").show()
+        $("#networkIpv6AddressRow").show()
+        $("#networkIpv4RoutesRow").hide(); $("#networkIpv4RoutesInput").val('');
+        $("#networkIpv6RoutesRow").hide(); $("#networkIpv6RoutesInput").val('');
+        $("#networkSecurityMacFilteringRow").hide(); $("#networkSecurityMacFilteringInput").val('');
+        $("#networkSecurityIpv4FilteringRow").hide(); $("#networkSecurityIpv4FilteringInput").val('');
+        $("#networkSecurityIpv6FilteringRow").hide(); $("#networkSecurityIpv6FilteringInput").val('');
+        $("#networkMaasSubnetIpv4Row").hide(); $("#networkMaasSubnetIpv4Input").val('');
+        $("#networkMaasSubnetIpv6Row").hide(); $("#networkMaasSubnetIpv6Input").val('');
+        $("#networkBootPriorityRow").hide(); $("#networkBootPriorityInput").val('');
+        $("#networkVlanRow").show()
+        $("#networkVlanTaggedRow").hide(); $("#networkVlanTaggedInput").val('');
+        $("#networkSecurityPortIsolationRow").hide(); $("#netnetworkSecurityPortIsolationRowworkModeInput").val('');
+        $("#networkGvrpRow").show()
+        $("#networkModeRow").show()
+        $("#networkIpv4GatewayRow").show()
+        $("#networkIpv4HostTableRow").show()
+        $("#networkIpv6GatewayRow").show()
+        $("#networkIpv6HostTableRow").show()
+        $("#networkIpv4HostAddressRow").hide(); $("#networkIpv4HostAddressInput").val('');
+        $("#networkIpv6HostAddressRow").hide(); $("#networkIpv6HostAddressInput").val('');
+        $("#networkIpv4RoutesExternalRow").hide(); $("#networkIpv4RoutesExternalInput").val('');
+        $("#networkIpv6RoutesExternalRow").hide(); $("#networkIpv6RoutesExternalInput").val('');
+        $("#networkSecurityAclsRow").hide(); $("#networkSecurityAclsInput").val('');
+        $("#networkSecurityAclsDefaultIngressActionRow").hide(); $("#networkSecurityAclsDefaultIngressActionInput").val('');
+        $("#networkSecurityAclsDefaultEgressActionRow").hide(); $("#networkSecurityAclsDefaultEgressActionInput").val('');
+        $("#networkSecurityAclsDefaultIngressLoggedRow").hide(); $("#networkSecurityAclsDefaultIngressLoggedInput").val('');
+        $("#networkSecurityAclsDefaultEgressLoggedRow").hide(); $("#networkSecurityAclsDefaultEgressLoggedInput").val('');
+      }
+      if (networkNicTypeInput == "p2p"){
+        $("#networkParentRow").hide(); $("#networkParentInput").val('');
+        $("#networkNetworkRow").hide(); $("#networkNetworkInput").val('');
+        $("#networkInterfaceNameRow").show()
+        $("#networkMtuRow").show()
+        $("#networkHwaddrRow").show()
+        $("#networkHostNameRow").show()
+        $("#networkLimitsIngressRow").show()
+        $("#networkLimitsEgressRow").show()
+        $("#networkLimitsMaxRow").show()
+        $("#networkIpv4AddressRow").hide(); $("#networkIpv4AddressInput").val('');
+        $("#networkIpv6AddressRow").hide(); $("#networkIpv6AddressInput").val('');
+        $("#networkIpv4RoutesRow").show()
+        $("#networkIpv6RoutesRow").show()
+        $("#networkSecurityMacFilteringRow").hide(); $("#networkSecurityMacFilteringInput").val('');
+        $("#networkSecurityIpv4FilteringRow").hide(); $("#netnetworkSecurityIpv4FilteringRowworkModeInput").val('');
+        $("#networkSecurityIpv6FilteringRow").hide(); $("#networkSecurityIpv6FilteringInput").val('');
+        $("#networkMaasSubnetIpv4Row").hide(); $("#networkMaasSubnetIpv4Input").val('');
+        $("#networkMaasSubnetIpv6Row").hide(); $("#networkMaasSubnetIpv6Input").val('');
+        $("#networkBootPriorityRow").show()
+        $("#networkVlanRow").hide(); $("#networkVlanInput").val('');
+        $("#networkVlanTaggedRow").hide(); $("#networkVlanTaggedInput").val('');
+        $("#networkSecurityPortIsolationRow").hide(); $("#networkSecurityPortIsolationInput").val('');
+        $("#networkGvrpRow").hide(); $("#networkGvrpInput").val('');
+        $("#networkModeRow").hide(); $("#networkModeInput").val('');
+        $("#networkIpv4GatewayRow").hide(); $("#networkIpv4GatewayInput").val('');
+        $("#networkIpv4HostTableRow").hide(); $("#networkIpv4HostTableInput").val('');
+        $("#networkIpv6GatewayRow").hide(); $("#networkIpv6GatewayInput").val('');
+        $("#networkIpv6HostTableRow").hide(); $("#networkIpv6HostTableInput").val('');
+        $("#networkIpv4HostAddressRow").hide(); $("#networkIpv4HostAddressInput").val('');
+        $("#networkIpv6HostAddressRow").hide(); $("#networkIpv6HostAddressInput").val('');
+        $("#networkIpv4RoutesExternalRow").hide(); $("#networkIpv4RoutesExternalInput").val('');
+        $("#networkIpv6RoutesExternalRow").hide(); $("#networkIpv6RoutesExternalInput").val('');
+        $("#networkSecurityAclsRow").hide(); $("#networkSecurityAclsInput").val('');
+        $("#networkSecurityAclsDefaultIngressActionRow").hide(); $("#networkSecurityAclsDefaultIngressActionInput").val('');
+        $("#networkSecurityAclsDefaultEgressActionRow").hide(); $("#networkSecurityAclsDefaultEgressActionInput").val('');
+        $("#networkSecurityAclsDefaultIngressLoggedRow").hide(); $("#networkSecurityAclsDefaultIngressLoggedInput").val('');
+        $("#networkSecurityAclsDefaultEgressLoggedRow").hide(); $("#networkSecurityAclsDefaultEgressLoggedInput").val('');
+      }
+      if (networkNicTypeInput == "routed"){
+        $("#networkParentRow").show()
+        $("#networkNetworkRow").hide(); $("#networkNetworkInput").val('');
+        $("#networkInterfaceNameRow").show()
+        $("#networkMtuRow").show()
+        $("#networkHwaddrRow").show()
+        $("#networkHostNameRow").show()
+        $("#networkLimitsIngressRow").show()
+        $("#networkLimitsEgressRow").show()
+        $("#networkLimitsMaxRow").show()
+        $("#networkIpv4AddressRow").show()
+        $("#networkIpv6AddressRow").show()
+        $("#networkIpv4RoutesRow").hide(); $("#networkIpv4RoutesInput").val('');
+        $("#networkIpv6RoutesRow").hide(); $("#networkIpv6RoutesInput").val('');
+        $("#networkSecurityMacFilteringRow").hide(); $("#networkSecurityMacFilteringInput").val('');
+        $("#networkSecurityIpv4FilteringRow").hide(); $("#networkSecurityIpv4FilteringInput").val('');
+        $("#networkSecurityIpv6FilteringRow").hide(); $("#networkSecurityIpv6FilteringInput").val('');
+        $("#networkMaasSubnetIpv4Row").hide(); $("#networkMaasSubnetIpv4Input").val('');
+        $("#networkMaasSubnetIpv6Row").hide(); $("#networkMaasSubnetIpv6Input").val('');
+        $("#networkBootPriorityRow").hide(); $("#networkBootPriorityInput").val('');
+        $("#networkVlanRow").show()
+        $("#networkVlanTaggedRow").hide(); $("#networkVlanTaggedInput").val('');
+        $("#networkSecurityPortIsolationRow").hide(); $("#networkSecurityPortIsolationInput").val('');
+        $("#networkGvrpRow").show()
+        $("#networkModeRow").hide(); $("#networkModeInput").val('');
+        $("#networkIpv4GatewayRow").show()
+        $("#networkIpv4HostTableRow").show()
+        $("#networkIpv6GatewayRow").show()
+        $("#networkIpv6HostTableRow").show()
+        $("#networkIpv4HostAddressRow").show()
+        $("#networkIpv6HostAddressRow").show()
+        $("#networkIpv4RoutesExternalRow").hide(); $("#networkIpv4RoutesExternalInput").val('');
+        $("#networkIpv6RoutesExternalRow").hide(); $("#networkIpv6RoutesExternalInput").val('');
+        $("#networkSecurityAclsRow").hide(); $("#networkSecurityAclsInput").val('');
+        $("#networkSecurityAclsDefaultIngressActionRow").hide(); $("#networkSecurityAclsDefaultIngressActionInput").val('');
+        $("#networkSecurityAclsDefaultEgressActionRow").hide(); $("#networkSecurityAclsDefaultEgressActionInput").val('');
+        $("#networkSecurityAclsDefaultIngressLoggedRow").hide(); $("#networkSecurityAclsDefaultIngressLoggedInput").val('');
+        $("#networkSecurityAclsDefaultEgressLoggedRow").hide(); $("#networkSecurityAclsDefaultEgressLoggedInput").val('');
+      }
+    }
+
+    // Change options based on parent type while adding network devices
+    function changeParentTypeInput(){
+      var networkParentTypeInput = $("#networkParentTypeInput").val();
+      if (networkParentTypeInput == "bridge"){
+        $("#networkParentRow").hide(); $("#networkParentInput").val('');
+        $("#networkNetworkRow").show()
+        $("#networkInterfaceNameRow").show()
+        $("#networkMtuRow").hide(); $("#networkMtuInput").val('');
+        $("#networkHwaddrRow").show()
+        $("#networkHostNameRow").show()
+        $("#networkLimitsIngressRow").show()
+        $("#networkLimitsEgressRow").show()
+        $("#networkLimitsMaxRow").show()
+        $("#networkIpv4AddressRow").show()
+        $("#networkIpv6AddressRow").show()
+        $("#networkIpv4RoutesRow").show()
+        $("#networkIpv6RoutesRow").show()
+        $("#networkSecurityMacFilteringRow").show()
+        $("#networkSecurityIpv4FilteringRow").show()
+        $("#networkSecurityIpv6FilteringRow").show()
+        $("#networkMaasSubnetIpv4Row").hide(); $("#networkMaasSubnetIpv4Input").val('');
+        $("#networkMaasSubnetIpv6Row").hide(); $("#networkMaasSubnetIpv6Input").val('');
+        $("#networkBootPriorityRow").show()
+        $("#networkVlanRow").show()
+        $("#networkVlanTaggedRow").show()
+        $("#networkSecurityPortIsolationRow").show()
+        $("#networkGvrpRow").hide(); $("#networkGvrpInput").val('');
+        $("#networkModeRow").hide(); $("#networkModeInput").val('');
+        $("#networkIpv4GatewayRow").hide(); $("#networkIpv4GatewayInput").val('');
+        $("#networkIpv4HostTableRow").hide(); $("#networkIpv4HostTableInput").val('');
+        $("#networkIpv6GatewayRow").hide(); $("#networkIpv6GatewayInput").val('');
+        $("#networkIpv6HostTableRow").hide(); $("#networkIpv6HostTableInput").val('');
+        $("#networkIpv4HostAddressRow").hide(); $("#networkIpv4HostAddressInput").val('');
+        $("#networkIpv6HostAddressRow").hide(); $("#networkIpv6HostAddressInput").val('');
+        $("#networkIpv4RoutesExternalRow").hide(); $("#networkIpv4RoutesExternalInput").val('');
+        $("#networkIpv6RoutesExternalRow").hide(); $("#networkIpv6RoutesExternalInput").val('');
+        $("#networkSecurityAclsRow").hide(); $("#networkSecurityAclsInput").val('');
+        $("#networkSecurityAclsDefaultIngressActionRow").hide(); $("#networkSecurityAclsDefaultIngressActionInput").val('');
+        $("#networkSecurityAclsDefaultEgressActionRow").hide(); $("#networkSecurityAclsDefaultEgressActionInput").val('');
+        $("#networkSecurityAclsDefaultIngressLoggedRow").hide(); $("#networkSecurityAclsDefaultIngressLoggedInput").val('');
+        $("#networkSecurityAclsDefaultEgressLoggedRow").hide(); $("#networkSecurityAclsDefaultEgressLoggedInput").val('');
+      }
+      if (networkParentTypeInput == "macvlan"){
+        $("#networkParentRow").hide(); $("#networkParentInput").val('');
+        $("#networkNetworkRow").show()
+        $("#networkInterfaceNameRow").show()
+        $("#networkMtuRow").hide(); $("#networkMtuInput").val('');
+        $("#networkHwaddrRow").show()
+        $("#networkHostNameRow").hide(); $("#networkHostNameInput").val('');
+        $("#networkLimitsIngressRow").hide(); $("#networkLimitsIngressInput").val('');
+        $("#networkLimitsEgressRow").hide(); $("#networkLimitsEgressInput").val('');
+        $("#networkLimitsMaxRow").hide(); $("#networkLimitsMaxInput").val('');
+        $("#networkIpv4AddressRow").hide(); $("#networkIpv4AddressInput").val('');
+        $("#networkIpv6AddressRow").hide(); $("#networkIpv6AddressInput").val('');
+        $("#networkIpv4RoutesRow").hide(); $("#networkIpv4RoutesInput").val('');
+        $("#networkIpv6RoutesRow").hide(); $("#networkIpv6RoutesInput").val('');
+        $("#networkSecurityMacFilteringRow").hide(); $("#networkSecurityMacFilteringInput").val('');
+        $("#networkSecurityIpv4FilteringRow").hide(); $("#networkSecurityIpv4FilteringInput").val('');
+        $("#networkSecurityIpv6FilteringRow").hide(); $("#networkSecurityIpv6FilteringInput").val('');
+        $("#networkMaasSubnetIpv4Row").hide(); $("#networkMaasSubnetIpv4Input").val('');
+        $("#networkMaasSubnetIpv6Row").hide(); $("#networkMaasSubnetIpv6Input").val('');
+        $("#networkBootPriorityRow").show()
+        $("#networkVlanRow").show()
+        $("#networkVlanTaggedRow").hide(); $("#networkVlanTaggedInput").val('');
+        $("#networkSecurityPortIsolationRow").hide(); $("#networkSecurityPortIsolationInput").val('');
+        $("#networkGvrpRow").show()
+        $("#networkModeRow").hide(); $("#networkModeInput").val('');
+        $("#networkIpv4GatewayRow").hide(); $("#networkIpv4GatewayInput").val('');
+        $("#networkIpv4HostTableRow").hide(); $("#networkIpv4HostTableInput").val('');
+        $("#networkIpv6GatewayRow").hide(); $("#networkIpv6GatewayInput").val('');
+        $("#networkIpv6HostTableRow").hide(); $("#networkIpv6HostTableInput").val('');
+        $("#networkIpv4HostAddressRow").hide(); $("#networkIpv4HostAddressInput").val('');
+        $("#networkIpv6HostAddressRow").hide(); $("#networkIpv6HostAddressInput").val('');
+        $("#networkIpv4RoutesExternalRow").hide(); $("#networkIpv4RoutesExternalInput").val('');
+        $("#networkIpv6RoutesExternalRow").hide(); $("#networkIpv6RoutesExternalInput").val('');
+        $("#networkSecurityAclsRow").hide(); $("#networkSecurityAclsInput").val('');
+        $("#networkSecurityAclsDefaultIngressActionRow").hide(); $("#networkSecurityAclsDefaultIngressActionInput").val('');
+        $("#networkSecurityAclsDefaultEgressActionRow").hide(); $("#networkSecurityAclsDefaultEgressActionInput").val('');
+        $("#networkSecurityAclsDefaultIngressLoggedRow").hide(); $("#networkSecurityAclsDefaultIngressLoggedInput").val('');
+        $("#networkSecurityAclsDefaultEgressLoggedRow").hide(); $("#networkSecurityAclsDefaultEgressLoggedInput").val('');
+      }
+      if (networkParentTypeInput == "ovn"){
+        $("#networkParentRow").hide(); $("#networkParentInput").val('');
+        $("#networkNetworkRow").show()
+        $("#networkInterfaceNameRow").show()
+        $("#networkMtuRow").hide(); $("#networkMtuInput").val('');
+        $("#networkHwaddrRow").show()
+        $("#networkHostNameRow").show()
+        $("#networkLimitsIngressRow").hide(); $("#networkLimitsIngressInput").val('');
+        $("#networkLimitsEgressRow").hide(); $("#networkLimitsEgressInput").val('');
+        $("#networkLimitsMaxRow").hide(); $("#networkLimitsMaxInput").val('');
+        $("#networkIpv4AddressRow").show()
+        $("#networkIpv6AddressRow").show()
+        $("#networkIpv4RoutesRow").show()
+        $("#networkIpv6RoutesRow").show()
+        $("#networkSecurityMacFilteringRow").hide(); $("#networkSecurityMacFilteringInput").val('');
+        $("#networkSecurityIpv4FilteringRow").hide(); $("#networkSecurityIpv4FilteringInput").val('');
+        $("#networkSecurityIpv6FilteringRow").hide(); $("#networkSecurityIpv6FilteringInput").val('');
+        $("#networkMaasSubnetIpv4Row").hide(); $("#networkMaasSubnetIpv4Input").val('');
+        $("#networkMaasSubnetIpv6Row").hide(); $("#networkMaasSubnetIpv6Input").val('');
+        $("#networkBootPriorityRow").show()
+        $("#networkVlanRow").hide(); $("#networkVlanInput").val('');
+        $("#networkVlanTaggedRow").hide(); $("#networkVlanTaggedInput").val('');
+        $("#networkSecurityPortIsolationRow").hide(); $("#networkSecurityPortIsolationInput").val('');
+        $("#networkGvrpRow").hide(); $("#networkGvrpInput").val('');
+        $("#networkModeRow").hide(); $("#networkModeInput").val('');
+        $("#networkIpv4GatewayRow").hide(); $("#networkIpv4GatewayInput").val('');
+        $("#networkIpv4HostTableRow").hide(); $("#networkIpv4HostTableInput").val('');
+        $("#networkIpv6GatewayRow").hide(); $("#networkIpv6GatewayInput").val('');
+        $("#networkIpv6HostTableRow").hide(); $("#networkIpv6HostTableInput").val('');
+        $("#networkIpv4HostAddressRow").hide(); $("#networkIpv4HostAddressInput").val('');
+        $("#networkIpv6HostAddressRow").hide(); $("#networkIpv6HostAddressInput").val('');
+        $("#networkIpv4RoutesExternalRow").show()
+        $("#networkIpv6RoutesExternalRow").show()
+        $("#networkSecurityAclsRow").show()
+        $("#networkSecurityAclsDefaultIngressActionRow").show()
+        $("#networkSecurityAclsDefaultEgressActionRow").show()
+        $("#networkSecurityAclsDefaultIngressLoggedRow").show()
+        $("#networkSecurityAclsDefaultEgressLoggedRow").show()
+      }
+      if (networkParentTypeInput == "sriov"){
+        $("#networkParentRow").hide(); $("#networkParentInput").val('');
+        $("#networkNetworkRow").show()
+        $("#networkInterfaceNameRow").show()
+        $("#networkMtuRow").hide(); $("#networkMtuInput").val('');
+        $("#networkHwaddrRow").show()
+        $("#networkHostNameRow").hide(); $("#networkHostNameInput").val('');
+        $("#networkLimitsIngressRow").hide(); $("#networkLimitsIngressInput").val('');
+        $("#networkLimitsEgressRow").hide(); $("#networkLimitsEgressInput").val('');
+        $("#networkLimitsMaxRow").hide(); $("#networkLimitsMaxInput").val('');
+        $("#networkIpv4AddressRow").hide(); $("#networkIpv4AddressInput").val('');
+        $("#networkIpv6AddressRow").hide(); $("#networkIpv6AddressInput").val('');
+        $("#networkIpv4RoutesRow").hide(); $("#networkIpv4RoutesInput").val('');
+        $("#networkIpv6RoutesRow").hide(); $("#networkIpv6RoutesInput").val('');
+        $("#networkSecurityMacFilteringRow").show()
+        $("#networkSecurityIpv4FilteringRow").hide(); $("#networkSecurityIpv4FilteringInput").val('');
+        $("#networkSecurityIpv6FilteringRow").hide(); $("#networkSecurityIpv6FilteringInput").val('');
+        $("#networkMaasSubnetIpv4Row").hide(); $("#networkMaasSubnetIpv4Input").val('');
+        $("#networkMaasSubnetIpv6Row").hide(); $("#networkMaasSubnetIpv6Input").val('');
+        $("#networkBootPriorityRow").show()
+        $("#networkVlanRow").show()
+        $("#networkVlanTaggedRow").hide(); $("#networkVlanTaggedInput").val('');
+        $("#networkSecurityPortIsolationRow").hide(); $("#networkSecurityPortIsolationInput").val('');
+        $("#networkGvrpRow").hide(); $("#networkGvrpInput").val('');
+        $("#networkModeRow").hide(); $("#networkModeInput").val('');
+        $("#networkIpv4GatewayRow").hide(); $("#networkIpv4GatewayInput").val('');
+        $("#networkIpv4HostTableRow").hide(); $("#networkIpv4HostTableInput").val('');
+        $("#networkIpv6GatewayRow").hide(); $("#networkIpv6GatewayInput").val('');
+        $("#networkIpv6HostTableRow").hide(); $("#networkIpv6HostTableInput").val('');
+        $("#networkIpv4HostAddressRow").hide(); $("#networkIpv4HostAddressInput").val('');
+        $("#networkIpv6HostAddressRow").hide(); $("#networkIpv6HostAddressInput").val('');
+        $("#networkIpv4RoutesExternalRow").hide(); $("#networkIpv4RoutesExternalInput").val('');
+        $("#networkIpv6RoutesExternalRow").hide(); $("#networkIpv6RoutesExternalInput").val('');
+        $("#networkSecurityAclsRow").hide(); $("#networkSecurityAclsInput").val('');
+        $("#networkSecurityAclsDefaultIngressActionRow").hide(); $("#networkSecurityAclsDefaultIngressActionInput").val('');
+        $("#networkSecurityAclsDefaultEgressActionRow").hide(); $("#networkSecurityAclsDefaultEgressActionInput").val('');
+        $("#networkSecurityAclsDefaultIngressLoggedRow").hide(); $("#networkSecurityAclsDefaultIngressLoggedInput").val('');
+        $("#networkSecurityAclsDefaultEgressLoggedRow").hide(); $("#networkSecurityAclsDefaultEgressLoggedInput").val('');
+      }
+    }
+
+    // Change the state of an instance: start, stop, freeze, unfreeze, restart, force stop
+    function changeItemState(instance, action, force=false){
+      console.log("Info: starting instance " + instance);
+      $.post("../api/instance/change_instance_state?id=" + serverId + "&project=" + project, { instance: instance, action: action, force: force }, function (data) {
+        console.log(data);
+        if (data.error_code >= 400){
+          alert(data.error);
+        }
+        //Async type
+        setTimeout(() => { reloadPageContent(); }, 2000);
+        operationStatusCheck()
+      });
+    }
+
+    // Change storage volumes based on storage pool in add disk device modal
+    function changeStorageVolumeInput(){
+      var diskPoolInput = $("#diskPoolInput").val();
+      if (diskPoolInput == ""){
+        $("#diskSourceInput").show()
+        $("#diskSourceSelectInput").hide()
+      }
+      else{
+        //show and populate select field
+        $("#diskSourceSelectInput").empty().append('<option value="">(not set)</option>');
+        $.getJSON("../api/storage-volumes/list_storage_volumes?id="+serverId+"&project="+project+"&pool="+diskPoolInput, function (data) {
+          data = data.metadata
+          for (var index = 0; index < data.length; index++) {
+            if (data[index].includes('/1.0/storage-pools/' + diskPoolInput + '/volumes/custom/')){
+              optionText = data[index].replace('/1.0/storage-pools/' + diskPoolInput + '/volumes/custom/','');
+              $('#diskSourceSelectInput').append('<option value="' + optionText + '">' + optionText + '</option>');
+            }
+          }
+        })
+        $("#diskSourceInput").hide()
+        $("#diskSourceSelectInput").show()
+      }
+    }
+
+    // Dynamically change Instance Actions options based on state
+    function displayMenuOptions(data){
+      switch (data.status){
+        case "Stopped":
+          $('#startLinkButton').show();
+          $('#stopLinkButton').hide();
+          $('#unfreezeLinkButton').hide();
+          $('#startLink').show();
+          $('#stopLink').hide();
+          $('#unfreezeLink').hide();
+          $('#restartInstanceOption').prop('disabled', true).removeClass('text-primary').addClass('text-muted');
+          $('#stopInstanceForcefullyOption').prop('disabled', true).removeClass('text-primary').addClass('text-muted');
+          $('#freezeInstanceOption').prop('disabled', true).removeClass('text-primary').addClass('text-muted');
+          $('#snapshotInstanceOption').prop('disabled', false).removeClass('text-muted').addClass('text-primary');
+          $('#attachProfileOption').prop('disabled', false).removeClass('text-muted').addClass('text-primary');
+          $('#detachProfileOption').prop('disabled', false).removeClass('text-muted').addClass('text-primary');
+          $('#editInstanceOption').prop('disabled', false).removeClass('text-muted').addClass('text-primary');
+          $('#renameInstanceOption').prop('disabled', false).removeClass('text-muted').addClass('text-primary');
+          $('#copyInstanceOption').prop('disabled', false).removeClass('text-muted').addClass('text-primary');
+          $('#migrateInstanceOption').prop('disabled', false).removeClass('text-muted').addClass('text-primary');
+          $('#publishInstanceOption').prop('disabled', false).removeClass('text-muted').addClass('text-primary');
+          $('#deleteInstanceOption').prop('disabled', false).removeClass('text-muted').addClass('text-primary');
+          $('#startExecButton').prop('disabled', true);
+          $('#startConsoleButton').prop('disabled', true);
+          break;
+        case "Frozen":
+          $('#startLinkButton').hide();
+          $('#stopLinkButton').hide();
+          $('#unfreezeLinkButton').show();
+          $('#startLink').hide();
+          $('#stopLink').hide();
+          $('#unfreezeLink').show();
+          $('#restartInstanceOption').prop('disabled', true).removeClass('text-primary').addClass('text-muted');
+          $('#stopInstanceForcefullyOption').prop('disabled', true).removeClass('text-primary').addClass('text-muted');
+          $('#freezeInstanceOption').prop('disabled', true).removeClass('text-primary').addClass('text-muted');
+          $('#snapshotInstanceOption').prop('disabled', false).removeClass('text-muted').addClass('text-primary');
+          $('#attachProfileOption').prop('disabled', true).removeClass('text-primary').addClass('text-muted');
+          $('#detachProfileOption').prop('disabled', true).removeClass('text-primary').addClass('text-muted');
+          $('#editInstanceOption').prop('disabled', true).removeClass('text-primary').addClass('text-muted');
+          $('#renameInstanceOption').prop('disabled', true).removeClass('text-primary').addClass('text-muted');
+          $('#copyInstanceOption').prop('disabled', false).removeClass('text-muted').addClass('text-primary');
+          $('#migrateInstanceOption').prop('disabled', true).removeClass('text-primary').addClass('text-muted');
+          $('#publishInstanceOption').prop('disabled', true).removeClass('text-primary').addClass('text-muted');
+          $('#deleteInstanceOption').prop('disabled', true).removeClass('text-primary').addClass('text-muted');
+          $('#startExecButton').prop('disabled', true);
+          $('#startConsoleButton').prop('disabled', true);
+          break;
+        default:
+          $('#startLinkButton').hide();
+          $('#stopLinkButton').show();
+          $('#unfreezeLinkButton').hide();
+          $('#startLink').hide();
+          $('#stopLink').show();
+          $('#unfreezeLink').hide();
+          $('#restartInstanceOption').prop('disabled', false).removeClass('text-muted').addClass('text-primary');
+          $('#stopInstanceForcefullyOption').prop('disabled', false).removeClass('text-muted').addClass('text-primary');
+          $('#freezeInstanceOption').prop('disabled', false).removeClass('text-muted').addClass('text-primary');
+          $('#snapshotInstanceOption').prop('disabled', false).removeClass('text-muted').addClass('text-primary');
+          $('#attachProfileOption').prop('disabled', false).removeClass('text-muted').addClass('text-primary');
+          $('#detachProfileOption').prop('disabled', false).removeClass('text-muted').addClass('text-primary');
+          $('#editInstanceOption').prop('disabled', false).removeClass('text-muted').addClass('text-primary');
+          $('#renameInstanceOption').prop('disabled', true).removeClass('text-primary').addClass('text-muted');
+          $('#copyInstanceOption').prop('disabled', true).removeClass('text-primary').addClass('text-muted');
+          $('#migrateInstanceOption').prop('disabled', true).removeClass('text-primary').addClass('text-muted');
+          $('#publishInstanceOption').prop('disabled', true).removeClass('text-primary').addClass('text-muted');
+          $('#deleteInstanceOption').prop('disabled', true).removeClass('text-primary').addClass('text-muted');
+          if (server_clustered && server_name != target_location){
+            $('#startExecButton').prop('disabled', true);
+            $('#startConsoleButton').prop('disabled', true);
+          }
+          else {
+            $('#startExecButton').prop('disabled', false);
+            $('#startConsoleButton').prop('disabled', false);
+          }
+      }
+    }
+
+    // Show the edit instance modal
+    function editInstance(){
+      console.log("Info: viewing instance " + instance);
+      $.get("../api/instance/get_instance?id="+serverId+"&project="+project+"&name="+instance+"&recursion=1", function (data) {
+        data = data.metadata;
+
+        if (data.error_code >= 400){
+          alert(data.error);
+        }
+
+        //Clean all values in form
+        $("#editModal").find('input, select, textarea').val('');
+
+        //Set existing description value in form
+        if (data.hasOwnProperty('description')) { $("#instanceDescriptionInput").val(data.description); }
+
+        //Set existing values from config in form
+        $.each(data.config, function(key, value) {
+          item = "#"+key
+          $(`[name="${key}"]`).val(value);
+          console.log(item + "=" + value)
+        })
+
+        //Set instance name on form
+        $("#instanceNameEditInput").text("Name: " + instance);
+
+        //Set json tab content
+        $("#jsonEditInput").val(JSON.stringify(data, null, 2));
+
+        //Show modal with form and json
+        $("#editModal").modal('show');
+
+      });
+    }
+
+    // Update the instance from the edit instance modal form
+    function updateInstanceForm(){
+      console.log("Info: updating instance " + instance);
+      data = $('#editForm').serialize();
+      $.post("../api/instance/update_instance?id=" + serverId + "&project=" + project + "&instance=" + encodeURI(instance), data,  function (data) {
+        console.log(data);
+        if (data.error_code >= 400){
+          alert(data.error);
+        }
+        //Sync type
+        setTimeout(() => { reloadPageContent(); }, 1000);
+        operationStatusCheck()
+      });
+    }
+
+    // Update the instance from the edit instance modal json
+    function updateInstanceJson(){
+      var instanceUpdateJSON = $("#jsonEditInstanceInput").val();
+      console.log("Info: updating instance " + instance);
+      $.post("../api/instance/update_instance?id=" + serverId + "&project=" + project + "&instance=" + encodeURI(instance), { 
+        json: instanceUpdateJSON 
+        },  function (data) {
+          console.log(data);
+          if (data.error_code >= 400){
+            alert(data.error);
+          }
+          //Sync type
+          setTimeout(() => { reloadPageContent(); }, 1000);
+          operationStatusCheck()
+      });
+    }
+
+    // Migrate the instance to new cluster host
+    function migrateInstance(){
+      var clusterHost = $("#selectClusterInput").val();
+      console.log("Info: migrating instance " + instance + " to " + clusterHost);
+      $.post("../api/instance/migrate_instance?id="+serverId+"&project="+project+"&instance="+instance+"&location="+clusterHost, {},  function (data) {
+        console.log(data);
+        if (data.error_code >= 400){
+          alert(data.error);
+        }
+        //Async type
+        setTimeout(() => { reloadPageContent(); }, 2000);
+        operationStatusCheck()
+      });
+    }
+
+    // Copy or clone the instance
+    function copyInstance(){
+      var copyName = $("#copyName").val();
+      console.log("Info: copying instance " + instance + " to " + copyName);
+      $.post("../api/instance/copy_instance?id="+serverId+"&project="+project+"&instance="+instance+"&location="+target_location, { name: copyName },  function (data) {
+        console.log(data);
+        if (data.error_code >= 400){
+          alert(data.error);
+        }
+        //Async type
+        setTimeout(() => { reloadPageContent(); }, 2000);
+        operationStatusCheck()
+      });
+    }
+
+    // Rename the instance
+    function renameInstance(){
+      var renameName = $("#renameName").val();
+      console.log("Info: renaming instance " + instance + " to " + renameName);
+      $.post("../api/instance/rename_instance?id="+serverId+"&project="+project+"&instance="+instance, { name: renameName },  function (data) {
+        console.log(data);
+        if (data.error_code >= 400){
+          alert(data.error);
+        }
+        else {
+          window.location.href = 'instance?id=' + serverId + '&project=' + project + '&instance=' + renameName;
+        }
+      });
+    }
+
+    // Publish the instance into an image
+    function publishInstance(){
+      var description = $("#publishInstanceDescriptionInput").val();
+      var os = $("#publishInstanceOsInput").val();
+      var release = $("#publishInstanceReleaseInput").val();
+      var public = $("#publishInstancePublicInput").val();
+      console.log("Info: publishing image " + description + " from instance " + instance);
+      $.post("../api/instance/publish_instance?id="+serverId+"&project="+project+"&instance="+instance, { description: description, os: os, release: release, public:public },  function (data) {
+        console.log(data);
+        if (data.error_code >= 400){
+          alert(data.error);
+        }
+        //Async type
+        setTimeout(() => { reloadPageContent(); }, 2000);
+        operationStatusCheck()
+      });
+    }
+
+    // Convert websocket array buffer data to string
+    function convertArrayBuffer2String(buf) {
+      var encoding = 'utf8';
+      var decoder = new TextDecoder(encoding);
+      var str = decoder.decode(buf);
+      return str
+    }
+
+    // Convert websocket input string to array buffer
+    function convertString2ArrayBuffer(str) {
+      var buf = new ArrayBuffer(str.length);
+      var bufView = new Uint8Array(buf);
+      for (var i=0, strLen=str.length; i < strLen; i++) {
+        bufView[i] = str.charCodeAt(i);
+      }
+      return buf;
+    }
+
+    // Setup websocket connection for console use
+    function establishInstanceWebSocketConsoleConnection() {
+      $.get("../api/instance/get_instance_websocket_host?id=" + serverId + "&project=" + project + "&instance=" + encodeURI(instance), function (data) {
+        console.log(data);
+        server_addr = data.addr
+        server_port = data.port
+
+        if (data.proxy) 
+          wss_addr = data.proxy
+        else 
+          wss_addr = data.addr + ':' + data.port;
+
+        //Check to see if we can connect to the LXD server over a secure connection
+        fetch('https://' + wss_addr + '/1.0?addr=' + server_addr + '&port=' + data.port, { mode: 'no-cors' })
+        .then(response => {
+          //If we made it here then the self-signed LXD certificate would have been already trusted by the user's browser we can setup a secure websocket connection
+          $.post("../api/instance/establish_instance_console_websocket?id=" + serverId + "&project=" + project + "&instance=" + encodeURI(instance), { 
+            width: consoleTerminal.cols,
+            height: consoleTerminal.rows
+          }, function (data) {
+            console.log(data);
+            var operation = data.operation;
+            var consoleControlURL = "wss://" + wss_addr + operation + "/websocket?secret=" + data.control + "&addr=" + server_addr + "&port=" + server_port;
+            var consoleDataURL = "wss://" + wss_addr + operation + "/websocket?secret=" + data.secret + "&addr=" + server_addr + "&port=" + server_port;
+
+            if(operation == "" && operationData.secret == ""){
+              alert("Unable to connect via websocket");
+              return;
+            }
+            
+            //Create a new "control" websocket
+            consoleControlSocket = new WebSocket(consoleControlURL);
+
+            //Listen for "control" websocket errors
+            consoleControlSocket.onerror = function (e) {
+              console.log("There was a WebSocket error: " + e);
+            }
+
+            //Listen for "control" websocket opening connection
+            consoleControlSocket.onopen = function (e) {
+              console.log( "Console Control WebSocket ReadyState: " + consoleControlSocket.readyState ); 
+            };
+    
+            //Listen for "control" websocket messages
+            consoleControlSocket.onmessage = function (e) {      
+              if (e.data instanceof ArrayBuffer) {
+                if (convertArrayBuffer2String(e.data) != null){
+                  consoleTerminal.write(convertArrayBuffer2String(e.data));
+                }
+              }
+            };
+
+            //Listen for "control" websocket closing
+            consoleControlSocket.onclose = function (e) {
+              console.log(e);
+            };
+
+            //Create a new "data" websocket
+            consoleDataSocket = new WebSocket(consoleDataURL);
+              
+            //Listen for "data" websocket errors
+            consoleDataSocket.onerror = function (e) {
+              console.log("There was a WebSocket error: " + e);
+            }
+
+            //Listen for "data" websocket opening connection
+            consoleDataSocket.onopen = function (e) {
+              //Set binaryType to ArrayBuffer. This should be default value
+              consoleDataSocket.binaryType = 'arraybuffer';
+              
+              console.log( "Console Data WebSocket ReadyState: " + consoleDataSocket.readyState );
+              consoleTerminal.write("--- Secure Websocket Connection Opened --- \r\n");
+
+              //Send return to show login screen on console connections
+              setTimeout(() => { consoleDataSocket.send(convertString2ArrayBuffer('\r')); }, 1000);
+              
+              //Switch console action buttons
+              $("#startConsoleButton").hide();
+              $("#stopConsoleButton").show();
+            };
+        
+            //Listen for "data" websocket messages
+            consoleDataSocket.onmessage = function (e) {   
+              if (e.data.length == 0) {
+                consoleControlSocket.close();
+                consoleDataSocket.close();
+              } else {   
+                if (e.data instanceof ArrayBuffer) {
+                  if (convertArrayBuffer2String(e.data) != null){
+                    consoleTerminal.write(convertArrayBuffer2String(e.data));
+                  }
+                }
+              }
+            };
+
+            //Listen for "data" websocket closing
+            consoleDataSocket.onclose = function (e) {
+              console.log(e);
+              consoleTerminal.write("\r\n--- Websocket Connection Closed ---\r\n");
+              $("#stopConsoleButton").hide();
+              $("#startConsoleButton").show();
+            };
+
+          });
+
+        })
+        .catch((error) => {
+          console.log("Error: ", error)
+          //If we make it here then we had an error connection to LXD server. Most likely the Self-Signed Certificate is not yet trusted by the user's browser
+          data = 'There was an error connecting to your LXD server. <br />The LXD server may be using a self-signed certificate. <br />Click <a href="https://' + wss_addr + '?addr=' + server_addr + '&port=' + data.port + '" target="_blank">here</a> to accept the certificate if not yet trusted.';
+          $("#webSocketConnectionError").html(data);
+          $('#webSocketConnectionErrorModal').modal('show');
+        })
+
+      });
+
+    }
+
+    // Setup websocket connection for exec use
+    function establishInstanceWebSocketExecConnection() {
+      $.get("../api/instance/get_instance_websocket_host?id=" + serverId + "&project=" + project + "&instance=" + encodeURI(instance), function (data) {
+        console.log(data);
+        server_addr = data.addr
+        server_port = data.port
+
+        if (data.proxy) 
+          wss_addr = data.proxy
+        else 
+          wss_addr = data.addr + ':' + data.port;
+
+        //Check to see if we can connect to the LXD server over a secure connection
+        fetch('https://' + wss_addr + '/1.0?addr=' + server_addr + '&port=' + server_port, { mode: 'no-cors' })
+        .then(response => {
+          //If we made it here then the self-signed LXD certificate would have been already trusted by the user's browser we can setup a secure websocket connection
+          $.post("../api/instance/establish_instance_exec_websocket?id=" + serverId + "&project=" + project + "&instance=" + encodeURI(instance), { 
+            shell: $("#execShellInput").val(),
+            width: execTerminal.cols,
+            height: execTerminal.rows
+          }, function (data) {
+            console.log(data);
+            var operation = data.operation;
+            var execControlURL = "wss://" + wss_addr + operation + "/websocket?secret=" + data.control + "&addr=" + server_addr + "&port=" + server_port;
+            var execDataURL = "wss://" + wss_addr + operation + "/websocket?secret=" + data.secret + "&addr=" + server_addr + "&port=" + server_port;
+
+            if(operation == "" && data.secret == ""){
+              alert("Unable to connect via websocket");
+              return;
+            }
+            
+            //Create a new "control" websocket
+            execControlSocket = new WebSocket(execControlURL);
+
+            //Listen for "control" websocket errors
+            execControlSocket.onerror = function (e) {
+              console.log("There was a WebSocket error: " + e);
+            }
+
+            //Listen for "control" websocket opening connection
+            execControlSocket.onopen = function (e) {
+              console.log( "Exec Control WebSocket ReadyState: " + execControlSocket.readyState ); 
+            };
+    
+            //Listen for "control" websocket messages
+            execControlSocket.onmessage = function (e) {     
+              console.log(e) 
+              if (e.data instanceof ArrayBuffer) {
+                if (convertArrayBuffer2String(e.data) != null){
+                  execTerminal.write(convertArrayBuffer2String(e.data));
+                }
+              }
+            };
+
+            //Listen for "control" websocket closing
+            execControlSocket.onclose = function (e) {
+              console.log(e);
+            };
+
+            //Create a new "data" websocket
+            execDataSocket = new WebSocket(execDataURL);
+              
+            //Listen for "data" websocket errors
+            execDataSocket.onerror = function (e) {
+              console.log("There was a WebSocket error: " + e);
+            }
+
+            //Listen for "data" websocket opening connection
+            execDataSocket.onopen = function (e) {
+              //Set binaryType to ArrayBuffer. This should be default value
+              execDataSocket.binaryType = 'arraybuffer';
+              
+              console.log( "Exec Data WebSocket ReadyState: " + execDataSocket.readyState );
+              execTerminal.write("--- Secure Websocket Connection Opened --- \r\n");
+
+              //Switch console action buttons
+              $("#startExecButton").hide();
+              $("#stopExecButton").show();
+            };
+        
+            //Listen for "data" websocket messages
+            execDataSocket.onmessage = function (e) {  
+              if (e.data.length == 0) {
+                execControlSocket.close();
+                execDataSocket.close();
+              }
+              else {    
+                if (e.data instanceof ArrayBuffer) {
+                  if (convertArrayBuffer2String(e.data) != null){
+                    execTerminal.write(convertArrayBuffer2String(e.data));
+                  }
+                }
+              }
+            };
+
+            //Listen for "data" websocket closing
+            execDataSocket.onclose = function (e) {
+              console.log(e);
+              execTerminal.write("\r\n--- Websocket Connection Closed ---\r\n");
+              $("#stopExecButton").hide();
+              $("#startExecButton").show();
+            };
+
+          });
+
+        })
+        .catch((error) => {
+          console.log("Error: ", error)
+          //If we make it here then we had an error connection to LXD server. Most likely the Self-Signed Certificate is not yet trusted by the user's browser
+          data = 'There was an error connecting to your LXD server. <br />The LXD server may be using a self-signed certificate. <br />Click <a href="https://' + wss_addr + '?addr=' + server_addr + '&port=' + data.port + '" target="_blank">here</a> to accept the certificate if not yet trusted.';
+          $("#webSocketConnectionError").html(data);
+          $('#webSocketConnectionErrorModal').modal('show');
+        })
+
+      });
+
+    }
+
+    // Close websocket connection for console user
+    function closeWebSocketConsoleConnection() {
+      //Closing the "control" websocket for console operations will stop the operation without crashing existing host's WebSockets.
+      consoleControlSocket.close();
+      consoleDataSocket.close();
+    }
+
+    // Close websocket connection for exec use
+    function closeWebSocketExecConnection() {
+      //Sending Ctrl+d (exit) three times to back out of potential nested shells or logins up to three deep. If not logged out, WebSocket operation may continue to run.
+      execDataSocket.send(convertString2ArrayBuffer('\04 \r \04 \r \04 \r'))
+
+      //Closing the "control" websocket for console operations will stop the operation without crashing existing host WebSockets.
+      execControlSocket.close();
+      execDataSocket.close();
+    }
+
+
+    // Change properties options while adding network device
+    function changeInstanceModalTypeOptions(){
+      if (instanceType == "container"){
+        //Virtual-machine specific options
+        $("#instanceLimitsMemoryHugepagesInput").attr("disabled", true);
+        $("#instanceMigrationStatefulInput").attr("disabled", true);
+        $("#instanceRawQemuInput").attr("disabled", true);
+        $("#instanceRawQemuConfInput").attr("disabled", true);
+        $("#instanceSecurityAgentMetricsInput").attr("disabled", true);
+        $("#instanceSecuritySecurebootInput").attr("disabled", true);
+      }
+      if (instanceType == "virtual-machine"){
+        //Container specific options
+        $("#instanceLimitsCpuAllowanceInput").attr("disabled", true);
+        $("#instanceLimitsCpuPriorityInput").attr("disabled", true);
+        $("#instanceLimitsHugepages64KBInput").attr("disabled", true);
+        $("#instanceLimitsHugepages1MBInput").attr("disabled", true);
+        $("#instanceLimitsHugepages2MBInput").attr("disabled", true);
+        $("#instanceLimitsHugepages1GBInput").attr("disabled", true);
+        $("#instanceLimitsMemoryEnforceInput").attr("disabled", true);
+        $("#instanceLimitsMemorySwapPriorityInput").attr("disabled", true);
+        $("#instanceLimitsMemorySwapInput").attr("disabled", true);
+        $("#instanceLimitsProcessesInput").attr("disabled", true);
+        $("#instanceLinuxKernel_modulesInput").attr("disabled", true);
+        $("#instanceMigrationIncrementalMemoryInput").attr("disabled", true);
+        $("#instanceMigrationIncrementalMemoryGoalInput").attr("disabled", true);
+        $("#instanceMigrationIncrementalMemoryIterationsInput").attr("disabled", true);
+        $("#instanceNvidiaDriverCapabilitiesInput").attr("disabled", true);
+        $("#instanceNvidiaRuntimeInput").attr("disabled", true);
+        $("#instanceNvidiaRequireCudaInput").attr("disabled", true);
+        $("#instanceNvidiaRequireDriverInput").attr("disabled", true);
+        $("#instanceRawIdmapInput").attr("disabled", true);
+        $("#instanceRawLxcInput").attr("disabled", true);
+        $("#instanceRawSeccompInput").attr("disabled", true);
+        $("#instanceSecurityDevlxdInput").attr("disabled", true);
+        $("#instanceSecurityDevlxdImagesInput").attr("disabled", true);
+        $("#instanceSecurityIdmapBaseInput").attr("disabled", true);
+        $("#instanceSecurityIdmapIsolatedInput").attr("disabled", true);
+        $("#instanceSecurityIdmapSizeInput").attr("disabled", true);
+        $("#instanceSecurityNestingInput").attr("disabled", true);
+        $("#instanceSecurityPrivilegedInput").attr("disabled", true);
+        $("#instanceSecurityProtectionDeleteInput").attr("disabled", true);
+        $("#instanceSecurityProtectionShiftInput").attr("disabled", true);
+        $("#instanceSecuritySyscallsAllowInput").attr("disabled", true);
+        $("#instanceSecuritySyscallsDenyInput").attr("disabled", true);
+        $("#instanceSecuritySyscallsDeny_compatInput").attr("disabled", true);
+        $("#instanceSecuritySyscallsDeny_defaultInput").attr("disabled", true);
+        $("#instanceSecuritySyscallsInterceptBpfInput").attr("disabled", true);
+        $("#instanceSecuritySyscallsInterceptBpfDevicesInput").attr("disabled", true);
+        $("#instanceSecuritySyscallsInterceptMknodInput").attr("disabled", true);
+        $("#instanceSecuritySyscallsInterceptMountInput").attr("disabled", true);
+        $("#instanceSecuritySyscallsInterceptMountAllowedInput").attr("disabled", true);
+        $("#instanceSecuritySyscallsInterceptMountFuseInput").attr("disabled", true);
+        $("#instanceSecuritySyscallsInterceptMountShiftInput").attr("disabled", true);
+        $("#instanceSecuritySyscallsInterceptSetxattrInput").attr("disabled", true);
+      }
+    }
+
+
+    $(document).ready(function(){
+
+      //If id project, instance, or instanceType variables are missing redirect to servers page
+      if (!serverId || !project || !instance || !instanceType) {
+        window.location.href = 'servers';
+      }
+      else {
+        $("#instance_title").text(instance);
+        loadPageContent()
+        operationStatusCheck()
+      }
+    
+    });
+
+  </script>
+
+
+{% endblock script %}

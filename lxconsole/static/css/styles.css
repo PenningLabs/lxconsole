@@ -68,7 +68,12 @@ td.details-control {
   color:#007bff ;
 cursor: pointer;
 }
+
 tr.shown td.details-control {
 text-align:center; 
 color:#ff0000 ;
+}
+
+.table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
+  background-color: #fefefe;
 }

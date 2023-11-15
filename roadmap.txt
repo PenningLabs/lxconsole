@@ -1,18 +1,17 @@
-# 0.4.0
-- Convert to bootstrap 5
+# 0.5.0
 - Add dark theme option
 - Add bootstrap toast notifications
 - Add warnings
 
-# 0.5.0
+# 0.6.0
 - Add two factor authentication option
 - Add password complexity requirements option
 
-# 0.6.0
+# 0.7.0
 - Add support for MariaDB and Postgres database backends
 - Add logs page
 
-# 0.7.0
+# 0.8.0
 - Add offcanvas sidebars where appropriate for additional information
 - Include rename tasks in tables with edit form on new tab
 

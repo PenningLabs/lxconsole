@@ -59,20 +59,15 @@ def cluster_groups():
 def cluster_members():
   return render_template('cluster-members.html', page_title='Cluster Members', page_user_id=current_user.id, page_username=current_user.username,)
 
-@app.route("/container")
-@login_required
-def container():
-  return render_template('container.html', page_title='Container: ', page_user_id=current_user.id, page_username=current_user.username,)
-
-@app.route("/containers")
-@login_required
-def containers():
-  return render_template('containers.html', page_title='Containers', page_user_id=current_user.id, page_username=current_user.username,)
-
 @app.route("/images")
 @login_required
 def images():
   return render_template('images.html', page_title='Images', page_user_id=current_user.id, page_username=current_user.username,)
+
+@app.route("/instance")
+@login_required
+def instance():
+  return render_template('instance.html', page_title='Instance', page_user_id=current_user.id, page_username=current_user.username,)
 
 @app.route("/instances")
 @login_required
@@ -143,17 +138,6 @@ def storage_pools():
 @login_required
 def storage_volumes():
   return render_template('storage-volumes.html', page_title='Storage Volumes', page_user_id=current_user.id, page_username=current_user.username,)
-
-@app.route("/virtual-machine")
-@login_required
-def virtual_machine():
-  return render_template('virtual-machine.html', page_title='Virtual Machine: ', page_user_id=current_user.id, page_username=current_user.username,)
-
-@app.route("/virtual-machines")
-@login_required
-def virtual_machines():
-  return render_template('virtual-machines.html', page_title='Virtual Machines', page_user_id=current_user.id, page_username=current_user.username,)
-
 
 @app.route("/backups/<serverId>/<project>/<instance>/<filename>")
 @login_required

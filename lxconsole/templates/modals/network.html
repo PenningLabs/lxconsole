@@ -4,17 +4,17 @@
     <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLabel">Add Network Forward</h5>
-          <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+          <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">×</span>
           </button>
         </div>
         <div class="modal-body">
           <ul class="nav nav-tabs" id="myTab" role="tablist">
             <li class="nav-item">
-              <a class="nav-link active" id="add-forward-form-tab" data-toggle="tab" href="#addForwardform" role="tab" aria-controls="add-forward-form-tab" aria-selected="true">Form</a>
+              <a class="nav-link active" id="add-forward-form-tab" data-bs-toggle="tab" href="#addForwardform" role="tab" aria-controls="add-forward-form-tab" aria-selected="true">Form</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" id="add-forward-json-tab" data-toggle="tab" href="#addForwardJson" role="tab" aria-controls="add-forward-json-tab" aria-selected="false">JSON</a>
+              <a class="nav-link" id="add-forward-json-tab" data-bs-toggle="tab" href="#addForwardJson" role="tab" aria-controls="add-forward-json-tab" aria-selected="false">JSON</a>
             </li>
           </ul>
           <div class="tab-content" id="myTabContent">
@@ -73,7 +73,7 @@
                   <label class="col-3 col-form-label text-right">Protocol: </label>
                   <div class="col-7">
                     <div class="form-group">
-                      <select class="form-control" name="port_protocol">
+                      <select class="form-select" name="port_protocol">
                         <option value="tcp">TCP</option>
                         <option value="udp">UDP</option>
                       </select>
@@ -111,8 +111,8 @@
 
               </form>
               <div class="modal-footer">
-                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                <a class="btn btn-primary" href="#" onclick="addItem('forward')" data-dismiss="modal">Submit</a>
+                <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+                <a class="btn btn-primary" href="#" onclick="addItem('forward')" data-bs-dismiss="modal">Submit</a>
               </div>
             </div>
             <div class="tab-pane fade" id="addForwardJson" role="tabpanel" aria-labelledby="json-tab">
@@ -127,8 +127,8 @@
                 </div>
               </div>
               <div class="modal-footer">
-                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                <a class="btn btn-primary" href="#" onclick="createItemUsingJSON('forward')" data-dismiss="modal">Submit</a>
+                <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+                <a class="btn btn-primary" href="#" onclick="createItemUsingJSON('forward')" data-bs-dismiss="modal">Submit</a>
               </div>
             </div>
           </div>
@@ -143,17 +143,17 @@
     <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLabel">Add Network Load Balancer</h5>
-          <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+          <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">×</span>
           </button>
         </div>
         <div class="modal-body">
           <ul class="nav nav-tabs" id="myTab" role="tablist">
             <li class="nav-item">
-              <a class="nav-link active" id="form-tab" data-toggle="tab" href="#form" role="tab" aria-controls="form" aria-selected="true">Form</a>
+              <a class="nav-link active" id="form-tab" data-bs-toggle="tab" href="#form" role="tab" aria-controls="form" aria-selected="true">Form</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" id="json-tab" data-toggle="tab" href="#json" role="tab" aria-controls="json" aria-selected="false">JSON</a>
+              <a class="nav-link" id="json-tab" data-bs-toggle="tab" href="#json" role="tab" aria-controls="json" aria-selected="false">JSON</a>
             </li>
           </ul>
           <div class="tab-content" id="myTabContent">
@@ -263,7 +263,7 @@
                   <label class="col-3 col-form-label text-right">Protocol: </label>
                   <div class="col-7">
                     <div class="form-group">
-                      <select class="form-control" name="port_protocol">
+                      <select class="form-select" name="port_protocol">
                         <option value="tcp">TCP</option>
                         <option value="udp">UDP</option>
                       </select>
@@ -288,8 +288,8 @@
 
               </form>
               <div class="modal-footer">
-                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                <a class="btn btn-primary" href="#" onclick="addItem('load_balancer')" data-dismiss="modal">Submit</a>
+                <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+                <a class="btn btn-primary" href="#" onclick="addItem('load_balancer')" data-bs-dismiss="modal">Submit</a>
               </div>
             </div>
             <div class="tab-pane fade" id="json" role="tabpanel" aria-labelledby="json-tab">
@@ -304,8 +304,8 @@
                 </div>
               </div>
               <div class="modal-footer">
-                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                <a class="btn btn-primary" href="#" onclick="createItemUsingJSON('load_balancer')" data-dismiss="modal">Submit</a>
+                <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+                <a class="btn btn-primary" href="#" onclick="createItemUsingJSON('load_balancer')" data-bs-dismiss="modal">Submit</a>
               </div>
             </div>
           </div>
@@ -320,17 +320,17 @@
     <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLabel">Add Network Peer</h5>
-          <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+          <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">×</span>
           </button>
         </div>
         <div class="modal-body">
           <ul class="nav nav-tabs" id="myTab" role="tablist">
             <li class="nav-item">
-              <a class="nav-link active" id="add-peer-form-tab" data-toggle="tab" href="#addPeerform" role="tab" aria-controls="add-peer-form-tab" aria-selected="true">Form</a>
+              <a class="nav-link active" id="add-peer-form-tab" data-bs-toggle="tab" href="#addPeerform" role="tab" aria-controls="add-peer-form-tab" aria-selected="true">Form</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" id="add-peer-json-tab" data-toggle="tab" href="#addPeerJson" role="tab" aria-controls="add-peer-json-tab" aria-selected="false">JSON</a>
+              <a class="nav-link" id="add-peer-json-tab" data-bs-toggle="tab" href="#addPeerJson" role="tab" aria-controls="add-peer-json-tab" aria-selected="false">JSON</a>
             </li>
           </ul>
           <div class="tab-content" id="myTabContent">
@@ -384,8 +384,8 @@
 
               </form>
               <div class="modal-footer">
-                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                <a class="btn btn-primary" href="#" onclick="addItem('peer')" data-dismiss="modal">Submit</a>
+                <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+                <a class="btn btn-primary" href="#" onclick="addItem('peer')" data-bs-dismiss="modal">Submit</a>
               </div>
             </div>
             <div class="tab-pane fade" id="addPeerJson" role="tabpanel" aria-labelledby="json-tab">
@@ -400,8 +400,8 @@
                 </div>
               </div>
               <div class="modal-footer">
-                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                <a class="btn btn-primary" href="#" onclick="createItemUsingJSON('peer')" data-dismiss="modal">Submit</a>
+                <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+                <a class="btn btn-primary" href="#" onclick="createItemUsingJSON('peer')" data-bs-dismiss="modal">Submit</a>
               </div>
             </div>
           </div>
@@ -417,14 +417,14 @@
     <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLabel">Edit Network Forward</h5>
-          <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+          <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">×</span>
           </button>
         </div>
         <div class="modal-body">
           <ul class="nav nav-tabs" id="myTab" role="tablist">
             <li class="nav-item">
-              <a class="nav-link active" id="json-edit-tab" data-toggle="tab" href="#json-edit" role="tab" aria-controls="json-edit" aria-selected="false">JSON</a>
+              <a class="nav-link active" id="json-edit-tab" data-bs-toggle="tab" href="#json-edit" role="tab" aria-controls="json-edit" aria-selected="false">JSON</a>
             </li>
           </ul>
           <div class="tab-content" id="myTabContent">
@@ -442,8 +442,8 @@
                 </div>
               </div>
               <div class="modal-footer">
-                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                <a class="btn btn-primary" href="#" onclick="updateForward()" data-dismiss="modal">Submit</a>
+                <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+                <a class="btn btn-primary" href="#" onclick="updateForward()" data-bs-dismiss="modal">Submit</a>
               </div>
             </div>
           </div>
@@ -458,14 +458,14 @@
     <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLabel">Edit Network Load Balancer</h5>
-          <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+          <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">×</span>
           </button>
         </div>
         <div class="modal-body">
           <ul class="nav nav-tabs" id="myTab" role="tablist">
             <li class="nav-item">
-              <a class="nav-link active" id="json-edit-tab" data-toggle="tab" href="#json-edit" role="tab" aria-controls="json-edit" aria-selected="false">JSON</a>
+              <a class="nav-link active" id="json-edit-tab" data-bs-toggle="tab" href="#json-edit" role="tab" aria-controls="json-edit" aria-selected="false">JSON</a>
             </li>
           </ul>
           <div class="tab-content" id="myTabContent">
@@ -483,8 +483,8 @@
                 </div>
               </div>
               <div class="modal-footer">
-                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                <a class="btn btn-primary" href="#" onclick="updateLoadBalancer()" data-dismiss="modal">Submit</a>
+                <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+                <a class="btn btn-primary" href="#" onclick="updateLoadBalancer()" data-bs-dismiss="modal">Submit</a>
               </div>
             </div>
           </div>
@@ -499,14 +499,14 @@
     <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLabel">Edit Network Peer</h5>
-          <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+          <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">×</span>
           </button>
         </div>
         <div class="modal-body">
           <ul class="nav nav-tabs" id="myTab" role="tablist">
             <li class="nav-item">
-              <a class="nav-link active" id="json-edit-tab" data-toggle="tab" href="#json-edit" role="tab" aria-controls="json-edit" aria-selected="false">JSON</a>
+              <a class="nav-link active" id="json-edit-tab" data-bs-toggle="tab" href="#json-edit" role="tab" aria-controls="json-edit" aria-selected="false">JSON</a>
             </li>
           </ul>
           <div class="tab-content" id="myTabContent">
@@ -524,8 +524,8 @@
                 </div>
               </div>
               <div class="modal-footer">
-                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                <a class="btn btn-primary" href="#" onclick="updatePeer()" data-dismiss="modal">Submit</a>
+                <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+                <a class="btn btn-primary" href="#" onclick="updatePeer()" data-bs-dismiss="modal">Submit</a>
               </div>
             </div>
           </div>

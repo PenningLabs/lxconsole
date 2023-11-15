@@ -6,9 +6,9 @@
       <h1>{{ page_title | safe }}</h1>
     </div>
     <div class="col-sm-6">
-      <a class="btn btn-outline-primary float-sm-right mr-4" href="#" data-toggle="modal" data-target="#addModal" title="Add Image" aria-hidden="true">
+      <button class="btn btn-outline-primary float-sm-right mr-4" data-bs-toggle="modal" data-bs-target="#addModal" title="Add Image" aria-hidden="true">
         <i class="fas fa-plus fa-sm fa-fw"></i> Image
-      </a>
+      </button>
     </div>
   </div>
 {% endblock header %}
@@ -65,40 +65,20 @@
       //Display the current project
       $("#selectedProject").text(project);
 
-      //Populate the Server dropdown
-      $.getJSON("../api/servers/list_servers?id="+serverId, function (data) {
-        data = data.data
-        for (var index = 0; index < data.length; index++) {
-          if (data[index].name == '')
-            optionText = data[index].addr
-          else
-            optionText = data[index].name
-          if (data[index].id == serverId)
-            $('#serverListNav').append('<option value="' + data[index].id + '" selected="selected">' + optionText + '</option>');
-          else
-            $('#serverListNav').append('<option value="' + data[index].id + '">' + optionText + '</option>');
-        }
-      })
-
-      //Populate the Project dropdown
-      $.getJSON("../api/projects/list_projects?id="+serverId+"&project="+project, function (data) {
-        data = data.metadata
-        for (var index = 0; index < data.length; index++) {
-          optionText = data[index].replace('/1.0/projects/','');
-          if (optionText == project)
-            $('#projectListNav').append('<option value="' + optionText + '" selected="selected">' + optionText + '</option>');
-          else
-            $('#projectListNav').append('<option value="' + optionText + '">' + optionText + '</option>');
-        }
-      })
-
+      //Loaded from main.html template
+      populateServerSelectDropdown()
+      populateProjectSelectDropdown()
+      
       // Configure Datatable
       $('#myDataTable').DataTable({
         ajax: {
           url: "../api/images/list_images?id="+serverId + "&project=" + project + "&recursion=1",
           dataType: "json",
           dataSrc: "metadata",
-          contentType: "application/json"
+          contentType: "application/json",
+          error: function (xhr, error, code) {
+            console.log(xhr, code);
+          }
         },
         columns: [
           { title: "Alias", data: function (row, type, set) {

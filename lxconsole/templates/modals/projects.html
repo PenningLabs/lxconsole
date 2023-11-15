@@ -4,17 +4,17 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLabel">Add Project</h5>
-          <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+          <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">×</span>
           </button>
         </div>
         <div class="modal-body">
           <ul class="nav nav-tabs" id="myTab" role="tablist">
             <li class="nav-item">
-              <a class="nav-link active" id="form-tab" data-toggle="tab" href="#form" role="tab" aria-controls="form" aria-selected="true">Form</a>
+              <a class="nav-link active" id="form-tab" data-bs-toggle="tab" href="#form" role="tab" aria-controls="form" aria-selected="true">Form</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" id="json-tab" data-toggle="tab" href="#json" role="tab" aria-controls="json" aria-selected="false">JSON</a>
+              <a class="nav-link" id="json-tab" data-bs-toggle="tab" href="#json" role="tab" aria-controls="json" aria-selected="false">JSON</a>
             </li>
           </ul>
           <div class="tab-content" id="myTabContent">
@@ -47,7 +47,7 @@
                   <label class="col-3 col-form-label text-right">features.images: </label>
                   <div class="col-7">
                     <div class="form-group">
-                      <select onchange="" class="form-control" name="features.images">
+                      <select onchange="" class="form-select" name="features.images">
                         <option value="">(not set)</option>
                         <option value="true">true</option>
                         <option value="false">false</option>
@@ -62,7 +62,7 @@
                   <label class="col-3 col-form-label text-right">features.networks: </label>
                   <div class="col-7">
                     <div class="form-group">
-                      <select onchange="" class="form-control" name="features.networks">
+                      <select onchange="" class="form-select" name="features.networks">
                         <option value="">(not set)</option>
                         <option value="true">true</option>
                         <option value="false">false</option>
@@ -77,7 +77,7 @@
                   <label class="col-3 col-form-label text-right">features.profiles: </label>
                   <div class="col-7">
                     <div class="form-group">
-                      <select onchange="" class="form-control" name="features.profiles">
+                      <select onchange="" class="form-select" name="features.profiles">
                         <option value="">(not set)</option>
                         <option value="true">true</option>
                         <option value="false">false</option>
@@ -92,7 +92,7 @@
                   <label class="col-3 col-form-label text-right">features.storage.volumes: </label>
                   <div class="col-7">
                     <div class="form-group">
-                      <select onchange="" class="form-control" name="features.storage.volumes">
+                      <select onchange="" class="form-select" name="features.storage.volumes">
                         <option value="">(not set)</option>
                         <option value="true">true</option>
                         <option value="false">false</option>
@@ -107,7 +107,7 @@
                   <label class="col-3 col-form-label text-right">features.storage.buckets: </label>
                   <div class="col-7">
                     <div class="form-group">
-                      <select onchange="" class="form-control" name="features.storage.buckets">
+                      <select onchange="" class="form-select" name="features.storage.buckets">
                         <option value="">(not set)</option>
                         <option value="true">true</option>
                         <option value="false">false</option>
@@ -121,7 +121,7 @@
                 <hr>
                 <div id="accordionConfigurationProperties">
                   <h2>
-                    <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#configurationProperties" aria-expanded="false" aria-controls="configurationProperties">
+                    <button class="btn btn-link collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#configurationProperties" aria-expanded="false" aria-controls="configurationProperties">
                       Additional Configuration Properties
                     </button>
                   </h2> 
@@ -130,7 +130,7 @@
                       <label class="col-4 col-form-label text-right">backups.compression_algorithm: </label>
                       <div class="col-6">
                         <div class="form-group">
-                          <select onchange="" class="form-control" name="features.backups.compression_algorithm">
+                          <select onchange="" class="form-select" name="features.backups.compression_algorithm">
                             <option value="">(not set)</option>
                             <option value="bzip2">bzip2</option>
                             <option value="gzip">gzip</option>
@@ -148,7 +148,7 @@
                       <label class="col-4 col-form-label text-right">images.auto_update_cached: </label>
                       <div class="col-6">
                         <div class="form-group">
-                          <select onchange="" class="form-control" name="features.images.auto_update_cached">
+                          <select onchange="" class="form-select" name="features.images.auto_update_cached">
                             <option value="">(not set)</option>
                             <option value="true">true</option>
                             <option value="false">false</option>
@@ -156,7 +156,7 @@
                         </div>
                       </div>
                       <div class="col-1">
-                        <i class="far fa-sm fa-question-circle" title='Select whether or not to automatically update images that LXD caches. Default: (not set).'></i>
+                        <i class="far fa-sm fa-question-circle" title='Select whether or not to automatically update images that LXD/Incus caches. Default: (not set).'></i>
                       </div>
                     </div>
                     <div class="row">
@@ -174,7 +174,7 @@
                       <label class="col-4 col-form-label text-right">images.compression_algorithm: </label>
                       <div class="col-6">
                         <div class="form-group">
-                          <select  onchange="" class="form-control" name="features.images.compression_algorithm">
+                          <select  onchange="" class="form-select" name="features.images.compression_algorithm">
                             <option value="">(not set)</option>
                             <option value="bzip2">bzip2</option>
                             <option value="gzip">gzip</option>
@@ -302,7 +302,7 @@
                       <label class="col-4 col-form-label text-right">restricted: </label>
                       <div class="col-6">
                         <div class="form-group">
-                          <select id="addModalRestrictedInput" onchange="changeRestrictedOptionsDisplay()" class="form-control" name="restricted">
+                          <select id="addModalRestrictedInput" onchange="changeRestrictedOptionsDisplay()" class="form-select" name="restricted">
                             <option value="">(not set)</option>
                             <option value="true">true</option>
                             <option value="false">false</option>
@@ -310,14 +310,14 @@
                         </div>
                       </div>
                       <div class="col-1">
-                        <i class="far fa-sm fa-question-circle" title='Select whether to block access to security-sensitive LXD features. Default: false'></i>
+                        <i class="far fa-sm fa-question-circle" title='Select whether to block access to security-sensitive LXD/Incus features. Default: false'></i>
                       </div>
                     </div>
                     <div class="row" id="projectRestrictedBackupsRow" style="display: none;">
                       <label class="col-4 col-form-label text-right">restricted.backups: </label>
                       <div class="col-6">
                         <div class="form-group">
-                          <select onchange="" class="form-control" name="restricted.backups">
+                          <select onchange="" class="form-select" name="restricted.backups">
                             <option value="">(not set)</option>
                             <option value="allow">allow</option>
                             <option value="block">block</option>
@@ -332,7 +332,7 @@
                       <label class="col-4 col-form-label text-right">restricted.cluster.target: </label>
                       <div class="col-6">
                         <div class="form-group">
-                          <select onchange="" class="form-control" name="restricted.cluster.target">
+                          <select onchange="" class="form-select" name="restricted.cluster.target">
                             <option value="">(not set)</option>
                             <option value="allow">allow</option>
                             <option value="block">block</option>
@@ -347,7 +347,7 @@
                       <label class="col-4 col-form-label text-right">restricted.containers.lowlevel: </label>
                       <div class="col-6">
                         <div class="form-group">
-                          <select onchange="" class="form-control" name="restricted.containers.lowlevel">
+                          <select onchange="" class="form-select" name="restricted.containers.lowlevel">
                             <option value="">(not set)</option>
                             <option value="allow">allow</option>
                             <option value="block">block</option>
@@ -362,7 +362,7 @@
                       <label class="col-4 col-form-label text-right">restricted.containers.nesting: </label>
                       <div class="col-6">
                         <div class="form-group">
-                          <select onchange="" class="form-control" name="restricted.containers.nesting">
+                          <select onchange="" class="form-select" name="restricted.containers.nesting">
                             <option value="">(not set)</option>
                             <option value="allow">allow</option>
                             <option value="block">block</option>
@@ -377,7 +377,7 @@
                       <label class="col-4 col-form-label text-right">restricted.containers.privilege: </label>
                       <div class="col-6">
                         <div class="form-group">
-                          <select onchange="" class="form-control" name="restricted.containers.privilege">
+                          <select onchange="" class="form-select" name="restricted.containers.privilege">
                             <option value="">(not set)</option>
                             <option value="allow">allow</option>
                             <option value="isolated">isolated</option>
@@ -393,7 +393,7 @@
                       <label class="col-4 col-form-label text-right">restricted.devices.disk: </label>
                       <div class="col-6">
                         <div class="form-group">
-                          <select onchange="" class="form-control" name="restricted.devices.disk">
+                          <select onchange="" class="form-select" name="restricted.devices.disk">
                             <option value="">(not set)</option>
                             <option value="allow">allow</option>
                             <option value="block">block</option>
@@ -409,7 +409,7 @@
                       <label class="col-4 col-form-label text-right">restricted.devices.gpu: </label>
                       <div class="col-6">
                         <div class="form-group">
-                          <select onchange="" class="form-control" name="restricted.devices.gpu">
+                          <select onchange="" class="form-select" name="restricted.devices.gpu">
                             <option value="">(not set)</option>
                             <option value="allow">allow</option>
                             <option value="block">block</option>
@@ -424,7 +424,7 @@
                       <label class="col-4 col-form-label text-right">restricted.devices.infiniband: </label>
                       <div class="col-6">
                         <div class="form-group">
-                          <select onchange="" class="form-control" name="restricted.devices.infiniband">
+                          <select onchange="" class="form-select" name="restricted.devices.infiniband">
                             <option value="">(not set)</option>
                             <option value="allow">allow</option>
                             <option value="block">block</option>
@@ -439,7 +439,7 @@
                       <label class="col-4 col-form-label text-right">restricted.devices.nic: </label>
                       <div class="col-6">
                         <div class="form-group">
-                          <select onchange="" class="form-control" name="restricted.devices.nic">
+                          <select onchange="" class="form-select" name="restricted.devices.nic">
                             <option value="">(not set)</option>
                             <option value="allow">allow</option>
                             <option value="block">block</option>
@@ -455,7 +455,7 @@
                       <label class="col-4 col-form-label text-right">restricted.devices.pci: </label>
                       <div class="col-6">
                         <div class="form-group">
-                          <select onchange="" class="form-control" name="restricted.devices.pci">
+                          <select onchange="" class="form-select" name="restricted.devices.pci">
                             <option value="">(not set)</option>
                             <option value="allow">allow</option>
                             <option value="block">block</option>
@@ -470,7 +470,7 @@
                       <label class="col-4 col-form-label text-right">restricted.devices.proxy: </label>
                       <div class="col-6">
                         <div class="form-group">
-                          <select onchange="" class="form-control" name="restricted.devices.proxy">
+                          <select onchange="" class="form-select" name="restricted.devices.proxy">
                             <option value="">(not set)</option>
                             <option value="allow">allow</option>
                             <option value="block">block</option>
@@ -485,7 +485,7 @@
                       <label class="col-4 col-form-label text-right">restricted.devices.unix-block: </label>
                       <div class="col-6">
                         <div class="form-group">
-                          <select onchange="" class="form-control" name="restricted.devices.unix-block">
+                          <select onchange="" class="form-select" name="restricted.devices.unix-block">
                             <option value="">(not set)</option>
                             <option value="allow">allow</option>
                             <option value="block">block</option>
@@ -500,7 +500,7 @@
                       <label class="col-4 col-form-label text-right">restricted.devices.unix-char: </label>
                       <div class="col-6">
                         <div class="form-group">
-                          <select onchange="" class="form-control" name="restricted.devices.unix-char">
+                          <select onchange="" class="form-select" name="restricted.devices.unix-char">
                             <option value="">(not set)</option>
                             <option value="allow">allow</option>
                             <option value="block">block</option>
@@ -515,7 +515,7 @@
                       <label class="col-4 col-form-label text-right">restricted.devices.unix-hotplug: </label>
                       <div class="col-6">
                         <div class="form-group">
-                          <select onchange="" class="form-control" name="restricted.devices.unix-hotplug">
+                          <select onchange="" class="form-select" name="restricted.devices.unix-hotplug">
                             <option value="">(not set)</option>
                             <option value="allow">allow</option>
                             <option value="block">block</option>
@@ -530,7 +530,7 @@
                       <label class="col-4 col-form-label text-right">restricted.devices.usb: </label>
                       <div class="col-6">
                         <div class="form-group">
-                          <select onchange="" class="form-control" name="restricted.devices.usb">
+                          <select onchange="" class="form-select" name="restricted.devices.usb">
                             <option value="">(not set)</option>
                             <option value="allow">allow</option>
                             <option value="block">block</option>
@@ -567,7 +567,7 @@
                       <label class="col-4 col-form-label text-right">restricted.snapshots: </label>
                       <div class="col-6">
                         <div class="form-group">
-                          <select onchange="" class="form-control" name="restricted.snapshots">
+                          <select onchange="" class="form-select" name="restricted.snapshots">
                             <option value="">(not set)</option>
                             <option value="allow">allow</option>
                             <option value="block">block</option>
@@ -582,7 +582,7 @@
                       <label class="col-4 col-form-label text-right">restricted.virtual-machines.lowlevel: </label>
                       <div class="col-6">
                         <div class="form-group">
-                          <select onchange="" class="form-control" name="restricted.virtual-machines.lowlevel">
+                          <select onchange="" class="form-select" name="restricted.virtual-machines.lowlevel">
                             <option value="">(not set)</option>
                             <option value="allow">allow</option>
                             <option value="block">block</option>
@@ -596,8 +596,8 @@
                   </div>
                 </div>
                 <div class="modal-footer">
-                  <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                  <a class="btn btn-primary" onclick="addItem()" href="#" data-dismiss="modal">Submit</a>
+                  <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+                  <a class="btn btn-primary" onclick="addItem()" href="#" data-bs-dismiss="modal">Submit</a>
                 </div>
               </form>
             </div>
@@ -613,8 +613,8 @@
                 </div>
               </div>
               <div class="modal-footer">
-                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                <a class="btn btn-primary" href="#" onclick="createProjectUsingJSON()" data-dismiss="modal">Submit</a>
+                <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+                <a class="btn btn-primary" href="#" onclick="createProjectUsingJSON()" data-bs-dismiss="modal">Submit</a>
               </div>
             </div>
           </div>
@@ -629,7 +629,7 @@
       <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="exampleModalLabel">Edit Project</h5>
-            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+            <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">×</span>
             </button>
           </div>
@@ -646,8 +646,8 @@
             </div>
           </div>
           <div class="modal-footer">
-            <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-            <a class="btn btn-primary" href="#" onclick="updateProject()" data-dismiss="modal">Submit</a>
+            <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+            <a class="btn btn-primary" href="#" onclick="updateProject()" data-bs-dismiss="modal">Submit</a>
           </div>
       </div>
     </div>
@@ -659,7 +659,7 @@
       <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="renameProjectModalLabel">Rename Project</h5>
-            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+            <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">×</span>
             </button>
           </div>
@@ -678,8 +678,8 @@
             <input type="hidden" id ="projectToRename" name="projectToRename">
           </div>
           <div class="modal-footer">
-            <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-            <a class="btn btn-primary" href="#" onclick="updateProjectName()" data-dismiss="modal">Ok</a>
+            <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+            <a class="btn btn-primary" href="#" onclick="updateProjectName()" data-bs-dismiss="modal">Ok</a>
           </div>
       </div>
     </div>

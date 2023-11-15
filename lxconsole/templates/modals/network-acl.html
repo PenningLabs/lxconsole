@@ -4,17 +4,17 @@
     <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLabel">Add Network ACL Rule</h5>
-          <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+          <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">×</span>
           </button>
         </div>
         <div class="modal-body">
           <ul class="nav nav-tabs" id="myTab" role="tablist">
             <li class="nav-item">
-              <a class="nav-link active" id="form-tab" data-toggle="tab" href="#form" role="tab" aria-controls="form" aria-selected="true">Form</a>
+              <a class="nav-link active" id="form-tab" data-bs-toggle="tab" href="#form" role="tab" aria-controls="form" aria-selected="true">Form</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" id="json-tab" data-toggle="tab" href="#json" role="tab" aria-controls="json" aria-selected="false">JSON</a>
+              <a class="nav-link" id="json-tab" data-bs-toggle="tab" href="#json" role="tab" aria-controls="json" aria-selected="false">JSON</a>
             </li>
           </ul>
           <div class="tab-content" id="myTabContent">
@@ -25,7 +25,7 @@
                   <label class="col-3 col-form-label text-right">Type: <span class="text-danger">*</span></label>
                   <div class="col-7">
                     <div class="form-group">
-                      <select onchange="" class="form-control" name="type">
+                      <select onchange="" class="form-select" name="type">
                         <option value="ingress">ingress</option>
                         <option value="egress">egress</option>
                       </select>
@@ -39,7 +39,7 @@
                   <label class="col-3 col-form-label text-right">Action: <span class="text-danger">*</span></label>
                   <div class="col-7">
                     <div class="form-group">
-                      <select onchange="" class="form-control" name="action">
+                      <select onchange="" class="form-select" name="action">
                         <option value="allow">allow</option>
                         <option value="reject">reject</option>
                         <option value="drop">drop</option>
@@ -54,7 +54,7 @@
                   <label class="col-3 col-form-label text-right">State: <span class="text-danger">*</span></label>
                   <div class="col-7">
                     <div class="form-group">
-                      <select onchange="" class="form-control" name="state">
+                      <select onchange="" class="form-select" name="state">
                         <option value="enabled">enabled</option>
                         <option value="disabled">disabled</option>
                         <option value="logged">logged</option>
@@ -102,7 +102,7 @@
                   <label class="col-3 col-form-label text-right">Protocol: </label>
                   <div class="col-7">
                     <div class="form-group">
-                      <select onchange="" class="form-control" name="protocol">
+                      <select onchange="" class="form-select" name="protocol">
                         <option value="">(not set)</option>
                         <option value="icmp4">icmp4</option>
                         <option value="icmp6">icmp6</option>
@@ -161,8 +161,8 @@
                 </div>
               </form>
               <div class="modal-footer">
-                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                <a class="btn btn-primary" href="#" onclick="addItem()" data-dismiss="modal">Submit</a>
+                <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+                <a class="btn btn-primary" href="#" onclick="addItem()" data-bs-dismiss="modal">Submit</a>
               </div>
             </div>
             <div class="tab-pane fade" id="json" role="tabpanel" aria-labelledby="json-tab">
@@ -177,8 +177,8 @@
                 </div>
               </div>
               <div class="modal-footer">
-                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                <a class="btn btn-primary" href="#" onclick="createItemUsingJSON()" data-dismiss="modal">Submit</a>
+                <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+                <a class="btn btn-primary" href="#" onclick="createItemUsingJSON()" data-bs-dismiss="modal">Submit</a>
               </div>
             </div>
           </div>
