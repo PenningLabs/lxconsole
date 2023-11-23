@@ -1,3 +1,6 @@
+# 0.4.1
+ - Added selectize.js to allow ordered multiple select option of profiles when creating new instance
+
 # 0.4.0
  - Upgraded Bootstrap from version 4 to version 5
  - Converted containers and virtual-machines endpoints to instances endpoint to support Incus

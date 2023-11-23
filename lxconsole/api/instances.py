@@ -42,9 +42,7 @@ def api_instances_endpoint(endpoint):
     data.update({'location': request.form.get('location')})
     data.update({'type': request.form.get('type')})
     data.update({'instance_type': request.form.get('instance_type')})
-    profiles = []
-    profiles.append(request.form.get('profiles'))
-    data.update({'profiles': profiles})
+    data.update({'profiles': request.form.getlist('profiles')})
 
     source = {}
     if request.form.get('image') == 'none':

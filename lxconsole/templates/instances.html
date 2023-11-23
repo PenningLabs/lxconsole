@@ -67,6 +67,9 @@
 {% endblock modal %}
 
 {% block script %}
+  <!-- Page specific script  https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.15.2/js/selectize.min.js -->
+  <script src="../static/js/selectize/selectize.min.js"></script>
+
   <script>
     var reloadTime = 10000;
     const queryString = window.location.search;
@@ -114,6 +117,10 @@
             $('#instanceProfileInput').append('<option value="' + optionText + '">' + optionText + '</option>');
           }
         }
+        //Initialize selectize form select control
+        $(function () {
+          $("#instanceProfileInput").selectize();
+        });
       })
 
       //Populate the modal Location dropdown
