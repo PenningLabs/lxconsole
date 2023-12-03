@@ -160,12 +160,13 @@
     <div class="col-sm-12 col-md-6 mb-4">
       <div class="card h-100">
         <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-          <h6 class="m-0 font-weight-bold text-primary">LXD Information</h6>
+          <h6 class="m-0 font-weight-bold text-primary">Server Information</h6>
         </div>
         <!-- Card Body -->
         <div class="card-body">
           <strong>Operating System</strong>: <span id="osName"></span> <span id="osVersion"></span><br />
-          <strong>LXD Version</strong>: <span id="serverVersion"></span><br />
+          <strong>Server</strong>: <span id="server"></span><br />
+          <strong>Version</strong>: <span id="serverVersion"></span><br />
           <strong>Server Name</strong>: <span id="serverName"></span><br />
           <strong>Kernel</strong>: <span id="kernel"></span> <span id="kernelArchitecture"></span><br />
           <strong>Firewall</strong>: <span id="firewall"></span><br />
@@ -336,6 +337,7 @@
         $("#kernelVersion").text(data.kernel_version);
         $("#osName").text(data.os_name);
         $("#osVersion").text(data.os_version)
+        $("#server").text(data.server);
         $("#serverVersion").text(data.server_version);
         $("#serverName").text(data.server_name);
         $("#storage").text(data.storage);

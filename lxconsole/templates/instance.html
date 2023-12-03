@@ -15,19 +15,19 @@
         <a class="dropdown-item text-primary" style="display: none;" onclick="changeItemState(instance, 'stop')" id="stopLink"><i class="fas fa-stop fa-sm fa-fw mr-2"></i>Stop</a>
         <a class="dropdown-item text-primary" style="display: none;" onclick="changeItemState(instance, 'unfreeze')" id="unfreezeLink"><i class="fas fa-pause fa-sm fa-fw mr-2"></i>UnFreeze</a>
         <div class="dropdown-divider"></div> 
-        <a class="dropdown-item" onclick="editInstance()" id="editInstanceOption"><i class="fas fa-edit fa-sm fa-fw mr-2"></i>Edit</a>
-        <a class="dropdown-item" onclick="changeItemState(instance, 'restart')" id="restartInstanceOption"><i class="fas fa-redo fa-sm fa-fw mr-2"></i>Restart</a>
-        <a class="dropdown-item" onclick="changeItemState(instance, 'stop', true)" id="stopInstanceForcefullyOption"><i class="fas fa-plug fa-sm fa-fw mr-2"></i>Force Stop</a>
-        <a class="dropdown-item" onclick="changeItemState(instance, 'freeze')" id="freezeInstanceOption"><i class="fas fa-pause fa-sm fa-fw mr-2"></i>Freeze</a>
-        <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#createSnapshotModal" id="snapshotInstanceOption"><i class="fas fa-clone fa-sm fa-fw mr-2"></i>Snapshot</a>
-        <a class="dropdown-item" onclick="loadAttachProfileModal()" id="attachProfileOption"><i class="fas fa-address-card fa-sm fa-fw mr-2"></i>Attach Profile</a>
-        <a class="dropdown-item" onclick="loadDetachProfileModal()" id="detachProfileOption"><i class="fas fa-address-card fa-sm fa-fw mr-2"></i>Detach Profile</a>
-        <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#renameInstanceModal" id="renameInstanceOption"><i class="fas fa-edit fa-sm fa-fw mr-2"></i>Rename</a>
-        <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#copyInstanceModal" id="copyInstanceOption"><i class="fas fa-copy fa-sm fa-fw mr-2"></i>Copy</a>
-        <a class="dropdown-item" onclick="loadMigrateInstanceModal()" id="migrateInstanceOption"><i class="fas fa-suitcase fa-sm fa-fw mr-2"></i>Migrate</a>
+        <a class="dropdown-item" id="editInstanceOption"><i class="fas fa-edit fa-sm fa-fw mr-2"></i>Edit</a>
+        <a class="dropdown-item" id="restartInstanceOption"><i class="fas fa-redo fa-sm fa-fw mr-2"></i>Restart</a>
+        <a class="dropdown-item" id="stopInstanceForcefullyOption"><i class="fas fa-plug fa-sm fa-fw mr-2"></i>Force Stop</a>
+        <a class="dropdown-item" id="freezeInstanceOption"><i class="fas fa-pause fa-sm fa-fw mr-2"></i>Freeze</a>
+        <a class="dropdown-item text-primary" href="#" data-bs-toggle="modal" data-bs-target="#createSnapshotModal" id="snapshotInstanceOption"><i class="fas fa-clone fa-sm fa-fw mr-2"></i>Snapshot</a>
+        <a class="dropdown-item" id="attachProfileOption"><i class="fas fa-address-card fa-sm fa-fw mr-2"></i>Attach Profile</a>
+        <a class="dropdown-item" id="detachProfileOption"><i class="fas fa-address-card fa-sm fa-fw mr-2"></i>Detach Profile</a>
+        <a class="dropdown-item" id="renameInstanceOption"><i class="fas fa-edit fa-sm fa-fw mr-2"></i>Rename</a>
+        <a class="dropdown-item" id="copyInstanceOption"><i class="fas fa-copy fa-sm fa-fw mr-2"></i>Copy</a>
+        <a class="dropdown-item" id="migrateInstanceOption"><i class="fas fa-suitcase fa-sm fa-fw mr-2"></i>Migrate</a>
         <a class="dropdown-item text-primary" href="#" data-bs-toggle="modal" data-bs-target="#backupInstanceModal" id="backupInstanceOption"><i class="fas fa-save fa-sm fa-fw mr-2"></i>Backup</a>
-        <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#publishInstanceModal" id="publishInstanceOption"><i class="fas fa-box-open fa-sm fa-fw mr-2"></i>Publish</a>
-        <a class="dropdown-item" onclick="deleteInstance()" id="deleteInstanceOption"><i class="fas fa-trash-alt fa-sm fa-fw mr-2"></i>Delete</a>
+        <a class="dropdown-item" id="publishInstanceOption"><i class="fas fa-box-open fa-sm fa-fw mr-2"></i>Publish</a>
+        <a class="dropdown-item" id="deleteInstanceOption"><i class="fas fa-trash-alt fa-sm fa-fw mr-2"></i>Delete</a>
       </div>
 
       <a class="btn btn-outline-primary float-sm-right" href="#" role="button" id="startLinkButton" onclick="changeItemState(instance, 'start')" style="display:none;" title="Start">
@@ -671,7 +671,7 @@
         loadUsbDevicesTable()
       }
 
-      loadCpuPercentage()
+
 
       //Set the automatic page reload
       pageReloadTimeout = setTimeout(() => { reloadPageContent(); }, reloadTime);
@@ -692,7 +692,7 @@
       sessionStorage.removeItem("instance_user_time");
       sessionStorage.removeItem("instance_system_time");
       sessionStorage.removeItem("instance_idle_time");
-      loadCpuPercentage()
+      
 
       //Load Home Tab Tables
       loadInterfacesTable()
@@ -965,21 +965,36 @@
         $("#pid").text(data.pid)
         $("#processes").text(data.processes)
 
-        if (data.memory.usage && data.memory.total && data.memory.total > 0){
-          percentage = parseFloat(100 * (data.memory.usage / data.memory.total)).toFixed(2)
+        //Get Memory and CPU progress bar status if runnning
+        if (data.status == "Running"){
+          if (data.memory.usage && data.memory.total && data.memory.total > 0){
+            percentage = parseFloat(100 * (data.memory.usage / data.memory.total)).toFixed(2)
+          }
+          else {
+            percentage = parseFloat(0).toFixed(2)
+          }
+        
+          $('#memPercentage').text(percentage)
+          $('#memPercentageBar').css('width', percentage + '%');
+          $('#memPercentageBar').attr('aria-valuenow', percentage + '%');
+          if (percentage > 90.00)
+            $('#memPercentageBar').attr('class', 'progress-bar bg-danger');
+          else
+            $('#memPercentageBar').attr('class', 'progress-bar bg-primary');
+          
+          loadCpuPercentage()
         }
         else {
-          percentage = parseFloat(0).toFixed(2)
-        }
-       
-        $('#memPercentage').text(percentage)
-        $('#memPercentageBar').css('width', percentage + '%');
-        $('#memPercentageBar').attr('aria-valuenow', percentage + '%');
-        if (percentage > 90.00)
-          $('#memPercentageBar').attr('class', 'progress-bar bg-danger');
-        else
+          percentage = 0.00
+          $('#memPercentage').text(percentage)
+          $('#memPercentageBar').css('width', percentage + '%');
+          $('#memPercentageBar').attr('aria-valuenow', percentage + '%');
           $('#memPercentageBar').attr('class', 'progress-bar bg-primary');
-        
+          $('#cpuPercentage').text(percentage);
+          $('#cpuPercentageBar').css('width', percentage + '%');
+          $('#cpuPercentageBar').attr('aria-valuenow', percentage + '%');
+          $('#cpuPercentageBar').attr('class', 'progress-bar bg-primary');
+        }
 
       });
 
@@ -1786,6 +1801,18 @@
       })
     }
 
+    function loadRenameModal() {
+      $("#renameInstanceModal").modal('show');
+    }
+
+    function loadCopyModal() {
+      $("#copyInstanceModal").modal('show');
+    }
+
+    function loadPublishModal() {
+      $("#publishInstanceModal").modal('show');
+    }
+
     // Loads the addNetworkDevice modal and populates dynamic form options
     function loadAddNetworkDeviceModal(){
 
@@ -1830,19 +1857,41 @@
       })
     }
 
-    // Loads thes migrateInstanceModal and populates dynamic form options
+    // Loads the migrateInstanceModal and populates dynamic form options
     function loadMigrateInstanceModal(){
-      //Reset and populate the modal Server dropdown
-      $("#selectClusterInput").empty().append('<option value="">(not set)</option>');
+      //Populate the migrate modal Server location dropdown
+      $("#selectClusterLocationInput").empty().append('<option value="">(not set)</option>');
       $.getJSON("../api/cluster-members/list_cluster_members?id="+serverId+"&project="+project, function (data) {
         data = data.metadata
         for (var index = 0; index < data.length; index++) {
           optionText = data[index].replace('/1.0/cluster/members/','');
-          $('#selectClusterInput').append('<option value="' + optionText + '">' + optionText + '</option>');
+          $('#selectClusterLocationInput').append('<option value="' + optionText + '">' + optionText + '</option>');
         }
-        //Show modal
-        $("#migrateInstanceModal").modal('show');
       })
+
+      //Populate the migrate modal Storage Pool dropdown
+      $("#selectPoolInput").empty().append('<option value="">(not set)</option>');
+      $.getJSON("../api/storage-pools/list_storage_pools?id="+serverId+"&project="+project, function (data) {
+        data = data.metadata
+        for (var index = 0; index < data.length; index++) {
+          optionText = data[index].replace('/1.0/storage-pools/','');
+          $('#selectPoolInput').append('<option value="' + optionText + '">' + optionText + '</option>');
+        }
+      })
+
+      //Populate the migrate modal Project dropdown
+      $("#selectProjectInput").empty().append('<option value="">(not set)</option>');
+      $.getJSON("../api/projects/list_projects?id="+serverId+"&project="+project, function (data) {
+        data = data.metadata
+        for (var index = 0; index < data.length; index++) {
+          optionText = data[index].replace('/1.0/projects/','');
+          $('#selectProjectInput').append('<option value="' + optionText + '">' + optionText + '</option>');
+        }
+      })
+
+      //Show modal
+      $("#migrateInstanceModal").modal('show');
+      changeMigrationInput()
     }
     
     // Create snapshot from modal data
@@ -1934,7 +1983,12 @@
             alert(data.error);
           }
           // Change window to instances page
-          window.location.replace("instances?id="+serverId+"&project="+project);
+          if (instanceType == "virtual-machine") {
+            window.location.replace("instances?id="+serverId+"&project="+project+"#virtual-machines");
+          }
+          else {
+            window.location.replace("instances?id="+serverId+"&project="+project);
+          }
         });
       }
     }
@@ -2779,6 +2833,35 @@
       }
     }
 
+    // Change migration modal select options based on selected item
+    function changeMigrationInput(){
+      migration_location = $("#selectClusterLocationInput").val();
+      migration_pool = $("#selectPoolInput").val();
+      migration_project = $("#selectProjectInput").val();
+
+      if (migration_location == "" && migration_pool == "" && migration_project == "") {
+        $("#selectClusterLocationInput").prop('disabled', false)
+        $("#selectPoolInput").prop('disabled', false)
+        $("#selectProjectInput").prop('disabled', false)
+      }
+
+      if (migration_location != ""){
+        $("#selectPoolInput").prop('disabled', true)
+        $("#selectProjectInput").prop('disabled', true)
+      }
+
+      if (migration_pool != ""){
+        $("#selectClusterLocationInput").prop('disabled', true)
+        $("#selectProjectInput").prop('disabled', true)
+      }
+
+      if (migration_project != ""){
+        $("#selectClusterLocationInput").prop('disabled', true)
+        $("#selectPoolInput").prop('disabled', true)
+      }
+
+    }
+
     // Dynamically change Instance Actions options based on state
     function displayMenuOptions(data){
       switch (data.status){
@@ -2789,18 +2872,17 @@
           $('#startLink').show();
           $('#stopLink').hide();
           $('#unfreezeLink').hide();
-          $('#restartInstanceOption').prop('disabled', true).removeClass('text-primary').addClass('text-muted');
-          $('#stopInstanceForcefullyOption').prop('disabled', true).removeClass('text-primary').addClass('text-muted');
-          $('#freezeInstanceOption').prop('disabled', true).removeClass('text-primary').addClass('text-muted');
-          $('#snapshotInstanceOption').prop('disabled', false).removeClass('text-muted').addClass('text-primary');
-          $('#attachProfileOption').prop('disabled', false).removeClass('text-muted').addClass('text-primary');
-          $('#detachProfileOption').prop('disabled', false).removeClass('text-muted').addClass('text-primary');
-          $('#editInstanceOption').prop('disabled', false).removeClass('text-muted').addClass('text-primary');
-          $('#renameInstanceOption').prop('disabled', false).removeClass('text-muted').addClass('text-primary');
-          $('#copyInstanceOption').prop('disabled', false).removeClass('text-muted').addClass('text-primary');
-          $('#migrateInstanceOption').prop('disabled', false).removeClass('text-muted').addClass('text-primary');
-          $('#publishInstanceOption').prop('disabled', false).removeClass('text-muted').addClass('text-primary');
-          $('#deleteInstanceOption').prop('disabled', false).removeClass('text-muted').addClass('text-primary');
+          $('#restartInstanceOption').prop('disabled', true).removeClass('text-primary').addClass('text-muted').removeAttr('onclick');
+          $('#stopInstanceForcefullyOption').prop('disabled', true).removeClass('text-primary').addClass('text-muted').removeAttr('onclick');
+          $('#freezeInstanceOption').prop('disabled', true).removeClass('text-primary').addClass('text-muted').removeAttr('onclick');
+          $('#attachProfileOption').prop('disabled', false).removeClass('text-muted').addClass('text-primary').attr('onClick', 'loadAttachProfileModal();');
+          $('#detachProfileOption').prop('disabled', false).removeClass('text-muted').addClass('text-primary').attr('onClick', 'loadDetachProfileModal();');
+          $('#editInstanceOption').prop('disabled', false).removeClass('text-muted').addClass('text-primary').attr('onClick', 'editInstance();');
+          $('#renameInstanceOption').prop('disabled', false).removeClass('text-muted').addClass('text-primary').attr('onClick', 'loadRenameModal();');
+          $('#copyInstanceOption').prop('disabled', false).removeClass('text-muted').addClass('text-primary').attr('onClick', 'loadCopyModal();');
+          $('#migrateInstanceOption').prop('disabled', false).removeClass('text-muted').addClass('text-primary').attr('onClick', 'loadMigrateInstanceModal();');
+          $('#publishInstanceOption').prop('disabled', false).removeClass('text-muted').addClass('text-primary').attr('onClick', 'loadPublishModal();');
+          $('#deleteInstanceOption').prop('disabled', false).removeClass('text-muted').addClass('text-primary').attr('onClick', 'deleteInstance();');
           $('#startExecButton').prop('disabled', true);
           $('#startConsoleButton').prop('disabled', true);
           break;
@@ -2811,18 +2893,17 @@
           $('#startLink').hide();
           $('#stopLink').hide();
           $('#unfreezeLink').show();
-          $('#restartInstanceOption').prop('disabled', true).removeClass('text-primary').addClass('text-muted');
-          $('#stopInstanceForcefullyOption').prop('disabled', true).removeClass('text-primary').addClass('text-muted');
-          $('#freezeInstanceOption').prop('disabled', true).removeClass('text-primary').addClass('text-muted');
-          $('#snapshotInstanceOption').prop('disabled', false).removeClass('text-muted').addClass('text-primary');
-          $('#attachProfileOption').prop('disabled', true).removeClass('text-primary').addClass('text-muted');
-          $('#detachProfileOption').prop('disabled', true).removeClass('text-primary').addClass('text-muted');
-          $('#editInstanceOption').prop('disabled', true).removeClass('text-primary').addClass('text-muted');
-          $('#renameInstanceOption').prop('disabled', true).removeClass('text-primary').addClass('text-muted');
-          $('#copyInstanceOption').prop('disabled', false).removeClass('text-muted').addClass('text-primary');
-          $('#migrateInstanceOption').prop('disabled', true).removeClass('text-primary').addClass('text-muted');
-          $('#publishInstanceOption').prop('disabled', true).removeClass('text-primary').addClass('text-muted');
-          $('#deleteInstanceOption').prop('disabled', true).removeClass('text-primary').addClass('text-muted');
+          $('#restartInstanceOption').prop('disabled', true).removeClass('text-primary').addClass('text-muted').removeAttr('onclick');
+          $('#stopInstanceForcefullyOption').prop('disabled', true).removeClass('text-primary').addClass('text-muted').removeAttr('onclick');
+          $('#freezeInstanceOption').prop('disabled', true).removeClass('text-primary').addClass('text-muted').removeAttr('onclick');
+          $('#attachProfileOption').prop('disabled', true).removeClass('text-primary').addClass('text-muted').removeAttr('onclick');
+          $('#detachProfileOption').prop('disabled', true).removeClass('text-primary').addClass('text-muted').removeAttr('onclick');
+          $('#editInstanceOption').prop('disabled', true).removeClass('text-primary').addClass('text-muted').removeAttr('onclick');
+          $('#renameInstanceOption').prop('disabled', true).removeClass('text-primary').addClass('text-muted').removeAttr('onclick');
+          $('#copyInstanceOption').prop('disabled', false).removeClass('text-muted').addClass('text-primary').attr('onClick', 'loadCopyModal();');
+          $('#migrateInstanceOption').prop('disabled', true).removeClass('text-primary').addClass('text-muted').removeAttr('onclick');
+          $('#publishInstanceOption').prop('disabled', true).removeClass('text-primary').addClass('text-muted').removeAttr('onclick');
+          $('#deleteInstanceOption').prop('disabled', true).removeClass('text-primary').addClass('text-muted').removeAttr('onclick');
           $('#startExecButton').prop('disabled', true);
           $('#startConsoleButton').prop('disabled', true);
           break;
@@ -2833,18 +2914,17 @@
           $('#startLink').hide();
           $('#stopLink').show();
           $('#unfreezeLink').hide();
-          $('#restartInstanceOption').prop('disabled', false).removeClass('text-muted').addClass('text-primary');
-          $('#stopInstanceForcefullyOption').prop('disabled', false).removeClass('text-muted').addClass('text-primary');
-          $('#freezeInstanceOption').prop('disabled', false).removeClass('text-muted').addClass('text-primary');
-          $('#snapshotInstanceOption').prop('disabled', false).removeClass('text-muted').addClass('text-primary');
-          $('#attachProfileOption').prop('disabled', false).removeClass('text-muted').addClass('text-primary');
-          $('#detachProfileOption').prop('disabled', false).removeClass('text-muted').addClass('text-primary');
-          $('#editInstanceOption').prop('disabled', false).removeClass('text-muted').addClass('text-primary');
-          $('#renameInstanceOption').prop('disabled', true).removeClass('text-primary').addClass('text-muted');
-          $('#copyInstanceOption').prop('disabled', true).removeClass('text-primary').addClass('text-muted');
-          $('#migrateInstanceOption').prop('disabled', true).removeClass('text-primary').addClass('text-muted');
-          $('#publishInstanceOption').prop('disabled', true).removeClass('text-primary').addClass('text-muted');
-          $('#deleteInstanceOption').prop('disabled', true).removeClass('text-primary').addClass('text-muted');
+          $('#restartInstanceOption').prop('disabled', false).removeClass('text-muted').addClass('text-primary').attr('onClick', "changeItemState(instance, 'restart');");
+          $('#stopInstanceForcefullyOption').prop('disabled', false).removeClass('text-muted').addClass('text-primary').attr('onClick', "changeItemState(instance, 'stop', true);");
+          $('#freezeInstanceOption').prop('disabled', false).removeClass('text-muted').addClass('text-primary').attr('onClick', "changeItemState(instance, 'freeze');");
+          $('#attachProfileOption').prop('disabled', false).removeClass('text-muted').addClass('text-primary').attr('onClick', 'loadAttachProfileModal();');
+          $('#detachProfileOption').prop('disabled', false).removeClass('text-muted').addClass('text-primary').attr('onClick', 'loadDetachProfileModal();');
+          $('#editInstanceOption').prop('disabled', false).removeClass('text-muted').addClass('text-primary').attr('onClick', 'editInstance(this);');
+          $('#renameInstanceOption').prop('disabled', true).removeClass('text-primary').addClass('text-muted').removeAttr('onclick');
+          $('#copyInstanceOption').prop('disabled', true).removeClass('text-primary').addClass('text-muted').removeAttr('onclick');
+          $('#migrateInstanceOption').prop('disabled', true).removeClass('text-primary').addClass('text-muted').removeAttr('onclick');
+          $('#publishInstanceOption').prop('disabled', true).removeClass('text-primary').addClass('text-muted').removeAttr('onclick');
+          $('#deleteInstanceOption').prop('disabled', true).removeClass('text-primary').addClass('text-muted').removeAttr('onclick');
           if (server_clustered && server_name != target_location){
             $('#startExecButton').prop('disabled', true);
             $('#startConsoleButton').prop('disabled', true);
@@ -2925,16 +3005,29 @@
 
     // Migrate the instance to new cluster host
     function migrateInstance(){
-      var clusterHost = $("#selectClusterInput").val();
-      console.log("Info: migrating instance " + instance + " to " + clusterHost);
-      $.post("../api/instance/migrate_instance?id="+serverId+"&project="+project+"&instance="+instance+"&location="+clusterHost, {},  function (data) {
+      console.log("Info: migrating instance " + instance);
+      post_data = $('#migrateForm').serialize();
+      migration_project = $("#selectProjectInput").val();
+      $.post("../api/instance/migrate_instance?id="+serverId+"&project="+project+"&instance="+instance, post_data,  function (data) {
         console.log(data);
         if (data.error_code >= 400){
           alert(data.error);
         }
-        //Async type
-        setTimeout(() => { reloadPageContent(); }, 2000);
-        operationStatusCheck()
+        if (migration_project == project || migration_project == "") {
+          //Async type
+          setTimeout(() => { reloadPageContent(); }, 2000);
+          operationStatusCheck()
+        }
+        else {
+          // Change window to instances page as instance is no longer in current project
+          if (instanceType == "virtual-machine") {
+            window.location.replace("instances?id="+serverId+"&project="+project+"#virtual-machines");
+          }
+          else {
+            window.location.replace("instances?id="+serverId+"&project="+project);
+          }
+
+        }
       });
     }
 

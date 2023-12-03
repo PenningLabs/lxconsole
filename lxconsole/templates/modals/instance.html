@@ -85,18 +85,44 @@
             </button>
           </div>
           <div class="modal-body">
-            <div class="row">
-              <label class="col-3 col-form-label text-right">Server: <span class="text-danger">*</span></label>
-              <div class="col-7">
-                <div class="form-group">
-                  <select id="selectClusterInput" class="form-select" name="cluster">
-                  </select>
+            <form id="migrateForm">
+              <div class="row">
+                <label class="col-3 col-form-label text-right">Server:</label>
+                <div class="col-7">
+                  <div class="form-group">
+                    <select id="selectClusterLocationInput" onchange="changeMigrationInput()" class="form-select" name="location">
+                    </select>
+                  </div>
+                </div>
+                <div class="col-1">
+                  <i class="far fa-sm fa-question-circle" title='Select the cluster member to migrate this instance to.'></i>
                 </div>
               </div>
-              <div class="col-1">
-                <i class="far fa-sm fa-question-circle" title='Select the cluster member to migrate this instance to.'></i>
+              <div class="row">
+                <label class="col-3 col-form-label text-right">Storage Pool:</label>
+                <div class="col-7">
+                  <div class="form-group">
+                    <select id="selectPoolInput" onchange="changeMigrationInput()" class="form-select" name="pool">
+                    </select>
+                  </div>
+                </div>
+                <div class="col-1">
+                  <i class="far fa-sm fa-question-circle" title='Select the storage pool to migrate the root disk device to.'></i>
+                </div>
               </div>
-            </div>
+              <div class="row">
+                <label class="col-3 col-form-label text-right">Project:</label>
+                <div class="col-7">
+                  <div class="form-group">
+                    <select id="selectProjectInput" onchange="changeMigrationInput()" class="form-select" name="project">
+                    </select>
+                  </div>
+                </div>
+                <div class="col-1">
+                  <i class="far fa-sm fa-question-circle" title='Select the project to migrate the instance to.'></i>
+                </div>
+              </div>
+            </form>
           </div>
           <div class="modal-footer">
             <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>

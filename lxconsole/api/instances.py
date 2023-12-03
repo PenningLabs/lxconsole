@@ -53,8 +53,10 @@ def api_instances_endpoint(endpoint):
       source.update({'fingerprint': request.form.get('image')})
       data.update({'source': source})
 
+    devices = {'root': {'path': '/', 'pool': request.form.get('pool'), 'type': 'disk'}}
+    data.update({'devices': devices})
+    
     config = {}
-
     #Options shared between containers and virtual machines
     config.update({'boot.autostart': request.form.get('boot.autostart')}) if request.form.get('boot.autostart') else False
     config.update({'boot.autostart.delay': request.form.get('boot.autostart.delay')}) if request.form.get('boot.autostart.delay') else False

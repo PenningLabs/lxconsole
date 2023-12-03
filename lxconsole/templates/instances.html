@@ -103,7 +103,7 @@
       populateServerSelectDropdown()
       populateProjectSelectDropdown()
       
-      //Populate the modal Profile dropdown
+      //Populate the create instance modal Profile dropdown
       $.getJSON("../api/profiles/list_profiles?id="+serverId+"&project="+project, function (data) {
         data = data.metadata
         for (var index = 0; index < data.length; index++) {
@@ -123,7 +123,19 @@
         });
       })
 
-      //Populate the modal Location dropdown
+      //Populate the create instance modal Storge Pool dropdown
+      $.getJSON("../api/storage-pools/list_storage_pools?id="+serverId+"&project="+project, function (data) {
+        data = data.metadata
+        for (var index = 0; index < data.length; index++) {
+          optionText = data[index].replace('/1.0/storage-pools/','');
+          if (optionText == 'default')
+            $('#instanceStoragePoolInput').append('<option value="' + optionText + '" selected="selected">' + optionText + '</option>');
+          else
+            $('#instanceStoragePoolInput').append('<option value="' + optionText + '">' + optionText + '</option>');
+        }
+      })
+
+      //Populate the create instance modal Location dropdown
       $.getJSON("../api/cluster-members/list_cluster_members?id="+serverId+"&project="+project, function (data) {
         data = data.metadata
         for (var index = 0; index < data.length; index++) {
@@ -131,7 +143,6 @@
           $('#instanceLocationInput').append('<option value="' + optionText + '">' + optionText + '</option>');
         }
       })
-
       $.getJSON("../api/cluster-groups/list_cluster_groups?id="+serverId+"&project="+project, function (data) {
         data = data.metadata
         for (var index = 0; index < data.length; index++) {

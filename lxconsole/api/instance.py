@@ -746,27 +746,33 @@ def api_instance_endpoint(endpoint):
     results = requests.get(url, verify=server.ssl_verify, cert=(client_cert, client_key))
     instance = json.dumps(results.json())
     instance = json.loads(instance)
-    expanded_devices = instance['metadata']['expanded_devices']
     devices = []
-    instance_state_url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/instances/' + name + '/state?project=' + project
-    instance_state = requests.get(instance_state_url, verify=server.ssl_verify, cert=(client_cert, client_key))
-    instance_state = json.dumps(instance_state.json())
-    instance_state = json.loads(instance_state)
-    if expanded_devices:
-      for expanded_device in expanded_devices:
-        if expanded_devices[expanded_device]['type'] == 'disk':
-          device = {}
-          device.update({ 'device': expanded_device })
-          device.update({ 'type': expanded_devices[expanded_device]['type'] })
-          if 'path' in expanded_devices[expanded_device]:
-            device.update({ 'path': expanded_devices[expanded_device]['path'] })
-          if 'pool' in expanded_devices[expanded_device]:
-            device.update({ 'pool': expanded_devices[expanded_device]['pool'] })
-          if expanded_device in instance_state['metadata']['disk']:
-            if 'usage' in instance_state['metadata']['disk'][expanded_device]:
-              device.update({ 'usage': instance_state['metadata']['disk'][expanded_device]['usage'] })
+    if 'expanded_devices' in instance['metadata']:
+      expanded_devices = instance['metadata']['expanded_devices']
+      instance_state_url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/instances/' + name + '/state?project=' + project
+      
+      instance_state = requests.get(instance_state_url, verify=server.ssl_verify, cert=(client_cert, client_key))
+      instance_state = json.dumps(instance_state.json())
+      instance_state = json.loads(instance_state)
 
-          devices.append(device)
+      if expanded_devices:
+        for expanded_device in expanded_devices:
+          if 'type' in expanded_devices[expanded_device]:
+            if expanded_devices[expanded_device]['type'] == 'disk':
+              device = {}
+              device.update({ 'device': expanded_device })
+              device.update({ 'type': expanded_devices[expanded_device]['type'] })
+              if 'path' in expanded_devices[expanded_device]:
+                device.update({ 'path': expanded_devices[expanded_device]['path'] })
+              if 'pool' in expanded_devices[expanded_device]:
+                device.update({ 'pool': expanded_devices[expanded_device]['pool'] })
+
+              if 'metadata' in instance_state:
+                if 'disk' in instance_state['metadata']:
+                  if instance_state['metadata']['disk'] and expanded_device in instance_state['metadata']['disk']:
+                    if 'usage' in instance_state['metadata']['disk'][expanded_device]: 
+                      device.update({ 'usage': instance_state['metadata']['disk'][expanded_device]['usage'] })
+              devices.append(device)
     return jsonify({ 'data': devices })
 
 
@@ -1095,14 +1101,25 @@ def api_instance_endpoint(endpoint):
     project = request.args.get('project')
     instance = request.args.get('instance')
     server = Server.query.filter_by(id=id).first()
-    location = request.args.get('location')
-    url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/instances/' + instance + '?target='+location+'&project=' + project
+    location = request.form.get('location')
+    if location:
+      url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/instances/' + instance + '?target='+location+'&project=' + project
+    else:
+      url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/instances/' + instance + '?project=' + project
     client_cert = get_client_crt()
     client_key = get_client_key()
     data = {}
     data.update({'name': instance })
+    data.update({'instance_only': False})
+    data.update({'container_only': False})
+    data.update({'allow_inconsistent': False})
     data.update({'migration': True})
-    data.update({'live': False})
+    if request.form.get('live') == 'true':
+      data.update({'live': True})
+    else:
+      data.update({'live': False})
+    data.update({'pool': request.form.get('pool')}) if request.form.get('pool') else False
+    data.update({'project': request.form.get('project')}) if request.form.get('project') else False
     results = requests.post(url, verify=server.ssl_verify, cert=(client_cert, client_key), json=data)
     return jsonify(results.json())
 

@@ -1,3 +1,8 @@
+# 0.4.2
+ - Added migrate option to change storage pool of root device
+ - Added migrate option to change project of an instance
+ - Added storage pool selection when creating new instance
+ 
 # 0.4.1
  - Added selectize.js to allow ordered multiple select option of profiles when creating new instance
 
