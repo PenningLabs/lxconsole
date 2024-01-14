@@ -1,3 +1,6 @@
+# 0.4.3
+ - Added code to create bridged, macvlan, ovn, sriov, and pysical adapters with config options 
+
 # 0.4.2
  - Added migrate option to change storage pool of root device
  - Added migrate option to change project of an instance

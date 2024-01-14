@@ -20,6 +20,7 @@ def api_storage_pools_endpoint(endpoint):
 
 
   if endpoint == 'add_storage_pool':
+
     id = request.args.get('id')
     project = request.args.get('project')
     server = Server.query.filter_by(id=id).first()
@@ -27,7 +28,7 @@ def api_storage_pools_endpoint(endpoint):
     client_cert = get_client_crt()
     client_key = get_client_key()
 
-    # at this point check to see if parf of a cluster, if so, send this data to each server
+    # Check to see if part of a cluster, if so, send this data to each server
     cluster_url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/cluster?project=' + project
     results = requests.get(cluster_url, verify=server.ssl_verify, cert=(client_cert, client_key))
     cluster = results.json()['metadata']
@@ -40,25 +41,24 @@ def api_storage_pools_endpoint(endpoint):
       data.update({'description': json_data['description']})
       data.update({'driver': json_data['driver']})
       config = {}
-     
-      if 'source' in json_data['config'].keys():
-        config.update({'source': json_data['config']['source']})
+      if 'config' in json_data.keys():
+        if 'source' in json_data['config'].keys():
+          config.update({'source': json_data['config']['source']})
 
-      if 'driver' in json_data['config'].keys():
-        if json_data['config']['driver'] == 'btrfs':
-          if 'size' in json_data['config'].keys():
-            config.update({'size': str(json_data['config']['size'])})
+        if 'driver' in json_data['config'].keys():
+          if json_data['config']['driver'] == 'btrfs':
+            if 'size' in json_data['config'].keys():
+              config.update({'size': str(json_data['config']['size'])})
 
-        if json_data['config']['driver'] == 'lvm':
-          if 'size' in json_data['config'].keys():
-            config.update({'size': str(json_data['config']['size'])})
-        
-        if json_data['config']['driver'] == 'zfs':
-          if 'size' in json_data['config'].keys():
-            config.update({'size': str(json_data['config']['size'])})
-          if 'zfs.pool_name' in json_data['config'].keys():
-            config.update({'size': str(json_data['config']['size'])})
-            config.update({'zfs.pool_name': json_data['config']['zfs.pool_name']})
+          if json_data['config']['driver'] == 'lvm':
+            if 'size' in json_data['config'].keys():
+              config.update({'size': str(json_data['config']['size'])})
+          
+          if json_data['config']['driver'] == 'zfs':
+            if 'size' in json_data['config'].keys():
+              config.update({'size': str(json_data['config']['size'])})
+            if 'zfs.pool_name' in json_data['config'].keys():
+              config.update({'zfs.pool_name': json_data['config']['zfs.pool_name']})
 
 
       if cluster['enabled']:  
