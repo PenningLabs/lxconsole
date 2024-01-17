@@ -62,7 +62,7 @@ def api_networks_endpoint(endpoint):
 
           # Notify each cluster host of pending network interface
           for member in cluster_members:
-            member_url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/networkss?project=' + project + '&target=' + member['server_name']
+            member_url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/networks?project=' + project + '&target=' + member['server_name']
             results = requests.post(member_url, verify=server.ssl_verify, cert=(client_cert, client_key), json=data)
 
         # Build the configuration needed to create the network interface
@@ -168,7 +168,7 @@ def api_networks_endpoint(endpoint):
       data.update({'config': config})
 
       for member in cluster_members:
-        member_url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/networkss?project=' + project + '&target=' + member['server_name']
+        member_url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/networks?project=' + project + '&target=' + member['server_name']
         results = requests.post(member_url, verify=server.ssl_verify, cert=(client_cert, client_key), json=data)
 
       # Now lets create the network without target config options, moving the pending status to created

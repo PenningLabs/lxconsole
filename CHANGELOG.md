@@ -1,3 +1,6 @@
+# 0.4.4
+ - Fixed bug when creating network adapters in clustered environments
+
 # 0.4.3
  - Added code to create bridged, macvlan, ovn, sriov, and pysical adapters with config options 
 
