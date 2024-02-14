@@ -1,3 +1,7 @@
+# 0.4.5
+ - Added source column to instance disk devices table
+ - Updated backup exports to use server hostname directory instead of id number
+ 
 # 0.4.4
  - Fixed bug when creating network adapters in clustered environments
 

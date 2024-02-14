@@ -427,7 +427,9 @@ def api_instance_endpoint(endpoint):
     url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/instances/' + instance + '/backups/' + backup + '?project=' + project
     client_cert = get_client_crt()
     client_key = get_client_key()
-    if os.path.isfile('backups/' + str(server.id) + '/' + project + '/' + instance + '/' + backup):
+    if os.path.isfile('backups/' + str(server.name) + '/' + project + '/' + instance + '/' + backup):
+      os.unlink('backups/' + str(server.name) + '/' + project + '/' + instance + '/' + backup)
+    elif os.path.isfile('backups/' + str(server.id) + '/' + project + '/' + instance + '/' + backup):
       os.unlink('backups/' + str(server.id) + '/' + project + '/' + instance + '/' + backup)
     results = requests.delete(url, verify=server.ssl_verify, cert=(client_cert, client_key))
     return jsonify(results.json())
@@ -588,8 +590,8 @@ def api_instance_endpoint(endpoint):
     url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/instances/' + instance + '/backups/' + backup + '/export?project=' + project
     client_cert = get_client_crt()
     client_key = get_client_key()
-    os.system('mkdir -p backups/' + str(server.id) + '/' + project + '/' + instance)
-    filename = 'backups/' + str(server.id) + '/' + project + '/' + instance + '/' + backup
+    os.system('mkdir -p backups/' + str(server.name) + '/' + project + '/' + instance)
+    filename = 'backups/' + str(server.name) + '/' + project + '/' + instance + '/' + backup
     with requests.get(url, stream=True, verify=server.ssl_verify, cert=(client_cert, client_key)) as r:
       r.raise_for_status()
       with open(filename, 'wb') as f:
@@ -766,6 +768,8 @@ def api_instance_endpoint(endpoint):
                 device.update({ 'path': expanded_devices[expanded_device]['path'] })
               if 'pool' in expanded_devices[expanded_device]:
                 device.update({ 'pool': expanded_devices[expanded_device]['pool'] })
+              if 'source' in expanded_devices[expanded_device]:
+                device.update({ 'source': expanded_devices[expanded_device]['source'] })
 
               if 'metadata' in instance_state:
                 if 'disk' in instance_state['metadata']:
@@ -1049,7 +1053,10 @@ def api_instance_endpoint(endpoint):
     if backups:
       for backup in backups['metadata']:
         # Check if backup file exists
-        if os.path.isfile('backups/' + str(server.id) + '/' + project + '/' + name + '/' + backup['name']):
+        if os.path.isfile('backups/' + str(server.name) + '/' + project + '/' + name + '/' + backup['name']):
+          backup.update({'backup_file_exists': True})
+          backup.update({'backup_file_size': os.path.getsize('backups/' + str(server.name) + '/' + project + '/' + name + '/' + backup['name'])})
+        elif os.path.isfile('backups/' + str(server.id) + '/' + project + '/' + name + '/' + backup['name']):
           backup.update({'backup_file_exists': True})
           backup.update({'backup_file_size': os.path.getsize('backups/' + str(server.id) + '/' + project + '/' + name + '/' + backup['name'])})
         else:

@@ -1329,6 +1329,14 @@
                 return '-'
               },
             },
+            { title: "Source", data: function (row, type, set) {
+                if (row.hasOwnProperty('source')) {
+                  if (row.source)
+                    return row.source
+                }
+                return '-'
+              },
+            },
             { title: "Usage", data: function (row, type, set) {
                 if (row.hasOwnProperty('usage')) {
                   if (row.usage) {
@@ -2277,16 +2285,19 @@
 
     // Export a backup to app
     function exportBackup(backup){
-      console.log("Info: exporting backup " + backup + " from instance " + instance);
-      $.get("../api/instance/export_instance_backup?id="+serverId+"&project="+project+"&instance="+instance+"&backup="+backup, function (data) {
-        console.log(data);
-        if (data.error_code >= 400){
-          alert(data.error);
-        }
-        //Async type
-        setTimeout(() => { reloadPageContent(); }, 2000);
-        operationStatusCheck()
-      });
+      console.log("Info: confirming export of backup " + backup);
+      if (confirm("Are you sure you want to export " + backup + " to a local file?") == true) {
+        console.log("Info: exporting backup " + backup + " from instance " + instance);
+        $.get("../api/instance/export_instance_backup?id="+serverId+"&project="+project+"&instance="+instance+"&backup="+backup, function (data) {
+          console.log(data);
+          if (data.error_code >= 400){
+            alert(data.error);
+          }
+          //Async type
+          setTimeout(() => { reloadPageContent(); }, 2000);
+          operationStatusCheck()
+        });
+      }
     }
 
     // Display log file in modal
