@@ -257,7 +257,7 @@
       var serverName = $("#addModalNameInput").val();
       var serverAddr = $("#addModalAddrInput").val();
       var serverPassword = $("#addModalPasswordInput").val();
-      console.log("Info: adding lxd server " + serverName + " " + serverAddr);
+      console.log("Info: adding server " + serverName + " " + serverAddr);
       $.post("../api/servers/add_server", { 
         server_name: serverName, 
         server_addr: serverAddr,

@@ -1,3 +1,8 @@
+# 0.4.6
+ - Added optional --host and --port command-line args to override flask behavior
+ - Added optional FLASK_RUN_PORT and FLASK_RUN_HOST environment variables to override flask behaviour
+ - Removed LXD label on servers page
+ 
 # 0.4.5
  - Added source column to instance disk devices table
  - Updated backup exports to use server hostname directory instead of id number

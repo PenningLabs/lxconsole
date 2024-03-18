@@ -17,7 +17,7 @@
   <div class="col-12">
     <div class="card">
       <div class="card-header">
-        <h3 class="card-title">LXD Servers</h3>
+        <h3 class="card-title">Servers</h3>
         <div class="card-tools">
           <button type="button" class="btn btn-tool" onclick="reloadPageContent()" title="Refresh">
           <i class="fas fa-sync"></i>
@@ -130,7 +130,7 @@
     }
 
     function addServer(){
-      console.log("Info: adding lxd server " + $("#addModalAddrInput").val() + ":" + $("#addModalPortInput").val());
+      console.log("Info: adding server " + $("#addModalAddrInput").val() + ":" + $("#addModalPortInput").val());
       $.post("../api/servers/add_server", { 
         addr: $("#addModalAddrInput").val(), 
         port: $("#addModalPortInput").val(),
@@ -145,7 +145,7 @@
     }
 
     function confirmDeleteServer(id, addr, port, name){
-      console.log("Info: confirming removal of lxd server " + name);
+      console.log("Info: confirming removal of server " + name);
       if (confirm("Are you sure you want to remove host " + name + "?") == true) {
         deleteServer(id);
         setTimeout(() => { reloadPageContent(); }, 1000);
@@ -153,7 +153,7 @@
     }
 
     function deleteServer(id){
-      console.log("Info: removing lxd server " + id);
+      console.log("Info: removing server " + id);
       $.get("../api/servers/remove_server", {
         id: id
       }, function (data) {
