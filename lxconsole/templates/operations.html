@@ -68,7 +68,7 @@
       // Configure Datatable
       $('#myDataTable').DataTable({
         ajax: {
-          url: "../api/operations/list_operations?id="+serverId+"&project=" + project + "&recursion=1",
+          url: "{{ url_for('api') }}/operations/list_operations?id="+serverId+"&project=" + project + "&recursion=1",
           dataType: "json",
           dataSrc: "metadata.running",
           contentType: "application/json",
@@ -154,7 +154,7 @@
 
     function deleteItem(name){
       console.log("Info: deleting operation " + name);
-      $.post("../api/operations/delete_operation?id=" + serverId + "&project=" + project, { id: name }, function (data) {
+      $.post("{{ url_for('api') }}/operations/delete_operation?id=" + serverId + "&project=" + project, { id: name }, function (data) {
         console.log(data);
         if (data.error_code >= 400){
           alert(data.error);
@@ -167,7 +167,7 @@
 
     function viewItem(name){
       console.log("Info: loading operation " + name);
-      $.post("../api/operations/load_operation?id=" + serverId + "&project=" + project, { id: name }, function (data) {
+      $.post("{{ url_for('api') }}/operations/load_operation?id=" + serverId + "&project=" + project, { id: name }, function (data) {
         console.log(data);
         if (data.error_code >= 400){
           alert(data.error);
@@ -182,7 +182,7 @@
 
       //If id or project variables are missing redirect to servers page
       if (!serverId || !project) {
-        window.location.href = 'servers';
+        window.location.href = "{{ url_for('servers') }}";
       }
       else {
         loadPageContent()

@@ -72,7 +72,7 @@
       // Configure Datatable
       $('#myDataTable').DataTable({
         ajax: {
-          url: "../api/network-zones/list_network_zones?id="+serverId+"&project=" + project + "&recursion=1",
+          url: "{{ url_for('api') }}/network-zones/list_network_zones?id="+serverId+"&project=" + project + "&recursion=1",
           dataType: "json",
           dataSrc: "metadata",
           contentType: "application/json",
@@ -121,7 +121,7 @@
     function addItem(){
       console.log("Info: adding new item");
       data = $('#addForm').serialize();
-      $.post("../api/network-zones/add_network_zone?id="+serverId+"&project="+project, data, function (data) {
+      $.post("{{ url_for('api') }}/network-zones/add_network_zone?id="+serverId+"&project="+project, data, function (data) {
         console.log(data)
         if (data.error_code >= 400){
           alert(data.error);
@@ -141,7 +141,7 @@
     function createItemUsingJSON(){
       var json = $("#jsonCreateInput").val();
       console.log("Info: adding new network zone");
-      $.post("../api/network-zones/add_network_zone?id="+serverId+"&project="+project, { json: json },  function (data) {
+      $.post("{{ url_for('api') }}/network-zones/add_network_zone?id="+serverId+"&project="+project, { json: json },  function (data) {
         console.log(data);
         if (data.error_code >= 400){
           alert(data.error);
@@ -154,7 +154,7 @@
     function deleteItem(){
       name = $("#networkZone").val();
       console.log("Info: deleting item " + name);
-      $.post("../api/network-zones/delete_network_zone?id=" + serverId + "&project=" + project, { name: name }, function (data) {
+      $.post("{{ url_for('api') }}/network-zones/delete_network_zone?id=" + serverId + "&project=" + project, { name: name }, function (data) {
         console.log(data);
         if (data.error_code >= 400){
           alert(data.error);
@@ -167,7 +167,7 @@
     function editItem(name){
       editedNetworkZone = name
       console.log("Info: loading network zone " + name);
-      $.post("../api/network-zones/load_network_zone?id=" + serverId + "&project=" + project, { name: name }, function (data) {
+      $.post("{{ url_for('api') }}/network-zones/load_network_zone?id=" + serverId + "&project=" + project, { name: name }, function (data) {
         console.log(data);
         if (data.error_code >= 400){
           alert(data.error);
@@ -181,7 +181,7 @@
       name = editedNetworkZone
       console.log("Info: renaming network zone");
       data = $('#renameForm').serialize();
-      $.post("../api/network-zones/update_network_zone?id=" + serverId + "&project=" + project + "&name=" + encodeURI(name), data, function (data) {
+      $.post("{{ url_for('api') }}/network-zones/update_network_zone?id=" + serverId + "&project=" + project + "&name=" + encodeURI(name), data, function (data) {
         console.log(data)
         if (data.error_code >= 400){
           alert(data.error);
@@ -195,7 +195,7 @@
       name = editedNetworkZone
       var updatedJSON = $("#jsonInput").val();
       console.log("Info: updating netowrk zone");
-      $.post("../api/network-zones/update_network_zone?id=" + serverId + "&project=" + project + "&name=" + encodeURI(name), { json: updatedJSON },  function (data) {
+      $.post("{{ url_for('api') }}/network-zones/update_network_zone?id=" + serverId + "&project=" + project + "&name=" + encodeURI(name), { json: updatedJSON },  function (data) {
         console.log(data);
         if (data.error_code >= 400){
           alert(data.error);
@@ -209,7 +209,7 @@
 
       //If id or project variables are missing redirect to servers page
       if (!serverId || !project) {
-        window.location.href = 'servers';
+        window.location.href = "{{ url_for('servers') }}";
       }
       else {
         loadPageContent()

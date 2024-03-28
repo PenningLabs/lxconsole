@@ -2,7 +2,7 @@
   <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
     <a href="/" class="brand-link">
-      <img src="../static/assets/img/logo-dark.svg" alt="Logo" class="brand-image elevation-3" style="opacity: .8">
+      <img src="{{ url_for('static', filename='assets/img/logo-dark.svg') }}" alt="Logo" class="brand-image elevation-3" style="opacity: .8">
       <span class="brand-text"><strong>lx</strong>console</span>
     </a>
 
@@ -13,7 +13,7 @@
 
         <ul class="nav nav-pills nav-sidebar flex-column user-panel py-2" data-widget="treeview" role="menu" data-accordion="false">
           <li class="nav-item">
-            <a class="nav-link" id="serversLinkSidebar" href="servers">
+            <a class="nav-link" id="serversLinkSidebar" href="{{ url_for('servers') }}">
               <i id="serversIcon" class="nav-icon fas fa-server"></i>
               <p id="serversSpan">
                 Servers
@@ -21,7 +21,7 @@
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" id="clusterMembersLinkSidebar" href="cluster-members" style="display: none;">
+            <a class="nav-link" id="clusterMembersLinkSidebar" href="{{ url_for('cluster_members') }}" style="display: none;">
               <i id="clusterMembersIcon" class="nav-icon fas fa-layer-group"></i>
               <p id="clusterMembersSpan">
                 Cluster Members
@@ -29,7 +29,7 @@
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" id="clusterGroupsLinkSidebar" href="cluster-groups" style="display: none;">
+            <a class="nav-link" id="clusterGroupsLinkSidebar" href="{{ url_for('cluster_groups') }}" style="display: none;">
               <i id="clusterGroupsIcon" class="nav-icon fab fa-hive"></i>
               <p id="clusterGroupsSpan">
                 Cluster Groups
@@ -40,7 +40,7 @@
 
         <ul id="instanceSidebarLinks" class="nav nav-pills nav-sidebar flex-column user-panel py-2" style="display: none;" data-widget="treeview" role="menu" data-accordion="false">
           <li class="nav-item">
-            <a class="nav-link" id="instancesLinkSidebar" href="instances">
+            <a class="nav-link" id="instancesLinkSidebar" href="{{ url_for('instances') }}">
               <i id="instancesIcon" class="nav-icon fas fa-cube"></i>
               <p id="instancesSpan">
                 Instances
@@ -51,7 +51,7 @@
 
         <ul id="coreSidebarLinks" class="nav nav-pills nav-sidebar flex-column user-panel py-2" style="display: none;" data-widget="treeview" role="menu" data-accordion="false">
           <li class="nav-item">
-            <a class="nav-link" id="imagesLinkSidebar" href="images">
+            <a class="nav-link" id="imagesLinkSidebar" href="{{ url_for('images') }}">
               <i id="imagesIcon" class="nav-icon fas fa-box-open"></i>
               <p id="imagesSpan">
                 Images
@@ -59,7 +59,7 @@
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" id="profilesLinkSidebar" href="profiles">
+            <a class="nav-link" id="profilesLinkSidebar" href="{{ url_for('profiles') }}">
               <i id="profilesIcon" class="nav-icon fas fa-money-check"></i>
               <p id="profilesSpan">
                 Profiles
@@ -67,7 +67,7 @@
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" id="projectsLinkSidebar" href="projects">
+            <a class="nav-link" id="projectsLinkSidebar" href="{{ url_for('projects') }}">
               <i id="projectsIcon" class="nav-icon fas fa-chart-bar"></i>
               <p id="projectsSpan">
                 Projects
@@ -75,7 +75,7 @@
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" id="storagePoolsLinkSidebar" href="storage-pools">
+            <a class="nav-link" id="storagePoolsLinkSidebar" href="{{ url_for('storage_pools') }}">
               <i id="storagePoolsIcon" class="nav-icon fas fa-hdd"></i>
               <p id="storagePoolsSpan">
                 Storage Pools
@@ -86,7 +86,7 @@
 
         <ul id="networkSidebarLinks" class="nav nav-pills nav-sidebar flex-column user-panel py-2" style="display: none;" data-widget="treeview" role="menu" data-accordion="false">
           <li class="nav-item">
-            <a class="nav-link" id="networksLinkSidebar" href="networks">
+            <a class="nav-link" id="networksLinkSidebar" href="{{ url_for('networks') }}">
               <i id="networksIcon" class="nav-icon fas fa-network-wired"></i>
               <p id="networksSpan">
                 Networks
@@ -94,7 +94,7 @@
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" id="networkAclsLinkSidebar" href="network-acls">
+            <a class="nav-link" id="networkAclsLinkSidebar" href="{{ url_for('network_acls') }}">
               <i id="networkAclsIcon" class="nav-icon fas fa-shield-alt"></i>
               <p id="networkAclsSpan">
                 Network ACLs
@@ -102,7 +102,7 @@
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" id="networkZonesLinkSidebar" href="network-zones">
+            <a class="nav-link" id="networkZonesLinkSidebar" href="{{ url_for('network_zones') }}">
               <i id="networkZonesIcon" class="nav-icon fas fa-globe"></i>
               <p id="networkZonesSpan">
                 Network Zones
@@ -114,7 +114,7 @@
 
         <ul id="additionalSidebarLinks" class="nav nav-pills nav-sidebar flex-column user-panel py-2" style="display: none;" data-widget="treeview" role="menu" data-accordion="false">
           <li class="nav-item">
-            <a class="nav-link" id="operationsLinkSidebar" href="operations">
+            <a class="nav-link" id="operationsLinkSidebar" href="{{ url_for('operations') }}">
               <i id="operationsIcon" class="nav-icon fas fa-exchange-alt"></i>
               <p id="operationsSpan">
                 Operations
@@ -122,7 +122,7 @@
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" id="certificatesLinkSidebar" href="certificates">
+            <a class="nav-link" id="certificatesLinkSidebar" href="{{ url_for('certificates') }}">
               <i id="certificatesIcon" class="nav-icon fas fa-wallet"></i>
               <p id="certificatesSpan">
                 Certificates
@@ -130,7 +130,7 @@
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" id="simplestreamsLinkSidebar" href="simplestreams">
+            <a class="nav-link" id="simplestreamsLinkSidebar" href="{{ url_for('simplestreams') }}">
               <i id="simplestreamsIcon" class="nav-icon fas fa-archive"></i>
               <p id="simplestreamsSpan">
                 Simplestreams
@@ -144,10 +144,3 @@
     </div>
     <!-- /.sidebar -->
   </aside>
-
-
-
-
-
-
-

@@ -71,7 +71,7 @@
       // Configure Datatable
       $('#myDataTable').DataTable({
         ajax: {
-          url: "../api/simplestreams/list_simplestreams",
+          url: "{{ url_for('api') }}/simplestreams/list_simplestreams",
           dataType: "json",
           dataSrc: "data",
           contentType: "application/json",
@@ -116,7 +116,7 @@
     function addItem(){
       console.log("Info: adding new simplestreams repo");
       data = $('#addForm').serialize();
-      $.post("../api/simplestreams/add_simplestream", data, function (data) {
+      $.post("{{ url_for('api') }}/simplestreams/add_simplestream", data, function (data) {
         console.log(data)
         if (data.error_code >= 400){
           alert(data.error);
@@ -139,7 +139,7 @@
 
     function deleteSimplestreams(id){
       console.log("Info: deleting simplestreams repo " + id);
-      $.post("../api/simplestreams/delete_simplestream", { id: id }, function (data) {
+      $.post("{{ url_for('api') }}/simplestreams/delete_simplestream", { id: id }, function (data) {
         console.log(data);
         if (data.error_code >= 400){
           alert(data.error);
@@ -153,7 +153,7 @@
 
       //If id or project variables are missing redirect to servers page
       if (!serverId || !project) {
-        window.location.href = 'servers';
+        window.location.href = "{{ url_for('servers') }}";
       }
       else {
         loadPageContent()

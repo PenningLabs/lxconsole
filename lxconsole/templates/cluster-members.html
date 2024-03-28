@@ -74,7 +74,7 @@
       // Configure Datatable
       $('#myDataTable').DataTable({
         ajax: {
-          url: "../api/cluster-members/list_cluster_members?id="+serverId+"&project=" + project + "&recursion=1",
+          url: "{{ url_for('api') }}/cluster-members/list_cluster_members?id="+serverId+"&project=" + project + "&recursion=1",
           dataType: "json",
           dataSrc: "metadata",
           contentType: "application/json",
@@ -164,7 +164,7 @@
     function addItem(){
       console.log("Info: adding new item");
       data = $('#addForm').serialize();
-      $.post("../api/cluster-members/add_cluster_member?id="+serverId+"&project="+project, data, function (data) {
+      $.post("{{ url_for('api') }}/cluster-members/add_cluster_member?id="+serverId+"&project="+project, data, function (data) {
         console.log(data)
         if (data.error_code >= 400){
           alert(data.error);
@@ -178,7 +178,7 @@
       console.log("Info: confirming " + action + " action of cluster member " + name);
       if (confirm("Are you sure you want to " + action + " cluster member " + name + "?") == true) {
         console.log("Info: " + name + " " + action + " action started");
-        $.post("../api/cluster-members/change_cluster_member_state?id=" + serverId + "&project=" + project, { name: name, action: action }, function (data) {
+        $.post("{{ url_for('api') }}/cluster-members/change_cluster_member_state?id=" + serverId + "&project=" + project, { name: name, action: action }, function (data) {
           console.log(data);
           if (data.error_code >= 400){
             alert(data.error);
@@ -200,7 +200,7 @@
     function createItemUsingJSON(){
       var json = $("#jsonCreateInput").val();
       console.log("Info: adding new project");
-      $.post("../api/cluster-members/add_cluster_member?id="+serverId+"&project="+project, { json: json },  function (data) {
+      $.post("{{ url_for('api') }}/cluster-members/add_cluster_member?id="+serverId+"&project="+project, { json: json },  function (data) {
         console.log(data);
         if (data.error_code >= 400){
           alert(data.error);
@@ -217,7 +217,7 @@
         force = "true";
       }
       console.log("Info: deleting item " + name);
-      $.post("../api/cluster-members/delete_cluster_member?id=" + serverId + "&project=" + project, { name: name, force: force }, function (data) {
+      $.post("{{ url_for('api') }}/cluster-members/delete_cluster_member?id=" + serverId + "&project=" + project, { name: name, force: force }, function (data) {
         console.log(data);
         if (data.error_code >= 400){
           alert(data.error);
@@ -230,7 +230,7 @@
     function editItem(name){
       editedClusterMember = name
       console.log("Info: loading cluster member " + name);
-      $.post("../api/cluster-members/load_cluster_member?id=" + serverId + "&project=" + project, { name: name }, function (data) {
+      $.post("{{ url_for('api') }}/cluster-members/load_cluster_member?id=" + serverId + "&project=" + project, { name: name }, function (data) {
         console.log(data);
         if (data.error_code >= 400){
           alert(data.error);
@@ -245,7 +245,7 @@
       name = editedClusterMember
       console.log("Info: renaming cluster group");
       data = $('#renameForm').serialize();
-      $.post("../api/cluster-members/update_cluster_member?id=" + serverId + "&project=" + project + "&name=" + encodeURI(name), data, function (data) {
+      $.post("{{ url_for('api') }}/cluster-members/update_cluster_member?id=" + serverId + "&project=" + project + "&name=" + encodeURI(name), data, function (data) {
         console.log(data)
         if (data.error_code >= 400){
           alert(data.error);
@@ -260,7 +260,7 @@
       name = editedClusterMember
       var updatedJSON = $("#jsonInput").val();
       console.log("Info: updating cluster member");
-      $.post("../api/cluster-members/update_cluster_member?id=" + serverId + "&project=" + project + "&name=" + encodeURI(name), { json: updatedJSON },  function (data) {
+      $.post("{{ url_for('api') }}/cluster-members/update_cluster_member?id=" + serverId + "&project=" + project + "&name=" + encodeURI(name), { json: updatedJSON },  function (data) {
         console.log(data);
         if (data.error_code >= 400){
           alert(data.error);
@@ -274,7 +274,7 @@
 
       //If id or project variables are missing redirect to servers page
       if (!serverId || !project) {
-        window.location.href = 'servers';
+        window.location.href = "{{ url_for('servers') }}";
       }
       else {
         loadPageContent()

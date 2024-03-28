@@ -283,7 +283,7 @@
 
 
     function loadNetworkState() {
-      $.get("../api/network/get_network_state?id="+serverId+"&project="+project+"&name="+network+"&recursion=1", function (data) {
+      $.get("{{ url_for('api') }}/network/get_network_state?id="+serverId+"&project="+project+"&name="+network+"&recursion=1", function (data) {
 
         data = data.metadata;
         console.log(data)
@@ -323,7 +323,7 @@
         //Load DHCP Leases Table
         $('#dhcpLeasesTable').DataTable({
           ajax: {
-            url: "../api/network/list_network_leases?id="+serverId+"&project="+project+"&name="+network,
+            url: "{{ url_for('api') }}/network/list_network_leases?id="+serverId+"&project="+project+"&name="+network,
             dataType: "json",
             dataSrc: "metadata",
             contentType: "application/json",
@@ -388,7 +388,7 @@
         //Load Load Balancers Table
         var loadBalancersTable = $('#loadBalancersTable').DataTable({
             ajax: {
-              url: "../api/network/list_network_load_balancers?id="+serverId+"&project="+project+"&name="+network+"&recursion=1",
+              url: "{{ url_for('api') }}/network/list_network_load_balancers?id="+serverId+"&project="+project+"&name="+network+"&recursion=1",
               dataType: "json",
               dataSrc: "metadata",
               contentType: "application/json",
@@ -448,7 +448,7 @@
         //Load Forwards Table
         var forwardsTable = $('#forwardsTable').DataTable({
             ajax: {
-              url: "../api/network/list_network_forwards?id="+serverId+"&project="+project+"&name="+network+"&recursion=1",
+              url: "{{ url_for('api') }}/network/list_network_forwards?id="+serverId+"&project="+project+"&name="+network+"&recursion=1",
               dataType: "json",
               dataSrc: "metadata",
               contentType: "application/json",
@@ -508,7 +508,7 @@
               //Load Peers Table
         $('#peersTable').DataTable({
           ajax: {
-            url: "../api/network/list_network_peers?id="+serverId+"&project="+project+"&name="+network+"&recursion=1",
+            url: "{{ url_for('api') }}/network/list_network_peers?id="+serverId+"&project="+project+"&name="+network+"&recursion=1",
             dataType: "json",
             dataSrc: "metadata",
             contentType: "application/json",
@@ -599,7 +599,7 @@
       else
         var json = {}
 
-      $.post("../api/network/add_network_" + type + "?id="+serverId+"&project="+project+"&network="+network, data, function (data) {
+      $.post("{{ url_for('api') }}/network/add_network_" + type + "?id="+serverId+"&project="+project+"&network="+network, data, function (data) {
         console.log(data)
         if (data.error_code >= 400){
           alert(data.error);
@@ -620,7 +620,7 @@
       else
         var json = {}
       
-      $.post("../api/network/add_network?id="+serverId+"&project="+project+"&network="+network, { json: json },  function (data) {
+      $.post("{{ url_for('api') }}/network/add_network?id="+serverId+"&project="+project+"&network="+network, { json: json },  function (data) {
         console.log(data);
         if (data.error_code >= 400){
           alert(data.error);
@@ -634,7 +634,7 @@
       console.log("Info: confirming deletion of " + type + " " + name);
       if (confirm("Are you sure you want to delete " + type + " " + name + "?") == true) {
         console.log("Info: deleting " + type + " " + name);
-        $.post("../api/network/delete_network_" + type + "?id=" + serverId + "&project=" + project + "&network=" + network, { name: name }, function (data) {
+        $.post("{{ url_for('api') }}/network/delete_network_" + type + "?id=" + serverId + "&project=" + project + "&network=" + network, { name: name }, function (data) {
           console.log(data);
           if (data.error_code >= 400){
             alert(data.error);
@@ -648,7 +648,7 @@
 
     function editForward(name){
       console.log("Info: loading forward " + name);
-      $.post("../api/network/load_network_forward?id=" + serverId + "&project=" + project + "&network=" + network, { name: name }, function (data) {
+      $.post("{{ url_for('api') }}/network/load_network_forward?id=" + serverId + "&project=" + project + "&network=" + network, { name: name }, function (data) {
         console.log(data);
         if (data.error_code >= 400){
           alert(data.error);
@@ -661,7 +661,7 @@
 
     function editLoadBalancer(name){
       console.log("Info: loading load balancer " + name);
-      $.post("../api/network/load_network_load_balancer?id=" + serverId + "&project=" + project + "&network=" + network, { name: name }, function (data) {
+      $.post("{{ url_for('api') }}/network/load_network_load_balancer?id=" + serverId + "&project=" + project + "&network=" + network, { name: name }, function (data) {
         console.log(data);
         if (data.error_code >= 400){
           alert(data.error);
@@ -674,7 +674,7 @@
 
     function editPeer(name){
       console.log("Info: loading peer " + name);
-      $.post("../api/network/load_network_peer?id=" + serverId + "&project=" + project + "&network=" + network, { name: name }, function (data) {
+      $.post("{{ url_for('api') }}/network/load_network_peer?id=" + serverId + "&project=" + project + "&network=" + network, { name: name }, function (data) {
         console.log(data);
         if (data.error_code >= 400){
           alert(data.error);
@@ -689,7 +689,7 @@
       var name = $("#forwardNameHiddenInput").val();
       var updatedJSON = $("#forwardJsonInput").val();
       console.log("Info: updating forward " + name);
-      $.post("../api/network/update_network_forward?id=" + serverId + "&project=" + project + "&network=" + network + "&name=" + encodeURI(name), { json: updatedJSON },  function (data) {
+      $.post("{{ url_for('api') }}/network/update_network_forward?id=" + serverId + "&project=" + project + "&network=" + network + "&name=" + encodeURI(name), { json: updatedJSON },  function (data) {
         console.log(data);
         if (data.error_code >= 400){
           alert(data.error);
@@ -703,7 +703,7 @@
       var name = $("#loadBalancerNameHiddenInput").val();
       var updatedJSON = $("#loadBalancerJsonInput").val();
       console.log("Info: updating load balancer " + name);
-      $.post("../api/network/update_network_load_balancer?id=" + serverId + "&project=" + project + "&network=" + network + "&name=" + encodeURI(name), { json: updatedJSON },  function (data) {
+      $.post("{{ url_for('api') }}/network/update_network_load_balancer?id=" + serverId + "&project=" + project + "&network=" + network + "&name=" + encodeURI(name), { json: updatedJSON },  function (data) {
         console.log(data);
         if (data.error_code >= 400){
           alert(data.error);
@@ -717,7 +717,7 @@
       var name = $("#peerNameHiddenInput").val();
       var updatedJSON = $("#peerJsonInput").val();
       console.log("Info: updating peer " + name);
-      $.post("../api/network/update_network_peer?id=" + serverId + "&project=" + project + "&network=" + network + "&name=" + encodeURI(name), { json: updatedJSON },  function (data) {
+      $.post("{{ url_for('api') }}/network/update_network_peer?id=" + serverId + "&project=" + project + "&network=" + network + "&name=" + encodeURI(name), { json: updatedJSON },  function (data) {
         console.log(data);
         if (data.error_code >= 400){
           alert(data.error);
@@ -732,7 +732,7 @@
 
       //If id or project variables are missing redirect to servers page
       if (!serverId || !project) {
-        window.location.href = 'servers';
+        window.location.href = "{{ url_for('servers') }}";
       }
       else {
         $("#network_title").text(network);

@@ -1056,9 +1056,11 @@ def api_instance_endpoint(endpoint):
         if os.path.isfile('backups/' + str(server.name) + '/' + project + '/' + name + '/' + backup['name']):
           backup.update({'backup_file_exists': True})
           backup.update({'backup_file_size': os.path.getsize('backups/' + str(server.name) + '/' + project + '/' + name + '/' + backup['name'])})
+          backup.update({'backup_file_path': 'backups/' + str(server.name) + '/' + project + '/' + name + '/' + backup['name']})
         elif os.path.isfile('backups/' + str(server.id) + '/' + project + '/' + name + '/' + backup['name']):
           backup.update({'backup_file_exists': True})
           backup.update({'backup_file_size': os.path.getsize('backups/' + str(server.id) + '/' + project + '/' + name + '/' + backup['name'])})
+          backup.update({'backup_file_path':'backups/' + str(server.id) + '/' + project + '/' + name + '/' + backup['name']})
         else:
           backup.update({'backup_file_exists': False})
 

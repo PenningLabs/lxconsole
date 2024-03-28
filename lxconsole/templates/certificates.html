@@ -72,7 +72,7 @@
       // Configure Datatable
       $('#myDataTable').DataTable({
         ajax: {
-          url: "../api/certificates/list_certificates?id="+serverId+"&project=" + project + "&recursion=1",
+          url: "{{ url_for('api') }}/certificates/list_certificates?id="+serverId+"&project=" + project + "&recursion=1",
           dataType: "json",
           dataSrc: "metadata",
           contentType: "application/json",
@@ -149,7 +149,7 @@
     function addItem(){
       console.log("Info: adding new certificate");
       data = $('#addForm').serialize();
-      $.post("../api/certificates/add_certificate?id="+serverId+"&project="+project, data, function (data) {
+      $.post("{{ url_for('api') }}/certificates/add_certificate?id="+serverId+"&project="+project, data, function (data) {
         console.log(data)
         if (data.error_code >= 400){
           alert(data.error);
@@ -170,7 +170,7 @@
     function createItemUsingJSON(){
       var json = $("#jsonCreateInput").val();
       console.log("Info: adding new project");
-      $.post("../api/certificates/add_certificate?id="+serverId+"&project="+project, { json: json },  function (data) {
+      $.post("{{ url_for('api') }}/certificates/add_certificate?id="+serverId+"&project="+project, { json: json },  function (data) {
         console.log(data);
         if (data.error_code >= 400){
           alert(data.error);
@@ -183,7 +183,7 @@
 
     function deleteItem(name){
       console.log("Info: deleting certificate " + name);
-      $.post("../api/certificates/delete_certificate?id=" + serverId + "&project=" + project, { fingerprint: name }, function (data) {
+      $.post("{{ url_for('api') }}/certificates/delete_certificate?id=" + serverId + "&project=" + project, { fingerprint: name }, function (data) {
         console.log(data);
         if (data.error_code >= 400){
           alert(data.error);
@@ -197,7 +197,7 @@
     function editItem(name){
       editedCertificate = name
       console.log("Info: loading certificate " + name);
-      $.post("../api/certificates/load_certificate?id=" + serverId + "&project=" + project, { fingerprint: name }, function (data) {
+      $.post("{{ url_for('api') }}/certificates/load_certificate?id=" + serverId + "&project=" + project, { fingerprint: name }, function (data) {
         console.log(data);
         if (data.error_code >= 400){
           alert(data.error);
@@ -212,7 +212,7 @@
       name = editedCertificate
       var updatedJSON = $("#jsonInput").val();
       console.log("Info: updating certificate");
-      $.post("../api/certificates/update_certificate?id=" + serverId + "&project=" + project + "&fingerprint=" + encodeURI(name), { json: updatedJSON },  function (data) {
+      $.post("{{ url_for('api') }}/certificates/update_certificate?id=" + serverId + "&project=" + project + "&fingerprint=" + encodeURI(name), { json: updatedJSON },  function (data) {
         console.log(data);
         if (data.error_code >= 400){
           alert(data.error);
@@ -227,7 +227,7 @@
 
       //If id or project variables are missing redirect to servers page
       if (!serverId || !project) {
-        window.location.href = 'servers';
+        window.location.href = "{{ url_for('servers') }}";
       }
       else {
         loadPageContent()

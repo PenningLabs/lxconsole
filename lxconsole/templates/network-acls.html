@@ -72,7 +72,7 @@
       // Configure Datatable
       $('#myDataTable').DataTable({
         ajax: {
-          url: "../api/network-acls/list_network_acls?id="+serverId+"&project=" + project + "&recursion=1",
+          url: "{{ url_for('api') }}/network-acls/list_network_acls?id="+serverId+"&project=" + project + "&recursion=1",
           dataType: "json",
           dataSrc: "metadata",
           contentType: "application/json",
@@ -84,7 +84,7 @@
           { title: "Name", data: function (row, type, set) {
               if (row.hasOwnProperty('name')) {
                 if (row.name)
-                  return '<a href="../network-acl?id=' + serverId + '&project=' + project + '&acl=' + row.name + '">' + row.name + '</a>';
+                  return "<a href=\"{{ url_for('network_acl') }}?id=" + serverId + '&project=' + project + '&acl=' + row.name + '">' + row.name + '</a>';
               }
               return '-'
             },
@@ -156,7 +156,7 @@
     function addItem(){
       console.log("Info: adding new network-acl");
       data = $('#addForm').serialize();
-      $.post("../api/network-acls/add_network_acl?id="+serverId+"&project="+project, data, function (data) {
+      $.post("{{ url_for('api') }}/network-acls/add_network_acl?id="+serverId+"&project="+project, data, function (data) {
         console.log(data)
         if (data.error_code >= 400){
           alert(data.error);
@@ -177,7 +177,7 @@
     function createItemUsingJSON(){
       var json = $("#jsonCreateInput").val();
       console.log("Info: adding new project");
-      $.post("../api/network-acls/add_network_acl?id="+serverId+"&project="+project, { json: json },  function (data) {
+      $.post("{{ url_for('api') }}/network-acls/add_network_acl?id="+serverId+"&project="+project, { json: json },  function (data) {
         console.log(data);
         if (data.error_code >= 400){
           alert(data.error);
@@ -190,7 +190,7 @@
 
     function deleteItem(name){
       console.log("Info: deleting network-acl " + name);
-      $.post("../api/network-acls/delete_network_acl?id=" + serverId + "&project=" + project, { name: name }, function (data) {
+      $.post("{{ url_for('api') }}/network-acls/delete_network_acl?id=" + serverId + "&project=" + project, { name: name }, function (data) {
         console.log(data);
         if (data.error_code >= 400){
           alert(data.error);
@@ -204,7 +204,7 @@
     function editItem(name){
       editedNetworkACL = name
       console.log("Info: loading network-acl " + name);
-      $.post("../api/network-acls/load_network_acl?id=" + serverId + "&project=" + project, { name: name }, function (data) {
+      $.post("{{ url_for('api') }}/network-acls/load_network_acl?id=" + serverId + "&project=" + project, { name: name }, function (data) {
         console.log(data);
         if (data.error_code >= 400){
           alert(data.error);
@@ -226,7 +226,7 @@
       name = editedNetworkACL
       var updatedJSON = $("#jsonInput").val();
       console.log("Info: updating network-acl");
-      $.post("../api/network-acls/update_network_acl?id=" + serverId + "&project=" + project + "&name=" + encodeURI(name), { json: updatedJSON },  function (data) {
+      $.post("{{ url_for('api') }}/network-acls/update_network_acl?id=" + serverId + "&project=" + project + "&name=" + encodeURI(name), { json: updatedJSON },  function (data) {
         console.log(data);
         if (data.error_code >= 400){
           alert(data.error);
@@ -241,7 +241,7 @@
       var networkACLNewName = $("#newNetworkACLName").val();
       var networkACLToRename = $("#networkACLToRename").val();
       console.log("Info: renaming network-acl " + networkACLToRename);
-      $.post("../api/network-acls/update_network_acl?id=" + serverId + "&project=" + project + "&name=" + encodeURI(networkACLToRename), { 'name': networkACLNewName },  function (data) {
+      $.post("{{ url_for('api') }}/network-acls/update_network_acl?id=" + serverId + "&project=" + project + "&name=" + encodeURI(networkACLToRename), { 'name': networkACLNewName },  function (data) {
         console.log(data);
         if (data.error_code >= 400){
           alert(data.error);
@@ -256,7 +256,7 @@
 
       //If id or project variables are missing redirect to servers page
       if (!serverId || !project) {
-        window.location.href = 'servers';
+        window.location.href = "{{ url_for('servers') }}";
       }
       else {
         loadPageContent()

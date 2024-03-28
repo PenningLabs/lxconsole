@@ -51,7 +51,7 @@
       // Configure Datatable
       $('#myDataTable').DataTable({
         ajax: {
-          url: "../api/logs/list_logs",
+          url: "{{ url_for('api') }}/logs/list_logs",
           dataType: "json",
           dataSrc: "data",
           contentType: "application/json",

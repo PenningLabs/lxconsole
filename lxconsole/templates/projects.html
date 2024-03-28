@@ -72,7 +72,7 @@
       // Configure Datatable
       $('#myDataTable').DataTable({
         ajax: {
-          url: "../api/projects/list_projects?id="+serverId+"&project="+project+"&recursion=1",
+          url: "{{ url_for('api') }}/projects/list_projects?id="+serverId+"&project="+project+"&recursion=1",
           dataType: "json",
           dataSrc: "metadata",
           contentType: "application/json",
@@ -188,7 +188,7 @@
     function addItem(){
       console.log("Info: adding new project");
       data = $('#addForm').serialize();
-      $.post("../api/projects/add_project?id="+serverId+"&project="+project, data, function (data) {
+      $.post("{{ url_for('api') }}/projects/add_project?id="+serverId+"&project="+project, data, function (data) {
         console.log(data)
         if (data.error_code >= 400){
           alert(data.error);
@@ -202,7 +202,7 @@
     function createProjectUsingJSON(){
       var projectCreateJSON = $("#jsonCreateInput").val();
       console.log("Info: adding new project");
-      $.post("../api/projects/add_project?id="+serverId+"&project="+project, { json: projectCreateJSON },  function (data) {
+      $.post("{{ url_for('api') }}/projects/add_project?id="+serverId+"&project="+project, { json: projectCreateJSON },  function (data) {
         console.log(data);
         if (data.error_code >= 400){
           alert(data.error);
@@ -215,7 +215,7 @@
 
     function deleteProject(projectToDelete){
       console.log("Info: deleting project " + projectToDelete);
-      $.get("../api/projects/delete_project?id=" + serverId + "&project=" + project + "&name=" + encodeURI(projectToDelete), function (data) {
+      $.get("{{ url_for('api') }}/projects/delete_project?id=" + serverId + "&project=" + project + "&name=" + encodeURI(projectToDelete), function (data) {
         console.log(data);
         if (data.error_code >= 400){
           alert(data.error);
@@ -229,7 +229,7 @@
     function editProject(name){
       editedProject = name
       console.log("Info: loading project " + name);
-      $.get("../api/projects/load_project?id=" + serverId + "&project=" + project + "&name=" + encodeURI(name), function (data) {
+      $.get("{{ url_for('api') }}/projects/load_project?id=" + serverId + "&project=" + project + "&name=" + encodeURI(name), function (data) {
         console.log(data);
         if (data.error_code >= 400){
           alert(data.error);
@@ -251,7 +251,7 @@
       name = editedProject
       var updatedJSON = $("#jsonInput").val();
       console.log("Info: updating project");
-      $.post("../api/projects/update_project?id=" + serverId + "&project=" + project + "&name=" + encodeURI(name), { json: updatedJSON },  function (data) {
+      $.post("{{ url_for('api') }}/projects/update_project?id=" + serverId + "&project=" + project + "&name=" + encodeURI(name), { json: updatedJSON },  function (data) {
         console.log(data);
         if (data.error_code >= 400){
           alert(data.error);
@@ -266,7 +266,7 @@
       var projectNewName = $("#newProjectName").val();
       var projectToRename = $("#projectToRename").val();
       console.log("Info: renaming project " + projectToRename);
-      $.post("../api/projects/update_project?id=" + serverId + "&project=" + project + "&name=" + encodeURI(projectToRename), { 'name': projectNewName },  function (data) {
+      $.post("{{ url_for('api') }}/projects/update_project?id=" + serverId + "&project=" + project + "&name=" + encodeURI(projectToRename), { 'name': projectNewName },  function (data) {
         console.log(data);
         if (data.error_code >= 400){
           alert(data.error);
@@ -281,7 +281,7 @@
 
       //If id or project variables are missing redirect to servers page
       if (!serverId || !project) {
-        window.location.href = 'servers';
+        window.location.href = "{{ url_for('servers') }}";
       }
       else {
         loadPageContent()

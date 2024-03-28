@@ -258,7 +258,7 @@
       var serverAddr = $("#addModalAddrInput").val();
       var serverPassword = $("#addModalPasswordInput").val();
       console.log("Info: adding server " + serverName + " " + serverAddr);
-      $.post("../api/servers/add_server", { 
+      $.post("{{ url_for('api') }}/servers/add_server", { 
         server_name: serverName, 
         server_addr: serverAddr,
         server_password: serverPassword
@@ -310,15 +310,15 @@
       loadProjectsInformation()
 
       //Set hyperlink references for cards
-      $("#containersLink").attr("href", "instances?id="+serverId+"&project="+project)
-      $("#virtualMachinesLink").attr("href", "instances?id="+serverId+"&project="+project+"#virtual-machines")
-      $("#clusterMembersLink").attr("href", "cluster-members?id="+serverId+"&project="+project)
-      $("#imagesLink").attr("href", "images?id="+serverId+"&project="+project)
-      $("#profilesLink").attr("href", "profiles?id="+serverId+"&project="+project)
-      $("#networksLink").attr("href", "networks?id="+serverId+"&project="+project)
-      $("#storagePoolsLink").attr("href", "storage-pools?id="+serverId+"&project="+project)
-      $("#projectsLink").attr("href", "projects?id="+serverId+"&project="+project)
-      $("#networkAclsLink").attr("href", "network-acls?id="+serverId+"&project="+project)
+      $("#containersLink").attr("href", "{{ url_for('instances') }}?id="+serverId+"&project="+project)
+      $("#virtualMachinesLink").attr("href", "{{ url_for('instances') }}?id="+serverId+"&project="+project+"#virtual-machines")
+      $("#clusterMembersLink").attr("href", "{{ url_for('cluster_members') }}?id="+serverId+"&project="+project)
+      $("#imagesLink").attr("href", "{{ url_for('images') }}?id="+serverId+"&project="+project)
+      $("#profilesLink").attr("href", "{{ url_for('profiles') }}?id="+serverId+"&project="+project)
+      $("#networksLink").attr("href", "{{ url_for('networks') }}?id="+serverId+"&project="+project)
+      $("#storagePoolsLink").attr("href", "{{ url_for('storage_pools') }}?id="+serverId+"&project="+project)
+      $("#projectsLink").attr("href", "{{ url_for('projects') }}?id="+serverId+"&project="+project)
+      $("#networkAclsLink").attr("href", "{{ url_for('network_acls') }}?id="+serverId+"&project="+project)
 
       //Set reload page content
       pageReloadTimeout = setTimeout(() => { reloadPageContent(); }, reloadTime);
@@ -327,7 +327,7 @@
 
     function loadLxdInformation() {
       //LXD Info
-      $.getJSON("../api/server/get_server_info?id="+encodeURI(serverId)+'&project='+encodeURI(project), function (data) {
+      $.getJSON("{{ url_for('api') }}/server/get_server_info?id="+encodeURI(serverId)+'&project='+encodeURI(project), function (data) {
         data = data.metadata.environment;
         $("#driver").text(data.driver);
         $("#driverVersion").text(data.driver_version);
@@ -353,7 +353,7 @@
 
     function loadResourceInformation() {
       //Resource Info
-      $.getJSON("../api/server/get_server_resources?id="+encodeURI(serverId)+'&project='+encodeURI(project), function (data) {
+      $.getJSON("{{ url_for('api') }}/server/get_server_resources?id="+encodeURI(serverId)+'&project='+encodeURI(project), function (data) {
         data = data.metadata;
         $("#systemVendor").text(data.system.vendor);
         $("#systemProduct").text(data.system.product);
@@ -425,7 +425,7 @@
 
     function loadContainersInformation(){
       //Load Containers Info
-      $.getJSON("../api/instances/list_instances?id="+encodeURI(serverId)+'&project='+encodeURI(project)+'&filter=container'+'&recursion=1', function (data) {
+      $.getJSON("{{ url_for('api') }}/instances/list_instances?id="+encodeURI(serverId)+'&project='+encodeURI(project)+'&filter=container'+'&recursion=1', function (data) {
         data = data.metadata;
         
         running_containers = 0
@@ -453,7 +453,7 @@
 
     function loadVirtualMachinesInformation(){
       // Load Virtual Machine Info
-      $.getJSON("../api/instances/list_instances?id="+encodeURI(serverId)+'&project='+encodeURI(project)+'&filter=virtual-machine'+'&recursion=1', function (data) {
+      $.getJSON("{{ url_for('api') }}/instances/list_instances?id="+encodeURI(serverId)+'&project='+encodeURI(project)+'&filter=virtual-machine'+'&recursion=1', function (data) {
         data = data.metadata;
         
         running_virtual_machines = 0
@@ -481,7 +481,7 @@
 
     function loadClusterMembersInformation() {
       //Load Cluster Members Info
-      $.getJSON("../api/cluster-members/list_cluster_members?id="+encodeURI(serverId)+'&project='+encodeURI(project)+'&recursion=1', function (data) {
+      $.getJSON("{{ url_for('api') }}/cluster-members/list_cluster_members?id="+encodeURI(serverId)+'&project='+encodeURI(project)+'&recursion=1', function (data) {
         data = data.metadata;
 
         online_members = 0
@@ -513,7 +513,7 @@
 
     function loadImagesInformation() {
       //Load Images Info
-      $.getJSON("../api/images/list_images?id="+encodeURI(serverId)+'&project='+encodeURI(project), function (data) {
+      $.getJSON("{{ url_for('api') }}/images/list_images?id="+encodeURI(serverId)+'&project='+encodeURI(project), function (data) {
         data = data.metadata
         $("#totalImages").text(data.length);
       });
@@ -521,7 +521,7 @@
 
     function loadProfilesInformation() {
       //Load Profiles Info
-      $.getJSON("../api/profiles/list_profiles?id="+encodeURI(serverId)+'&project='+encodeURI(project), function (data) {
+      $.getJSON("{{ url_for('api') }}/profiles/list_profiles?id="+encodeURI(serverId)+'&project='+encodeURI(project), function (data) {
         data = data.metadata
         $("#totalProfiles").text(data.length);
       });
@@ -529,7 +529,7 @@
 
     function loadNetworksInformation(){
       //Load Network Info
-      $.getJSON("../api/networks/list_networks?id="+encodeURI(serverId)+'&project='+encodeURI(project), function (data) {
+      $.getJSON("{{ url_for('api') }}/networks/list_networks?id="+encodeURI(serverId)+'&project='+encodeURI(project), function (data) {
         data = data.metadata
         $("#totalNetworks").text(data.length);
       });
@@ -537,7 +537,7 @@
 
     function loadStoragePoolsInformation(){
       //Load Storage Pools Info
-      $.getJSON("../api/storage-pools/list_storage_pools?id="+encodeURI(serverId)+'&project='+encodeURI(project), function (data) {
+      $.getJSON("{{ url_for('api') }}/storage-pools/list_storage_pools?id="+encodeURI(serverId)+'&project='+encodeURI(project), function (data) {
         data = data.metadata
         $("#totalStoragePools").text(data.length);
       });
@@ -545,7 +545,7 @@
 
     function loadNetworkAclsInformation() {
       //Load Network ACLs Info
-      $.getJSON("../api/network-acls/list_network_acls?id="+encodeURI(serverId)+'&project='+encodeURI(project), function (data) {
+      $.getJSON("{{ url_for('api') }}/network-acls/list_network_acls?id="+encodeURI(serverId)+'&project='+encodeURI(project), function (data) {
         data = data.metadata
         $("#totalNetworkAcls").text(data.length);
       });
@@ -553,7 +553,7 @@
 
     function loadProjectsInformation() {
       //Populate the Project dropdown
-      $.getJSON("../api/projects/list_projects?id="+serverId+"&project="+project, function (data) {
+      $.getJSON("{{ url_for('api') }}/projects/list_projects?id="+serverId+"&project="+project, function (data) {
         data = data.metadata
         $("#totalProjects").text(data.length);
       })
@@ -564,15 +564,15 @@
 
       //If serverId is missing redirect to servers page
       if (!serverId) {
-        window.location.href = 'servers';
+        window.location.href = "{{ url_for('servers') }}";
       }
 
       //If project is missing get initial project and reload page. If certificate restrictions are in place, default project may not be available
       if (!project) {
-        $.get("../api/server/get_server_initial_project?id="+serverId, function(data) {
+        $.get("{{ url_for('api') }}/server/get_server_initial_project?id="+serverId, function(data) {
           if (data.hasOwnProperty('error')) {
             alert(data.error)
-            window.location.href = 'servers';
+            window.location.href = "{{ url_for('servers') }}";
           }
           const url = new URL(window.location);
           url.searchParams.set('project', data);

@@ -251,3 +251,8 @@ def access_controls():
 @login_required
 def logs():
   return render_template('logs.html', page_title='Logs', page_user_id=current_user.id, page_username=current_user.username,)
+
+@app.route('/api')
+@login_required
+def api():
+  return redirect(url_for('api.index'))
