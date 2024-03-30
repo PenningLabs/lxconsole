@@ -3,7 +3,7 @@
 {% block header %}
   <div class="row mb-2">
     <div class="col-sm-6">
-      <h1>{{ page_title | safe }} <span id="network_title"></span></h1>
+      <h1>{{ page_title | safe }}: <span id="network_title"></span></h1>
     </div>
     <div class="col-sm-6">
       <button class="btn btn-outline-primary dropdown-toggle float-sm-right ml-2 mr-4" type="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false" title="Actions">
@@ -580,14 +580,6 @@
       }
     }
 
-
-
-
-
-
-
-
-
     function addItem(type){
       console.log("Info: adding new " + type);
       if (type == 'forward')
@@ -731,7 +723,7 @@
     $(document).ready(function(){
 
       //If id or project variables are missing redirect to servers page
-      if (!serverId || !project) {
+      if (!serverId || !project || !network) {
         window.location.href = "{{ url_for('servers') }}";
       }
       else {

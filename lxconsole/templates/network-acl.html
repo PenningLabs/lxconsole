@@ -3,7 +3,7 @@
 {% block header %}
   <div class="row mb-2">
     <div class="col-sm-6">
-      <h1>{{ page_title | safe }}</h1>
+      <h1>{{ page_title | safe }}: <span id="acl_title"></span></h1>
     </div>
     <div class="col-sm-6">
       <button class="btn btn-outline-primary float-sm-right mr-4" data-bs-toggle="modal" data-bs-target="#addModal" title="Add Network ACL Rule" aria-hidden="true">
@@ -379,6 +379,7 @@
         window.location.href = "{{ url_for('network_acls') }}?id=" + serverId + '&project=' + project
       }
       else {
+        $("#acl_title").text(acl);
         loadPageContent()
         operationStatusCheck()
       }
