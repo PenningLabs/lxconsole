@@ -91,14 +91,16 @@
                   }
                 }
               }
+              if (arr.length > 0) {
+                return arr.join(", ")
+              }
             }
             if (row.hasOwnProperty('update_source')) {
               if (row.update_source.hasOwnProperty('alias')) {
-                arr.push(row.update_source['alias'])
+                if (row.update_source['alias'] != "") {
+                  return row.update_source['alias']
+                }
               }
-            }
-            if (arr.length > 0) {
-              return arr.join(", ")
             }
             return '-'
             },
