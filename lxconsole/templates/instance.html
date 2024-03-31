@@ -3074,12 +3074,13 @@
 
     // Publish the instance into an image
     function publishInstance(){
+      var alias = $("#publishInstanceAliasInput").val();
       var description = $("#publishInstanceDescriptionInput").val();
       var os = $("#publishInstanceOsInput").val();
       var release = $("#publishInstanceReleaseInput").val();
       var public = $("#publishInstancePublicInput").val();
       console.log("Info: publishing image " + description + " from instance " + instance);
-      $.post("{{ url_for('api') }}/instance/publish_instance?id="+serverId+"&project="+project+"&instance="+instance, { description: description, os: os, release: release, public:public },  function (data) {
+      $.post("{{ url_for('api') }}/instance/publish_instance?id="+serverId+"&project="+project+"&instance="+instance, { alias: alias, description: description, os: os, release: release, public:public },  function (data) {
         console.log(data);
         if (data.error_code >= 400){
           alert(data.error);

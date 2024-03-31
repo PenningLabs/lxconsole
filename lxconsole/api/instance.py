@@ -1060,7 +1060,7 @@ def api_instance_endpoint(endpoint):
         elif os.path.isfile('backups/' + str(server.id) + '/' + project + '/' + name + '/' + backup['name']):
           backup.update({'backup_file_exists': True})
           backup.update({'backup_file_size': os.path.getsize('backups/' + str(server.id) + '/' + project + '/' + name + '/' + backup['name'])})
-          backup.update({'backup_file_path':'backups/' + str(server.id) + '/' + project + '/' + name + '/' + backup['name']})
+          backup.update({'backup_file_path': 'backups/' + str(server.id) + '/' + project + '/' + name + '/' + backup['name']})
         else:
           backup.update({'backup_file_exists': False})
 
@@ -1142,6 +1142,8 @@ def api_instance_endpoint(endpoint):
     client_cert = get_client_crt()
     client_key = get_client_key()
     data = {}
+    if request.form.get('alias'):
+      data.update({ 'aliases': [{ 'name':request.form.get('alias') }] })
     properties = {}
     properties.update({ 'description':request.form.get('description') })
     properties.update({ 'os': request.form.get('os') })

@@ -82,10 +82,23 @@
         },
         columns: [
           { title: "Alias", data: function (row, type, set) {
+            arr = []
+            if (row.hasOwnProperty('aliases')) {
+              for (item in row.aliases) {
+                if (row.aliases[item].hasOwnProperty('name')) {
+                  if (row.aliases[item].name != "") {
+                    arr.push(row.aliases[item].name)
+                  }
+                }
+              }
+            }
             if (row.hasOwnProperty('update_source')) {
               if (row.update_source.hasOwnProperty('alias')) {
-                return row.update_source['alias']
+                arr.push(row.update_source['alias'])
               }
+            }
+            if (arr.length > 0) {
+              return arr.join(", ")
             }
             return '-'
             },
@@ -93,7 +106,9 @@
           { title: "Description", data: function (row, type, set) {
             if (row.hasOwnProperty('properties')) {
               if (row.properties.hasOwnProperty('description')) {
-                return row.properties['description']
+                if (row.properties['description'] != "") {
+                  return row.properties['description']
+                }
               }
             }
             return '-'
@@ -108,7 +123,6 @@
             return '-'
             },
           },
-
           { title: "Fingerprint", data: function (row, type, set) {
               if (row.hasOwnProperty('fingerprint')) {
                 if (row.fingerprint)

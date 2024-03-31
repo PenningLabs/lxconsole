@@ -2,6 +2,7 @@
  - Updated argparser to parse known args for operabilty with gunicorn
  - Updated relative links to use url_for allowing for non-root proxy redirects
  - Fixed backup URL download links
+ - Added alias when publishing an instance to an image
 
 # 0.4.6
  - Added optional --host and --port command-line args to override flask behavior
