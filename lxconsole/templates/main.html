@@ -40,7 +40,7 @@
 
       <footer class="main-footer">
         <div class="float-right d-none d-sm-block">
-          Version 0.4.6
+          Version 0.4.7
         </div>
         Copyright &copy; 2020-Present <a href="https://penninglabs.com">Penning Labs</a>. All rights reserved.
       </footer>
@@ -49,28 +49,28 @@
     <!-- ./wrapper -->
 
     <!-- jQuery - https://code.jquery.com/jquery-3.7.1.js -->
-    <script src="../static/js/jquery/jquery-3.7.1.js"></script>
+    <script src="{{ url_for('static', filename='js/jquery/jquery-3.7.1.js') }}"></script>
 
     <!-- Bootstrap 5 - https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js -->
-    <script src="../static/js/bootstrap/bootstrap-5.2.3.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap/bootstrap-5.2.3.bundle.min.js') }}"></script>
 
     <!-- jQuery Datatables -   https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js -->
-    <script src="../static/js/datatables/jquery.dataTables-1.13.6.min.js"></script>
+    <script src="{{ url_for('static', filename='js/datatables/jquery.dataTables-1.13.6.min.js') }}"></script>
 
     <!-- Datatables Bootstrap 5 - https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js -->
-    <script src="../static/js/datatables/dataTables.bootstrap5.min.js"></script>
+    <script src="{{ url_for('static', filename='js/datatables/dataTables.bootstrap5.min.js') }}"></script>
   
-    <script src="../static/js/jquery-knob/jquery.knob.min.js"></script>
+    <script src="{{ url_for('static', filename='js/jquery-knob/jquery.knob.min.js') }}"></script>
     
     <!-- AdminLTE App -->
-    <script src="../static/dist/js/adminlte.min.js"></script>
+    <script src="{{ url_for('static', filename='dist/js/adminlte.min.js') }}"></script>
 
     <!-- Page specific script -->
-    <script src="../static/js/sidebar.js"></script>
+    <script src="{{ url_for('static', filename='js/sidebar.js') }}"></script>
 
     <script>
       function changeProject(project){
-        window.location.href = 'server?id=' + serverId + '&project=' + project;
+        window.location.href = "{{ url_for('server') }}?id=" + serverId + '&project=' + project;
         // var url = new URL(window.location);
         // var search_params = url.searchParams;
         // search_params.set('project', project);
@@ -79,7 +79,7 @@
       }
 
       function changeServer(id){
-        window.location.href = 'server?id=' + id;
+        window.location.href = "{{ url_for('server') }}?id=" + id;
         // var url = new URL(window.location);
         // var search_params = url.searchParams;
         // search_params.set('id', id);
@@ -89,7 +89,7 @@
 
       function loadAccountModal(){
         console.log("Info: loading account modal");
-        $.get("../api/users/get_user?id={{ page_user_id }}", function (data) {
+        $.get("{{ url_for('api') }}/users/get_user?id={{ page_user_id }}", function (data) {
           data = data.metadata
           $("#usernameEditInput").val(data.username);
           $("#firstNameEditInput").val(data.first_name);
@@ -101,7 +101,7 @@
 
       function populateServerSelectDropdown() {
         //Populate the Server dropdown
-        $.getJSON("../api/servers/list_servers?id="+serverId, function (data) {
+        $.getJSON("{{ url_for('api') }}/servers/list_servers?id="+serverId, function (data) {
           data = data.data
           for (var index = 0; index < data.length; index++) {
             if (data[index].name == '')
@@ -118,7 +118,7 @@
 
       function populateProjectSelectDropdown() {
         //Populate the Project dropdown
-        $.getJSON("../api/projects/list_projects?id="+serverId+"&project="+project, function (data) {
+        $.getJSON("{{ url_for('api') }}/projects/list_projects?id="+serverId+"&project="+project, function (data) {
           data = data.metadata
           for (var index = 0; index < data.length; index++) {
             optionText = data[index].replace('/1.0/projects/','');
@@ -131,7 +131,7 @@
       }
 
       function updateAccount(){
-        $.post("../api/users/update_user", {
+        $.post("{{ url_for('api') }}/users/update_user", {
           id: "{{ page_user_id }}",
           username: $("#usernameEditInput").val(),
           first_name: $("#firstNameEditInput").val(),
@@ -157,7 +157,7 @@
         clearTimeout(operationReloadTimeout);
 
         //Request list of opertions
-        $.get("../api/operations/list_operations?id="+serverId+"&project=" + project + "&recursion=1", function (data) {
+        $.get("{{ url_for('api') }}/operations/list_operations?id="+serverId+"&project=" + project + "&recursion=1", function (data) {
 
           //Clear any previous messages in notification area
           $('#notificationText').text("");
@@ -270,8 +270,3 @@
 
   </body>
 </html>
-
-
-
-
-

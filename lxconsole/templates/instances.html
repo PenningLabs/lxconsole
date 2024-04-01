@@ -68,7 +68,7 @@
 
 {% block script %}
   <!-- Page specific script  https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.15.2/js/selectize.min.js -->
-  <script src="../static/js/selectize/selectize.min.js"></script>
+  <script src="{{ url_for('static', filename='js/selectize/selectize.min.js') }}"></script>
 
   <script>
     var reloadTime = 10000;
@@ -104,7 +104,7 @@
       populateProjectSelectDropdown()
       
       //Populate the create instance modal Profile dropdown
-      $.getJSON("../api/profiles/list_profiles?id="+serverId+"&project="+project, function (data) {
+      $.getJSON("{{ url_for('api') }}/profiles/list_profiles?id="+serverId+"&project="+project, function (data) {
         data = data.metadata
         for (var index = 0; index < data.length; index++) {
           //When using projects other than default and no recursion, it gets like URL variable with "?"
@@ -124,7 +124,7 @@
       })
 
       //Populate the create instance modal Storge Pool dropdown
-      $.getJSON("../api/storage-pools/list_storage_pools?id="+serverId+"&project="+project, function (data) {
+      $.getJSON("{{ url_for('api') }}/storage-pools/list_storage_pools?id="+serverId+"&project="+project, function (data) {
         data = data.metadata
         for (var index = 0; index < data.length; index++) {
           optionText = data[index].replace('/1.0/storage-pools/','');
@@ -136,14 +136,14 @@
       })
 
       //Populate the create instance modal Location dropdown
-      $.getJSON("../api/cluster-members/list_cluster_members?id="+serverId+"&project="+project, function (data) {
+      $.getJSON("{{ url_for('api') }}/cluster-members/list_cluster_members?id="+serverId+"&project="+project, function (data) {
         data = data.metadata
         for (var index = 0; index < data.length; index++) {
           optionText = data[index].replace('/1.0/cluster/members/','');
           $('#instanceLocationInput').append('<option value="' + optionText + '">' + optionText + '</option>');
         }
       })
-      $.getJSON("../api/cluster-groups/list_cluster_groups?id="+serverId+"&project="+project, function (data) {
+      $.getJSON("{{ url_for('api') }}/cluster-groups/list_cluster_groups?id="+serverId+"&project="+project, function (data) {
         data = data.metadata
         for (var index = 0; index < data.length; index++) {
           optionText = data[index].replace('/1.0/cluster/groups/','');
@@ -164,7 +164,7 @@
     function populateContainerImages() {
       $("#instanceImageInput").empty().append('<option value="none">none</option>');
       //Populate the modal Image dropdown
-      $.getJSON("../api/images/list_images?id="+serverId+"&project="+project+"&recursion=1", function (data) {
+      $.getJSON("{{ url_for('api') }}/images/list_images?id="+serverId+"&project="+project+"&recursion=1", function (data) {
         data = data.metadata
         for (var index = 0; index < data.length; index++) {
           // Earlier versions of LXD did not have type property. These only supported container type instances
@@ -183,7 +183,7 @@
     function populateVirtualMachineImages() {
       $("#instanceImageInput").empty().append('<option value="none">none</option>');
       //Populate the modal Image dropdown
-      $.getJSON("../api/images/list_images?id="+serverId+"&project="+project+"&recursion=1", function (data) {
+      $.getJSON("{{ url_for('api') }}/images/list_images?id="+serverId+"&project="+project+"&recursion=1", function (data) {
         data = data.metadata
         for (var index = 0; index < data.length; index++) {
           // Earlier versions of LXD did not have type property. These only supported container type instances
@@ -204,7 +204,7 @@
         // Configure Containers Datatable
         $('#containerDataTable').DataTable({
           ajax: {
-            url: "../api/instances/list_instances?id=" + serverId + "&filter=container" + "&project=" + project + "&recursion=2",
+            url: "{{ url_for('api') }}/instances/list_instances?id=" + serverId + "&filter=container" + "&project=" + project + "&recursion=2",
             dataType: "json",
             dataSrc: "metadata",
             contentType: "application/json",
@@ -216,7 +216,7 @@
             { title: "Name", data: function (row, type, set) {
                 if (row.hasOwnProperty('name')) {
                   if (row.name)
-                    return '<a href="../instance?id=' + serverId + '&project=' + project + '&instance=' + row.name + '&type=container">' + row.name + '</a>';
+                    return "<a href=\"{{ url_for('instance') }}?id=" + serverId + '&project=' + project + '&instance=' + row.name + '&type=container">' + row.name + '</a>';
                 }
                 return '-'
               },
@@ -323,7 +323,7 @@
         // Configure Datatable
         $('#virtualMachineDataTable').DataTable({
           ajax: {
-            url: "../api/instances/list_instances?id=" + serverId + "&filter=virtual-machine" + "&project=" + project + "&recursion=2",
+            url: "{{ url_for('api') }}/instances/list_instances?id=" + serverId + "&filter=virtual-machine" + "&project=" + project + "&recursion=2",
             dataType: "json",
             dataSrc: "metadata",
             contentType: "application/json",
@@ -335,7 +335,7 @@
             { title: "Name", data: function (row, type, set) {
                 if (row.hasOwnProperty('name')) {
                   if (row.name)
-                    return '<a href="../instance?id=' + serverId + '&project=' + project + '&instance=' + row.name + '&type=virtual-machine">' + row.name + '</a>';
+                    return "<a href=\"{{ url_for('instance') }}?id=" + serverId + '&project=' + project + '&instance=' + row.name + '&type=virtual-machine">' + row.name + '</a>';
                 }
                 return '-'
               },
@@ -441,7 +441,7 @@
     // Change state start/stop of instance
     function changeItemState(name, action){
       console.log("Info: starting instance " + name);
-      $.post("../api/instances/change_instance_state?id=" + serverId + "&project=" + project, { name: name, action: action }, function (data) {
+      $.post("{{ url_for('api') }}/instances/change_instance_state?id=" + serverId + "&project=" + project, { name: name, action: action }, function (data) {
         console.log(data);
         if (data.error_code >= 400){
           alert(data.error);
@@ -456,7 +456,7 @@
     function addItem(){
       console.log("Info: adding new instance");
       data = $('#addForm').serialize();
-      $.post("../api/instances/add_instance?id="+serverId+"&project="+project, data, function (data) {
+      $.post("{{ url_for('api') }}/instances/add_instance?id="+serverId+"&project="+project, data, function (data) {
         console.log(data);
         if (data.error_code >= 400){
           alert(data.error);
@@ -472,7 +472,7 @@
       console.log("Info: confirming deletion of instance " + name);
       if (confirm("Are you sure you want to delete instance " + name + "?") == true) {
         console.log("Info: deleting instance " + name);
-        $.post("../api/instances/delete_instance?id=" + serverId + "&project=" + project, { name: name }, function (data) {
+        $.post("{{ url_for('api') }}/instances/delete_instance?id=" + serverId + "&project=" + project, { name: name }, function (data) {
           console.log(data);
           if (data.error_code >= 400){
             alert(data.error);
@@ -488,7 +488,7 @@
     function createItemUsingJSON(){
       var json = $("#jsonCreateInput").val();
       console.log("Info: adding new instance");
-      $.post("../api/instances/add_instance?id="+serverId+"&project="+project, { json: json },  function (data) {
+      $.post("{{ url_for('api') }}/instances/add_instance?id="+serverId+"&project="+project, { json: json },  function (data) {
         console.log(data);
         if (data.error_code >= 400){
           alert(data.error);
@@ -615,7 +615,7 @@
 
       //If id or project variables are missing redirect to servers page
       if (!serverId || !project) {
-        window.location.href = 'servers';
+        window.location.href = "{{ url_for('servers') }}";
       }
       else {
         if (hash == '#virtual-machines'){

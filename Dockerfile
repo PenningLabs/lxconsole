@@ -14,5 +14,11 @@ RUN apt install sqlite3
 
 WORKDIR /opt/lxconsole
 
+#ENTRYPOINT [ "gunicorn" ]
+#CMD [ "--bind", "0.0.0.0:8081", "run:app" ]
+
+#ENTRYPOINT [ "python3" ]
+#CMD [ "run.py", "--host", "0.0.0.0", "--port", "5000"]
+
 ENTRYPOINT [ "python3" ]
 CMD [ "run.py" ]

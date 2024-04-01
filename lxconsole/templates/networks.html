@@ -72,7 +72,7 @@
       // Configure Datatable
       $('#myDataTable').DataTable({
         ajax: {
-          url: "../api/networks/list_networks?id="+serverId+"&project=" + project + "&recursion=1",
+          url: "{{ url_for('api') }}/networks/list_networks?id="+serverId+"&project=" + project + "&recursion=1",
           dataType: "json",
           dataSrc: "metadata",
           contentType: "application/json",
@@ -84,7 +84,7 @@
           { title: "Name", data: function (row, type, set) {
               if (row.hasOwnProperty('name')) {
                 if (row.name && row.managed && row.type)
-                  return '<a href="../network?id=' + serverId + '&project=' + project + '&network=' + row.name + '&network_type=' + row.type + '">' + row.name + '</a>';
+                  return "<a href=\"{{ url_for('network') }}?id=" + serverId + '&project=' + project + '&network=' + row.name + '&network_type=' + row.type + '">' + row.name + '</a>';
                 if (row.name)
                   return row.name
               }
@@ -154,7 +154,7 @@
       });
 
       //Populate Network/Parent Fields in addModal
-      $.getJSON("../api/networks/list_networks?id="+serverId+'&project='+project+'&recursion=1', function (data) {
+      $.getJSON("{{ url_for('api') }}/networks/list_networks?id="+serverId+'&project='+project+'&recursion=1', function (data) {
         data = data.metadata
         for (var index = 0; index < data.length; index++) {
           optionText = data[index].name;
@@ -172,7 +172,7 @@
     function addItem(){
       console.log("Info: adding new network");
       data = $('#addForm').serialize();
-      $.post("../api/networks/add_network?id="+serverId+"&project="+project, data, function (data) {
+      $.post("{{ url_for('api') }}/networks/add_network?id="+serverId+"&project="+project, data, function (data) {
         console.log(data)
         if (data.error_code >= 400){
           alert(data.error);
@@ -398,7 +398,7 @@
     function createNetworkUsingJSON(){
       var json = $("#jsonCreateInput").val();
       console.log("Info: adding new network");
-      $.post("../api/networks/add_network?id="+serverId+"&project="+project, { json: json },  function (data) {
+      $.post("{{ url_for('api') }}/networks/add_network?id="+serverId+"&project="+project, { json: json },  function (data) {
         console.log(data);
         if (data.error_code >= 400){
           alert(data.error);
@@ -411,7 +411,7 @@
 
     function deleteNetwork(name){
       console.log("Info: deleting network " + name);
-      $.post("../api/networks/delete_network?id=" + serverId + "&project=" + project, { name: name }, function (data) {
+      $.post("{{ url_for('api') }}/networks/delete_network?id=" + serverId + "&project=" + project, { name: name }, function (data) {
         console.log(data);
         if (data.error_code >= 400){
           alert(data.error);
@@ -425,7 +425,7 @@
     function editNetwork(name){
       editedNetwork = name
       console.log("Info: loading network " + name);
-      $.post("../api/networks/load_network?id=" + serverId + "&project=" + project, { name: name }, function (data) {
+      $.post("{{ url_for('api') }}/networks/load_network?id=" + serverId + "&project=" + project, { name: name }, function (data) {
         console.log(data);
         if (data.error_code >= 400){
           alert(data.error);
@@ -447,7 +447,7 @@
       name = editedNetwork
       var updatedJSON = $("#jsonInput").val();
       console.log("Info: updating network");
-      $.post("../api/networks/update_network?id=" + serverId + "&project=" + project + "&name=" + encodeURI(name), { json: updatedJSON },  function (data) {
+      $.post("{{ url_for('api') }}/networks/update_network?id=" + serverId + "&project=" + project + "&name=" + encodeURI(name), { json: updatedJSON },  function (data) {
         console.log(data);
         if (data.error_code >= 400){
           alert(data.error);
@@ -462,7 +462,7 @@
       var networkNewName = $("#newNetworkName").val();
       var networkToRename = $("#networkToRename").val();
       console.log("Info: renaming network " + networkToRename);
-      $.post("../api/networks/update_network?id=" + serverId + "&project=" + project + "&name=" + encodeURI(networkToRename), { 'name': networkNewName },  function (data) {
+      $.post("{{ url_for('api') }}/networks/update_network?id=" + serverId + "&project=" + project + "&name=" + encodeURI(networkToRename), { 'name': networkNewName },  function (data) {
         console.log(data);
         if (data.error_code >= 400){
           alert(data.error);
@@ -477,7 +477,7 @@
 
       //If id or project variables are missing redirect to servers page
       if (!serverId || !project) {
-        window.location.href = 'servers';
+        window.location.href = "{{ url_for('servers') }}";
       }
       else {
         loadPageContent()

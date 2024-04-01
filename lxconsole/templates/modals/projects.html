@@ -1,686 +1,686 @@
-  <!-- Add Modal-->
-  <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Add Project</h5>
-          <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">×</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          <ul class="nav nav-tabs" id="myTab" role="tablist">
-            <li class="nav-item">
-              <a class="nav-link active" id="form-tab" data-bs-toggle="tab" href="#form" role="tab" aria-controls="form" aria-selected="true">Form</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" id="json-tab" data-bs-toggle="tab" href="#json" role="tab" aria-controls="json" aria-selected="false">JSON</a>
-            </li>
-          </ul>
-          <div class="tab-content" id="myTabContent">
-            <div class="tab-pane fade show active" id="form" role="tabpanel" aria-labelledby="form-tab">
-              <br />
-              <form id="addForm">
-                <div class="row">
-                  <label class="col-3 col-form-label text-right">Name: <span class="text-danger">*</span></label>
-                  <div class="col-7">
-                    <div class="form-group text-right">
-                      <input type="text" class="form-control" required="required" placeholder="" name="name">
-                    </div>
-                  </div>
-                  <div class="col-1">
-                    <i class="far fa-sm fa-question-circle" title='(Required) - Enter in a name for the project.'></i>
-                  </div>
-                </div>
-                <div class="row">
-                  <label class="col-3 col-form-label text-right">Description: </label>
-                  <div class="col-7">
-                    <div class="form-group text-right">
-                      <input type="text" class="form-control" required="required" placeholder="" name="description">
-                    </div>
-                  </div>
-                  <div class="col-1">
-                    <i class="far fa-sm fa-question-circle" title='Enter in a description for the project.'></i>
-                  </div>
-                </div>
-                <div class="row">
-                  <label class="col-3 col-form-label text-right">features.images: </label>
-                  <div class="col-7">
-                    <div class="form-group">
-                      <select onchange="" class="form-select" name="features.images">
-                        <option value="">(not set)</option>
-                        <option value="true">true</option>
-                        <option value="false">false</option>
-                      </select>
-                    </div>
-                  </div>
-                  <div class="col-1">
-                    <i class="far fa-sm fa-question-circle" title='Select whether or not to seperate images and image aliases for this project. Default: true.'></i>
-                  </div>
-                </div>
-                <div class="row">
-                  <label class="col-3 col-form-label text-right">features.networks: </label>
-                  <div class="col-7">
-                    <div class="form-group">
-                      <select onchange="" class="form-select" name="features.networks">
-                        <option value="">(not set)</option>
-                        <option value="true">true</option>
-                        <option value="false">false</option>
-                      </select>
-                    </div>
-                  </div>
-                  <div class="col-1">
-                    <i class="far fa-sm fa-question-circle" title='Select whether or not to seperate networks for this project. Default: false.'></i>
-                  </div>
-                </div>
-                <div class="row">
-                  <label class="col-3 col-form-label text-right">features.profiles: </label>
-                  <div class="col-7">
-                    <div class="form-group">
-                      <select onchange="" class="form-select" name="features.profiles">
-                        <option value="">(not set)</option>
-                        <option value="true">true</option>
-                        <option value="false">false</option>
-                      </select>
-                    </div>
-                  </div>
-                  <div class="col-1">
-                    <i class="far fa-sm fa-question-circle" title='Select whether or not to seperate profiles for this project. Default: true.'></i>
-                  </div>
-                </div>
-                <div class="row">
-                  <label class="col-3 col-form-label text-right">features.storage.volumes: </label>
-                  <div class="col-7">
-                    <div class="form-group">
-                      <select onchange="" class="form-select" name="features.storage.volumes">
-                        <option value="">(not set)</option>
-                        <option value="true">true</option>
-                        <option value="false">false</option>
-                      </select>
-                    </div>
-                  </div>
-                  <div class="col-1">
-                    <i class="far fa-sm fa-question-circle" title='Select whether or not to seperate storage volumes for this project. Default: true.'></i>
-                  </div>
-                </div>
-                <div class="row">
-                  <label class="col-3 col-form-label text-right">features.storage.buckets: </label>
-                  <div class="col-7">
-                    <div class="form-group">
-                      <select onchange="" class="form-select" name="features.storage.buckets">
-                        <option value="">(not set)</option>
-                        <option value="true">true</option>
-                        <option value="false">false</option>
-                      </select>
-                    </div>
-                  </div>
-                  <div class="col-1">
-                    <i class="far fa-sm fa-question-circle" title='Select whether or not to seperate storage buckets for this project. Default: true.'></i>
-                  </div>
-                </div>
-                <hr>
-                <div id="accordionConfigurationProperties">
-                  <h2>
-                    <button class="btn btn-link collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#configurationProperties" aria-expanded="false" aria-controls="configurationProperties">
-                      Additional Configuration Properties
-                    </button>
-                  </h2> 
-                  <div id="configurationProperties" class="collapse" aria-labelledby="configurationProperties">
-                    <div class="row">
-                      <label class="col-4 col-form-label text-right">backups.compression_algorithm: </label>
-                      <div class="col-6">
-                        <div class="form-group">
-                          <select onchange="" class="form-select" name="features.backups.compression_algorithm">
-                            <option value="">(not set)</option>
-                            <option value="bzip2">bzip2</option>
-                            <option value="gzip">gzip</option>
-                            <option value="lzma">lzma</option>
-                            <option value="none">none</option>
-                            <option value="xz">xz</option>
-                          </select>
-                        </div>
-                      </div>
-                      <div class="col-1">
-                        <i class="far fa-sm fa-question-circle" title='Select the compression algorithm to use for backups in the project. Default: (not set)'></i>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <label class="col-4 col-form-label text-right">images.auto_update_cached: </label>
-                      <div class="col-6">
-                        <div class="form-group">
-                          <select onchange="" class="form-select" name="features.images.auto_update_cached">
-                            <option value="">(not set)</option>
-                            <option value="true">true</option>
-                            <option value="false">false</option>
-                          </select>
-                        </div>
-                      </div>
-                      <div class="col-1">
-                        <i class="far fa-sm fa-question-circle" title='Select whether or not to automatically update images that LXD/Incus caches. Default: (not set).'></i>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <label class="col-4 col-form-label text-right">images.auto_update_interval: </label>
-                      <div class="col-6">
-                        <div class="form-group">
-                          <input type="number" class="form-control" placeholder="" name="features.images.auto_update_interval">
-                        </div>
-                      </div>
-                      <div class="col-1">
-                        <i class="far fa-sm fa-question-circle" title='Enter in the hourly interval for the system to look for updates on cached images. Use 0 to disable.'></i>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <label class="col-4 col-form-label text-right">images.compression_algorithm: </label>
-                      <div class="col-6">
-                        <div class="form-group">
-                          <select  onchange="" class="form-select" name="features.images.compression_algorithm">
-                            <option value="">(not set)</option>
-                            <option value="bzip2">bzip2</option>
-                            <option value="gzip">gzip</option>
-                            <option value="lzma">lzma</option>
-                            <option value="none">none</option>
-                            <option value="xz">xz</option>
-                          </select>
-                        </div>
-                      </div>
-                      <div class="col-1">
-                        <i class="far fa-sm fa-question-circle" title='Select the compression algorithm to use for images in the project. Default: (not set)'></i>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <label class="col-4 col-form-label text-right">images.default_architecture: </label>
-                      <div class="col-6">
-                        <div class="form-group">
-                          <input type="text" class="form-control" placeholder="" name="features.images.default_architecture">
-                        </div>
-                      </div>
-                      <div class="col-1">
-                        <i class="far fa-sm fa-question-circle" title='Enter in the default architecture that should be used in a mixed architecture cluster.'></i>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <label class="col-4 col-form-label text-right">images.remote_cache_expiry: </label>
-                      <div class="col-6">
-                        <div class="form-group">
-                          <input type="number" class="form-control" placeholder="" name="features.images.remote_cache_expiry">
-                        </div>
-                      </div>
-                      <div class="col-1">
-                        <i class="far fa-sm fa-question-circle" title='Enter in the number of days unused cached remote images will be flushed from the project.'></i>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <label class="col-4 col-form-label text-right">limits.containers: </label>
-                      <div class="col-6">
-                        <div class="form-group">
-                          <input type="number" class="form-control" placeholder="" name="features.limits.containers">
-                        </div>
-                      </div>
-                      <div class="col-1">
-                        <i class="far fa-sm fa-question-circle" title='Enter in the maximum number of containers that can be created within the project. Default: (not set)'></i>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <label class="col-4 col-form-label text-right">limits.cpu: </label>
-                      <div class="col-6">
-                        <div class="form-group">
-                          <input type="number" class="form-control" placeholder="" name="features.limits.cpu">
-                        </div>
-                      </div>
-                      <div class="col-1">
-                        <i class="far fa-sm fa-question-circle" title='Enter in the maximum value for the total sum of all individual "limits.cpu" configs set on instances within the project. Default: (not set)'></i>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <label class="col-4 col-form-label text-right">limits.disk: </label>
-                      <div class="col-6">
-                        <div class="form-group">
-                          <input type="text" class="form-control" placeholder="" name="features.limits.disk">
-                        </div>
-                      </div>
-                      <div class="col-1">
-                        <i class="far fa-sm fa-question-circle" title='Enter in the maximum value of total disk space used by all volumes and images within the project. Default: (not set)'></i>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <label class="col-4 col-form-label text-right">limits.instances: </label>
-                      <div class="col-6">
-                        <div class="form-group">
-                          <input type="number" class="form-control" placeholder="" name="features.limits.instances">
-                        </div>
-                      </div>
-                      <div class="col-1">
-                        <i class="far fa-sm fa-question-circle" title='Enter in the maximum number of instances that can be created within the project. Default: (not set)'></i>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <label class="col-4 col-form-label text-right">limits.memory: </label>
-                      <div class="col-6">
-                        <div class="form-group">
-                          <input type="text" class="form-control" placeholder="" name="features.limits.memory">
-                        </div>
-                      </div>
-                      <div class="col-1">
-                        <i class="far fa-sm fa-question-circle" title='Enter in the maximum value for the total sum of all individual "limits.memory" configs set on instances within the project. Default: (not set)'></i>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <label class="col-4 col-form-label text-right">limits.networks: </label>
-                      <div class="col-6">
-                        <div class="form-group">
-                          <input type="number" class="form-control" placeholder="" name="features.limits.networks">
-                        </div>
-                      </div>
-                      <div class="col-1">
-                        <i class="far fa-sm fa-question-circle" title='Enter in the maximum number of networks within the project. Default: (not set)'></i>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <label class="col-4 col-form-label text-right">limits.processes: </label>
-                      <div class="col-6">
-                        <div class="form-group">
-                          <input type="number" class="form-control" placeholder="" name="features.limits.processes">
-                        </div>
-                      </div>
-                      <div class="col-1">
-                        <i class="far fa-sm fa-question-circle" title='Enter in the maximum value for the total sum of all individual "limits.processes" configs set on instances within the project. Default: (not set)'></i>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <label class="col-4 col-form-label text-right">limits.virtual-machines: </label>
-                      <div class="col-6">
-                        <div class="form-group">
-                          <input type="number" class="form-control" placeholder="" name="features.limits.virtual-machines">
-                        </div>
-                      </div>
-                      <div class="col-1">
-                        <i class="far fa-sm fa-question-circle" title='Enter in the maximum number of virtual machines that can be created within the project. Default: (not set)'></i>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <label class="col-4 col-form-label text-right">restricted: </label>
-                      <div class="col-6">
-                        <div class="form-group">
-                          <select id="addModalRestrictedInput" onchange="changeRestrictedOptionsDisplay()" class="form-select" name="restricted">
-                            <option value="">(not set)</option>
-                            <option value="true">true</option>
-                            <option value="false">false</option>
-                          </select>
-                        </div>
-                      </div>
-                      <div class="col-1">
-                        <i class="far fa-sm fa-question-circle" title='Select whether to block access to security-sensitive LXD/Incus features. Default: false'></i>
-                      </div>
-                    </div>
-                    <div class="row" id="projectRestrictedBackupsRow" style="display: none;">
-                      <label class="col-4 col-form-label text-right">restricted.backups: </label>
-                      <div class="col-6">
-                        <div class="form-group">
-                          <select onchange="" class="form-select" name="restricted.backups">
-                            <option value="">(not set)</option>
-                            <option value="allow">allow</option>
-                            <option value="block">block</option>
-                          </select>
-                        </div>
-                      </div>
-                      <div class="col-1">
-                        <i class="far fa-sm fa-question-circle" title='Select whether or not to prevent the creation of instances or volume backups within the project. Default: block'></i>
-                      </div>
-                    </div>
-                    <div class="row" id="projectRestrictedClusterTargetRow" style="display: none;">
-                      <label class="col-4 col-form-label text-right">restricted.cluster.target: </label>
-                      <div class="col-6">
-                        <div class="form-group">
-                          <select onchange="" class="form-select" name="restricted.cluster.target">
-                            <option value="">(not set)</option>
-                            <option value="allow">allow</option>
-                            <option value="block">block</option>
-                          </select>
-                        </div>
-                      </div>
-                      <div class="col-1">
-                        <i class="far fa-sm fa-question-circle" title='Select whether or not to prevent the use of low-level container options like raw.lxc, raw.idmap, volatile, etc. within the project. Default: block'></i>
-                      </div>
-                    </div>
-                    <div class="row" id="projectRestrictedContainersLowlevelRow" style="display: none;">
-                      <label class="col-4 col-form-label text-right">restricted.containers.lowlevel: </label>
-                      <div class="col-6">
-                        <div class="form-group">
-                          <select onchange="" class="form-select" name="restricted.containers.lowlevel">
-                            <option value="">(not set)</option>
-                            <option value="allow">allow</option>
-                            <option value="block">block</option>
-                          </select>
-                        </div>
-                      </div>
-                      <div class="col-1">
-                        <i class="far fa-sm fa-question-circle" title='Select whether or not to prevent the use of low-level container options like raw.lxc, raw.idmap, volatile, etc. within the project. Default: block'></i>
-                      </div>
-                    </div>
-                    <div class="row" id="projectRestrictedContainersNestingRow" style="display: none;">
-                      <label class="col-4 col-form-label text-right">restricted.containers.nesting: </label>
-                      <div class="col-6">
-                        <div class="form-group">
-                          <select onchange="" class="form-select" name="restricted.containers.nesting">
-                            <option value="">(not set)</option>
-                            <option value="allow">allow</option>
-                            <option value="block">block</option>
-                          </select>
-                        </div>
-                      </div>
-                      <div class="col-1">
-                        <i class="far fa-sm fa-question-circle" title='Select whether or not to prevent setting "security.nesting=true" within the project. Default: block'></i>
-                      </div>
-                    </div>
-                    <div class="row" id="projectRestrictedContainersPrivilegeRow" style="display: none;">
-                      <label class="col-4 col-form-label text-right">restricted.containers.privilege: </label>
-                      <div class="col-6">
-                        <div class="form-group">
-                          <select onchange="" class="form-select" name="restricted.containers.privilege">
-                            <option value="">(not set)</option>
-                            <option value="allow">allow</option>
-                            <option value="isolated">isolated</option>
-                            <option value="unprivileged">unprivileged</option>
-                          </select>
-                        </div>
-                      </div>
-                      <div class="col-1">
-                        <i class="far fa-sm fa-question-circle" title='Select "allow" for no restrictions, "isolated" to prevent setting both "security.privileged=true" and "security.idmap.isolated=true", and select "unprivileged" to prevent setting "security.privileged=true". Default: unprivileged'></i>
-                      </div>
-                    </div>
-                    <div class="row" id="projectRestrictedDevicesDiskRow" style="display: none;">
-                      <label class="col-4 col-form-label text-right">restricted.devices.disk: </label>
-                      <div class="col-6">
-                        <div class="form-group">
-                          <select onchange="" class="form-select" name="restricted.devices.disk">
-                            <option value="">(not set)</option>
-                            <option value="allow">allow</option>
-                            <option value="block">block</option>
-                            <option value="managed">managed</option>
-                          </select>
-                        </div>
-                      </div>
-                      <div class="col-1">
-                        <i class="far fa-sm fa-question-circle" title='Select "allow" for no restrictions, "block" to prevent using disk devices except root, and "managed" to allow the use of disk devices if "pool=" is set. Default: managed'></i>
-                      </div>
-                    </div>
-                    <div class="row" id="projectRestrictedDevicesGpuRow" style="display: none;">
-                      <label class="col-4 col-form-label text-right">restricted.devices.gpu: </label>
-                      <div class="col-6">
-                        <div class="form-group">
-                          <select onchange="" class="form-select" name="restricted.devices.gpu">
-                            <option value="">(not set)</option>
-                            <option value="allow">allow</option>
-                            <option value="block">block</option>
-                          </select>
-                        </div>
-                      </div>
-                      <div class="col-1">
-                        <i class="far fa-sm fa-question-circle" title='Select whether or not to allow the use of "gpu" type devices. Default: blocked'></i>
-                      </div>
-                    </div>
-                    <div class="row" id="projectRestrictedDevicesInfinibandRow" style="display: none;">
-                      <label class="col-4 col-form-label text-right">restricted.devices.infiniband: </label>
-                      <div class="col-6">
-                        <div class="form-group">
-                          <select onchange="" class="form-select" name="restricted.devices.infiniband">
-                            <option value="">(not set)</option>
-                            <option value="allow">allow</option>
-                            <option value="block">block</option>
-                          </select>
-                        </div>
-                      </div>
-                      <div class="col-1">
-                        <i class="far fa-sm fa-question-circle" title='Select whether or not to allow the use of "infiniband" type devices. Default: blocked'></i>
-                      </div>
-                    </div>
-                    <div class="row" id="projectRestrictedDevicesNicRow" style="display: none;">
-                      <label class="col-4 col-form-label text-right">restricted.devices.nic: </label>
-                      <div class="col-6">
-                        <div class="form-group">
-                          <select onchange="" class="form-select" name="restricted.devices.nic">
-                            <option value="">(not set)</option>
-                            <option value="allow">allow</option>
-                            <option value="block">block</option>
-                            <option value="managed">managed</option>
-                          </select>
-                        </div>
-                      </div>
-                      <div class="col-1">
-                        <i class="far fa-sm fa-question-circle" title='Select "allow" for no restrictions, "block" to prevent using all network devices, and "managed" to allow the use of network devices if "network=" is set. Default: managed'></i>
-                      </div>
-                    </div>
-                    <div class="row" id="projectRestrictedDevicesPciRow" style="display: none;">
-                      <label class="col-4 col-form-label text-right">restricted.devices.pci: </label>
-                      <div class="col-6">
-                        <div class="form-group">
-                          <select onchange="" class="form-select" name="restricted.devices.pci">
-                            <option value="">(not set)</option>
-                            <option value="allow">allow</option>
-                            <option value="block">block</option>
-                          </select>
-                        </div>
-                      </div>
-                      <div class="col-1">
-                        <i class="far fa-sm fa-question-circle" title='Select whether or not to allow the use of "pci" type devices. Default: blocked'></i>
-                      </div>
-                    </div>
-                    <div class="row" id="projectRestrictedDevicesProxyRow" style="display: none;">
-                      <label class="col-4 col-form-label text-right">restricted.devices.proxy: </label>
-                      <div class="col-6">
-                        <div class="form-group">
-                          <select onchange="" class="form-select" name="restricted.devices.proxy">
-                            <option value="">(not set)</option>
-                            <option value="allow">allow</option>
-                            <option value="block">block</option>
-                          </select>
-                        </div>
-                      </div>
-                      <div class="col-1">
-                        <i class="far fa-sm fa-question-circle" title='Select whether or not to allow the use of "proxy" type devices. Default: blocked'></i>
-                      </div>
-                    </div>
-                    <div class="row" id="projectRestrictedDevicesUnixBlockRow" style="display: none;">
-                      <label class="col-4 col-form-label text-right">restricted.devices.unix-block: </label>
-                      <div class="col-6">
-                        <div class="form-group">
-                          <select onchange="" class="form-select" name="restricted.devices.unix-block">
-                            <option value="">(not set)</option>
-                            <option value="allow">allow</option>
-                            <option value="block">block</option>
-                          </select>
-                        </div>
-                      </div>
-                      <div class="col-1">
-                        <i class="far fa-sm fa-question-circle" title='Select whether or not to allow the use of "unix-block" type devices. Default: blocked'></i>
-                      </div>
-                    </div>
-                    <div class="row" id="projectRestrictedDevicesUnixCharRow" style="display: none;">
-                      <label class="col-4 col-form-label text-right">restricted.devices.unix-char: </label>
-                      <div class="col-6">
-                        <div class="form-group">
-                          <select onchange="" class="form-select" name="restricted.devices.unix-char">
-                            <option value="">(not set)</option>
-                            <option value="allow">allow</option>
-                            <option value="block">block</option>
-                          </select>
-                        </div>
-                      </div>
-                      <div class="col-1">
-                        <i class="far fa-sm fa-question-circle" title='Select whether or not to allow the use of "unix-char" type devices. Default: blocked'></i>
-                      </div>
-                    </div>
-                    <div class="row" id="projectRestrictedDevicesUnixHotplugRow" style="display: none;">
-                      <label class="col-4 col-form-label text-right">restricted.devices.unix-hotplug: </label>
-                      <div class="col-6">
-                        <div class="form-group">
-                          <select onchange="" class="form-select" name="restricted.devices.unix-hotplug">
-                            <option value="">(not set)</option>
-                            <option value="allow">allow</option>
-                            <option value="block">block</option>
-                          </select>
-                        </div>
-                      </div>
-                      <div class="col-1">
-                        <i class="far fa-sm fa-question-circle" title='Select whether or not to allow the use of "unix-hotplug" type devices. Default: blocked'></i>
-                      </div>
-                    </div>
-                    <div class="row" id="projectRestrictedDevicesUsbRow" style="display: none;">
-                      <label class="col-4 col-form-label text-right">restricted.devices.usb: </label>
-                      <div class="col-6">
-                        <div class="form-group">
-                          <select onchange="" class="form-select" name="restricted.devices.usb">
-                            <option value="">(not set)</option>
-                            <option value="allow">allow</option>
-                            <option value="block">block</option>
-                          </select>
-                        </div>
-                      </div>
-                      <div class="col-1">
-                        <i class="far fa-sm fa-question-circle" title='Select whether or not to allow the use of "usb" type devices. Default: blocked'></i>
-                      </div>
-                    </div>
-                    <div class="row" id="projectRestrictedNetworksSubnetsRow" style="display: none;">
-                      <label class="col-4 col-form-label text-right">restricted.networks.subnets: </label>
-                      <div class="col-6">
-                        <div class="form-group">
-                          <input type="text" class="form-control" placeholder="" name="restricted.networks.subnets">
-                        </div>
-                      </div>
-                      <div class="col-1">
-                        <i class="far fa-sm fa-question-circle" title='Enter in a comma seperated list of network subnets allocated for use in this project. Use the format <uplink>:<subnet>. Default: blocked'></i>
-                      </div>
-                    </div>
-                    <div class="row" id="projectRestrictedNetworksUplinksRow" style="display: none;">
-                      <label class="col-4 col-form-label text-right">restricted.networks.uplinks: </label>
-                      <div class="col-6">
-                        <div class="form-group">
-                          <input type="text" class="form-control" placeholder="" name="restricted.networks.uplinks">
-                        </div>
-                      </div>
-                      <div class="col-1">
-                        <i class="far fa-sm fa-question-circle" title='Enter in a comma seperated list of network names that can be used as uplinks for this project. Default: blocked'></i>
-                      </div>
-                    </div>
-                    <div class="row" id="projectRestrictedSnapshotsRow" style="display: none;">
-                      <label class="col-4 col-form-label text-right">restricted.snapshots: </label>
-                      <div class="col-6">
-                        <div class="form-group">
-                          <select onchange="" class="form-select" name="restricted.snapshots">
-                            <option value="">(not set)</option>
-                            <option value="allow">allow</option>
-                            <option value="block">block</option>
-                          </select>
-                        </div>
-                      </div>
-                      <div class="col-1">
-                        <i class="far fa-sm fa-question-circle" title='Select whether or not to allow the creation of instance and volume snaphots. Default: blocked'></i>
-                      </div>
-                    </div>
-                    <div class="row" id="projectRestrictedVirtualMachinesLowlevelRow" style="display: none;">
-                      <label class="col-4 col-form-label text-right">restricted.virtual-machines.lowlevel: </label>
-                      <div class="col-6">
-                        <div class="form-group">
-                          <select onchange="" class="form-select" name="restricted.virtual-machines.lowlevel">
-                            <option value="">(not set)</option>
-                            <option value="allow">allow</option>
-                            <option value="block">block</option>
-                          </select>
-                        </div>
-                      </div>
-                      <div class="col-1">
-                        <i class="far fa-sm fa-question-circle" title='Select whether or not to allow the use of low-level virtual-machine options like raw.qemu, volatile, etc. Default: blocked'></i>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="modal-footer">
-                  <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
-                  <a class="btn btn-primary" onclick="addItem()" href="#" data-bs-dismiss="modal">Submit</a>
-                </div>
-              </form>
-            </div>
-            <div class="tab-pane fade" id="json" role="tabpanel" aria-labelledby="json-tab">
-              <br />
+<!-- Add Modal-->
+<div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Add Project</h5>
+        <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+          <li class="nav-item">
+            <a class="nav-link active" id="form-tab" data-bs-toggle="tab" href="#form" role="tab" aria-controls="form" aria-selected="true">Form</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" id="json-tab" data-bs-toggle="tab" href="#json" role="tab" aria-controls="json" aria-selected="false">JSON</a>
+          </li>
+        </ul>
+        <div class="tab-content" id="myTabContent">
+          <div class="tab-pane fade show active" id="form" role="tabpanel" aria-labelledby="form-tab">
+            <br />
+            <form id="addForm">
               <div class="row">
-                <div class="col-12">
+                <label class="col-3 col-form-label text-right">Name: <span class="text-danger">*</span></label>
+                <div class="col-7">
                   <div class="form-group text-right">
-                    <pre>
-                      <textarea name="json" class="form-control" id="jsonCreateInput" rows="16" placeholder="Enter JSON data"></textarea>
-                    </pre>
+                    <input type="text" class="form-control" required="required" placeholder="" name="name">
+                  </div>
+                </div>
+                <div class="col-1">
+                  <i class="far fa-sm fa-question-circle" title='(Required) - Enter in a name for the project.'></i>
+                </div>
+              </div>
+              <div class="row">
+                <label class="col-3 col-form-label text-right">Description: </label>
+                <div class="col-7">
+                  <div class="form-group text-right">
+                    <input type="text" class="form-control" required="required" placeholder="" name="description">
+                  </div>
+                </div>
+                <div class="col-1">
+                  <i class="far fa-sm fa-question-circle" title='Enter in a description for the project.'></i>
+                </div>
+              </div>
+              <div class="row">
+                <label class="col-3 col-form-label text-right">features.images: </label>
+                <div class="col-7">
+                  <div class="form-group">
+                    <select onchange="" class="form-select" name="features.images">
+                      <option value="">(not set)</option>
+                      <option value="true">true</option>
+                      <option value="false">false</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-1">
+                  <i class="far fa-sm fa-question-circle" title='Select whether or not to seperate images and image aliases for this project. Default: true.'></i>
+                </div>
+              </div>
+              <div class="row">
+                <label class="col-3 col-form-label text-right">features.networks: </label>
+                <div class="col-7">
+                  <div class="form-group">
+                    <select onchange="" class="form-select" name="features.networks">
+                      <option value="">(not set)</option>
+                      <option value="true">true</option>
+                      <option value="false">false</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-1">
+                  <i class="far fa-sm fa-question-circle" title='Select whether or not to seperate networks for this project. Default: false.'></i>
+                </div>
+              </div>
+              <div class="row">
+                <label class="col-3 col-form-label text-right">features.profiles: </label>
+                <div class="col-7">
+                  <div class="form-group">
+                    <select onchange="" class="form-select" name="features.profiles">
+                      <option value="">(not set)</option>
+                      <option value="true">true</option>
+                      <option value="false">false</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-1">
+                  <i class="far fa-sm fa-question-circle" title='Select whether or not to seperate profiles for this project. Default: true.'></i>
+                </div>
+              </div>
+              <div class="row">
+                <label class="col-3 col-form-label text-right">features.storage.volumes: </label>
+                <div class="col-7">
+                  <div class="form-group">
+                    <select onchange="" class="form-select" name="features.storage.volumes">
+                      <option value="">(not set)</option>
+                      <option value="true">true</option>
+                      <option value="false">false</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-1">
+                  <i class="far fa-sm fa-question-circle" title='Select whether or not to seperate storage volumes for this project. Default: true.'></i>
+                </div>
+              </div>
+              <div class="row">
+                <label class="col-3 col-form-label text-right">features.storage.buckets: </label>
+                <div class="col-7">
+                  <div class="form-group">
+                    <select onchange="" class="form-select" name="features.storage.buckets">
+                      <option value="">(not set)</option>
+                      <option value="true">true</option>
+                      <option value="false">false</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-1">
+                  <i class="far fa-sm fa-question-circle" title='Select whether or not to seperate storage buckets for this project. Default: true.'></i>
+                </div>
+              </div>
+              <hr>
+              <div id="accordionConfigurationProperties">
+                <h2>
+                  <button class="btn btn-link collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#configurationProperties" aria-expanded="false" aria-controls="configurationProperties">
+                    Additional Configuration Properties
+                  </button>
+                </h2> 
+                <div id="configurationProperties" class="collapse" aria-labelledby="configurationProperties">
+                  <div class="row">
+                    <label class="col-4 col-form-label text-right">backups.compression_algorithm: </label>
+                    <div class="col-6">
+                      <div class="form-group">
+                        <select onchange="" class="form-select" name="features.backups.compression_algorithm">
+                          <option value="">(not set)</option>
+                          <option value="bzip2">bzip2</option>
+                          <option value="gzip">gzip</option>
+                          <option value="lzma">lzma</option>
+                          <option value="none">none</option>
+                          <option value="xz">xz</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="col-1">
+                      <i class="far fa-sm fa-question-circle" title='Select the compression algorithm to use for backups in the project. Default: (not set)'></i>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <label class="col-4 col-form-label text-right">images.auto_update_cached: </label>
+                    <div class="col-6">
+                      <div class="form-group">
+                        <select onchange="" class="form-select" name="features.images.auto_update_cached">
+                          <option value="">(not set)</option>
+                          <option value="true">true</option>
+                          <option value="false">false</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="col-1">
+                      <i class="far fa-sm fa-question-circle" title='Select whether or not to automatically update images that LXD/Incus caches. Default: (not set).'></i>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <label class="col-4 col-form-label text-right">images.auto_update_interval: </label>
+                    <div class="col-6">
+                      <div class="form-group">
+                        <input type="number" class="form-control" placeholder="" name="features.images.auto_update_interval">
+                      </div>
+                    </div>
+                    <div class="col-1">
+                      <i class="far fa-sm fa-question-circle" title='Enter in the hourly interval for the system to look for updates on cached images. Use 0 to disable.'></i>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <label class="col-4 col-form-label text-right">images.compression_algorithm: </label>
+                    <div class="col-6">
+                      <div class="form-group">
+                        <select  onchange="" class="form-select" name="features.images.compression_algorithm">
+                          <option value="">(not set)</option>
+                          <option value="bzip2">bzip2</option>
+                          <option value="gzip">gzip</option>
+                          <option value="lzma">lzma</option>
+                          <option value="none">none</option>
+                          <option value="xz">xz</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="col-1">
+                      <i class="far fa-sm fa-question-circle" title='Select the compression algorithm to use for images in the project. Default: (not set)'></i>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <label class="col-4 col-form-label text-right">images.default_architecture: </label>
+                    <div class="col-6">
+                      <div class="form-group">
+                        <input type="text" class="form-control" placeholder="" name="features.images.default_architecture">
+                      </div>
+                    </div>
+                    <div class="col-1">
+                      <i class="far fa-sm fa-question-circle" title='Enter in the default architecture that should be used in a mixed architecture cluster.'></i>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <label class="col-4 col-form-label text-right">images.remote_cache_expiry: </label>
+                    <div class="col-6">
+                      <div class="form-group">
+                        <input type="number" class="form-control" placeholder="" name="features.images.remote_cache_expiry">
+                      </div>
+                    </div>
+                    <div class="col-1">
+                      <i class="far fa-sm fa-question-circle" title='Enter in the number of days unused cached remote images will be flushed from the project.'></i>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <label class="col-4 col-form-label text-right">limits.containers: </label>
+                    <div class="col-6">
+                      <div class="form-group">
+                        <input type="number" class="form-control" placeholder="" name="features.limits.containers">
+                      </div>
+                    </div>
+                    <div class="col-1">
+                      <i class="far fa-sm fa-question-circle" title='Enter in the maximum number of containers that can be created within the project. Default: (not set)'></i>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <label class="col-4 col-form-label text-right">limits.cpu: </label>
+                    <div class="col-6">
+                      <div class="form-group">
+                        <input type="number" class="form-control" placeholder="" name="features.limits.cpu">
+                      </div>
+                    </div>
+                    <div class="col-1">
+                      <i class="far fa-sm fa-question-circle" title='Enter in the maximum value for the total sum of all individual "limits.cpu" configs set on instances within the project. Default: (not set)'></i>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <label class="col-4 col-form-label text-right">limits.disk: </label>
+                    <div class="col-6">
+                      <div class="form-group">
+                        <input type="text" class="form-control" placeholder="" name="features.limits.disk">
+                      </div>
+                    </div>
+                    <div class="col-1">
+                      <i class="far fa-sm fa-question-circle" title='Enter in the maximum value of total disk space used by all volumes and images within the project. Default: (not set)'></i>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <label class="col-4 col-form-label text-right">limits.instances: </label>
+                    <div class="col-6">
+                      <div class="form-group">
+                        <input type="number" class="form-control" placeholder="" name="features.limits.instances">
+                      </div>
+                    </div>
+                    <div class="col-1">
+                      <i class="far fa-sm fa-question-circle" title='Enter in the maximum number of instances that can be created within the project. Default: (not set)'></i>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <label class="col-4 col-form-label text-right">limits.memory: </label>
+                    <div class="col-6">
+                      <div class="form-group">
+                        <input type="text" class="form-control" placeholder="" name="features.limits.memory">
+                      </div>
+                    </div>
+                    <div class="col-1">
+                      <i class="far fa-sm fa-question-circle" title='Enter in the maximum value for the total sum of all individual "limits.memory" configs set on instances within the project. Default: (not set)'></i>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <label class="col-4 col-form-label text-right">limits.networks: </label>
+                    <div class="col-6">
+                      <div class="form-group">
+                        <input type="number" class="form-control" placeholder="" name="features.limits.networks">
+                      </div>
+                    </div>
+                    <div class="col-1">
+                      <i class="far fa-sm fa-question-circle" title='Enter in the maximum number of networks within the project. Default: (not set)'></i>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <label class="col-4 col-form-label text-right">limits.processes: </label>
+                    <div class="col-6">
+                      <div class="form-group">
+                        <input type="number" class="form-control" placeholder="" name="features.limits.processes">
+                      </div>
+                    </div>
+                    <div class="col-1">
+                      <i class="far fa-sm fa-question-circle" title='Enter in the maximum value for the total sum of all individual "limits.processes" configs set on instances within the project. Default: (not set)'></i>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <label class="col-4 col-form-label text-right">limits.virtual-machines: </label>
+                    <div class="col-6">
+                      <div class="form-group">
+                        <input type="number" class="form-control" placeholder="" name="features.limits.virtual-machines">
+                      </div>
+                    </div>
+                    <div class="col-1">
+                      <i class="far fa-sm fa-question-circle" title='Enter in the maximum number of virtual machines that can be created within the project. Default: (not set)'></i>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <label class="col-4 col-form-label text-right">restricted: </label>
+                    <div class="col-6">
+                      <div class="form-group">
+                        <select id="addModalRestrictedInput" onchange="changeRestrictedOptionsDisplay()" class="form-select" name="restricted">
+                          <option value="">(not set)</option>
+                          <option value="true">true</option>
+                          <option value="false">false</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="col-1">
+                      <i class="far fa-sm fa-question-circle" title='Select whether to block access to security-sensitive LXD/Incus features. Default: false'></i>
+                    </div>
+                  </div>
+                  <div class="row" id="projectRestrictedBackupsRow" style="display: none;">
+                    <label class="col-4 col-form-label text-right">restricted.backups: </label>
+                    <div class="col-6">
+                      <div class="form-group">
+                        <select onchange="" class="form-select" name="restricted.backups">
+                          <option value="">(not set)</option>
+                          <option value="allow">allow</option>
+                          <option value="block">block</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="col-1">
+                      <i class="far fa-sm fa-question-circle" title='Select whether or not to prevent the creation of instances or volume backups within the project. Default: block'></i>
+                    </div>
+                  </div>
+                  <div class="row" id="projectRestrictedClusterTargetRow" style="display: none;">
+                    <label class="col-4 col-form-label text-right">restricted.cluster.target: </label>
+                    <div class="col-6">
+                      <div class="form-group">
+                        <select onchange="" class="form-select" name="restricted.cluster.target">
+                          <option value="">(not set)</option>
+                          <option value="allow">allow</option>
+                          <option value="block">block</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="col-1">
+                      <i class="far fa-sm fa-question-circle" title='Select whether or not to prevent the use of low-level container options like raw.lxc, raw.idmap, volatile, etc. within the project. Default: block'></i>
+                    </div>
+                  </div>
+                  <div class="row" id="projectRestrictedContainersLowlevelRow" style="display: none;">
+                    <label class="col-4 col-form-label text-right">restricted.containers.lowlevel: </label>
+                    <div class="col-6">
+                      <div class="form-group">
+                        <select onchange="" class="form-select" name="restricted.containers.lowlevel">
+                          <option value="">(not set)</option>
+                          <option value="allow">allow</option>
+                          <option value="block">block</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="col-1">
+                      <i class="far fa-sm fa-question-circle" title='Select whether or not to prevent the use of low-level container options like raw.lxc, raw.idmap, volatile, etc. within the project. Default: block'></i>
+                    </div>
+                  </div>
+                  <div class="row" id="projectRestrictedContainersNestingRow" style="display: none;">
+                    <label class="col-4 col-form-label text-right">restricted.containers.nesting: </label>
+                    <div class="col-6">
+                      <div class="form-group">
+                        <select onchange="" class="form-select" name="restricted.containers.nesting">
+                          <option value="">(not set)</option>
+                          <option value="allow">allow</option>
+                          <option value="block">block</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="col-1">
+                      <i class="far fa-sm fa-question-circle" title='Select whether or not to prevent setting "security.nesting=true" within the project. Default: block'></i>
+                    </div>
+                  </div>
+                  <div class="row" id="projectRestrictedContainersPrivilegeRow" style="display: none;">
+                    <label class="col-4 col-form-label text-right">restricted.containers.privilege: </label>
+                    <div class="col-6">
+                      <div class="form-group">
+                        <select onchange="" class="form-select" name="restricted.containers.privilege">
+                          <option value="">(not set)</option>
+                          <option value="allow">allow</option>
+                          <option value="isolated">isolated</option>
+                          <option value="unprivileged">unprivileged</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="col-1">
+                      <i class="far fa-sm fa-question-circle" title='Select "allow" for no restrictions, "isolated" to prevent setting both "security.privileged=true" and "security.idmap.isolated=true", and select "unprivileged" to prevent setting "security.privileged=true". Default: unprivileged'></i>
+                    </div>
+                  </div>
+                  <div class="row" id="projectRestrictedDevicesDiskRow" style="display: none;">
+                    <label class="col-4 col-form-label text-right">restricted.devices.disk: </label>
+                    <div class="col-6">
+                      <div class="form-group">
+                        <select onchange="" class="form-select" name="restricted.devices.disk">
+                          <option value="">(not set)</option>
+                          <option value="allow">allow</option>
+                          <option value="block">block</option>
+                          <option value="managed">managed</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="col-1">
+                      <i class="far fa-sm fa-question-circle" title='Select "allow" for no restrictions, "block" to prevent using disk devices except root, and "managed" to allow the use of disk devices if "pool=" is set. Default: managed'></i>
+                    </div>
+                  </div>
+                  <div class="row" id="projectRestrictedDevicesGpuRow" style="display: none;">
+                    <label class="col-4 col-form-label text-right">restricted.devices.gpu: </label>
+                    <div class="col-6">
+                      <div class="form-group">
+                        <select onchange="" class="form-select" name="restricted.devices.gpu">
+                          <option value="">(not set)</option>
+                          <option value="allow">allow</option>
+                          <option value="block">block</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="col-1">
+                      <i class="far fa-sm fa-question-circle" title='Select whether or not to allow the use of "gpu" type devices. Default: blocked'></i>
+                    </div>
+                  </div>
+                  <div class="row" id="projectRestrictedDevicesInfinibandRow" style="display: none;">
+                    <label class="col-4 col-form-label text-right">restricted.devices.infiniband: </label>
+                    <div class="col-6">
+                      <div class="form-group">
+                        <select onchange="" class="form-select" name="restricted.devices.infiniband">
+                          <option value="">(not set)</option>
+                          <option value="allow">allow</option>
+                          <option value="block">block</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="col-1">
+                      <i class="far fa-sm fa-question-circle" title='Select whether or not to allow the use of "infiniband" type devices. Default: blocked'></i>
+                    </div>
+                  </div>
+                  <div class="row" id="projectRestrictedDevicesNicRow" style="display: none;">
+                    <label class="col-4 col-form-label text-right">restricted.devices.nic: </label>
+                    <div class="col-6">
+                      <div class="form-group">
+                        <select onchange="" class="form-select" name="restricted.devices.nic">
+                          <option value="">(not set)</option>
+                          <option value="allow">allow</option>
+                          <option value="block">block</option>
+                          <option value="managed">managed</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="col-1">
+                      <i class="far fa-sm fa-question-circle" title='Select "allow" for no restrictions, "block" to prevent using all network devices, and "managed" to allow the use of network devices if "network=" is set. Default: managed'></i>
+                    </div>
+                  </div>
+                  <div class="row" id="projectRestrictedDevicesPciRow" style="display: none;">
+                    <label class="col-4 col-form-label text-right">restricted.devices.pci: </label>
+                    <div class="col-6">
+                      <div class="form-group">
+                        <select onchange="" class="form-select" name="restricted.devices.pci">
+                          <option value="">(not set)</option>
+                          <option value="allow">allow</option>
+                          <option value="block">block</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="col-1">
+                      <i class="far fa-sm fa-question-circle" title='Select whether or not to allow the use of "pci" type devices. Default: blocked'></i>
+                    </div>
+                  </div>
+                  <div class="row" id="projectRestrictedDevicesProxyRow" style="display: none;">
+                    <label class="col-4 col-form-label text-right">restricted.devices.proxy: </label>
+                    <div class="col-6">
+                      <div class="form-group">
+                        <select onchange="" class="form-select" name="restricted.devices.proxy">
+                          <option value="">(not set)</option>
+                          <option value="allow">allow</option>
+                          <option value="block">block</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="col-1">
+                      <i class="far fa-sm fa-question-circle" title='Select whether or not to allow the use of "proxy" type devices. Default: blocked'></i>
+                    </div>
+                  </div>
+                  <div class="row" id="projectRestrictedDevicesUnixBlockRow" style="display: none;">
+                    <label class="col-4 col-form-label text-right">restricted.devices.unix-block: </label>
+                    <div class="col-6">
+                      <div class="form-group">
+                        <select onchange="" class="form-select" name="restricted.devices.unix-block">
+                          <option value="">(not set)</option>
+                          <option value="allow">allow</option>
+                          <option value="block">block</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="col-1">
+                      <i class="far fa-sm fa-question-circle" title='Select whether or not to allow the use of "unix-block" type devices. Default: blocked'></i>
+                    </div>
+                  </div>
+                  <div class="row" id="projectRestrictedDevicesUnixCharRow" style="display: none;">
+                    <label class="col-4 col-form-label text-right">restricted.devices.unix-char: </label>
+                    <div class="col-6">
+                      <div class="form-group">
+                        <select onchange="" class="form-select" name="restricted.devices.unix-char">
+                          <option value="">(not set)</option>
+                          <option value="allow">allow</option>
+                          <option value="block">block</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="col-1">
+                      <i class="far fa-sm fa-question-circle" title='Select whether or not to allow the use of "unix-char" type devices. Default: blocked'></i>
+                    </div>
+                  </div>
+                  <div class="row" id="projectRestrictedDevicesUnixHotplugRow" style="display: none;">
+                    <label class="col-4 col-form-label text-right">restricted.devices.unix-hotplug: </label>
+                    <div class="col-6">
+                      <div class="form-group">
+                        <select onchange="" class="form-select" name="restricted.devices.unix-hotplug">
+                          <option value="">(not set)</option>
+                          <option value="allow">allow</option>
+                          <option value="block">block</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="col-1">
+                      <i class="far fa-sm fa-question-circle" title='Select whether or not to allow the use of "unix-hotplug" type devices. Default: blocked'></i>
+                    </div>
+                  </div>
+                  <div class="row" id="projectRestrictedDevicesUsbRow" style="display: none;">
+                    <label class="col-4 col-form-label text-right">restricted.devices.usb: </label>
+                    <div class="col-6">
+                      <div class="form-group">
+                        <select onchange="" class="form-select" name="restricted.devices.usb">
+                          <option value="">(not set)</option>
+                          <option value="allow">allow</option>
+                          <option value="block">block</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="col-1">
+                      <i class="far fa-sm fa-question-circle" title='Select whether or not to allow the use of "usb" type devices. Default: blocked'></i>
+                    </div>
+                  </div>
+                  <div class="row" id="projectRestrictedNetworksSubnetsRow" style="display: none;">
+                    <label class="col-4 col-form-label text-right">restricted.networks.subnets: </label>
+                    <div class="col-6">
+                      <div class="form-group">
+                        <input type="text" class="form-control" placeholder="" name="restricted.networks.subnets">
+                      </div>
+                    </div>
+                    <div class="col-1">
+                      <i class="far fa-sm fa-question-circle" title='Enter in a comma seperated list of network subnets allocated for use in this project. Use the format <uplink>:<subnet>. Default: blocked'></i>
+                    </div>
+                  </div>
+                  <div class="row" id="projectRestrictedNetworksUplinksRow" style="display: none;">
+                    <label class="col-4 col-form-label text-right">restricted.networks.uplinks: </label>
+                    <div class="col-6">
+                      <div class="form-group">
+                        <input type="text" class="form-control" placeholder="" name="restricted.networks.uplinks">
+                      </div>
+                    </div>
+                    <div class="col-1">
+                      <i class="far fa-sm fa-question-circle" title='Enter in a comma seperated list of network names that can be used as uplinks for this project. Default: blocked'></i>
+                    </div>
+                  </div>
+                  <div class="row" id="projectRestrictedSnapshotsRow" style="display: none;">
+                    <label class="col-4 col-form-label text-right">restricted.snapshots: </label>
+                    <div class="col-6">
+                      <div class="form-group">
+                        <select onchange="" class="form-select" name="restricted.snapshots">
+                          <option value="">(not set)</option>
+                          <option value="allow">allow</option>
+                          <option value="block">block</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="col-1">
+                      <i class="far fa-sm fa-question-circle" title='Select whether or not to allow the creation of instance and volume snaphots. Default: blocked'></i>
+                    </div>
+                  </div>
+                  <div class="row" id="projectRestrictedVirtualMachinesLowlevelRow" style="display: none;">
+                    <label class="col-4 col-form-label text-right">restricted.virtual-machines.lowlevel: </label>
+                    <div class="col-6">
+                      <div class="form-group">
+                        <select onchange="" class="form-select" name="restricted.virtual-machines.lowlevel">
+                          <option value="">(not set)</option>
+                          <option value="allow">allow</option>
+                          <option value="block">block</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="col-1">
+                      <i class="far fa-sm fa-question-circle" title='Select whether or not to allow the use of low-level virtual-machine options like raw.qemu, volatile, etc. Default: blocked'></i>
+                    </div>
                   </div>
                 </div>
               </div>
               <div class="modal-footer">
                 <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
-                <a class="btn btn-primary" href="#" onclick="createProjectUsingJSON()" data-bs-dismiss="modal">Submit</a>
+                <a class="btn btn-primary" onclick="addItem()" href="#" data-bs-dismiss="modal">Submit</a>
               </div>
+            </form>
+          </div>
+          <div class="tab-pane fade" id="json" role="tabpanel" aria-labelledby="json-tab">
+            <br />
+            <div class="row">
+              <div class="col-12">
+                <div class="form-group text-right">
+                  <pre>
+                    <textarea name="json" class="form-control" id="jsonCreateInput" rows="16" placeholder="Enter JSON data"></textarea>
+                  </pre>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+              <a class="btn btn-primary" href="#" onclick="createProjectUsingJSON()" data-bs-dismiss="modal">Submit</a>
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
+</div>
 
-  <!-- Edit Modal-->
-  <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-      <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Edit Project</h5>
-            <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">×</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <div class="row">
-              <label class="col-4 col-form-label" id="projectNameEditInput"></label>
-              <div class="col-12">
-                <div class="form-group text-right">
-                  <pre>
-                    <textarea name="json" class="form-control" id="jsonInput" rows="16" ></textarea>
-                  </pre>
-                </div>
+<!-- Edit Modal-->
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Edit Project</h5>
+          <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <label class="col-4 col-form-label" id="projectNameEditInput"></label>
+            <div class="col-12">
+              <div class="form-group text-right">
+                <pre>
+                  <textarea name="json" class="form-control" id="jsonInput" rows="16" ></textarea>
+                </pre>
               </div>
             </div>
           </div>
-          <div class="modal-footer">
-            <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
-            <a class="btn btn-primary" href="#" onclick="updateProject()" data-bs-dismiss="modal">Submit</a>
-          </div>
-      </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+          <a class="btn btn-primary" href="#" onclick="updateProject()" data-bs-dismiss="modal">Submit</a>
+        </div>
     </div>
   </div>
+</div>
 
-  <!-- Rename Modal-->
-  <div class="modal fade" id="renameModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="renameProjectModalLabel">Rename Project</h5>
-            <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">×</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <div class="row">
-              <label class="col-3 col-form-label text-right" id="newProjectNameLabel">Name: <span class="text-danger">*</span></label>
-              <div class="col-7">
-                <div class="form-group">
-                  <input type="text" id="newProjectName" class="form-control" placeholder="">
-                </div>
-              </div>
-              <div class="col-1">
-                <i class="far fa-sm fa-question-circle" title='Enter in a new name for the project.'></i>
+<!-- Rename Modal-->
+<div class="modal fade" id="renameModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="renameProjectModalLabel">Rename Project</h5>
+          <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <label class="col-3 col-form-label text-right" id="newProjectNameLabel">Name: <span class="text-danger">*</span></label>
+            <div class="col-7">
+              <div class="form-group">
+                <input type="text" id="newProjectName" class="form-control" placeholder="">
               </div>
             </div>
-            <input type="hidden" id ="projectToRename" name="projectToRename">
+            <div class="col-1">
+              <i class="far fa-sm fa-question-circle" title='Enter in a new name for the project.'></i>
+            </div>
           </div>
-          <div class="modal-footer">
-            <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
-            <a class="btn btn-primary" href="#" onclick="updateProjectName()" data-bs-dismiss="modal">Ok</a>
-          </div>
-      </div>
+          <input type="hidden" id ="projectToRename" name="projectToRename">
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+          <a class="btn btn-primary" href="#" onclick="updateProjectName()" data-bs-dismiss="modal">Ok</a>
+        </div>
     </div>
   </div>
+</div>

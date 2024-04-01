@@ -105,4 +105,3 @@ def api_certificates_endpoint(endpoint):
     data.update({'name': request.form.get('name')})
     results = requests.post(url, verify=server.ssl_verify, cert=(client_cert, client_key), json=data)
     return jsonify(results.json())
-

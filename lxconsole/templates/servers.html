@@ -56,7 +56,7 @@
       // Configure Datatable
       $('#myDataTable').DataTable({
         ajax: {
-          url: "../api/servers/list_servers",
+          url: "{{ url_for('api') }}/servers/list_servers",
           dataType: "json",
           dataSrc: "data",
           contentType: "application/json",
@@ -131,7 +131,7 @@
 
     function addServer(){
       console.log("Info: adding server " + $("#addModalAddrInput").val() + ":" + $("#addModalPortInput").val());
-      $.post("../api/servers/add_server", { 
+      $.post("{{ url_for('api') }}/servers/add_server", { 
         addr: $("#addModalAddrInput").val(), 
         port: $("#addModalPortInput").val(),
         proxy: $("#addModalProxyInput").val(),
@@ -154,7 +154,7 @@
 
     function deleteServer(id){
       console.log("Info: removing server " + id);
-      $.get("../api/servers/remove_server", {
+      $.get("{{ url_for('api') }}/servers/remove_server", {
         id: id
       }, function (data) {
         setTimeout(() => { reloadPageContent(); }, 1000);
@@ -163,7 +163,7 @@
 
     function editServer(id){
       console.log("Info: loading edit server " + id);
-      $.get("../api/servers/get_server", { 
+      $.get("{{ url_for('api') }}/servers/get_server", { 
         id: id,
       }, function (data) {
         console.log(data);
@@ -179,7 +179,7 @@
 
     function updateServer(){
       console.log("Info: updating server " + $("#editModalIdInput").val());
-      $.post("../api/servers/update_server", {
+      $.post("{{ url_for('api') }}/servers/update_server", {
         id: $("#editModalIdInput").val(),
         addr: $("#editModalAddrInput").val(), 
         port: $("#editModalPortInput").val(),
@@ -199,4 +199,3 @@
 
   </script>
 {% endblock script %}
-

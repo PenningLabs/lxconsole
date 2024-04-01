@@ -3,7 +3,7 @@
 {% block header %}
   <div class="row mb-2">
     <div class="col-sm-6">
-      <h1>{{ page_title | safe }}</h1>
+      <h1>{{ page_title | safe }}: <span id="acl_title"></span></h1>
     </div>
     <div class="col-sm-6">
       <button class="btn btn-outline-primary float-sm-right mr-4" data-bs-toggle="modal" data-bs-target="#addModal" title="Add Network ACL Rule" aria-hidden="true">
@@ -110,7 +110,7 @@
       //Get data using jquery call datatable within function, set data: data.ingress for one table and data.exgress for the other
       $('#myDataTable').DataTable({
         ajax: {
-          url: "../api/network-acl/list_network_acls?id="+serverId+"&project=" + project + "&acl=" + acl,
+          url: "{{ url_for('api') }}/network-acl/list_network_acls?id="+serverId+"&project=" + project + "&acl=" + acl,
           dataType: "json",
           dataSrc: "metadata.ingress",
           contentType: "application/json",
@@ -214,7 +214,7 @@
 
       $('#myDataTable2').DataTable({
         ajax: {
-          url: "../api/network-acl/list_network_acls?id="+serverId+"&project=" + project + "&acl=" + acl,
+          url: "{{ url_for('api') }}/network-acl/list_network_acls?id="+serverId+"&project=" + project + "&acl=" + acl,
           dataType: "json",
           dataSrc: "metadata.egress",
           contentType: "application/json",
@@ -324,7 +324,7 @@
     function addItem(){
       console.log("Info: adding new network-acl");
       data = $('#addForm').serialize();
-      $.post("../api/network-acl/add_network_acl?id="+serverId+"&project="+project+"&acl="+acl, data, function (data) {
+      $.post("{{ url_for('api') }}/network-acl/add_network_acl?id="+serverId+"&project="+project+"&acl="+acl, data, function (data) {
         console.log(data)
         if (data.error_code >= 400){
           alert(data.error);
@@ -345,7 +345,7 @@
     function createItemUsingJSON(){
       var json = $("#jsonCreateInput").val();
       console.log("Info: adding new project");
-      $.post("../api/network-acl/add_network_acl?id="+serverId+"&project="+project, { json: json },  function (data) {
+      $.post("{{ url_for('api') }}/network-acl/add_network_acl?id="+serverId+"&project="+project, { json: json },  function (data) {
         console.log(data);
         if (data.error_code >= 400){
           alert(data.error);
@@ -358,7 +358,7 @@
 
     function deleteItem(name, type){
       console.log("Info: deleting network-acl " + name);
-      $.post("../api/network-acl/delete_network_acl?id=" + serverId + "&project=" + project+"&acl="+acl, { index: name, type: type }, function (data) {
+      $.post("{{ url_for('api') }}/network-acl/delete_network_acl?id=" + serverId + "&project=" + project+"&acl="+acl, { index: name, type: type }, function (data) {
         console.log(data);
         if (data.error_code >= 400){
           alert(data.error);
@@ -373,12 +373,13 @@
 
       //If id or project variables are missing redirect to servers page
       if (!serverId || !project) {
-        window.location.href = 'servers';
+        window.location.href = "{{ url_for('servers') }}";
       }
       else if (!acl) {
-        window.location.href = '../network-acls?id=' + serverId + '&project=' + project
+        window.location.href = "{{ url_for('network_acls') }}?id=" + serverId + '&project=' + project
       }
       else {
+        $("#acl_title").text(acl);
         loadPageContent()
         operationStatusCheck()
       }

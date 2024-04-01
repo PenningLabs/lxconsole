@@ -72,7 +72,7 @@
       // Configure Datatable
       $('#myDataTable').DataTable({
         ajax: {
-          url: "../api/profiles/list_profiles?id="+serverId+"&project=" + project + "&recursion=1",
+          url: "{{ url_for('api') }}/profiles/list_profiles?id="+serverId+"&project=" + project + "&recursion=1",
           dataType: "json",
           dataSrc: "metadata",
           contentType: "application/json",
@@ -134,7 +134,7 @@
     function addItem(){
       console.log("Info: adding new profile");
       data = $('#addForm').serialize();
-      $.post("../api/profiles/add_profile?id="+serverId+"&project="+project, data, function (data) {
+      $.post("{{ url_for('api') }}/profiles/add_profile?id="+serverId+"&project="+project, data, function (data) {
         console.log(data)
         if (data.error_code >= 400){
           alert(data.error);
@@ -155,7 +155,7 @@
     function createItemUsingJSON(){
       var json = $("#jsonCreateInput").val();
       console.log("Info: adding new project");
-      $.post("../api/profiles/add_profile?id="+serverId+"&project="+project, { json: json },  function (data) {
+      $.post("{{ url_for('api') }}/profiles/add_profile?id="+serverId+"&project="+project, { json: json },  function (data) {
         console.log(data);
         if (data.error_code >= 400){
           alert(data.error);
@@ -168,7 +168,7 @@
 
     function deleteItem(name){
       console.log("Info: deleting profile " + name);
-      $.post("../api/profiles/delete_profile?id=" + serverId + "&project=" + project, { name: name }, function (data) {
+      $.post("{{ url_for('api') }}/profiles/delete_profile?id=" + serverId + "&project=" + project, { name: name }, function (data) {
         console.log(data);
         if (data.error_code >= 400){
           alert(data.error);
@@ -182,7 +182,7 @@
     function editItem(name){
       editedProfile = name
       console.log("Info: loading profile " + name);
-      $.post("../api/profiles/load_profile?id=" + serverId + "&project=" + project, { name: name }, function (data) {
+      $.post("{{ url_for('api') }}/profiles/load_profile?id=" + serverId + "&project=" + project, { name: name }, function (data) {
         console.log(data);
         if (data.error_code >= 400){
           alert(data.error);
@@ -204,7 +204,7 @@
       name = editedProfile
       var updatedJSON = $("#jsonInput").val();
       console.log("Info: updating profile");
-      $.post("../api/profiles/update_profile?id=" + serverId + "&project=" + project + "&name=" + encodeURI(name), { json: updatedJSON },  function (data) {
+      $.post("{{ url_for('api') }}/profiles/update_profile?id=" + serverId + "&project=" + project + "&name=" + encodeURI(name), { json: updatedJSON },  function (data) {
         console.log(data);
         if (data.error_code >= 400){
           alert(data.error);
@@ -219,7 +219,7 @@
       var profileNewName = $("#newProfileName").val();
       var profileToRename = $("#profileToRename").val();
       console.log("Info: renaming profile " + profileToRename);
-      $.post("../api/profiles/update_profile?id=" + serverId + "&project=" + project + "&name=" + encodeURI(profileToRename), { 'name': profileNewName },  function (data) {
+      $.post("{{ url_for('api') }}/profiles/update_profile?id=" + serverId + "&project=" + project + "&name=" + encodeURI(profileToRename), { 'name': profileNewName },  function (data) {
         console.log(data);
         if (data.error_code >= 400){
           alert(data.error);
@@ -234,7 +234,7 @@
 
       //If id or project variables are missing redirect to servers page
       if (!serverId || !project) {
-        window.location.href = 'servers';
+        window.location.href = "{{ url_for('servers') }}";
       }
       else {
         loadPageContent()

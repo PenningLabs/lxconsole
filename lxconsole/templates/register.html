@@ -9,27 +9,27 @@
     <title>lxconsole</title>
 
     <!-- Google Font: Source Sans Pro -->
-    <link rel="stylesheet" href="../static/css/fonts/source_sans_pro.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/fonts/source_sans_pro.css') }}">
 
     <!-- Font Awesome -->
-    <link rel="stylesheet" href="../static/css/fontawesome-free/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/fontawesome-free/css/all.min.css') }}">
 
     <!-- Datatables Bootstrap 5 - https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css -->
-    <link rel="stylesheet" href="../static/css/datatables/dataTables.bootstrap5.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/datatables/dataTables.bootstrap5.min.css') }}">
 
     <!-- Bootstrap 5 - https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.2.3/css/bootstrap.min.css -->
-    <link rel="stylesheet" href="../static/css/bootstrap/bootstrap-5.2.3.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap/bootstrap-5.2.3.min.css') }}">
 
     <!-- Theme style -->
-    <link rel="stylesheet" href="../static/dist/css/adminlte.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='dist/css/adminlte.min.css') }}">
 
     <!-- LXD Dashboard style -->
-    <link rel="stylesheet" href="../static/css/styles.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 
     
     <style>
         body {
-          background-image: url('../static/assets/img/logo-bg.svg') !important;
+          background-image: url("{{ url_for('static', filename='assets/img/logo-bg.svg') }}") !important;
           background-position: center center !important;
           background-size: 100% auto !important;
           background-repeat: no-repeat;
@@ -58,7 +58,7 @@
 
                 <div class="pt-5">
                   <div class="text-center">
-                    <img src="../static/assets/img/logo-light.svg" width="50px" style="vertical-align: bottom !important;">
+                    <img src="{{ url_for('static', filename='assets/img/logo-light.svg') }}" width="50px" style="vertical-align: bottom !important;">
                     <span class="h1"><strong>lxconsole</strong></span>
                   </div>
                 </div>
@@ -162,24 +162,24 @@
   </div>
 
     <!-- jQuery - https://code.jquery.com/jquery-3.7.1.js -->
-    <script src="../static/js/jquery/jquery-3.7.1.js"></script>
+    <script src="{{ url_for('static', filename='js/jquery/jquery-3.7.1.js') }}"></script>
 
     <!-- Bootstrap 5 - https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js -->
-    <script src="../static/js/bootstrap/bootstrap-5.2.3.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap/bootstrap-5.2.3.bundle.min.js') }}"></script>
 
     <!-- jQuery Datatables -   https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js -->
-    <script src="../static/js/datatables/jquery.dataTables-1.13.6.min.js"></script>
+    <script src="{{ url_for('static', filename='js/datatables/jquery.dataTables-1.13.6.min.js') }}"></script>
 
     <!-- Datatables Bootstrap 5 - https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js -->
-    <script src="../static/js/datatables/dataTables.bootstrap5.min.js"></script>
+    <script src="{{ url_for('static', filename='js/datatables/dataTables.bootstrap5.min.js') }}"></script>
   
-    <script src="../static/js/jquery-knob/jquery.knob.min.js"></script>
+    <script src="{{ url_for('static', filename='js/jquery-knob/jquery.knob.min.js') }}"></script>
     
     <!-- AdminLTE App -->
-    <script src="../static/dist/js/adminlte.min.js"></script>
+    <script src="{{ url_for('static', filename='dist/js/adminlte.min.js') }}"></script>
 
     <!-- Page specific script -->
-    <script src="../static/js/sidebar.js"></script>
+    <script src="{{ url_for('static', filename='js/sidebar.js') }}"></script>
 
 
 </body>
@@ -193,11 +193,3 @@
 </script>
 
 </html>
-
-
-
-
-
-
-
-

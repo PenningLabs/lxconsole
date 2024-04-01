@@ -3,7 +3,7 @@
 {% block header %}
   <div class="row mb-2">
     <div class="col-sm-6">
-      <h1>{{ page_title | safe }} <span id="instance_title"></span></h1>
+      <h1>{{ page_title | safe }}: <span id="instance_title"></span></h1>
     </div>
     <div class="col-sm-6">
       <button class="btn btn-outline-primary dropdown-toggle float-sm-right ml-2 mr-4" type="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false" title="Actions">
@@ -562,7 +562,7 @@
 {% block script %}
   
   <!-- xterm -->
-  <script src="../static/js/xterm/xterm.js"></script> 
+  <script src="{{ url_for('static', filename='js/xterm/xterm.js') }}"></script> 
 
   <script>
     
@@ -724,7 +724,7 @@
       consoleTerminal.open(document.getElementById("terminal-console"));
 
       //On clustered servers, check that instance is running from connected host for console or exec connection
-      $.getJSON("../api/server/get_server_info?id="+encodeURI(serverId)+'&project='+encodeURI(project), function (data) {
+      $.getJSON("{{ url_for('api') }}/server/get_server_info?id="+encodeURI(serverId)+'&project='+encodeURI(project), function (data) {
         data = data.metadata.environment;
         server_name = data.server_name
         server_clustered = data.server_clustered 
@@ -742,7 +742,7 @@
     }
     
     function getInstanceProcStat() {
-      $.get("../api/instance/get_instance_proc_stat?id="+serverId+"&project="+project+"&name="+instance, function (data) {
+      $.get("{{ url_for('api') }}/instance/get_instance_proc_stat?id="+serverId+"&project="+project+"&name="+instance, function (data) {
 
         session_user_time = sessionStorage.getItem('instance_user_time')
         session_system_time = sessionStorage.getItem('instance_system_time')
@@ -792,7 +792,7 @@
     // Loads the CPU bar for container or virtual-machine
     function loadCpuPercentage() {
       if (instanceType == "container"){
-        $.get("../api/instance/get_instance_cpu_usage?id="+serverId+"&project="+project+"&name="+instance, function (data) {
+        $.get("{{ url_for('api') }}/instance/get_instance_cpu_usage?id="+serverId+"&project="+project+"&name="+instance, function (data) {
           //Reload using stored CPU data
           if (sessionStorage.getItem('host_cpu_time') && sessionStorage.getItem('instance_cpu_time')) {
             host_cpu_time = parseInt(data.host_cpu_time);
@@ -826,7 +826,7 @@
 
             //Wait a second to get a second set of cpu times
             setTimeout(function(){ 
-              $.get("../api/instance/get_instance_cpu_usage?id="+serverId+"&project="+project+"&name="+instance, function (data) {
+              $.get("{{ url_for('api') }}/instance/get_instance_cpu_usage?id="+serverId+"&project="+project+"&name="+instance, function (data) {
                 host_cpu_time = parseInt(data.host_cpu_time);
                 instance_cpu_time = parseInt(data.instance_cpu_time)
 
@@ -856,7 +856,7 @@
         })
       }
       if (instanceType == "virtual-machine"){
-        $.get("../api/instance/copy_instance_proc_stat?id="+serverId+"&project="+project+"&name="+instance, function (data) {
+        $.get("{{ url_for('api') }}/instance/copy_instance_proc_stat?id="+serverId+"&project="+project+"&name="+instance, function (data) {
           // Get instance /proc/stat data
           setTimeout(() => { getInstanceProcStat(); }, reloadTime / 2);
         });
@@ -866,7 +866,7 @@
 
     // Loads the Instance Data
     function loadInstanceData() {
-      $.get("../api/instance/get_instance?id="+serverId+"&project="+project+"&name="+instance+"&recursion=1", function (data) {
+      $.get("{{ url_for('api') }}/instance/get_instance?id="+serverId+"&project="+project+"&name="+instance+"&recursion=1", function (data) {
 
         data = data.metadata;
         dataConfig = data.config;
@@ -956,7 +956,7 @@
     // Loads the Instance State Data
     function loadInstanceStateData() {
 
-      $.get("../api/instance/get_instance_state?id="+serverId+"&project="+project+"&name="+instance+"&recursion=1", function (data) {
+      $.get("{{ url_for('api') }}/instance/get_instance_state?id="+serverId+"&project="+project+"&name="+instance+"&recursion=1", function (data) {
         data = data.metadata;
         displayMenuOptions(data)
         $("#cpu").text(parseFloat(parseInt(data.cpu.usage) / 1000000).toFixed(2)  + ' ms')
@@ -1006,7 +1006,7 @@
         //Load Interfaces Table
         $('#interfaceTableList').DataTable({
           ajax: {
-            url: "../api/instance/get_instance_interfaces?id="+serverId+"&project="+project+"&name="+instance+"&recursion=1",
+            url: "{{ url_for('api') }}/instance/get_instance_interfaces?id="+serverId+"&project="+project+"&name="+instance+"&recursion=1",
             dataType: "json",
             dataSrc: "data",
             contentType: "application/json",
@@ -1069,7 +1069,7 @@
         //Load Snapshots Table
         $('#snapshotTableList').DataTable({
           ajax: {
-            url: "../api/instance/list_instance_snapshots?id="+serverId+"&project="+project+"&name="+instance+"&recursion=1",
+            url: "{{ url_for('api') }}/instance/list_instance_snapshots?id="+serverId+"&project="+project+"&name="+instance+"&recursion=1",
             dataType: "json",
             dataSrc: "metadata",
             contentType: "application/json",
@@ -1152,7 +1152,7 @@
         //Load Backups Table
         $('#backupTableList').DataTable({
           ajax: {
-            url: "../api/instance/list_instance_backups?id="+serverId+"&project="+project+"&name="+instance+"&recursion=1",
+            url: "{{ url_for('api') }}/instance/list_instance_backups?id="+serverId+"&project="+project+"&name="+instance+"&recursion=1",
             dataType: "json",
             dataSrc: "metadata",
             contentType: "application/json",
@@ -1165,7 +1165,7 @@
                 if (row.hasOwnProperty('name')) {
                   if (row.name) {
                     if (row.backup_file_exists)
-                      return '<a href="backups/' + serverId + '/' + project + '/' + instance + '/' + row.name + '">' + row.name + '</a>'
+                      return '<a href="' + row.backup_file_path + '" download>' + row.name + '</a>'
                     return row.name
                   }
                 }
@@ -1250,7 +1250,7 @@
         //Load Logs Table
         $('#logTableList').DataTable({
           ajax: {
-            url: "../api/instance/list_instance_logs?id="+serverId+"&project="+project+"&name="+instance+"&recursion=1",
+            url: "{{ url_for('api') }}/instance/list_instance_logs?id="+serverId+"&project="+project+"&name="+instance+"&recursion=1",
             dataType: "json",
             dataSrc: "metadata",
             contentType: "application/json",
@@ -1296,7 +1296,7 @@
         //Load Disk Devices Table
         $('#diskDeviceTableList').DataTable({
           ajax: {
-            url: "../api/instance/get_instance_disk_devices?id="+serverId+"&project="+project+"&name="+instance+"&recursion=1",
+            url: "{{ url_for('api') }}/instance/get_instance_disk_devices?id="+serverId+"&project="+project+"&name="+instance+"&recursion=1",
             dataType: "json",
             dataSrc: "data",
             contentType: "application/json",
@@ -1370,7 +1370,7 @@
         //Load GPU Devices Table
         $('#gpuDeviceTableList').DataTable({
           ajax: {
-            url: "../api/instance/get_instance_gpu_devices?id="+serverId+"&project="+project+"&name="+instance+"&recursion=1",
+            url: "{{ url_for('api') }}/instance/get_instance_gpu_devices?id="+serverId+"&project="+project+"&name="+instance+"&recursion=1",
             dataType: "json",
             dataSrc: "data",
             contentType: "application/json",
@@ -1449,7 +1449,7 @@
         //Load Network Devices Table
         $('#networkDeviceTableList').DataTable({
           ajax: {
-            url: "../api/instance/get_instance_network_devices?id="+serverId+"&project="+project+"&name="+instance+"&recursion=1",
+            url: "{{ url_for('api') }}/instance/get_instance_network_devices?id="+serverId+"&project="+project+"&name="+instance+"&recursion=1",
             dataType: "json",
             dataSrc: "data",
             contentType: "application/json",
@@ -1520,7 +1520,7 @@
         //Load Proxy Devices Table
         $('#proxyDeviceTableList').DataTable({
           ajax: {
-            url: "../api/instance/get_instance_proxy_devices?id="+serverId+"&project="+project+"&name="+instance+"&recursion=1",
+            url: "{{ url_for('api') }}/instance/get_instance_proxy_devices?id="+serverId+"&project="+project+"&name="+instance+"&recursion=1",
             dataType: "json",
             dataSrc: "data",
             contentType: "application/json",
@@ -1583,7 +1583,7 @@
         //Load Unix Devices Table
         $('#unixDeviceTableList').DataTable({
           ajax: {
-            url: "../api/instance/get_instance_unix_devices?id="+serverId+"&project="+project+"&name="+instance+"&recursion=1",
+            url: "{{ url_for('api') }}/instance/get_instance_unix_devices?id="+serverId+"&project="+project+"&name="+instance+"&recursion=1",
             dataType: "json",
             dataSrc: "data",
             contentType: "application/json",
@@ -1662,7 +1662,7 @@
         //Load USB Devices Table
         $('#usbDeviceTableList').DataTable({
           ajax: {
-            url: "../api/instance/get_instance_usb_devices?id="+serverId+"&project="+project+"&name="+instance+"&recursion=1",
+            url: "{{ url_for('api') }}/instance/get_instance_usb_devices?id="+serverId+"&project="+project+"&name="+instance+"&recursion=1",
             dataType: "json",
             dataSrc: "data",
             contentType: "application/json",
@@ -1781,7 +1781,7 @@
     function loadAttachProfileModal(){
       //Reset and populate the Attach profile modal profile dropdown
       $("#selectProfileInput").empty().append('<option value="">(not set)</option>');
-      $.getJSON("../api/profiles/list_profiles?id="+serverId+"&project="+project, function (data) {
+      $.getJSON("{{ url_for('api') }}/profiles/list_profiles?id="+serverId+"&project="+project, function (data) {
         data = data.metadata
         for (var index = 0; index < data.length; index++) {
           //When using projects other than default and no recursion, it gets like URL variable with "?"
@@ -1798,7 +1798,7 @@
     function loadDetachProfileModal(){
       //Reset and populate the Detach profile modal profile dropdown
       $("#selectDetachProfileInput").empty().append('<option value="">(not set)</option>');
-      $.getJSON("../api/instance/get_instance?id="+serverId+"&project="+project+"&name="+instance+"&recursion=1", function (data) {
+      $.getJSON("{{ url_for('api') }}/instance/get_instance?id="+serverId+"&project="+project+"&name="+instance+"&recursion=1", function (data) {
         data = data.metadata
         for (var index = 0; index < data.profiles.length; index++) {
           optionText = data.profiles[index];
@@ -1826,7 +1826,7 @@
 
       //Reset and populate the modal Network Device's Network dropdown
       $("#networkNetworkInput").empty().append('<option value="">(not set)</option>');
-      $.getJSON("../api/networks/list_network_managed_devices?id="+serverId+"&project="+project, function (data) {
+      $.getJSON("{{ url_for('api') }}/networks/list_network_managed_devices?id="+serverId+"&project="+project, function (data) {
         for (var index = 0; index < data.length; index++) {
           optionText = data[index];
           $('#networkNetworkInput').append('<option value="' + optionText + '">' + optionText + '</option>');
@@ -1840,7 +1840,7 @@
 
       //Reset and populate the modal Network Device's Parent Network dropdown
       $("#networkParentInput").empty().append('<option value="">(not set)</option>');
-      $.getJSON("../api/networks/list_networks?id="+serverId+"&project="+project, function (data) {
+      $.getJSON("{{ url_for('api') }}/networks/list_networks?id="+serverId+"&project="+project, function (data) {
         data = data.metadata
         for (var index = 0; index < data.length; index++) {
           optionText = data[index].replace('/1.0/networks/','');
@@ -1854,7 +1854,7 @@
     function loadAddDiskDeviceModal(){
       //Reset and populate the modal Disk Device's Storage Pools dropdown
       $("#diskPoolInput").empty().append('<option value="">(not set)</option>');
-      $.getJSON("../api/storage-pools/list_storage_pools?id="+serverId+"&project="+project, function (data) {
+      $.getJSON("{{ url_for('api') }}/storage-pools/list_storage_pools?id="+serverId+"&project="+project, function (data) {
         data = data.metadata
         for (var index = 0; index < data.length; index++) {
           optionText = data[index].replace('/1.0/storage-pools/','');
@@ -1869,7 +1869,7 @@
     function loadMigrateInstanceModal(){
       //Populate the migrate modal Server location dropdown
       $("#selectClusterLocationInput").empty().append('<option value="">(not set)</option>');
-      $.getJSON("../api/cluster-members/list_cluster_members?id="+serverId+"&project="+project, function (data) {
+      $.getJSON("{{ url_for('api') }}/cluster-members/list_cluster_members?id="+serverId+"&project="+project, function (data) {
         data = data.metadata
         for (var index = 0; index < data.length; index++) {
           optionText = data[index].replace('/1.0/cluster/members/','');
@@ -1879,7 +1879,7 @@
 
       //Populate the migrate modal Storage Pool dropdown
       $("#selectPoolInput").empty().append('<option value="">(not set)</option>');
-      $.getJSON("../api/storage-pools/list_storage_pools?id="+serverId+"&project="+project, function (data) {
+      $.getJSON("{{ url_for('api') }}/storage-pools/list_storage_pools?id="+serverId+"&project="+project, function (data) {
         data = data.metadata
         for (var index = 0; index < data.length; index++) {
           optionText = data[index].replace('/1.0/storage-pools/','');
@@ -1889,7 +1889,7 @@
 
       //Populate the migrate modal Project dropdown
       $("#selectProjectInput").empty().append('<option value="">(not set)</option>');
-      $.getJSON("../api/projects/list_projects?id="+serverId+"&project="+project, function (data) {
+      $.getJSON("{{ url_for('api') }}/projects/list_projects?id="+serverId+"&project="+project, function (data) {
         data = data.metadata
         for (var index = 0; index < data.length; index++) {
           optionText = data[index].replace('/1.0/projects/','');
@@ -1907,7 +1907,7 @@
       var snapshotName = $("#snapshotName").val();
       var snapshotStateful = $("#snapshotStateful").val();
       console.log("Info: creating snapshot " + snapshotName);
-      $.post("../api/instance/create_instance_snapshot?id="+serverId+"&project="+project+"&instance="+instance, { name: snapshotName, stateful: snapshotStateful},  function (data) {
+      $.post("{{ url_for('api') }}/instance/create_instance_snapshot?id="+serverId+"&project="+project+"&instance="+instance, { name: snapshotName, stateful: snapshotStateful},  function (data) {
         console.log(data);
         if (data.error_code >= 400){
           alert(data.error);
@@ -1923,7 +1923,7 @@
       var copyName = $("#instanceNameForSnapshotCreate").val();
       var snapName = $("#snapNameForSnapshotCreate").val();
       console.log("Info: creating snapshot " + snapshotName);
-      $.post("../api/instance/create_instance_snapshot_instance?id="+serverId+"&project="+project+"&instance="+instance+"&location="+target_location, { name: copyName, snapshot: snapName },  function (data) {
+      $.post("{{ url_for('api') }}/instance/create_instance_snapshot_instance?id="+serverId+"&project="+project+"&instance="+instance+"&location="+target_location, { name: copyName, snapshot: snapName },  function (data) {
         console.log(data);
         if (data.error_code >= 400){
           alert(data.error);
@@ -1944,7 +1944,7 @@
     // Restore an instance from snapshot
     function restoreInstanceSnapshot(snapshotName){
       console.log("Info: restoring snapshot " + snapshotName + " to instance " + instance);
-      $.post("../api/instance/restore_instance_snapshot?id="+serverId+"&project="+project+"&instance="+instance, { name: snapshotName },  function (data) {
+      $.post("{{ url_for('api') }}/instance/restore_instance_snapshot?id="+serverId+"&project="+project+"&instance="+instance, { name: snapshotName },  function (data) {
         console.log(data);
         if (data.error_code >= 400){
           alert(data.error);
@@ -1963,7 +1963,7 @@
       var release = $("#publishSnapshotReleaseInput").val();
       var snapName = $("#publishSnapshotHiddenName").val();
       console.log("Info: publishing image " + description + " from snapshot " + instance + "/" + snapName);
-      $.post("../api/instance/publish_instance_snapshot?id="+serverId+"&project="+project+"&instance="+instance+"&snapshot="+snapName, { description: description, os: os, release: release, public:public },  function (data) {
+      $.post("{{ url_for('api') }}/instance/publish_instance_snapshot?id="+serverId+"&project="+project+"&instance="+instance+"&snapshot="+snapName, { description: description, os: os, release: release, public:public },  function (data) {
         console.log(data);
         if (data.error_code >= 400){
           alert(data.error);
@@ -1985,7 +1985,7 @@
       console.log("Info: confirming deletion of instance " + instance);
       if (confirm("Are you sure you want to delete instance " + instance + "?") == true) {
         console.log("Info: deleting instance " + instance);
-        $.post("../api/instance/delete_instance?id=" + serverId + "&project=" + project, { instance: instance }, function (data) {
+        $.post("{{ url_for('api') }}/instance/delete_instance?id=" + serverId + "&project=" + project, { instance: instance }, function (data) {
           console.log(data);
           if (data.error_code >= 400){
             alert(data.error);
@@ -2006,7 +2006,7 @@
       console.log("Info: confirming deletion of snapshot " + snapshot);
       if (confirm("Are you sure you want to delete snapshot " + snapshot + "?") == true) {
         console.log("Info: deleting snapshot " + snapshot + " from instance " + instance);
-        $.get("../api/instance/delete_instance_snapshot?id="+serverId+"&project="+project+"&instance="+instance+"&snapshot="+snapshot, function (data) {
+        $.get("{{ url_for('api') }}/instance/delete_instance_snapshot?id="+serverId+"&project="+project+"&instance="+instance+"&snapshot="+snapshot, function (data) {
           console.log(data);
           if (data.error_code >= 400){
             alert(data.error);
@@ -2022,7 +2022,7 @@
     function attachProfile(){
       profile = $("#selectProfileInput").val()
       console.log("Info: attaching profile " + profile + " to instance " + instance);
-      $.post("../api/instance/attach_instance_profile?id="+serverId+"&project="+project+"&instance="+instance, { name: profile, },  function (data) {
+      $.post("{{ url_for('api') }}/instance/attach_instance_profile?id="+serverId+"&project="+project+"&instance="+instance, { name: profile, },  function (data) {
         console.log(data);
         if (data.error_code >= 400){
           alert(data.error);
@@ -2037,7 +2037,7 @@
     function detachProfile(){
       profile = $("#selectDetachProfileInput").val()
       console.log("Info: removing profile " + profile + " from instance " + instance);
-      $.get("../api/instance/detach_instance_profile?id="+serverId+"&project="+project+"&instance="+instance+"&profile="+profile, function (data) {
+      $.get("{{ url_for('api') }}/instance/detach_instance_profile?id="+serverId+"&project="+project+"&instance="+instance+"&profile="+profile, function (data) {
         console.log(data);
         if (data.error_code >= 400){
           alert(data.error);
@@ -2058,7 +2058,7 @@
       else {
         source = $("#diskSourceInput").val();
       }
-      $.post("../api/instance/add_instance_disk_device?id="+serverId+"&project="+project+"&instance="+instance, { 
+      $.post("{{ url_for('api') }}/instance/add_instance_disk_device?id="+serverId+"&project="+project+"&instance="+instance, { 
         name: $("#diskNameInput").val(), 
         pool: $("#diskPoolInput").val(),
         source: source,
@@ -2092,7 +2092,7 @@
     function addInstanceGPUDevice(){
       gpuDevice = $("#gpuDeviceNameInput").val()
       console.log("Info: adding gpu device " + gpuDevice + " to instance " + instance);
-      $.post("../api/instance/add_instance_gpu_device?id="+serverId+"&project="+project+"&instance="+instance, { 
+      $.post("{{ url_for('api') }}/instance/add_instance_gpu_device?id="+serverId+"&project="+project+"&instance="+instance, { 
         name: $("#gpuDeviceNameInput").val(), 
         type: $("#gpuTypeInput").val(),
         vendorid: $("#gpuVendoridInput").val(),
@@ -2119,7 +2119,7 @@
     function addNetworkDevice(){
       networkDevice = $("#networkNameInput").val()
       console.log("Info: adding network device " + networkDevice + " to instance " + instance);
-      $.post("../api/instance/add_instance_network_device?id="+serverId+"&project="+project+"&instance="+instance, { 
+      $.post("{{ url_for('api') }}/instance/add_instance_network_device?id="+serverId+"&project="+project+"&instance="+instance, { 
         name: $("#networkNameInput").val(), 
         nictype: $("#networkNicTypeInput").val(),
         parent: $("#networkParentInput").val(),
@@ -2174,7 +2174,7 @@
     function addInstanceProxyDevice(){
       proxyDevice = $("#proxyDeviceNameInput").val()
       console.log("Info: adding proxy device " + proxyDevice + " to instance " + instance);
-      $.post("../api/instance/add_instance_proxy_device?id="+serverId+"&project="+project+"&instance="+instance, { 
+      $.post("{{ url_for('api') }}/instance/add_instance_proxy_device?id="+serverId+"&project="+project+"&instance="+instance, { 
         name: $("#proxyDeviceNameInput").val(), 
         listen: $("#proxyListenInput").val(),
         connect: $("#proxyConnectInput").val(),
@@ -2201,7 +2201,7 @@
     function addInstanceUnixDevice(){
       unixDevice = $("#unixDeviceNameInput").val()
       console.log("Info: adding Unix device " + unixDevice + " to instance " + instance);
-      $.post("../api/instance/add_instance_unix_device?id="+serverId+"&project="+project+"&instance="+instance, { 
+      $.post("{{ url_for('api') }}/instance/add_instance_unix_device?id="+serverId+"&project="+project+"&instance="+instance, { 
         name: $("#unixDeviceNameInput").val(), 
         type: $("#unixTypeInput").val(),
         source: $("#unixSourceInput").val(),
@@ -2228,7 +2228,7 @@
     function addInstanceUSBDevice(){
       usbDevice = $("#usbDeviceNameInput").val()
       console.log("Info: adding USB device " + usbDevice + " to instance " + instance);
-      $.post("../api/instance/add_instance_usb_device?id="+serverId+"&project="+project+"&instance="+instance, { 
+      $.post("{{ url_for('api') }}/instance/add_instance_usb_device?id="+serverId+"&project="+project+"&instance="+instance, { 
         name: $("#usbDeviceNameInput").val(), 
         vendorid: $("#usbVendoridInput").val(),
         productid: $("#usbProductidInput").val(),
@@ -2250,7 +2250,7 @@
     function createBackup(){
       backup = $("#backupName").val()
       console.log("Info: creating backup " + backup + " for instance " + instance);
-      $.post("../api/instance/create_instance_backup?id="+serverId+"&project="+project+"&instance="+instance, { 
+      $.post("{{ url_for('api') }}/instance/create_instance_backup?id="+serverId+"&project="+project+"&instance="+instance, { 
         name: $("#backupName").val(), 
         instance_only: $("#backupInstanceOnly").val(),
         optimized_storage: $("#backupOptimizedStorage").val(),
@@ -2271,7 +2271,7 @@
       console.log("Info: confirming deletion of backup " + backup);
       if (confirm("Are you sure you want to delete backup " + backup + "?") == true) {
         console.log("Info: deleting backup " + backup + " from instance " + instance);
-        $.get("../api/instance/delete_instance_backup?id="+serverId+"&project="+project+"&instance="+instance+"&backup="+backup, function (data) {
+        $.get("{{ url_for('api') }}/instance/delete_instance_backup?id="+serverId+"&project="+project+"&instance="+instance+"&backup="+backup, function (data) {
           console.log(data);
           if (data.error_code >= 400){
             alert(data.error);
@@ -2288,7 +2288,7 @@
       console.log("Info: confirming export of backup " + backup);
       if (confirm("Are you sure you want to export " + backup + " to a local file?") == true) {
         console.log("Info: exporting backup " + backup + " from instance " + instance);
-        $.get("../api/instance/export_instance_backup?id="+serverId+"&project="+project+"&instance="+instance+"&backup="+backup, function (data) {
+        $.get("{{ url_for('api') }}/instance/export_instance_backup?id="+serverId+"&project="+project+"&instance="+instance+"&backup="+backup, function (data) {
           console.log(data);
           if (data.error_code >= 400){
             alert(data.error);
@@ -2303,7 +2303,7 @@
     // Display log file in modal
     function displayLog(logPath){
       console.log("Info: displaying log " + logPath);
-      $.get("../api/instance/display_instance_log?id="+serverId+"&project="+project+"&log="+logPath, function (data) {
+      $.get("{{ url_for('api') }}/instance/display_instance_log?id="+serverId+"&project="+project+"&log="+logPath, function (data) {
         console.log(data);
         if (data.error_code >= 400){
           alert(data.error);
@@ -2319,7 +2319,7 @@
       console.log("Info: confirming deletion of log " + logPath);
       if (confirm("Are you sure you want to delete log " + logPath + "?") == true) {
         console.log("Info: deleting log " + logPath + " from instance " + instance);
-        $.get("../api/instance/delete_instance_log?id="+serverId+"&project="+project+"&log="+logPath, function (data) {
+        $.get("{{ url_for('api') }}/instance/delete_instance_log?id="+serverId+"&project="+project+"&log="+logPath, function (data) {
           console.log(data);
           if (data.error_code >= 400){
             alert(data.error);
@@ -2336,7 +2336,7 @@
       console.log("Info: confirming removal of device " + device);
       if (confirm("Are you sure you want to remove device " + device + "?") == true) {
         console.log("Info: removing device " + device + " from instance " + instance);
-        $.get("../api/instance/delete_instance_device?id="+serverId+"&project="+project+"&instance="+instance+"&device="+device, function (data) {
+        $.get("{{ url_for('api') }}/instance/delete_instance_device?id="+serverId+"&project="+project+"&instance="+instance+"&device="+device, function (data) {
           console.log(data);
           if (data.error_code >= 400){
             alert(data.error);
@@ -2809,7 +2809,7 @@
     // Change the state of an instance: start, stop, freeze, unfreeze, restart, force stop
     function changeItemState(instance, action, force=false){
       console.log("Info: starting instance " + instance);
-      $.post("../api/instance/change_instance_state?id=" + serverId + "&project=" + project, { instance: instance, action: action, force: force }, function (data) {
+      $.post("{{ url_for('api') }}/instance/change_instance_state?id=" + serverId + "&project=" + project, { instance: instance, action: action, force: force }, function (data) {
         console.log(data);
         if (data.error_code >= 400){
           alert(data.error);
@@ -2830,7 +2830,7 @@
       else{
         //show and populate select field
         $("#diskSourceSelectInput").empty().append('<option value="">(not set)</option>');
-        $.getJSON("../api/storage-volumes/list_storage_volumes?id="+serverId+"&project="+project+"&pool="+diskPoolInput, function (data) {
+        $.getJSON("{{ url_for('api') }}/storage-volumes/list_storage_volumes?id="+serverId+"&project="+project+"&pool="+diskPoolInput, function (data) {
           data = data.metadata
           for (var index = 0; index < data.length; index++) {
             if (data[index].includes('/1.0/storage-pools/' + diskPoolInput + '/volumes/custom/')){
@@ -2950,7 +2950,7 @@
     // Show the edit instance modal
     function editInstance(){
       console.log("Info: viewing instance " + instance);
-      $.get("../api/instance/get_instance?id="+serverId+"&project="+project+"&name="+instance+"&recursion=1", function (data) {
+      $.get("{{ url_for('api') }}/instance/get_instance?id="+serverId+"&project="+project+"&name="+instance+"&recursion=1", function (data) {
         data = data.metadata;
 
         if (data.error_code >= 400){
@@ -2986,7 +2986,7 @@
     function updateInstanceForm(){
       console.log("Info: updating instance " + instance);
       data = $('#editForm').serialize();
-      $.post("../api/instance/update_instance?id=" + serverId + "&project=" + project + "&instance=" + encodeURI(instance), data,  function (data) {
+      $.post("{{ url_for('api') }}/instance/update_instance?id=" + serverId + "&project=" + project + "&instance=" + encodeURI(instance), data,  function (data) {
         console.log(data);
         if (data.error_code >= 400){
           alert(data.error);
@@ -3001,7 +3001,7 @@
     function updateInstanceJson(){
       var instanceUpdateJSON = $("#jsonEditInstanceInput").val();
       console.log("Info: updating instance " + instance);
-      $.post("../api/instance/update_instance?id=" + serverId + "&project=" + project + "&instance=" + encodeURI(instance), { 
+      $.post("{{ url_for('api') }}/instance/update_instance?id=" + serverId + "&project=" + project + "&instance=" + encodeURI(instance), { 
         json: instanceUpdateJSON 
         },  function (data) {
           console.log(data);
@@ -3019,7 +3019,7 @@
       console.log("Info: migrating instance " + instance);
       post_data = $('#migrateForm').serialize();
       migration_project = $("#selectProjectInput").val();
-      $.post("../api/instance/migrate_instance?id="+serverId+"&project="+project+"&instance="+instance, post_data,  function (data) {
+      $.post("{{ url_for('api') }}/instance/migrate_instance?id="+serverId+"&project="+project+"&instance="+instance, post_data,  function (data) {
         console.log(data);
         if (data.error_code >= 400){
           alert(data.error);
@@ -3046,7 +3046,7 @@
     function copyInstance(){
       var copyName = $("#copyName").val();
       console.log("Info: copying instance " + instance + " to " + copyName);
-      $.post("../api/instance/copy_instance?id="+serverId+"&project="+project+"&instance="+instance+"&location="+target_location, { name: copyName },  function (data) {
+      $.post("{{ url_for('api') }}/instance/copy_instance?id="+serverId+"&project="+project+"&instance="+instance+"&location="+target_location, { name: copyName },  function (data) {
         console.log(data);
         if (data.error_code >= 400){
           alert(data.error);
@@ -3061,25 +3061,26 @@
     function renameInstance(){
       var renameName = $("#renameName").val();
       console.log("Info: renaming instance " + instance + " to " + renameName);
-      $.post("../api/instance/rename_instance?id="+serverId+"&project="+project+"&instance="+instance, { name: renameName },  function (data) {
+      $.post("{{ url_for('api') }}/instance/rename_instance?id="+serverId+"&project="+project+"&instance="+instance, { name: renameName },  function (data) {
         console.log(data);
         if (data.error_code >= 400){
           alert(data.error);
         }
         else {
-          window.location.href = 'instance?id=' + serverId + '&project=' + project + '&instance=' + renameName;
+          window.location.href = "{{ url_for('instance') }}?id=" + serverId + '&project=' + project + '&instance=' + renameName;
         }
       });
     }
 
     // Publish the instance into an image
     function publishInstance(){
+      var alias = $("#publishInstanceAliasInput").val();
       var description = $("#publishInstanceDescriptionInput").val();
       var os = $("#publishInstanceOsInput").val();
       var release = $("#publishInstanceReleaseInput").val();
       var public = $("#publishInstancePublicInput").val();
       console.log("Info: publishing image " + description + " from instance " + instance);
-      $.post("../api/instance/publish_instance?id="+serverId+"&project="+project+"&instance="+instance, { description: description, os: os, release: release, public:public },  function (data) {
+      $.post("{{ url_for('api') }}/instance/publish_instance?id="+serverId+"&project="+project+"&instance="+instance, { alias: alias, description: description, os: os, release: release, public:public },  function (data) {
         console.log(data);
         if (data.error_code >= 400){
           alert(data.error);
@@ -3110,7 +3111,7 @@
 
     // Setup websocket connection for console use
     function establishInstanceWebSocketConsoleConnection() {
-      $.get("../api/instance/get_instance_websocket_host?id=" + serverId + "&project=" + project + "&instance=" + encodeURI(instance), function (data) {
+      $.get("{{ url_for('api') }}/instance/get_instance_websocket_host?id=" + serverId + "&project=" + project + "&instance=" + encodeURI(instance), function (data) {
         console.log(data);
         server_addr = data.addr
         server_port = data.port
@@ -3124,7 +3125,7 @@
         fetch('https://' + wss_addr + '/1.0?addr=' + server_addr + '&port=' + data.port, { mode: 'no-cors' })
         .then(response => {
           //If we made it here then the self-signed LXD certificate would have been already trusted by the user's browser we can setup a secure websocket connection
-          $.post("../api/instance/establish_instance_console_websocket?id=" + serverId + "&project=" + project + "&instance=" + encodeURI(instance), { 
+          $.post("{{ url_for('api') }}/instance/establish_instance_console_websocket?id=" + serverId + "&project=" + project + "&instance=" + encodeURI(instance), { 
             width: consoleTerminal.cols,
             height: consoleTerminal.rows
           }, function (data) {
@@ -3228,7 +3229,7 @@
 
     // Setup websocket connection for exec use
     function establishInstanceWebSocketExecConnection() {
-      $.get("../api/instance/get_instance_websocket_host?id=" + serverId + "&project=" + project + "&instance=" + encodeURI(instance), function (data) {
+      $.get("{{ url_for('api') }}/instance/get_instance_websocket_host?id=" + serverId + "&project=" + project + "&instance=" + encodeURI(instance), function (data) {
         console.log(data);
         server_addr = data.addr
         server_port = data.port
@@ -3242,7 +3243,7 @@
         fetch('https://' + wss_addr + '/1.0?addr=' + server_addr + '&port=' + server_port, { mode: 'no-cors' })
         .then(response => {
           //If we made it here then the self-signed LXD certificate would have been already trusted by the user's browser we can setup a secure websocket connection
-          $.post("../api/instance/establish_instance_exec_websocket?id=" + serverId + "&project=" + project + "&instance=" + encodeURI(instance), { 
+          $.post("{{ url_for('api') }}/instance/establish_instance_exec_websocket?id=" + serverId + "&project=" + project + "&instance=" + encodeURI(instance), { 
             shell: $("#execShellInput").val(),
             width: execTerminal.cols,
             height: execTerminal.rows
@@ -3425,7 +3426,7 @@
 
       //If id project, instance, or instanceType variables are missing redirect to servers page
       if (!serverId || !project || !instance || !instanceType) {
-        window.location.href = 'servers';
+        window.location.href = "{{ url_for('servers') }}";
       }
       else {
         $("#instance_title").text(instance);

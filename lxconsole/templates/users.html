@@ -56,7 +56,7 @@
       // Configure Datatable
       $('#myDataTable').DataTable({
         ajax: {
-          url: "../api/users/list_users",
+          url: "{{ url_for('api') }}/users/list_users",
           dataType: "json",
           dataSrc: "data",
           contentType: "application/json",
@@ -120,7 +120,7 @@
       });
 
         //Populate the Groups dropdown in the add modal form
-        $.getJSON("../api/groups/list_groups", function (data) {
+        $.getJSON("{{ url_for('api') }}/groups/list_groups", function (data) {
           groups = data.data
           $("#groupInput").empty();
           for (var index = 0; index < groups.length; index++) {
@@ -137,7 +137,7 @@
     function addUser(){
       console.log("Info: adding new user");
       data = $('#addForm').serialize();
-      $.post("../api/users/add_user", data, function (data) {
+      $.post("{{ url_for('api') }}/users/add_user", data, function (data) {
         console.log(data);
         if (data.error_code >= 400){
           alert(data.error);
@@ -150,7 +150,7 @@
     // Edit user
     function editUser(id, username){
       console.log("Info: loading edit user " + username);
-      $.get("../api/users/get_user", { 
+      $.get("{{ url_for('api') }}/users/get_user", { 
         id: id,
       }, function (data) {
         data = data.metadata
@@ -166,7 +166,7 @@
         
         user_groups = data.groups
         //Populate the Groups dropdown in the modal form
-        $.getJSON("../api/groups/list_groups", function (data) {
+        $.getJSON("{{ url_for('api') }}/groups/list_groups", function (data) {
           groups = data.data
           $("#addGroupEditInput").empty();
           $("#removeGroupEditInput").empty();
@@ -186,7 +186,7 @@
     function updateUser(){
       console.log("Info: adding new user");
       data = $('#editForm').serialize();
-      $.post("../api/users/update_user", data, function (data) {
+      $.post("{{ url_for('api') }}/users/update_user", data, function (data) {
         console.log(data);
         if (data.error_code >= 400){
           alert(data.error);
@@ -200,7 +200,7 @@
     function updateUserGroup(){
       console.log("Info: editing user group");
       data = $('#editUserGroupsForm').serialize();
-      $.post("../api/users/update_user", data, function (data) {
+      $.post("{{ url_for('api') }}/users/update_user", data, function (data) {
         console.log(data);
         if (data.error_code >= 400){
           alert(data.error);
@@ -214,7 +214,7 @@
     function updateUserPassword(){
       console.log("Info: editing user password");
       data = $('#editUserPasswordForm').serialize();
-      $.post("../api/users/update_user", data, function (data) {
+      $.post("{{ url_for('api') }}/users/update_user", data, function (data) {
         console.log(data);
         if (data.error_code >= 400){
           alert(data.error);
@@ -229,7 +229,7 @@
       console.log("Info: confirming removal of user" + username);
       if (confirm("Are you sure you want to remove user " + username + "?") == true) {
         console.log("Info: deleting user " + username);
-        $.post("../api/users/delete_user", {id: id}, function (data) {
+        $.post("{{ url_for('api') }}/users/delete_user", {id: id}, function (data) {
           setTimeout(() => { reloadPageContent(); }, 1000);
         });
       }
@@ -256,4 +256,3 @@
 
   </script>
 {% endblock script %}
-

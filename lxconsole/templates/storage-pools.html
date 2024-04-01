@@ -72,7 +72,7 @@
       // Configure Datatable
       $('#myDataTable').DataTable({
         ajax: {
-          url: "../api/storage-pools/list_storage_pools?id="+serverId+"&project=" + project + "&recursion=1",
+          url: "{{ url_for('api') }}/storage-pools/list_storage_pools?id="+serverId+"&project=" + project + "&recursion=1",
           dataType: "json",
           dataSrc: "metadata",
           contentType: "application/json",
@@ -84,7 +84,7 @@
           { title: "Name", data: function (row, type, set) {
               if (row.hasOwnProperty('name')) {
                 if (row.name)
-                  return '<a href="../storage-volumes?id=' + serverId + '&project=' + project + '&pool=' + row.name + '">' + row.name + '</a>';
+                  return "<a href=\"{{ url_for('storage_volumes') }}?id=" + serverId + '&project=' + project + '&pool=' + row.name + '">' + row.name + '</a>';
               }
               return '-'
             },
@@ -155,7 +155,7 @@
     function addItem(){
       console.log("Info: adding new storage pool");
       data = $('#addForm').serialize();
-      $.post("../api/storage-pools/add_storage_pool?id="+serverId+"&project="+project, data, function (data) {
+      $.post("{{ url_for('api') }}/storage-pools/add_storage_pool?id="+serverId+"&project="+project, data, function (data) {
         console.log(data)
         if (data.error_code >= 400){
           alert(data.error);
@@ -384,7 +384,7 @@
     function createStoragePoolUsingJSON(){
       var json = $("#jsonCreateInput").val();
       console.log("Info: adding new project");
-      $.post("../api/storage-pools/add_storage_pool?id="+serverId+"&project="+project, { json: json },  function (data) {
+      $.post("{{ url_for('api') }}/storage-pools/add_storage_pool?id="+serverId+"&project="+project, { json: json },  function (data) {
         console.log(data);
         if (data.error_code >= 400){
           alert(data.error);
@@ -397,7 +397,7 @@
 
     function deleteStoragePool(name){
       console.log("Info: deleting storage pool " + name);
-      $.post("../api/storage-pools/delete_storage_pool?id=" + serverId + "&project=" + project, { name: name }, function (data) {
+      $.post("{{ url_for('api') }}/storage-pools/delete_storage_pool?id=" + serverId + "&project=" + project, { name: name }, function (data) {
         console.log(data);
         if (data.error_code >= 400){
           alert(data.error);
@@ -411,7 +411,7 @@
     function editStoragePool(name){
       editedStoragePool = name
       console.log("Info: loading storage pool " + name);
-      $.post("../api/storage-pools/load_storage_pool?id=" + serverId + "&project=" + project, { name: name }, function (data) {
+      $.post("{{ url_for('api') }}/storage-pools/load_storage_pool?id=" + serverId + "&project=" + project, { name: name }, function (data) {
         console.log(data);
         if (data.error_code >= 400){
           alert(data.error);
@@ -426,7 +426,7 @@
       name = editedStoragePool
       var updatedJSON = $("#jsonInput").val();
       console.log("Info: updating storage pool");
-      $.post("../api/storage-pools/update_storage_pool?id=" + serverId + "&project=" + project + "&name=" + encodeURI(name), { json: updatedJSON },  function (data) {
+      $.post("{{ url_for('api') }}/storage-pools/update_storage_pool?id=" + serverId + "&project=" + project + "&name=" + encodeURI(name), { json: updatedJSON },  function (data) {
         console.log(data);
         if (data.error_code >= 400){
           alert(data.error);
@@ -441,7 +441,7 @@
 
       //If id or project variables are missing redirect to servers page
       if (!serverId || !project) {
-        window.location.href = 'servers';
+        window.location.href = "{{ url_for('servers') }}";
       }
       else {
         loadPageContent()

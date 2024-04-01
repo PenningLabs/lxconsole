@@ -4,9 +4,9 @@ import argparse
 
 # Parse command-line arguments
 parser=argparse.ArgumentParser(description="LXConsole Args Parser")
-parser.add_argument('--port', type=int) 
+parser.add_argument('--port', type=int)
 parser.add_argument('--host', type=str)
-args=parser.parse_args()
+args, extra = parser.parse_known_args()
 
 # Use environment vars for the server (defaulting if not provided)
 port = os.environ.get("FLASK_RUN_PORT") or 5000
