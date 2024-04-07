@@ -23,10 +23,20 @@ def api_images_endpoint(endpoint):
     id = request.args.get('id')
     project = request.args.get('project')
     server = Server.query.filter_by(id=id).first()
-    url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/images?project=' + project
     client_cert = get_client_crt()
     client_key = get_client_key()
 
+    # Get Server Info
+    url = 'https://' + server.addr + ':' + str(server.port) + '/1.0'
+    results = requests.get(url, verify=server.ssl_verify, cert=(client_cert, client_key))
+    results = results.json()
+    if results['metadata']['environment']['server'] == 'lxd':
+      catalog_source = 'https://images.lxd.canonical.com'
+    else:
+      catalog_source = 'https://images.linuxcontainers.org'
+
+    # Set url for images request
+    url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/images?project=' + project
     image = request.form.get('image')
 
     # When using the manual form, the version and variant are included in the image string
@@ -35,29 +45,37 @@ def api_images_endpoint(endpoint):
         image = request.form.get('image') + '/' + request.form.get('image_version') + '/' + request.form.get('image_variant')
       else :
         image = request.form.get('image') + '/' + request.form.get('image_version')
-        
 
     data = {}
     source = {}
-    source.update({'type': 'image'})
+    source.update({'alias': image})
     source.update({'certificate': ''})
     source.update({'protocol': 'simplestreams'})
+    
+    # When using the manual form, the server address needs pulled from local simplestreams database
     if request.form.get('simplestreams_id'):
       simplestreams_id = request.form.get('simplestreams_id')
       simplestream = Simplestream.query.filter_by(id=simplestreams_id).first()
       source.update({'server': simplestream.url})
-      source.update({'mode': 'pull'})
-      source.update({'allow_inconsistent': 'false'})
     else:
-      source.update({'server': request.form.get('repo')})
-    source.update({'alias': image })
-    source.update({'image_type': request.form.get('image_type')})
+      source.update({'server': catalog_source})
+
+    if request.form.get('image_type') == 'virtual-machine':
+      source.update({'image_type': 'virtual-machine'})
+
+    source.update({'mode': 'pull'})
+    source.update({'type': 'image'})
+    source.update({'url': ''})
+    source.update({'name': ''})
+    source.update({'fingerprint': image })
+    source.update({'secret': ''})
+    source.update({'project': ''})
 
     data.update({'source': source})
     results = requests.post(url, verify=server.ssl_verify, cert=(client_cert, client_key), json=data)
-    
-    return jsonify(results.json())
 
+    return jsonify(results.json())
+  
 
   if endpoint == 'delete_image':
     id = request.args.get('id')
@@ -74,7 +92,18 @@ def api_images_endpoint(endpoint):
     id = request.args.get('id')
     project = request.args.get('project')
     server = Server.query.filter_by(id=id).first()
-    url = 'https://images.linuxcontainers.org/streams/v1/index.json'
+    client_cert = get_client_crt()
+    client_key = get_client_key()
+
+    # Get Server Info
+    url = 'https://' + server.addr + ':' + str(server.port) + '/1.0'
+    results = requests.get(url, verify=server.ssl_verify, cert=(client_cert, client_key))
+    results = results.json()
+    if results['metadata']['environment']['server'] == 'lxd':
+      url = 'https://images.lxd.canonical.com/streams/v1/index.json'
+    else:
+      url = 'https://images.linuxcontainers.org/streams/v1/index.json'
+
     client_cert = get_client_crt()
     client_key = get_client_key()
     results = requests.get(url, verify=True, cert=(client_cert, client_key))

@@ -264,12 +264,11 @@
 
     function addCatalogImage(){
       image = $("#operatingSystem").val();
-      repo = 'https://images.linuxcontainers.org'
       imageVersion = $("#operatingSystemVersion").val();
       imageVariant = $("#operatingSystemVariant").val();
       imageType = $("#operatingSystemType").val();
-      console.log("Info: downloading image " + image + " from " + repo);
-      $.post("{{ url_for('api') }}/images/add_image?id="+serverId+"&project="+project, { image: image, repo: repo, image_version: imageVersion, image_variant: imageVariant, image_type: imageType },  function (data) {
+      console.log("Info: downloading image " + image);
+      $.post("{{ url_for('api') }}/images/add_image?id="+serverId+"&project="+project, { image: image, image_version: imageVersion, image_variant: imageVariant, image_type: imageType },  function (data) {
         console.log(data);
         if (data.error_code >= 400){
           alert(data.error);
@@ -282,57 +281,37 @@
 
     function updateCatalog(){
       catalog_images = {}
-      // Check if session variable catalog_images is not yet set
-      if (sessionStorage.getItem("catalog_images") === null) {
-        console.log("Info: updating catalog images");
-        $.get("{{ url_for('api') }}/images/list_simplestream_images",  function (data) {
-          //Clear operating system select options in modal
-          $("#operatingSystem").empty();
-          //Loop through each operating system item
-          for (i = 0; i < data.length; i++) {
-            // Split the string by semicolon. Ex: "almalinux:8:amd64:cloud"
-            image = data[i].split(':')
-            //Check that operating system is not already in catalog_images object
-            if (!(image[0] in catalog_images)){
-              catalog_images[image[0]] = { "versions": [ image[1] ], "variants": [image[3]] }
-              $('#operatingSystem').append('<option value="' + image[0] + '">' + image[0] + '</option>');
-            }
-            //Populate OS versions
-            if (!(catalog_images[image[0]]['versions'].includes(image[1]))){
-              catalog_images[image[0]]['versions'].push(image[1])
-            }
-            //Populate OS variants
-            if (!(catalog_images[image[0]]['variants'].includes(image[3]))){
-              catalog_images[image[0]]['variants'].push(image[3])
-            }
+      console.log("Info: updating catalog images");
+      $.get("{{ url_for('api') }}/images/list_simplestream_images?id="+serverId+"&project="+project,  function (data) {
+        //Clear operating system select options in modal
+        $("#operatingSystem").empty();
+        //Loop through each operating system item
+        for (i = 0; i < data.length; i++) {
+          // Split the string by semicolon. Ex: "almalinux:8:amd64:cloud"
+          image = data[i].split(':')
+          //Check that operating system is not already in catalog_images object
+          if (!(image[0] in catalog_images)){
+            catalog_images[image[0]] = { "versions": [ image[1] ], "variants": [image[3]] }
+            $('#operatingSystem').append('<option value="' + image[0] + '">' + image[0] + '</option>');
           }
-          //Check if we populated any operating systems and store them in session storage
-          if (Object.keys(catalog_images).length > 0) {
-            sessionStorage.setItem('catalog_images', JSON.stringify(catalog_images))
+          //Populate OS versions
+          if (!(catalog_images[image[0]]['versions'].includes(image[1]))){
+            catalog_images[image[0]]['versions'].push(image[1])
           }
-  
-          //Update the OS version options based on selected OS
-          updateOSVersion()
-
-        });
-      }
-      else {
-        //Set catalog_images from session storage
-        catalog_images = JSON.parse(sessionStorage.getItem('catalog_images'))
-        //Double check to make sure there are actually operating systems as keys
-        if (Object.keys(catalog_images).length > 0) {
-          //Clear operating system select options in modal
-          $("#operatingSystem").empty();
-        
-          //Loop through each operating system to populate operating system select options
-          for (var catalog_image in catalog_images){
-            $('#operatingSystem').append('<option value="' + catalog_image + '">' + catalog_image + '</option>');
+          //Populate OS variants
+          if (!(catalog_images[image[0]]['variants'].includes(image[3]))){
+            catalog_images[image[0]]['variants'].push(image[3])
           }
-
-          //Update the OS version options based on selected OS
-          updateOSVersion()
         }
-      }
+        //Check if we populated any operating systems and store them in session storage
+        if (Object.keys(catalog_images).length > 0) {
+          sessionStorage.setItem('catalog_images', JSON.stringify(catalog_images))
+        }
+
+        //Update the OS version options based on selected OS
+        updateOSVersion()
+
+      });
     }
 
     function updateOSVersion(){

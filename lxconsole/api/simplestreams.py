@@ -18,8 +18,8 @@ def api_simplestreams_endpoint(endpoint):
 
 
   if endpoint == 'add_simplestream':
-    url = request.form.get('url')
-    alias = request.form.get('alias')
+    url = request.form.get('url').strip()
+    alias = request.form.get('alias').strip()
     
     simplestream = Simplestream(url=url, alias=alias)
     db.session.add(simplestream)
@@ -49,8 +49,8 @@ def api_simplestreams_endpoint(endpoint):
     id = request.form.get('id')
     simplestream = Simplestream.query.filter_by(id=id).first()
   
-    simplestream.url = request.form.get('url')
-    simplestream.alias = request.form.get('alias')
+    simplestream.url = request.form.get('url').strip()
+    simplestream.alias = request.form.get('alias').strip()
     db.session.commit()
 
     json_object = json.loads('{"status": 200}')
