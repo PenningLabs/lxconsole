@@ -17,11 +17,10 @@ def api_servers_endpoint(endpoint):
   if not privilege_check(endpoint):
     return jsonify({'data': [], 'metadata':[], 'error': 'not authorized', 'error_code': 403})
 
-
   if endpoint == 'add_server':
-    addr = request.form.get('addr')
+    addr = request.form.get('addr').strip()
     port = request.form.get('port')
-    proxy = request.form.get('proxy')
+    proxy = request.form.get('proxy').strip()
     ssl_verify = request.form.get('ssl_verify')
     user_id = request.form.get('user_id')
 
@@ -86,9 +85,9 @@ def api_servers_endpoint(endpoint):
     else:
       sslVerify = True
   
-    server.addr = request.form.get('addr')
+    server.addr = request.form.get('addr').strip()
     server.port = request.form.get('port')
-    server.proxy = request.form.get('proxy')
+    server.proxy = request.form.get('proxy').strip()
     server.ssl_verify = sslVerify
     db.session.commit()
 

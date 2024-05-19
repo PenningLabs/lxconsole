@@ -7,7 +7,7 @@
       <h1>{{ page_title | safe }}</h1>
     </div>
     <div class="col-sm-6">
-      <button class="btn btn-outline-primary float-sm-right mr-4" data-bs-toggle="modal" data-bs-target="#addModal" title="Add Role" aria-hidden="true">
+      <button class="btn btn-primary float-sm-right mr-4" data-bs-toggle="modal" data-bs-target="#addModal" title="Add Role" aria-hidden="true">
         <i class="fas fa-plus fa-sm fa-fw"></i> Role
       </button>
     </div>
@@ -27,7 +27,7 @@
         </div>
       </div>
       <div class="card-body">
-        <table class="table table-hover" id="myDataTable" width="100%" cellspacing="0">
+        <table class="table" id="myDataTable" width="100%" cellspacing="0">
         </table>
       </div>
     </div>
@@ -87,9 +87,9 @@
           { title: "Actions", data: function (row, type, set) {
               links = ''
               if (row.hasOwnProperty('id') && row.hasOwnProperty('name')) {
-                links = '<a href="#" onclick=editRole(\''+row.id+'\',\''+row.name+'\')> <i class="fas fa-edit fa-lg" style="color:#ddd" title="Edit" aria-hidden="true"></i> </a>' +
+                links = '<a href="#" onclick=editRole(\''+row.id+'\',\''+row.name+'\')> <i class="fas fa-edit fa-lg" title="Edit" aria-hidden="true"></i> </a>' +
                 '&nbsp' +
-                '<a href="#" onclick=deleteRole(\''+row.id+'\',\''+row.name+'\')> <i class="fas fa-trash-alt fa-lg" style="color:#ddd" title="Delete" aria-hidden="true"></i> </a>'
+                '<a href="#" onclick=deleteRole(\''+row.id+'\',\''+row.name+'\')> <i class="fas fa-trash-alt fa-lg" title="Delete" aria-hidden="true"></i> </a>'
               }
               return links
             },

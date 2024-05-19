@@ -3,7 +3,7 @@
 
   {% include 'head.html' %}
   <!-- Add dark-mode class to body for dark theme-->
-  <body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed">
+  <body id="main-body" class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed">
     <script>0</script>
     <div class="wrapper">
 
@@ -40,7 +40,7 @@
 
       <footer class="main-footer">
         <div class="float-right d-none d-sm-block">
-          Version 0.4.8
+          Version 0.5.0
         </div>
         Copyright &copy; 2020-Present <a href="https://penninglabs.com">Penning Labs</a>. All rights reserved.
       </footer>
@@ -67,6 +67,10 @@
 
     <!-- Page specific script -->
     <script src="{{ url_for('static', filename='js/sidebar.js') }}"></script>
+
+    <!-- Choices - https://cdn.jsdelivr.net/npm/choices.js@10.2.0/public/assets/scripts/choices.min.js -->
+    <script src="{{ url_for('static', filename='js/choices/choices.min.js') }}"></script>
+  
 
     <script>
       function changeProject(project){
@@ -146,10 +150,6 @@
           }
         });
       }
-
-      operationReloadTimeout = ''
-      operationReloadTime = 5000
-      operationExists = false
 
       function operationStatusCheck(){
         
@@ -262,7 +262,38 @@
 
         });
       }
+
+      function setDarkTheme() {
+        sessionStorage.setItem('theme-color', 'dark')
+        applyThemeColor()
+      }
+
+      function setLightTheme() {
+        sessionStorage.setItem('theme-color', 'default')
+        applyThemeColor()
+      }
   
+      function applyThemeColor() {
+        if (sessionStorage.getItem('theme-color') == 'dark') {
+          $('#main-body').addClass('dark-mode');
+          $('#main-nav').addClass('navbar-black navbar-dark');
+          $('#main-nav').removeClass('navbar-white navbar-light');
+          $('#lightThemeLink').show()
+          $('#darkThemeLink').hide()
+        }
+        else {
+          $('#main-body').removeClass('dark-mode');
+          $('#main-nav').addClass('navbar-white navbar-light');
+          $('#main-nav').removeClass('navbar-black navbar-dark');
+          $('#lightThemeLink').hide()
+          $('#darkThemeLink').show()
+        }
+      }
+
+      applyThemeColor()
+      operationReloadTimeout = ''
+      operationReloadTime = 5000
+      operationExists = false
     </script>
 
     {% block script %}

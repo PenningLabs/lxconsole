@@ -534,7 +534,7 @@ def api_instance_endpoint(endpoint):
     client_cert = get_client_crt()
     client_key = get_client_key()
     data = {}
-    data.update({'type': 'console'})
+    data.update({'type': request.args.get('type')})
     data.update({'width': int(request.form.get('width'))})
     data.update({'height': int(request.form.get('height'))})
     results = requests.post(url, verify=server.ssl_verify, cert=(client_cert, client_key), json=data)

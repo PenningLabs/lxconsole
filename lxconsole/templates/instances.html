@@ -6,7 +6,7 @@
       <h1>{{ page_title | safe }}</h1>
     </div>
     <div class="col-sm-6">
-      <button class="btn btn-outline-primary float-sm-right mr-4" data-bs-toggle="modal" data-bs-target="#addModal" title="Add Instance" aria-hidden="true">
+      <button class="btn btn-primary float-sm-right mr-4" data-bs-toggle="modal" data-bs-target="#addModal" title="Add Instance" aria-hidden="true">
         <i class="fas fa-plus fa-sm fa-fw"></i> Instance
       </button>
     </div>
@@ -34,7 +34,7 @@
             </div>
           </div>
           <div class="card-body">
-            <table class="table table-hover" id="containerDataTable" width="100%" cellspacing="0">
+            <table class="table" id="containerDataTable" width="100%" cellspacing="0">
             </table>
           </div>
         </div>
@@ -51,7 +51,7 @@
             </div>
           </div>
           <div class="card-body">
-            <table class="table table-hover" id="virtualMachineDataTable" width="100%" cellspacing="0">
+            <table class="table" id="virtualMachineDataTable" width="100%" cellspacing="0">
             </table>
           </div>
         </div>
@@ -67,9 +67,6 @@
 {% endblock modal %}
 
 {% block script %}
-  <!-- Page specific script  https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.15.2/js/selectize.min.js -->
-  <script src="{{ url_for('static', filename='js/selectize/selectize.min.js') }}"></script>
-
   <script>
     var reloadTime = 10000;
     const queryString = window.location.search;
@@ -117,10 +114,8 @@
             $('#instanceProfileInput').append('<option value="' + optionText + '">' + optionText + '</option>');
           }
         }
-        //Initialize selectize form select control
-        $(function () {
-          $("#instanceProfileInput").selectize();
-        });
+        //Setup choices.js multiselect for profiles dropdown in modal
+        new Choices(document.querySelector(".choices-multiple"));
       })
 
       //Populate the create instance modal Storge Pool dropdown
@@ -167,14 +162,39 @@
       $.getJSON("{{ url_for('api') }}/images/list_images?id="+serverId+"&project="+project+"&recursion=1", function (data) {
         data = data.metadata
         for (var index = 0; index < data.length; index++) {
+
+          // Set dropdown text for image choices
+          arr = []
+          imageDropdownText = data[index].properties.description + " (" + data[index].fingerprint.substring(0,11) + "...)"
+          if (data[index].hasOwnProperty('aliases')) {
+            for (item in data[index].aliases) {
+              if (data[index].aliases[item].hasOwnProperty('name')) {
+                if (data[index].aliases[item].name != "") {
+                  arr.push(data[index].aliases[item].name)
+                }
+              }
+            }
+            if (arr.length > 0) {
+              imageDropdownText =  arr.join(", ") + " (" + data[index].fingerprint.substring(0,11) + "...)"
+            }
+          }
+          if (data[index].hasOwnProperty('update_source')) {
+            if (data[index].update_source.hasOwnProperty('alias')) {
+              if (data[index].update_source['alias'] != "") {
+                imageDropdownText = data[index].update_source['alias'] + " (" + data[index].fingerprint.substring(0,11) + "...)"
+              }
+            }
+          }
+
           // Earlier versions of LXD did not have type property. These only supported container type instances
           if (data[index].hasOwnProperty('type')) {
             if(data[index].type == 'container'){
-              $('#instanceImageInput').append('<option value="' + data[index].fingerprint + '">' + data[index].properties.description + '</option>');
+              $('#instanceImageInput').append('<option value="' + data[index].fingerprint + '">' + imageDropdownText + '</option>');
             }
           }
           else {
-            $('#instanceImageInput').append('<option value="' + data[index].fingerprint + '">' + data[index].properties.description + '</option>');
+            //Backwards compatable support when there were only containers available in LXD
+            $('#instanceImageInput').append('<option value="' + data[index].fingerprint + '">' + imageDropdownText + '</option>');
           }
         }
       })
@@ -186,14 +206,35 @@
       $.getJSON("{{ url_for('api') }}/images/list_images?id="+serverId+"&project="+project+"&recursion=1", function (data) {
         data = data.metadata
         for (var index = 0; index < data.length; index++) {
+
+          // Set dropdown text for image choices
+          arr = []
+          imageDropdownText = data[index].properties.description + " (" + data[index].fingerprint.substring(0,11) + "...)"
+          if (data[index].hasOwnProperty('aliases')) {
+            for (item in data[index].aliases) {
+              if (data[index].aliases[item].hasOwnProperty('name')) {
+                if (data[index].aliases[item].name != "") {
+                  arr.push(data[index].aliases[item].name)
+                }
+              }
+            }
+            if (arr.length > 0) {
+              imageDropdownText =  arr.join(", ") + " (" + data[index].fingerprint.substring(0,11) + "...)"
+            }
+          }
+          if (data[index].hasOwnProperty('update_source')) {
+            if (data[index].update_source.hasOwnProperty('alias')) {
+              if (data[index].update_source['alias'] != "") {
+                imageDropdownText = data[index].update_source['alias'] + " (" + data[index].fingerprint.substring(0,11) + "...)"
+              }
+            }
+          }
+
           // Earlier versions of LXD did not have type property. These only supported container type instances
           if (data[index].hasOwnProperty('type')) {
             if(data[index].type == 'virtual-machine'){
-              $('#instanceImageInput').append('<option value="' + data[index].fingerprint + '">' + data[index].properties.description + '</option>');
+              $('#instanceImageInput').append('<option value="' + data[index].fingerprint + '">' + imageDropdownText + '</option>');
             }
-          }
-          else {
-            $('#instanceImageInput').append('<option value="' + data[index].fingerprint + '">' + data[index].properties.description + '</option>');
           }
         }
       })
@@ -217,6 +258,24 @@
                 if (row.hasOwnProperty('name')) {
                   if (row.name)
                     return "<a href=\"{{ url_for('instance') }}?id=" + serverId + '&project=' + project + '&instance=' + row.name + '&type=container">' + row.name + '</a>';
+                }
+                return '-'
+              },
+            },
+            { title: "Status", data: function (row, type, set) {
+                if (row.hasOwnProperty('status')) {
+                  if (row.status){
+                    if (row.status == "Running") {
+                      return '<i class="fas fa-check-circle fa-sm text-success mr-1" aria-hidden="true"></i> Running'
+                    }
+                    if (row.status == "Stopped") {
+                      return '<i class="fas fa-minus-circle fa-sm text-danger mr-1" aria-hidden="true"></i> Stopped'
+                    }
+                    if (row.status == "Frozen") {
+                      return '<i class="fas fa-pause-circle fa-sm text-info mr-1" aria-hidden="true"></i> Frozen'
+                    }
+                    return row.status
+                  }
                 }
                 return '-'
               },
@@ -283,27 +342,18 @@
                 return '-'
               },
             },
-            { title: "Status", data: function (row, type, set) {
-                if (row.hasOwnProperty('status')) {
-                  if (row.status){
-                    return row.status
-                  }
-                }
-                return '-'
-              },
-            },
             { title: "Actions", data: function (row, type, set) {
                 links = ''
                 if (row.hasOwnProperty('name') && row.hasOwnProperty('status')) {
                   if (row.name && row.status){
                     if (row.status == 'Frozen')
-                      links += '<a href="#" onclick=changeItemState(\''+row.name+'\',\'unfreeze\')><i class="fas fa-pause fa-lg" style="color:#ddd" title="Edit" aria-hidden="true"></i></a>'
+                      links += '<a href="#" onclick=changeItemState(\''+row.name+'\',\'unfreeze\')><i class="fas fa-pause fa-lg" title="Unfreeze" aria-hidden="true"></i></a>'
                     else if (row.status == 'Stopped')
-                      links += '<a href="#" onclick=changeItemState(\''+row.name+'\',\'start\')><i class="fas fa-play fa-lg" style="color:#ddd" title="Edit" aria-hidden="true"></i></a>'
+                      links += '<a href="#" onclick=changeItemState(\''+row.name+'\',\'start\')><i class="fas fa-play fa-lg" title="Start" aria-hidden="true"></i></a>'
                     else if (row.status == 'Running')
-                      links += '<a href="#" onclick=changeItemState(\''+row.name+'\',\'stop\')><i class="fas fa-stop fa-lg" style="color:#ddd" title="Edit" aria-hidden="true"></i></a>'
+                      links += '<a href="#" onclick=changeItemState(\''+row.name+'\',\'stop\')><i class="fas fa-stop fa-lg" title="Stop" aria-hidden="true"></i></a>'
                     links += '&nbsp' + '&nbsp' 
-                    links += '<a href="#" onclick=deleteInstance(\''+row.name+'\')><i class="fas fa-trash-alt fa-lg" style="color:#ddd" title="Delete" aria-hidden="true"></i></a>'
+                    links += '<a href="#" onclick=deleteInstance(\''+row.name+'\')><i class="fas fa-trash-alt fa-lg" title="Delete" aria-hidden="true"></i></a>'
                   }
                 }
                 return links
@@ -340,6 +390,24 @@
                 return '-'
               },
             },
+            { title: "Status", data: function (row, type, set) {
+                if (row.hasOwnProperty('status')) {
+                  if (row.status){
+                    if (row.status == "Running") {
+                      return '<i class="fas fa-check-circle fa-sm text-success mr-1" aria-hidden="true"></i> Running'
+                    }
+                    if (row.status == "Stopped") {
+                      return '<i class="fas fa-minus-circle fa-sm text-danger mr-1" aria-hidden="true"></i> Stopped'
+                    }
+                    if (row.status == "Frozen") {
+                      return '<i class="fas fa-pause-circle fa-sm text-info mr-1" aria-hidden="true"></i> Frozen'
+                    }
+                    return row.status
+                  }
+                }
+                return '-'
+              },
+            },
             { title: "OS", data: function (row, type, set) {
                 if (row.hasOwnProperty('expanded_config')) {
                   if (row.expanded_config.hasOwnProperty('image.os')) {
@@ -402,27 +470,18 @@
                 return '-'
               },
             },
-            { title: "Status", data: function (row, type, set) {
-                if (row.hasOwnProperty('status')) {
-                  if (row.status){
-                    return row.status
-                  }
-                }
-                return '-'
-              },
-            },
             { title: "Actions", data: function (row, type, set) {
                 links = ''
                 if (row.hasOwnProperty('name') && row.hasOwnProperty('status')) {
                   if (row.name && row.status){
                     if (row.status == 'Frozen')
-                      links += '<a href="#" onclick=changeItemState(\''+row.name+'\',\'unfreeze\')><i class="fas fa-pause fa-lg" style="color:#ddd" title="Edit" aria-hidden="true"></i></a>'
+                      links += '<a href="#" onclick=changeItemState(\''+row.name+'\',\'unfreeze\')><i class="fas fa-pause fa-lg" title="Unfreeze" aria-hidden="true"></i></a>'
                     else if (row.status == 'Stopped')
-                      links += '<a href="#" onclick=changeItemState(\''+row.name+'\',\'start\')><i class="fas fa-play fa-lg" style="color:#ddd" title="Edit" aria-hidden="true"></i></a>'
+                      links += '<a href="#" onclick=changeItemState(\''+row.name+'\',\'start\')><i class="fas fa-play fa-lg" title="Start" aria-hidden="true"></i></a>'
                     else if (row.status == 'Running')
-                      links += '<a href="#" onclick=changeItemState(\''+row.name+'\',\'stop\')><i class="fas fa-stop fa-lg" style="color:#ddd" title="Edit" aria-hidden="true"></i></a>'
+                      links += '<a href="#" onclick=changeItemState(\''+row.name+'\',\'stop\')><i class="fas fa-stop fa-lg" title="Stop" aria-hidden="true"></i></a>'
                     links += '&nbsp' + '&nbsp' 
-                    links += '<a href="#" onclick=deleteInstance(\''+row.name+'\')><i class="fas fa-trash-alt fa-lg" style="color:#ddd" title="Delete" aria-hidden="true"></i></a>'
+                    links += '<a href="#" onclick=deleteInstance(\''+row.name+'\')><i class="fas fa-trash-alt fa-lg" title="Delete" aria-hidden="true"></i></a>'
                   }
                 }
                 return links

@@ -6,7 +6,7 @@
       <h1>{{ page_title | safe }}: <span id="acl_title"></span></h1>
     </div>
     <div class="col-sm-6">
-      <button class="btn btn-outline-primary float-sm-right mr-4" data-bs-toggle="modal" data-bs-target="#addModal" title="Add Network ACL Rule" aria-hidden="true">
+      <button class="btn btn-primary float-sm-right mr-4" data-bs-toggle="modal" data-bs-target="#addModal" title="Add Network ACL Rule" aria-hidden="true">
         <i class="fas fa-plus fa-sm fa-fw"></i> Network ACL Rule
       </button>
     </div>
@@ -204,7 +204,7 @@
             },
           },
           { title: "Actions", data: function (row, type, set) {
-              links = '<a href="#" onclick=confirmDeleteItem(\''+row.index+'\',\'ingress\')><i class="fas fa-trash-alt fa-lg" style="color:#ddd" title="Delete" aria-hidden="true"></i></a>'
+              links = '<a href="#" onclick=confirmDeleteItem(\''+row.index+'\',\'ingress\')><i class="fas fa-trash-alt fa-lg" title="Delete" aria-hidden="true"></i></a>'
               return links
             },
           },
@@ -308,7 +308,7 @@
             },
           },
           { title: "Actions", data: function (row, type, set) {
-              links = '<a href="#" onclick=confirmDeleteItem(\''+row.index+'\',\'egress\')><i class="fas fa-trash-alt fa-lg" style="color:#ddd" title="Delete" aria-hidden="true"></i></a>'
+              links = '<a href="#" onclick=confirmDeleteItem(\''+row.index+'\',\'egress\')><i class="fas fa-trash-alt fa-lg" title="Delete" aria-hidden="true"></i></a>'
               return links
             },
           },
