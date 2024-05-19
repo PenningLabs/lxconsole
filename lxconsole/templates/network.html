@@ -6,7 +6,7 @@
       <h1>{{ page_title | safe }}: <span id="network_title"></span></h1>
     </div>
     <div class="col-sm-6">
-      <button class="btn btn-outline-primary dropdown-toggle float-sm-right ml-2 mr-4" type="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false" title="Actions">
+      <button class="btn btn-primary dropdown-toggle float-sm-right ml-2 mr-4" type="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false" title="Actions">
         Network Actions
       </button>
       <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
@@ -48,7 +48,7 @@
               </div>
               <div class="card-body">
                 <div class="table-responsive">
-                  <table class="table table-hover" id="dhcpLeasesTable" width="100%" cellspacing="0">
+                  <table class="table" id="dhcpLeasesTable" width="100%" cellspacing="0">
                   </table>
                 </div>
               </div>
@@ -151,7 +151,7 @@
             </div>
             <div class="card-body">
               <div class="table-responsive">
-                <table class="table table-hover" id="forwardsTable" width="100%" cellspacing="0">
+                <table class="table" id="forwardsTable" width="100%" cellspacing="0">
                 </table>
               </div>
             </div>
@@ -180,7 +180,7 @@
             </div>
             <div class="card-body">
               <div class="table-responsive">
-                <table class="table table-hover" id="loadBalancersTable" width="100%" cellspacing="0">
+                <table class="table" id="loadBalancersTable" width="100%" cellspacing="0">
                 </table>
               </div>
             </div>
@@ -209,7 +209,7 @@
             </div>
             <div class="card-body">
               <div class="table-responsive">
-                <table class="table table-hover" id="peersTable" width="100%" cellspacing="0">
+                <table class="table table" id="peersTable" width="100%" cellspacing="0">
                 </table>
               </div>
             </div>
@@ -426,9 +426,9 @@
                 links = ''
                 if (row.hasOwnProperty('listen_address')) {
                   if (row.listen_address){
-                    links = '<a href="#" onclick=editLoadBalancer(\''+row.listen_address+'\')><i class="fas fa-edit fa-lg" style="color:#ddd" title="Edit" aria-hidden="true"></i></a>' +
+                    links = '<a href="#" onclick=editLoadBalancer(\''+row.listen_address+'\')><i class="fas fa-edit fa-lg" title="Edit" aria-hidden="true"></i></a>' +
                     '&nbsp' + '&nbsp' +
-                    '<a href="#" onclick=deleteItem(\''+row.listen_address+'\',\'load_balancer\')><i class="fas fa-trash-alt fa-lg" style="color:#ddd" title="Delete" aria-hidden="true"></i></a>'
+                    '<a href="#" onclick=deleteItem(\''+row.listen_address+'\',\'load_balancer\')><i class="fas fa-trash-alt fa-lg" title="Delete" aria-hidden="true"></i></a>'
                   }
                 }
                 return links
@@ -486,9 +486,9 @@
                 links = ''
                 if (row.hasOwnProperty('listen_address')) {
                   if (row.listen_address){
-                    links = '<a href="#" onclick=editForward(\''+row.listen_address+'\')><i class="fas fa-edit fa-lg" style="color:#ddd" title="Edit" aria-hidden="true"></i></a>' +
+                    links = '<a href="#" onclick=editForward(\''+row.listen_address+'\')><i class="fas fa-edit fa-lg" title="Edit" aria-hidden="true"></i></a>' +
                     '&nbsp' + '&nbsp' +
-                    '<a href="#" onclick=deleteItem(\''+row.listen_address+'\',\'forward\')><i class="fas fa-trash-alt fa-lg" style="color:#ddd" title="Delete" aria-hidden="true"></i></a>'
+                    '<a href="#" onclick=deleteItem(\''+row.listen_address+'\',\'forward\')><i class="fas fa-trash-alt fa-lg" title="Delete" aria-hidden="true"></i></a>'
                   }
                 }
                 return links
@@ -563,9 +563,9 @@
               links = ''
               if (row.hasOwnProperty('name')) {
                 if (row.name){
-                  links = '<a href="#" onclick=editPeer(\''+row.name+'\')><i class="fas fa-edit fa-lg" style="color:#ddd" title="Edit" aria-hidden="true"></i></a>' +
+                  links = '<a href="#" onclick=editPeer(\''+row.name+'\')><i class="fas fa-edit fa-lg" title="Edit" aria-hidden="true"></i></a>' +
                   '&nbsp' + '&nbsp' +
-                  '<a href="#" onclick=deleteItem(\''+row.name+'\',\'peer\')><i class="fas fa-trash-alt fa-lg" style="color:#ddd" title="Delete" aria-hidden="true"></i></a>'
+                  '<a href="#" onclick=deleteItem(\''+row.name+'\',\'peer\')><i class="fas fa-trash-alt fa-lg" title="Delete" aria-hidden="true"></i></a>'
                 }
               }
               return links

@@ -1,3 +1,7 @@
+# 0.5.0
+ - Added Dark theme option
+ - Added VGA based console option to Virtual Machines via Spice-HTML5
+
 # 0.4.8
  - Added new lxd image repository for LXD based servers to catalog. Catalog automatically populates image catalog from respective images repository based on server type, incus or lxd
  

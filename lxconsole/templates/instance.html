@@ -6,7 +6,7 @@
       <h1>{{ page_title | safe }}: <span id="instance_title"></span></h1>
     </div>
     <div class="col-sm-6">
-      <button class="btn btn-outline-primary dropdown-toggle float-sm-right ml-2 mr-4" type="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false" title="Actions">
+      <button class="btn btn-primary dropdown-toggle float-sm-right ml-2 mr-4" type="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false" title="Actions">
         Instance Actions
       </button>
       <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
@@ -30,13 +30,13 @@
         <a class="dropdown-item" id="deleteInstanceOption"><i class="fas fa-trash-alt fa-sm fa-fw mr-2"></i>Delete</a>
       </div>
 
-      <a class="btn btn-outline-primary float-sm-right" href="#" role="button" id="startLinkButton" onclick="changeItemState(instance, 'start')" style="display:none;" title="Start">
+      <a class="btn btn-primary float-sm-right" href="#" role="button" id="startLinkButton" onclick="changeItemState(instance, 'start')" style="display:none;" title="Start">
         <i class="fas fa-play fa-fw"></i>
       </a>
-      <a class="btn btn-outline-primary float-sm-right" href="#" role="button" id="stopLinkButton" onclick="changeItemState(instance, 'stop')" style="display:none;" title="Stop">
+      <a class="btn btn-primary float-sm-right" href="#" role="button" id="stopLinkButton" onclick="changeItemState(instance, 'stop')" style="display:none;" title="Stop">
         <i class="fas fa-stop fa-fw"></i>
       </a>
-      <a class="btn btn-outline-primary float-sm-right" href="#" role="button" id="unfreezeLinkButton" onclick="changeItemState(instance, 'unfreeze')" style="display:none;" title="UnFreeze">
+      <a class="btn btn-primary float-sm-right" href="#" role="button" id="unfreezeLinkButton" onclick="changeItemState(instance, 'unfreeze')" style="display:none;" title="UnFreeze">
         <i class="fas fa-pause fa-fw"></i>
       </a>
 
@@ -70,7 +70,7 @@
               </div>
               <div class="card-body">
                 <div class="table-responsive">
-                  <table class="table table-hover" id="interfaceTableList" width="100%" cellspacing="0">
+                  <table class="table" id="interfaceTableList" width="100%" cellspacing="0">
                   </table>
                 </div>
               </div>
@@ -93,7 +93,7 @@
               </div>
               <div class="card-body">
                 <div class="table-responsive">
-                  <table class="table table-hover" id="snapshotTableList" width="100%" cellspacing="0">
+                  <table class="table" id="snapshotTableList" width="100%" cellspacing="0">
                   </table>
                 </div>
               </div>
@@ -116,7 +116,7 @@
               </div>
               <div class="card-body">
                 <div class="table-responsive">
-                  <table class="table table-hover" id="backupTableList" width="100%" cellspacing="0">
+                  <table class="table" id="backupTableList" width="100%" cellspacing="0">
                   </table>
                 </div>
               </div>
@@ -131,7 +131,7 @@
               </div>
               <div class="card-body">
                 <div class="table-responsive">
-                  <table class="table table-hover" id="logTableList" width="100%" cellspacing="0">
+                  <table class="table" id="logTableList" width="100%" cellspacing="0">
                   </table>
                 </div>
               </div>
@@ -371,7 +371,7 @@
                   </div>
                   <div class="card-body">
                     <div class="table-responsive">
-                      <table class="table table-hover" id="diskDeviceTableList" width="100%" cellspacing="0">
+                      <table class="table" id="diskDeviceTableList" width="100%" cellspacing="0">
                       </table>
                     </div>
                   </div>
@@ -396,7 +396,7 @@
                   </div>
                   <div class="card-body">
                     <div class="table-responsive">
-                      <table class="table table-hover" id="gpuDeviceTableList" width="100%" cellspacing="0">
+                      <table class="table" id="gpuDeviceTableList" width="100%" cellspacing="0">
                       </table>
                     </div>
                   </div>
@@ -421,7 +421,7 @@
                   </div>
                   <div class="card-body">
                     <div class="table-responsive">
-                      <table class="table table-hover" id="networkDeviceTableList" width="100%" cellspacing="0">
+                      <table class="table" id="networkDeviceTableList" width="100%" cellspacing="0">
                       </table>
                     </div>
                   </div>
@@ -446,7 +446,7 @@
                   </div>
                   <div class="card-body">
                     <div class="table-responsive">
-                      <table class="table table-hover" id="proxyDeviceTableList" width="100%" cellspacing="0">
+                      <table class="table" id="proxyDeviceTableList" width="100%" cellspacing="0">
                       </table>
                     </div>
                   </div>
@@ -471,7 +471,7 @@
                   </div>
                   <div class="card-body">
                     <div class="table-responsive">
-                      <table class="table table-hover" id="unixDeviceTableList" width="100%" cellspacing="0">
+                      <table class="table" id="unixDeviceTableList" width="100%" cellspacing="0">
                       </table>
                     </div>
                   </div>
@@ -496,7 +496,7 @@
                   </div>
                   <div class="card-body">
                     <div class="table-responsive">
-                      <table class="table table-hover" id="usbDeviceTableList" width="100%" cellspacing="0">
+                      <table class="table" id="usbDeviceTableList" width="100%" cellspacing="0">
                       </table>
                     </div>
                   </div>
@@ -517,16 +517,25 @@
             <h3 class="card-title text-primary">Console</h3>
             <div class="card-tools">
               <div class="dropdown no-arrow">
-                <button type="button btn-tool" class="mr-2 btn btn-sm btn-outline-primary" id="startConsoleButton" title="Start Console Terminal" onclick="establishInstanceWebSocketConsoleConnection()">Start Console</button>
-                <button type="button btn-tool" class="mr-2 btn btn-sm btn-outline-primary" id="stopConsoleButton" style="display: none;"  title="Stop Console Terminal" onclick="closeWebSocketConsoleConnection()">Stop Console</button>
+                
+                <button type="button btn-tool" class="mr-2 btn btn-sm btn-primary" id="startConsoleButton" title="Start Console Terminal" onclick="establishInstanceWebSocketConsoleConnection()">Start Console</button>
+                <button type="button btn-tool" class="mr-2 btn btn-sm btn-primary" id="stopConsoleButton" style="display: none;"  title="Stop Console Terminal" onclick="closeWebSocketConsoleConnection()">Stop Console</button>
+                <div id='consoleSwitchDiv'class="form-check form-check-inline form-switch" style="display: none;">
+                  <input class="form-check-input" type="checkbox" role="switch" id="consoleSwitch" onclick="setConsoleType()" checked>
+                  <label class="form-check-label" for="consoleSwitch">Enable VGA</label>
+                </div>
+                <button type="button btn-tool" class="mr-2 btn btn-sm btn-primary" id="sendCtrlAltDelButton" title="Send CtrlAltDel" style="display: none;">Ctrl+Alt+Del</button>
+                
               </div>
             </div>
           </div>
           <div class="card-body">
             <div id="terminal-console"></div>
+            <div id="spice-area" style="display: none;">
+              <div id="spice-screen" class="spice-screen"></div>
+            </div>
           </div>
         </div>
-        <!-- Console Card  -->
       </div>
       <div class="tab-pane fade" id="nav-exec" role="tabpanel" aria-labelledby="nav-exec-tab">
         <br />
@@ -536,8 +545,8 @@
             <h3 class="card-title text-primary">Exec</h3>
             <div class="card-tools">
               <div class="dropdown no-arrow">
-                <button type="button btn-tool" class="mr-2 btn btn-sm btn-outline-primary" id="startExecButton" title="Start Exec Terminal" onclick="establishInstanceWebSocketExecConnection()">Start Exec</button>
-                <button type="button btn-tool" class="mr-2 btn btn-sm btn-outline-primary"  style="display: none;" id="stopExecButton" title="Stop Exec Terminal" onclick="closeWebSocketExecConnection()">Stop Exec</button>
+                <button type="button btn-tool" class="mr-2 btn btn-sm btn-primary" id="startExecButton" title="Start Exec Terminal" onclick="establishInstanceWebSocketExecConnection()">Start Exec</button>
+                <button type="button btn-tool" class="mr-2 btn btn-sm btn-primary"  style="display: none;" id="stopExecButton" title="Stop Exec Terminal" onclick="closeWebSocketExecConnection()">Stop Exec</button>
                 <select id="execShellInput" class="dropdown-toggle mr-2 btn btn-sm btn-tool" name="execShellInput">
                   <option value="bash" selected>/bin/bash</option>
                   <option value="sh">/bin/sh</option>
@@ -549,7 +558,6 @@
             <div id="terminal-exec"></div>
           </div>
         </div>
-        <!-- Exec Card  -->
       </div>
     </div>
   </div>
@@ -1127,13 +1135,13 @@
             { title: "Actions", data: function (row, type, set) {
                 links = ''
                 if (row.hasOwnProperty('name')) {
-                  links += '<a onclick=restoreInstanceSnapshot(\''+row.name+'\')><i class="fas fa-window-restore fa-lg" style="color:#ddd" title="Restore Snapshot" aria-hidden="true"></i></a>'
+                  links += '<a onclick=restoreInstanceSnapshot(\''+row.name+'\')><i class="fas fa-window-restore fa-lg" title="Restore Snapshot" aria-hidden="true"></i></a>'
                   links += '&nbsp' + '&nbsp' 
-                  links += '<a onclick=loadCreateInstanceFromSnapshotModal(\''+row.name+'\')><i class="fas fa-cube fa-lg" style="color:#ddd" title="Create Instance" aria-hidden="true"></i></a>'
+                  links += '<a onclick=loadCreateInstanceFromSnapshotModal(\''+row.name+'\')><i class="fas fa-cube fa-lg" title="Create Instance" aria-hidden="true"></i></a>'
                   links += '&nbsp' + '&nbsp'
-                  links += '<a onclick=loadPublishImageFromSnapshotModal(\''+row.name+'\')><i class="fas fa-box-open fa-lg" style="color:#ddd" title="Publish Image" aria-hidden="true"></i></a>'
+                  links += '<a onclick=loadPublishImageFromSnapshotModal(\''+row.name+'\')><i class="fas fa-box-open fa-lg" title="Publish Image" aria-hidden="true"></i></a>'
                   links += '&nbsp' + '&nbsp' 
-                  links += '<a onclick=deleteSnapshot(\''+row.name+'\')><i class="fas fa-trash-alt fa-lg" style="color:#ddd" title="Delete" aria-hidden="true"></i></a>'
+                  links += '<a onclick=deleteSnapshot(\''+row.name+'\')><i class="fas fa-trash-alt fa-lg" title="Delete" aria-hidden="true"></i></a>'
                 }
                 return links
               },
@@ -1228,10 +1236,10 @@
                     if (row.backup_file_exists)
                       links += '<a><i class="fas fa-file-export fa-lg" style="color:#f1f1f1" title="Export Backup" aria-hidden="true"></i></a>'
                     else 
-                      links += '<a onclick=exportBackup(\''+row.name+'\')><i class="fas fa-file-export fa-lg" style="color:#ddd" title="Export Backup" aria-hidden="true"></i></a>'
+                      links += '<a onclick=exportBackup(\''+row.name+'\')><i class="fas fa-file-export fa-lg" title="Export Backup" aria-hidden="true"></i></a>'
                     links += '&nbsp' + '&nbsp' 
                   }
-                  links += '<a onclick=deleteBackup(\''+row.name+'\')><i class="fas fa-trash-alt fa-lg" style="color:#ddd" title="Delete" aria-hidden="true"></i></a>'
+                  links += '<a onclick=deleteBackup(\''+row.name+'\')><i class="fas fa-trash-alt fa-lg" title="Delete" aria-hidden="true"></i></a>'
                 }
                 return links
               },
@@ -1267,9 +1275,9 @@
               },
             },
             { title: "Actions", data: function (row, type, set) {
-              links = '<a onclick=displayLog(\''+row+'\')><i class="fas fa-file fa-lg" style="color:#ddd" title="Display Log" aria-hidden="true"></i></a>'
+              links = '<a onclick=displayLog(\''+row+'\')><i class="fas fa-file fa-lg" title="Display Log" aria-hidden="true"></i></a>'
               links += '&nbsp' + '&nbsp' 
-              links += '<a onclick=deleteLog(\''+row+'\')><i class="fas fa-trash-alt fa-lg" style="color:#ddd" title="Delete" aria-hidden="true"></i></a>'
+              links += '<a onclick=deleteLog(\''+row+'\')><i class="fas fa-trash-alt fa-lg" title="Delete" aria-hidden="true"></i></a>'
               return links
               },
             },
@@ -1351,7 +1359,7 @@
             { title: "Actions", data: function (row, type, set) {
               links = ''
               if (row.hasOwnProperty('device')) {
-                links = '<a onclick=delete_device(\''+row.device+'\')><i class="fas fa-trash-alt fa-lg" style="color:#ddd" title="Delete" aria-hidden="true"></i></a>'
+                links = '<a onclick=delete_device(\''+row.device+'\')><i class="fas fa-trash-alt fa-lg" title="Delete" aria-hidden="true"></i></a>'
               }
               return links
               },
@@ -1430,7 +1438,7 @@
             { title: "Actions", data: function (row, type, set) {
               links = ''
               if (row.hasOwnProperty('device')) {
-                links = '<a onclick=delete_device(\''+row.device+'\')><i class="fas fa-trash-alt fa-lg" style="color:#ddd" title="Delete" aria-hidden="true"></i></a>'
+                links = '<a onclick=delete_device(\''+row.device+'\')><i class="fas fa-trash-alt fa-lg" title="Delete" aria-hidden="true"></i></a>'
               }
               return links
               },
@@ -1501,7 +1509,7 @@
             { title: "Actions", data: function (row, type, set) {
               links = ''
               if (row.hasOwnProperty('device')) {
-                links = '<a onclick=delete_device(\''+row.device+'\')><i class="fas fa-trash-alt fa-lg" style="color:#ddd" title="Delete" aria-hidden="true"></i></a>'
+                links = '<a onclick=delete_device(\''+row.device+'\')><i class="fas fa-trash-alt fa-lg" title="Delete" aria-hidden="true"></i></a>'
               }
               return links
               },
@@ -1564,7 +1572,7 @@
             { title: "Actions", data: function (row, type, set) {
               links = ''
               if (row.hasOwnProperty('device')) {
-                links = '<a onclick=delete_device(\''+row.device+'\')><i class="fas fa-trash-alt fa-lg" style="color:#ddd" title="Delete" aria-hidden="true"></i></a>'
+                links = '<a onclick=delete_device(\''+row.device+'\')><i class="fas fa-trash-alt fa-lg" title="Delete" aria-hidden="true"></i></a>'
               }
               return links
               },
@@ -1643,7 +1651,7 @@
             { title: "Actions", data: function (row, type, set) {
               links = ''
               if (row.hasOwnProperty('device')) {
-                links = '<a onclick=delete_device(\''+row.device+'\')><i class="fas fa-trash-alt fa-lg" style="color:#ddd" title="Delete" aria-hidden="true"></i></a>'
+                links = '<a onclick=delete_device(\''+row.device+'\')><i class="fas fa-trash-alt fa-lg" title="Delete" aria-hidden="true"></i></a>'
               }
               return links
               },
@@ -1722,7 +1730,7 @@
             { title: "Actions", data: function (row, type, set) {
               lins = ''
               if (row.hasOwnProperty('device')) {
-                links = '<a onclick=delete_device(\''+row.device+'\')><i class="fas fa-trash-alt fa-lg" style="color:#ddd" title="Delete" aria-hidden="true"></i></a>'
+                links = '<a onclick=delete_device(\''+row.device+'\')><i class="fas fa-trash-alt fa-lg" title="Delete" aria-hidden="true"></i></a>'
               }
               return links
               },
@@ -3109,121 +3117,212 @@
       return buf;
     }
 
+    function setConsoleType() {
+      if ($("#consoleSwitch").is(":checked")){
+        $('#terminal-console').hide();
+        $('#spice-area').show();
+        $('#sendCtrlAltDelButton').attr("disabled", false);
+      }
+      else{
+        $('#terminal-console').show();
+        $('#spice-area').hide();
+        $('#sendCtrlAltDelButton').attr("disabled", true);
+      }
+    }
+
     // Setup websocket connection for console use
     function establishInstanceWebSocketConsoleConnection() {
-      $.get("{{ url_for('api') }}/instance/get_instance_websocket_host?id=" + serverId + "&project=" + project + "&instance=" + encodeURI(instance), function (data) {
-        console.log(data);
-        server_addr = data.addr
-        server_port = data.port
+      if ($("#consoleSwitch").is(":checked")){
+        $.get("{{ url_for('api') }}/instance/get_instance_websocket_host?id=" + serverId + "&project=" + project + "&instance=" + encodeURI(instance), function (data) {
+          console.log(data);
+          server_addr = data.addr
+          server_port = data.port
 
-        if (data.proxy) 
-          wss_addr = data.proxy
-        else 
-          wss_addr = data.addr + ':' + data.port;
+          if (data.proxy) 
+            wss_addr = data.proxy
+          else 
+            wss_addr = data.addr + ':' + data.port;
 
-        //Check to see if we can connect to the LXD server over a secure connection
-        fetch('https://' + wss_addr + '/1.0?addr=' + server_addr + '&port=' + data.port, { mode: 'no-cors' })
-        .then(response => {
-          //If we made it here then the self-signed LXD certificate would have been already trusted by the user's browser we can setup a secure websocket connection
-          $.post("{{ url_for('api') }}/instance/establish_instance_console_websocket?id=" + serverId + "&project=" + project + "&instance=" + encodeURI(instance), { 
-            width: consoleTerminal.cols,
-            height: consoleTerminal.rows
-          }, function (data) {
-            console.log(data);
-            var operation = data.operation;
-            var consoleControlURL = "wss://" + wss_addr + operation + "/websocket?secret=" + data.control + "&addr=" + server_addr + "&port=" + server_port;
-            var consoleDataURL = "wss://" + wss_addr + operation + "/websocket?secret=" + data.secret + "&addr=" + server_addr + "&port=" + server_port;
+          //Check to see if we can connect to the LXD server over a secure connection
+          fetch('https://' + wss_addr + '/1.0?addr=' + server_addr + '&port=' + data.port, { mode: 'no-cors' })
+          .then(response => {
+            //If we made it here then the self-signed LXD certificate would have been already trusted by the user's browser we can setup a secure websocket connection
+            $.post("{{ url_for('api') }}/instance/establish_instance_console_websocket?id=" + serverId + "&project=" + project + "&instance=" + encodeURI(instance) + "&type=vga", {
+              width: 0,
+              height: 0
+            }, function (data) {
+              console.log(data);
+              var operation = data.operation;
+              var consoleControlURL = "wss://" + wss_addr + operation + "/websocket?secret=" + data.control + "&addr=" + server_addr + "&port=" + server_port;
+              var consoleDataURL = "wss://" + wss_addr + operation + "/websocket?secret=" + data.secret + "&addr=" + server_addr + "&port=" + server_port;
+              console.log('dataURL='+ consoleDataURL)
 
-            if(operation == "" && operationData.secret == ""){
-              alert("Unable to connect via websocket");
-              return;
-            }
-            
-            //Create a new "control" websocket
-            consoleControlSocket = new WebSocket(consoleControlURL);
-
-            //Listen for "control" websocket errors
-            consoleControlSocket.onerror = function (e) {
-              console.log("There was a WebSocket error: " + e);
-            }
-
-            //Listen for "control" websocket opening connection
-            consoleControlSocket.onopen = function (e) {
-              console.log( "Console Control WebSocket ReadyState: " + consoleControlSocket.readyState ); 
-            };
-    
-            //Listen for "control" websocket messages
-            consoleControlSocket.onmessage = function (e) {      
-              if (e.data instanceof ArrayBuffer) {
-                if (convertArrayBuffer2String(e.data) != null){
-                  consoleTerminal.write(convertArrayBuffer2String(e.data));
-                }
+              if(operation == "" && operationData.secret == ""){
+                alert("Unable to connect via websocket");
+                return;
               }
-            };
-
-            //Listen for "control" websocket closing
-            consoleControlSocket.onclose = function (e) {
-              console.log(e);
-            };
-
-            //Create a new "data" websocket
-            consoleDataSocket = new WebSocket(consoleDataURL);
               
-            //Listen for "data" websocket errors
-            consoleDataSocket.onerror = function (e) {
-              console.log("There was a WebSocket error: " + e);
-            }
+              //Create a new "control" websocket
+              consoleGUIControlSocket = new WebSocket(consoleControlURL);
 
-            //Listen for "data" websocket opening connection
-            consoleDataSocket.onopen = function (e) {
-              //Set binaryType to ArrayBuffer. This should be default value
-              consoleDataSocket.binaryType = 'arraybuffer';
-              
-              console.log( "Console Data WebSocket ReadyState: " + consoleDataSocket.readyState );
-              consoleTerminal.write("--- Secure Websocket Connection Opened --- \r\n");
+              //Listen for "control" websocket errors
+              consoleGUIControlSocket.onerror = function (e) {
+                console.log("There was a WebSocket error: " + e);
+              }
 
-              //Send return to show login screen on console connections
-              setTimeout(() => { consoleDataSocket.send(convertString2ArrayBuffer('\r')); }, 1000);
+              //Listen for "control" websocket opening connection
+              consoleGUIControlSocket.onopen = function (e) {
+                console.log( "Console Control WebSocket ReadyState: " + consoleGUIControlSocket.readyState ); 
+              };
+      
+              //Listen for "control" websocket messages
+              consoleGUIControlSocket.onmessage = function (e) {      
+                if (e.data instanceof ArrayBuffer) {
+                  if (convertArrayBuffer2String(e.data) != null){
+                    console.log(e.data);
+                  }
+                }
+              };
+
+              //Listen for "control" websocket closing
+              consoleGUIControlSocket.onclose = function (e) {
+                console.log(e);
+              };
+
+              //Connect to Spice GUI
+              connect(consoleDataURL)
+
+            });
+
+          })
+          .catch((error) => {
+            console.log("Error: ", error)
+            //If we make it here then we had an error connection to LXD server. Most likely the Self-Signed Certificate is not yet trusted by the user's browser
+            data = 'There was an error connecting to your LXD server. <br />The LXD server may be using a self-signed certificate. <br />Click <a href="https://' + wss_addr + '?addr=' + server_addr + '&port=' + data.port + '" target="_blank">here</a> to accept the certificate if not yet trusted.';
+            $("#webSocketConnectionError").html(data);
+            $('#webSocketConnectionErrorModal').modal('show');
+          })
+
+        });
+      }
+      else {
+        $.get("{{ url_for('api') }}/instance/get_instance_websocket_host?id=" + serverId + "&project=" + project + "&instance=" + encodeURI(instance), function (data) {
+          console.log(data);
+          server_addr = data.addr
+          server_port = data.port
+
+          if (data.proxy) 
+            wss_addr = data.proxy
+          else 
+            wss_addr = data.addr + ':' + data.port;
+
+          //Check to see if we can connect to the LXD server over a secure connection
+          fetch('https://' + wss_addr + '/1.0?addr=' + server_addr + '&port=' + data.port, { mode: 'no-cors' })
+          .then(response => {
+            //If we made it here then the self-signed LXD certificate would have been already trusted by the user's browser we can setup a secure websocket connection
+            $.post("{{ url_for('api') }}/instance/establish_instance_console_websocket?id=" + serverId + "&project=" + project + "&instance=" + encodeURI(instance) + "&type=console", { 
+              width: consoleTerminal.cols,
+              height: consoleTerminal.rows
+            }, function (data) {
+              console.log(data);
+              var operation = data.operation;
+              var consoleControlURL = "wss://" + wss_addr + operation + "/websocket?secret=" + data.control + "&addr=" + server_addr + "&port=" + server_port;
+              var consoleDataURL = "wss://" + wss_addr + operation + "/websocket?secret=" + data.secret + "&addr=" + server_addr + "&port=" + server_port;
+
+              if(operation == "" && operationData.secret == ""){
+                alert("Unable to connect via websocket");
+                return;
+              }
               
-              //Switch console action buttons
-              $("#startConsoleButton").hide();
-              $("#stopConsoleButton").show();
-            };
-        
-            //Listen for "data" websocket messages
-            consoleDataSocket.onmessage = function (e) {   
-              if (e.data.length == 0) {
-                consoleControlSocket.close();
-                consoleDataSocket.close();
-              } else {   
+              //Create a new "control" websocket
+              consoleControlSocket = new WebSocket(consoleControlURL);
+
+              //Listen for "control" websocket errors
+              consoleControlSocket.onerror = function (e) {
+                console.log("There was a WebSocket error: " + e);
+              }
+
+              //Listen for "control" websocket opening connection
+              consoleControlSocket.onopen = function (e) {
+                console.log( "Console Control WebSocket ReadyState: " + consoleControlSocket.readyState ); 
+              };
+      
+              //Listen for "control" websocket messages
+              consoleControlSocket.onmessage = function (e) {      
                 if (e.data instanceof ArrayBuffer) {
                   if (convertArrayBuffer2String(e.data) != null){
                     consoleTerminal.write(convertArrayBuffer2String(e.data));
                   }
                 }
+              };
+
+              //Listen for "control" websocket closing
+              consoleControlSocket.onclose = function (e) {
+                console.log(e);
+              };
+
+              //Create a new "data" websocket
+              consoleDataSocket = new WebSocket(consoleDataURL);
+                
+              //Listen for "data" websocket errors
+              consoleDataSocket.onerror = function (e) {
+                console.log("There was a WebSocket error: " + e);
               }
-            };
 
-            //Listen for "data" websocket closing
-            consoleDataSocket.onclose = function (e) {
-              console.log(e);
-              consoleTerminal.write("\r\n--- Websocket Connection Closed ---\r\n");
-              $("#stopConsoleButton").hide();
-              $("#startConsoleButton").show();
-            };
+              //Listen for "data" websocket opening connection
+              consoleDataSocket.onopen = function (e) {
+                //Set binaryType to ArrayBuffer. This should be default value
+                consoleDataSocket.binaryType = 'arraybuffer';
+                
+                console.log( "Console Data WebSocket ReadyState: " + consoleDataSocket.readyState );
+                consoleTerminal.write("--- Secure Websocket Connection Opened --- \r\n");
 
-          });
+                //Send return to show login screen on console connections
+                setTimeout(() => { consoleDataSocket.send(convertString2ArrayBuffer('\r')); }, 1000);
+                
+                //Switch console action buttons
+                $("#startConsoleButton").hide();
+                $("#stopConsoleButton").show();
+                $('#consoleSwitch').attr("disabled", true);
+              };
+          
+              //Listen for "data" websocket messages
+              consoleDataSocket.onmessage = function (e) {   
+                if (e.data.length == 0) {
+                  consoleControlSocket.close();
+                  consoleDataSocket.close();
+                } else {   
+                  if (e.data instanceof ArrayBuffer) {
+                    if (convertArrayBuffer2String(e.data) != null){
+                      consoleTerminal.write(convertArrayBuffer2String(e.data));
+                    }
+                  }
+                }
+              };
 
-        })
-        .catch((error) => {
-          console.log("Error: ", error)
-          //If we make it here then we had an error connection to LXD server. Most likely the Self-Signed Certificate is not yet trusted by the user's browser
-          data = 'There was an error connecting to your LXD server. <br />The LXD server may be using a self-signed certificate. <br />Click <a href="https://' + wss_addr + '?addr=' + server_addr + '&port=' + data.port + '" target="_blank">here</a> to accept the certificate if not yet trusted.';
-          $("#webSocketConnectionError").html(data);
-          $('#webSocketConnectionErrorModal').modal('show');
-        })
+              //Listen for "data" websocket closing
+              consoleDataSocket.onclose = function (e) {
+                console.log(e);
+                consoleTerminal.write("\r\n--- Websocket Connection Closed ---\r\n");
+                $("#stopConsoleButton").hide();
+                $("#startConsoleButton").show();
+                $('#consoleSwitch').attr("disabled", false);
+              };
 
-      });
+            });
+
+          })
+          .catch((error) => {
+            console.log("Error: ", error)
+            //If we make it here then we had an error connection to LXD server. Most likely the Self-Signed Certificate is not yet trusted by the user's browser
+            data = 'There was an error connecting to your LXD server. <br />The LXD server may be using a self-signed certificate. <br />Click <a href="https://' + wss_addr + '?addr=' + server_addr + '&port=' + data.port + '" target="_blank">here</a> to accept the certificate if not yet trusted.';
+            $("#webSocketConnectionError").html(data);
+            $('#webSocketConnectionErrorModal').modal('show');
+          })
+
+        });
+
+      }
 
     }
 
@@ -3347,9 +3446,17 @@
 
     // Close websocket connection for console user
     function closeWebSocketConsoleConnection() {
-      //Closing the "control" websocket for console operations will stop the operation without crashing existing host's WebSockets.
-      consoleControlSocket.close();
-      consoleDataSocket.close();
+      if ($("#consoleSwitch").is(":checked")){
+        disconnect();
+        $("#startConsoleButton").show();
+        $("#stopConsoleButton").hide();
+        $('#consoleSwitch').attr("disabled", false);
+      }
+      else {
+        //Closing the "control" websocket for console operations will stop the operation without crashing existing host's WebSockets.
+        consoleControlSocket.close();
+        consoleDataSocket.close();
+      }
     }
 
     // Close websocket connection for exec use
@@ -3361,7 +3468,6 @@
       execControlSocket.close();
       execDataSocket.close();
     }
-
 
     // Change properties options while adding network device
     function changeInstanceModalTypeOptions(){
@@ -3432,11 +3538,106 @@
         $("#instance_title").text(instance);
         loadPageContent()
         operationStatusCheck()
-      }
+
+        if (instanceType == 'virtual-machine') {
+          $('#consoleSwitchDiv').show()
+          $('#consoleSwitch').prop('checked', true)
+          $('#sendCtrlAltDelButton').show()
+          setConsoleType()
+        }
+        else {
+          $('#consoleSwitchDiv').hide()
+          $('#consoleSwitch').prop('checked',false)
+          setConsoleType()
+        }
+      }      
     
     });
 
   </script>
 
+  <script type="module" crossorigin="anonymous">
+    import * as SpiceHtml5 from "{{ url_for('static', filename='js/spice-html5/main.js') }}";
+
+    var sc;
+
+    function spice_error(e) {
+      disconnect();
+    }
+
+    window.connect = function connect(uri) {
+      if (sc) {
+          sc.stop();
+      }
+
+      try {
+        sc = new SpiceHtml5.SpiceMainConn({uri: uri, screen_id: "spice-screen", onerror: spice_error, onagent: agent_connected });
+      }
+      catch (e) {
+          alert(e.toString());
+          disconnect();
+      }
+
+      //Switch console action buttons
+      $("#startConsoleButton").hide();
+      $("#stopConsoleButton").show();
+      $('#consoleSwitch').attr("disabled", true);
+    }
+
+    window.disconnect = function disconnect() {
+      console.log(">> disconnect");
+      if (sc) {
+          sc.stop();
+      }
+
+      if (window.File && window.FileReader && window.FileList && window.Blob) {
+          var spice_xfer_area = document.getElementById('spice-xfer-area');
+          if (spice_xfer_area != null) {
+            document.getElementById('spice-area').removeChild(spice_xfer_area);
+          }
+          document.getElementById('spice-area').removeEventListener('dragover', SpiceHtml5.handle_file_dragover, false);
+          document.getElementById('spice-area').removeEventListener('drop', SpiceHtml5.handle_file_drop, false);
+      }
+      console.log("<< disconnect");
+
+      //Switch console action buttons
+      $("#startConsoleButton").show();
+      $("#stopConsoleButton").hide();
+      $('#consoleSwitch').attr("disabled", false);
+    }
+
+    function agent_connected(sc) {
+        window.addEventListener('resize', SpiceHtml5.handle_resize);
+        window.spice_connection = this;
+
+        SpiceHtml5.resize_helper(this);
+
+        if (window.File && window.FileReader && window.FileList && window.Blob) {
+            var spice_xfer_area = document.createElement("div");
+            spice_xfer_area.setAttribute('id', 'spice-xfer-area');
+            document.getElementById('spice-area').appendChild(spice_xfer_area);
+            document.getElementById('spice-area').addEventListener('dragover', SpiceHtml5.handle_file_dragover, false);
+            document.getElementById('spice-area').addEventListener('drop', SpiceHtml5.handle_file_drop, false);
+        }
+        else {
+            console.log("File API is not supported");
+        }
+    }
+
+    /* SPICE port event listeners
+    window.addEventListener('spice-port-data', function(event) {
+        // Here we convert data to text, but really we can obtain binary data also
+        var msg_text = arraybuffer_to_str(new Uint8Array(event.detail.data));
+        DEBUG > 0 && console.log('SPICE port', event.detail.channel.portName, 'message text:', msg_text);
+    });
+
+    window.addEventListener('spice-port-event', function(event) {
+        DEBUG > 0 && console.log('SPICE port', event.detail.channel.portName, 'event data:', event.detail.spiceEvent);
+    });
+    */
+
+    // document.getElementById('connectButton').onclick = connect;
+    document.getElementById('sendCtrlAltDelButton').addEventListener('click', function(){ console.log('ctrlAltDel'); SpiceHtml5.sendCtrlAltDel(sc); });
+  </script>
 
 {% endblock script %}
