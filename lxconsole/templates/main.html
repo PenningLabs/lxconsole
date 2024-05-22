@@ -40,7 +40,7 @@
 
       <footer class="main-footer">
         <div class="float-right d-none d-sm-block">
-          Version 0.5.0
+          Version 0.5.1
         </div>
         Copyright &copy; 2020-Present <a href="https://penninglabs.com">Penning Labs</a>. All rights reserved.
       </footer>
@@ -264,17 +264,17 @@
       }
 
       function setDarkTheme() {
-        sessionStorage.setItem('theme-color', 'dark')
+        localStorage.setItem('theme-color', 'dark')
         applyThemeColor()
       }
 
       function setLightTheme() {
-        sessionStorage.setItem('theme-color', 'default')
+        localStorage.setItem('theme-color', 'default')
         applyThemeColor()
       }
   
       function applyThemeColor() {
-        if (sessionStorage.getItem('theme-color') == 'dark') {
+        if (localStorage.getItem('theme-color') == 'dark') {
           $('#main-body').addClass('dark-mode');
           $('#main-nav').addClass('navbar-black navbar-dark');
           $('#main-nav').removeClass('navbar-white navbar-light');

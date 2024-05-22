@@ -1,3 +1,7 @@
+# 0.5.1
+ - Added VGA console support for Chrome
+ - Changed theme persistence from sessionStorage to localStorage
+
 # 0.5.0
  - Added Dark theme option
  - Added VGA based console option to Virtual Machines via Spice-HTML5

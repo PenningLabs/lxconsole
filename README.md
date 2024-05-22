@@ -1,19 +1,19 @@
 # lxconsole
-This open source application that provides a web-based user interface capable of managing multiple LXD servers from a single location. Some of the features include:
+This open source application that provides a web-based user interface capable of managing multiple Incus and LXD servers from a single location. Some of the features include:
 
-- Connect and manage multiple LXD servers
-- Create LXD container and virtual machine instances from either a form or JSON input
-- Start, stop, rename, and delete LXD instances
+- Connect and manage multiple servers
+- Create container and virtual machine instances from either a form or JSON input
+- Start, stop, rename, and delete instances
 - Copy instances to create new instances 
 - Create, restore and delete snapshots of instances
 - Create instances from snaphots
-- Migrate instances between hosts on an LXD cluster
-- Download LXD container and virtual machine images to LXD hosts
-- Create, edit, apply, and remove LXD profiles
+- Migrate instances between hosts on a cluster
+- Download container and virtual machine images to hosts
+- Create, edit, apply, and remove profiles
 - Create, edit, and delete networks, storage pools, storage volumes, and projects
-- Switch between projects on an LXD host
+- Switch between projects on a host
 - Interact with instances using web-based terminal
-- Create and download backups of LXD instance to your local computer
+- Create and download backups of an instance to your local computer
 - Create local users and groups
 - Apply role based access control
 

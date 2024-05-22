@@ -50,7 +50,7 @@ function SpiceConn(o)
     if (o === undefined || o.uri === undefined || ! o.uri)
         throw new Error("You must specify a uri");
 
-    this.ws = new WebSocket(o.uri, 'binary');
+    this.ws = new WebSocket(o.uri);
 
     if (! this.ws.binaryType)
         throw new Error("WebSocket doesn't support binaryType.  Try a different browser.");
@@ -420,7 +420,7 @@ SpiceConn.prototype =
         else if (this.type == Constants.SPICE_CHANNEL_SMARTCARD)
             return "smartcard";
         else if (this.type == Constants.SPICE_CHANNEL_USBREDIR)
-            return "usbredir";
+            return "Fusbredir";
         else if (this.type == Constants.SPICE_CHANNEL_PORT)
             return "port";
         else if (this.type == Constants.SPICE_CHANNEL_WEBDAV)
