@@ -342,6 +342,19 @@
                 return '-'
               },
             },
+            { title: "Started At", data: function (row, type, set) {
+                if (row.hasOwnProperty('state')) {
+                  if (row.state.hasOwnProperty('started_at')) {
+                    if (row.state['started_at'] && row.state['started_at'] != '0001-01-01T00:00:00Z'){
+                      timestamp = new Date(row.state['started_at'])
+                      timestamp.setMilliseconds(0);
+                      return timestamp.toISOString().replace(".000Z", "Z");
+                    }
+                  }
+                }
+                return '-'
+              },
+            },
             { title: "Actions", data: function (row, type, set) {
                 links = ''
                 if (row.hasOwnProperty('name') && row.hasOwnProperty('status')) {
@@ -465,6 +478,19 @@
                       return (row.disk / 1024 / 1024).toFixed(2) + ' MiB'
                     }
                     return row.disk
+                  }
+                }
+                return '-'
+              },
+            },
+            { title: "Started At", data: function (row, type, set) {
+                if (row.hasOwnProperty('state')) {
+                  if (row.state.hasOwnProperty('started_at')) {
+                    if (row.state['started_at'] && row.state['started_at'] != '0001-01-01T00:00:00Z'){
+                      timestamp = new Date(row.state['started_at'])
+                      timestamp.setMilliseconds(0);
+                      return timestamp.toISOString().replace(".000Z", "Z");
+                    }
                   }
                 }
                 return '-'

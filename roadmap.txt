@@ -1,7 +1,6 @@
 # 0.5.0+
 - Add bootstrap toast notifications
 - Add warnings
-- Add instance start times
 
 # 0.6.0
 - Add two factor authentication option

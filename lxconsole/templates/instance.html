@@ -181,6 +181,7 @@
                     <tr><td class="pr-3">Swap:</td> <td><span id="swap"></span></td></tr>
                     <tr><td class="pr-3">PID:</td> <td><span id="pid"></span></td></tr>
                     <tr><td class="pr-3">Processes:</td> <td><span id="processes"></span></td></tr>
+                    <tr><td class="pr-3">Start Time:</td> <td><span id="startTime"></span></td></tr>
                   </table>
                 </div>
               </div>
@@ -972,6 +973,21 @@
         $("#swap").text(parseFloat(parseInt(data.memory.swap_usage) / 1024 / 1024 / 1024).toFixed(2)  + ' GiB')
         $("#pid").text(data.pid)
         $("#processes").text(data.processes)
+
+      
+        if (data.hasOwnProperty('started_at')) {
+          if (data['started_at'] && data['started_at'] != '0001-01-01T00:00:00Z'){
+            timestamp = new Date(data['started_at'])
+            timestamp.setMilliseconds(0);
+            $("#startTime").text(timestamp.toISOString().replace(".000Z", "Z"));
+          }
+          else {
+            $("#startTime").text('-')
+          }
+        }
+        else {
+          $("#startTime").text('-')
+        }
 
         //Get Memory and CPU progress bar status if runnning
         if (data.status == "Running"){
