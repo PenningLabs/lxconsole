@@ -72,11 +72,6 @@ color:#ff0000 ;
   background-color: #fefefe;
 }
 
-table {
-  table-layout:fixed;
-  width:100%;
-}
-
 .choices {
   font-size: 1rem;
 }

@@ -749,34 +749,37 @@ def api_instance_endpoint(endpoint):
     instance = json.dumps(results.json())
     instance = json.loads(instance)
     devices = []
-    if 'expanded_devices' in instance['metadata']:
-      expanded_devices = instance['metadata']['expanded_devices']
+    if 'metadata' in instance.keys() and instance['metadata']:
+      if 'expanded_devices' in instance['metadata'].keys() and instance['metadata']['expanded_devices']:
+        expanded_devices = instance['metadata']['expanded_devices']
+      else:
+        expanded_devices = []
+
       instance_state_url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/instances/' + name + '/state?project=' + project
       
       instance_state = requests.get(instance_state_url, verify=server.ssl_verify, cert=(client_cert, client_key))
       instance_state = json.dumps(instance_state.json())
       instance_state = json.loads(instance_state)
 
-      if expanded_devices:
-        for expanded_device in expanded_devices:
-          if 'type' in expanded_devices[expanded_device]:
-            if expanded_devices[expanded_device]['type'] == 'disk':
-              device = {}
-              device.update({ 'device': expanded_device })
-              device.update({ 'type': expanded_devices[expanded_device]['type'] })
-              if 'path' in expanded_devices[expanded_device]:
-                device.update({ 'path': expanded_devices[expanded_device]['path'] })
-              if 'pool' in expanded_devices[expanded_device]:
-                device.update({ 'pool': expanded_devices[expanded_device]['pool'] })
-              if 'source' in expanded_devices[expanded_device]:
-                device.update({ 'source': expanded_devices[expanded_device]['source'] })
+      for expanded_device in expanded_devices:
+        if 'type' in expanded_devices[expanded_device]:
+          if expanded_devices[expanded_device]['type'] == 'disk':
+            device = {}
+            device.update({ 'device': expanded_device })
+            device.update({ 'type': expanded_devices[expanded_device]['type'] })
+            if 'path' in expanded_devices[expanded_device]:
+              device.update({ 'path': expanded_devices[expanded_device]['path'] })
+            if 'pool' in expanded_devices[expanded_device]:
+              device.update({ 'pool': expanded_devices[expanded_device]['pool'] })
+            if 'source' in expanded_devices[expanded_device]:
+              device.update({ 'source': expanded_devices[expanded_device]['source'] })
 
-              if 'metadata' in instance_state:
-                if 'disk' in instance_state['metadata']:
-                  if instance_state['metadata']['disk'] and expanded_device in instance_state['metadata']['disk']:
-                    if 'usage' in instance_state['metadata']['disk'][expanded_device]: 
-                      device.update({ 'usage': instance_state['metadata']['disk'][expanded_device]['usage'] })
-              devices.append(device)
+            if 'metadata' in instance_state:
+              if 'disk' in instance_state['metadata']:
+                if instance_state['metadata']['disk'] and expanded_device in instance_state['metadata']['disk']:
+                  if 'usage' in instance_state['metadata']['disk'][expanded_device]: 
+                    device.update({ 'usage': instance_state['metadata']['disk'][expanded_device]['usage'] })
+            devices.append(device)
     return jsonify({ 'data': devices })
 
 
@@ -795,9 +798,12 @@ def api_instance_endpoint(endpoint):
     results = requests.get(url, verify=server.ssl_verify, cert=(client_cert, client_key))
     instance = json.dumps(results.json())
     instance = json.loads(instance)
-    expanded_devices = instance['metadata']['expanded_devices']
     devices = []
-    if expanded_devices:
+    if 'metadata' in instance.keys() and instance['metadata']:
+      if 'expanded_devices' in instance['metadata'].keys() and instance['metadata']['expanded_devices']:
+        expanded_devices = instance['metadata']['expanded_devices']
+      else:
+        expanded_devices = []
       for expanded_device in expanded_devices:
         if expanded_devices[expanded_device]['type'] == 'gpu':
           device = {}
@@ -842,9 +848,13 @@ def api_instance_endpoint(endpoint):
     results = requests.get(url, verify=server.ssl_verify, cert=(client_cert, client_key))
     instance = json.dumps(results.json())
     instance = json.loads(instance)
-    networks = instance['metadata']['network']
     interfaces = []
-    if networks:
+    if 'metadata' in instance.keys() and instance['metadata']:
+      if 'network' in instance['metadata'].keys() and instance['metadata']['network']:
+        networks = instance['metadata']['network']
+      else:
+        networks = []
+      
       for network in networks:
         if network:
           interface = {}
@@ -879,9 +889,13 @@ def api_instance_endpoint(endpoint):
     results = requests.get(url, verify=server.ssl_verify, cert=(client_cert, client_key))
     instance = json.dumps(results.json())
     instance = json.loads(instance)
-    expanded_devices = instance['metadata']['expanded_devices']
     devices = []
-    if expanded_devices:
+    if 'metadata' in instance.keys() and instance['metadata']:
+      if 'expanded_devices' in instance['metadata'].keys() and instance['metadata']['expanded_devices']:
+        expanded_devices = instance['metadata']['expanded_devices']
+      else:
+        expanded_devices = []
+
       for expanded_device in expanded_devices:
         if expanded_devices[expanded_device]['type'] == 'nic':
           device = {}
@@ -914,9 +928,13 @@ def api_instance_endpoint(endpoint):
     results = requests.get(url, verify=server.ssl_verify, cert=(client_cert, client_key))
     instance = json.dumps(results.json())
     instance = json.loads(instance)
-    expanded_devices = instance['metadata']['expanded_devices']
     devices = []
-    if expanded_devices:
+    if 'metadata' in instance.keys() and instance['metadata']:
+      if 'expanded_devices' in instance['metadata'].keys() and instance['metadata']['expanded_devices']:
+        expanded_devices = instance['metadata']['expanded_devices']
+      else:
+        expanded_devices = []
+
       for expanded_device in expanded_devices:
         if expanded_devices[expanded_device]['type'] == 'proxy':
           device = {}
@@ -961,9 +979,13 @@ def api_instance_endpoint(endpoint):
     results = requests.get(url, verify=server.ssl_verify, cert=(client_cert, client_key))
     instance = json.dumps(results.json())
     instance = json.loads(instance)
-    expanded_devices = instance['metadata']['expanded_devices']
     devices = []
-    if expanded_devices:
+    if 'metadata' in instance.keys() and instance['metadata']:
+      if 'expanded_devices' in instance['metadata'].keys() and instance['metadata']['expanded_devices']:
+        expanded_devices = instance['metadata']['expanded_devices']
+      else:
+        expanded_devices = []
+
       for expanded_device in expanded_devices:
         if expanded_devices[expanded_device]['type'] == 'unix-block' or expanded_devices[expanded_device]['type'] == 'unix-char':
           device = {}
@@ -1004,9 +1026,13 @@ def api_instance_endpoint(endpoint):
     results = requests.get(url, verify=server.ssl_verify, cert=(client_cert, client_key))
     instance = json.dumps(results.json())
     instance = json.loads(instance)
-    expanded_devices = instance['metadata']['expanded_devices']
     devices = []
-    if expanded_devices:
+    if 'metadata' in instance.keys() and instance['metadata']:
+      if 'expanded_devices' in instance['metadata'].keys() and instance['metadata']['expanded_devices']:
+        expanded_devices = instance['metadata']['expanded_devices']
+      else:
+        expanded_devices = []
+
       for expanded_device in expanded_devices:
         if expanded_devices[expanded_device]['type'] == 'usb':
           device = {}

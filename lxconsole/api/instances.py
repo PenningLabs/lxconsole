@@ -182,7 +182,7 @@ def api_instances_endpoint(endpoint):
       instances['metadata'][i]['ipv4_addresses'] = []
       instances['metadata'][i]['ipv6_addresses'] = []
 
-      if 'state' in instance.keys():
+      if 'state' in instance.keys() and instance['state']:
 
         # Set memory information if exists
         if 'memory' in instance['state'].keys():
@@ -216,6 +216,8 @@ def api_instances_endpoint(endpoint):
               for address in addresses:
                 if address['family'] == 'inet6' and address['scope'] == 'global':
                   instances['metadata'][i]['ipv6_addresses'] += [ address['address'] + ' (' + network + ')' ]
+      else:
+        instances['metadata'][i]['state'] = ''
       i += 1
     return jsonify(instances)
    

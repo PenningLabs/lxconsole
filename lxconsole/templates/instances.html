@@ -34,8 +34,9 @@
             </div>
           </div>
           <div class="card-body">
-            <table class="table" id="containerDataTable" width="100%" cellspacing="0">
-            </table>
+            <div class="table-responsive">
+              <table class="table" id="containerDataTable" width="100%" cellspacing="0"></table>
+            </div>
           </div>
         </div>
       </div>
@@ -51,8 +52,9 @@
             </div>
           </div>
           <div class="card-body">
-            <table class="table" id="virtualMachineDataTable" width="100%" cellspacing="0">
-            </table>
+            <div class="table-responsive">
+              <table class="table" id="virtualMachineDataTable" width="100%" cellspacing="0"></table>
+            </div>
           </div>
         </div>
       </div>
@@ -274,6 +276,9 @@
                     if (row.status == "Frozen") {
                       return '<i class="fas fa-pause-circle fa-sm text-info mr-1" aria-hidden="true"></i> Frozen'
                     }
+                    if (row.status == "Error") {
+                      return '<i class="fas fa-times-circle fa-sm text-danger mr-1" aria-hidden="true"></i> Error'
+                    }
                     return row.status
                   }
                 }
@@ -361,7 +366,7 @@
                   if (row.name && row.status){
                     if (row.status == 'Frozen')
                       links += '<a href="#" onclick=changeItemState(\''+row.name+'\',\'unfreeze\')><i class="fas fa-pause fa-lg" title="Unfreeze" aria-hidden="true"></i></a>'
-                    else if (row.status == 'Stopped')
+                    else if (row.status == 'Stopped' || row.status == 'Error')
                       links += '<a href="#" onclick=changeItemState(\''+row.name+'\',\'start\')><i class="fas fa-play fa-lg" title="Start" aria-hidden="true"></i></a>'
                     else if (row.status == 'Running')
                       links += '<a href="#" onclick=changeItemState(\''+row.name+'\',\'stop\')><i class="fas fa-stop fa-lg" title="Stop" aria-hidden="true"></i></a>'
@@ -415,6 +420,9 @@
                     if (row.status == "Frozen") {
                       return '<i class="fas fa-pause-circle fa-sm text-info mr-1" aria-hidden="true"></i> Frozen'
                     }
+                    if (row.status == "Error") {
+                      return '<i class="fas fa-times-circle fa-sm text-danger mr-1" aria-hidden="true"></i> Error'
+                    }
                     return row.status
                   }
                 }
@@ -502,7 +510,7 @@
                   if (row.name && row.status){
                     if (row.status == 'Frozen')
                       links += '<a href="#" onclick=changeItemState(\''+row.name+'\',\'unfreeze\')><i class="fas fa-pause fa-lg" title="Unfreeze" aria-hidden="true"></i></a>'
-                    else if (row.status == 'Stopped')
+                    else if (row.status == 'Stopped' || row.status == 'Error')
                       links += '<a href="#" onclick=changeItemState(\''+row.name+'\',\'start\')><i class="fas fa-play fa-lg" title="Start" aria-hidden="true"></i></a>'
                     else if (row.status == 'Running')
                       links += '<a href="#" onclick=changeItemState(\''+row.name+'\',\'stop\')><i class="fas fa-stop fa-lg" title="Stop" aria-hidden="true"></i></a>'

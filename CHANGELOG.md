@@ -1,5 +1,9 @@
+# 0.5.3
+ - Updated instances list to handle Error status
+
 # 0.5.2
  - Added started_at time to instances info
+ 
 # 0.5.1
  - Added VGA console support for Chrome
  - Changed theme persistence from sessionStorage to localStorage

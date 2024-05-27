@@ -876,8 +876,12 @@
     // Loads the Instance Data
     function loadInstanceData() {
       $.get("{{ url_for('api') }}/instance/get_instance?id="+serverId+"&project="+project+"&name="+instance+"&recursion=1", function (data) {
-
         data = data.metadata;
+        if (!typeof data === 'object' || data == null){
+          $("#status").text('Error');
+          return;
+        }
+
         dataConfig = data.config;
         target_location = data.location
 
@@ -967,6 +971,13 @@
 
       $.get("{{ url_for('api') }}/instance/get_instance_state?id="+serverId+"&project="+project+"&name="+instance+"&recursion=1", function (data) {
         data = data.metadata;
+        if (!typeof data === 'object' || data == null){
+          data = {}
+          data.status = 'Stopped'
+          displayMenuOptions(data)
+          return;
+        }
+
         displayMenuOptions(data)
         $("#cpu").text(parseFloat(parseInt(data.cpu.usage) / 1000000).toFixed(2)  + ' ms')
         $("#memory").text(parseFloat(parseInt(data.memory.usage) / 1024 / 1024 / 1024).toFixed(2)  + ' GiB')
