@@ -1,0 +1,64 @@
+<!-- Edit Modal-->
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Edit Warning</h5>
+          <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <label class="col-12 col-form-label" id="warningNameEditInput"></label>
+            <div class="col-12">
+              <div class="form-group text-right">
+                <pre>
+                  <textarea name="json" class="form-control" id="jsonInput" rows="16" ></textarea>
+                </pre>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+          <a class="btn btn-primary" href="#" onclick="updateItem()" data-bs-dismiss="modal">Submit</a>
+        </div>
+    </div>
+  </div>
+</div>
+  
+<!-- Acknowledge Modal-->
+<div class="modal fade" id="acknowledgeModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="acknowledgeItemModalLabel">Acknowledge Warning</h5>
+          <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <label class="col-3 col-form-label text-right" id="newWarningStatusLabel">Status: </label>
+            <div class="col-7">
+              <div class="form-group">
+                <select id="newWarningStatus" class="form-select" name="type">
+                  <option value="acknowledged" selected>acknowledged</option>
+                  <option value="new">new</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-1">
+              <i class="far fa-sm fa-question-circle" title='Change the status for the warning.'></i>
+            </div>
+          </div>
+          <input type="hidden" id="warningToAcknowledge" name="warningToAcknowledge">
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+          <a class="btn btn-primary" href="#" onclick="updateItemStatus()" data-bs-dismiss="modal">Ok</a>
+        </div>
+    </div>
+  </div>
+</div>

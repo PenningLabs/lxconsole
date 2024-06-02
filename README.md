@@ -19,6 +19,9 @@ This open source application that provides a web-based user interface capable of
 
 Lxconsole is a python web application that used flask as a framework.
 
+Screenshots are available in the screenshots directory
+![screenshot](screenshots/server.png)
+
 This software is currently in BETA TESTING. Please see roadmap.txt for development plans.
 
 Use the following instructions to setup this software on a linux server:

@@ -139,6 +139,11 @@ def storage_pools():
 def storage_volumes():
   return render_template('storage-volumes.html', page_title='Storage Volumes', page_user_id=current_user.id, page_username=current_user.username,)
 
+@app.route("/warnings")
+@login_required
+def warnings():
+  return render_template('warnings.html', page_title='Warnings', page_user_id=current_user.id, page_username=current_user.username,)
+
 @app.route("/backups/<serverId>/<project>/<instance>/<filename>")
 @login_required
 def backups(serverId, project, instance, filename):

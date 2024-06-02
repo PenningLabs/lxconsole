@@ -65,6 +65,7 @@ function applySidebarLinks() {
   $("#networkAclsLinkSidebar").attr("href", "network-acls?id=" + encodeURI(serverId) + "&project=" + encodeURI(project));
   $("#networkZonesLinkSidebar").attr("href", "network-zones?id=" + encodeURI(serverId) + "&project=" + encodeURI(project));
   $("#operationsLinkSidebar").attr("href", "operations?id=" + encodeURI(serverId) + "&project=" + encodeURI(project));
+  $("#warningsLinkSidebar").attr("href", "warnings?id=" + encodeURI(serverId) + "&project=" + encodeURI(project));
   $("#certificatesLinkSidebar").attr("href", "certificates?id=" + encodeURI(serverId) + "&project=" + encodeURI(project));
   $("#simplestreamsLinkSidebar").attr("href", "simplestreams?id=" + encodeURI(serverId) + "&project=" + encodeURI(project));  
 }
@@ -109,6 +110,10 @@ function  applySidebarStyles() {
     if (location.pathname == "/operations"){
       $('#operationsSpan').css('color','#fff');
       $('#operationsIcon').css('color','#fff');
+    }
+    if (location.pathname == "/warnings"){
+      $('#warningsSpan').css('color','#fff');
+      $('#warningsIcon').css('color','#fff');
     }
     if (location.pathname == "/certificates"){
       $('#certificatesSpan').css('color','#fff');

@@ -18,6 +18,7 @@ from . import projects
 from . import simplestreams
 from . import storage_pools
 from . import storage_volumes
+from . import warnings
 
 from . import users
 from . import groups
@@ -49,6 +50,7 @@ api.add_url_rule('/projects/<endpoint>', view_func=projects.api_projects_endpoin
 api.add_url_rule('/simplestreams/<endpoint>', view_func=simplestreams.api_simplestreams_endpoint, methods=['GET', 'POST'])
 api.add_url_rule('/storage-pools/<endpoint>', view_func=storage_pools.api_storage_pools_endpoint, methods=['GET', 'POST'])
 api.add_url_rule('/storage-volumes/<endpoint>', view_func=storage_volumes.api_storage_volumes_endpoint, methods=['GET', 'POST'])
+api.add_url_rule('/warnings/<endpoint>', view_func=warnings.api_warnings_endpoint, methods=['GET', 'POST'])
 
 api.add_url_rule('/users/<endpoint>', view_func=users.api_users_endpoint, methods=['GET', 'POST'])
 api.add_url_rule('/groups/<endpoint>', view_func=groups.api_groups_endpoint, methods=['GET', 'POST'])

@@ -1,0 +1,275 @@
+{% extends "main.html" %}
+
+{% block header %}
+  <div class="row mb-2">
+    <div class="col-sm-6">
+      <h1>{{ page_title | safe }}</h1>
+    </div>
+  </div>
+{% endblock header %}
+
+{% block content %}
+  <div class="col-12">
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title">Warnings</h3>
+        <div class="card-tools">
+          <button type="button" class="btn btn-tool" onclick="reloadPageContent()" title="Refresh">
+          <i class="fas fa-sync"></i>
+          </button>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table" id="myDataTable" width="100%" cellspacing="0"></table>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock content %}
+
+{% block modal %}
+  {% include 'modals/warnings.html' %}
+{% endblock modal %}
+
+{% block script %}
+  <script>
+    var reloadTime = 10000;
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const serverId = urlParams.get('id');
+    const project = urlParams.get('project');
+    var editedWarning = ''
+    applySidebarStyles();
+    applySidebarLinks();
+    populateSidebarLinks();
+    populateNavbarLinks();
+
+    function reloadPageContent() {
+      //Clear the automatic page reload
+      clearTimeout(pageReloadTimeout);
+
+      //Reload the datatables content
+      $('#myDataTable').DataTable().ajax.reload(null, false);
+
+      //Set the automatic page reload
+      pageReloadTimeout = setTimeout(() => { reloadPageContent(); }, reloadTime);
+    }
+
+    function loadPageContent(){
+
+      //Display the current project
+      $("#selectedProject").text(project);
+
+      //Loaded from main.html template
+      populateServerSelectDropdown()
+      populateProjectSelectDropdown()
+
+      // Configure Datatable
+      $('#myDataTable').DataTable({
+        ajax: {
+          url: "{{ url_for('api') }}/warnings/list_warnings?id="+serverId+"&project=" + project + "&recursion=1",
+          dataType: "json",
+          dataSrc: "metadata",
+          contentType: "application/json",
+          error: function (xhr, error, code) {
+            console.log(xhr, code);
+          }
+        },
+        columns: [
+          /*
+            {
+              "entity_url": "/1.0/instances/c1?project=default",
+              "first_seen_at": "2021-03-23T17:38:37.753398689-04:00",
+            }
+          */
+          { title: "Type", data: function (row, type, set) {
+              if (row.hasOwnProperty('type')) {
+                if (row.type)
+                  return row.type
+              }
+              return '-'
+            },
+          },
+          { title: "Status", data: function (row, type, set) {
+                if (row.hasOwnProperty('status')) {
+                  if (row.status){
+                    if (row.status == "resolved") {
+                      return '<i class="fas fa-check-circle fa-sm text-success mr-1" aria-hidden="true"></i> resolved'
+                    }
+                    if (row.status == "new") {
+                      return '<i class="fas fa-exclamation-circle fa-sm text-danger mr-1" aria-hidden="true"></i> new'
+                    }
+                    if (row.status == "acknowledged") {
+                      return '<i class="fas fa-dot-circle fa-sm text-info mr-1" aria-hidden="true"></i> acknowledged'
+                    }
+                    return row.status
+                  }
+                }
+                return '-'
+              },
+            },
+          { title: "Message", data: function (row, type, set) {
+              if (row.hasOwnProperty('last_message')) {
+                if (row.last_message)
+                  return row.last_message
+              }
+              return '-'
+            },
+          },
+          { title: "Severity", data: function (row, type, set) {
+              if (row.hasOwnProperty('severity')) {
+                if (row.severity)
+                  return row.severity
+              }
+              return '-'
+            },
+          },
+          { title: "UUID", data: function (row, type, set) {
+              if (row.hasOwnProperty('uuid')) {
+                if (row.uuid)
+                  return row.uuid.substring(0,8) + "...";
+              }
+              return '-'
+            },
+          },
+          { title: "Count", data: function (row, type, set) {
+              if (row.hasOwnProperty('count')) {
+                if (row.count)
+                  return row.count
+              }
+              return '-'
+            },
+          },
+          { title: "Project", data: function (row, type, set) {
+              if (row.hasOwnProperty('project')) {
+                if (row.project)
+                  return row.project
+              }
+              return '-'
+            },
+          },
+          { title: "Location", data: function (row, type, set) {
+              if (row.hasOwnProperty('location')) {
+                if (row.location)
+                  return row.location
+              }
+              return '-'
+            },
+          },
+          { title: "Last Seen", data: function (row, type, set) {
+              if (row.hasOwnProperty('last_seen_at')) {
+                if (row.last_seen_at){
+                  timestamp = new Date(row.last_seen_at)
+                  timestamp.setMilliseconds(0);
+                  return timestamp.toISOString().replace(".000Z", "Z").replace("T", " ");
+                }
+              }
+              return '-'
+            },
+          },
+          { title: "Actions", data: function (row, type, set) {
+              links = ''
+              if (row.hasOwnProperty('uuid')) {
+                links = '<a href="#" onclick=editItemStatus(\''+row.uuid+'\')><i class="fas fa-edit fa-lg" title="Edit" aria-hidden="true"></i></a>' +
+                '&nbsp' + '&nbsp' +
+                '<a href="#" onclick=confirmDeleteItem(\''+row.uuid+'\')><i class="fas fa-trash-alt fa-lg" title="Delete" aria-hidden="true"></i></a>'
+              }
+              return links
+            },
+          },
+        ],
+        order: [],
+      });
+
+      //Set reload page content
+      pageReloadTimeout = setTimeout(() => { reloadPageContent(); }, reloadTime);
+
+    }
+
+    function confirmDeleteItem(uuid){
+      console.log("Info: confirming deletion of warning " + uuid);
+      if (confirm("Are you sure you want to delete warning " + uuid + "?") == true) {
+        deleteItem(uuid);
+      }
+    }
+
+    function deleteItem(uuid){
+      console.log("Info: deleting warning " + uuid);
+      $.post("{{ url_for('api') }}/warnings/delete_warning?id=" + serverId + "&project=" + project, { uuid: uuid }, function (data) {
+        console.log(data);
+        if (data.error_code >= 400){
+          alert(data.error);
+        }
+        //Sync type
+        setTimeout(() => { reloadPageContent(); }, 1000);
+        operationStatusCheck()
+      });
+    }
+
+    function editItem(uuid){
+      editedWarning = uuid
+      console.log("Info: loading warning " + uuid);
+      $.post("{{ url_for('api') }}/warnings/load_warning?id=" + serverId + "&project=" + project, { uuid: uuid }, function (data) {
+        console.log(data);
+        if (data.error_code >= 400){
+          alert(data.error);
+        }
+        $("#warningNameEditInput").text("UUID: " + uuid);
+        $("#jsonInput").val(JSON.stringify(data.metadata, null, 2));
+        $("#editModal").modal('show');
+      });
+    }
+
+    function editItemStatus(uuid){
+      console.log("Loading acknowledge modal for warning " + uuid)
+      $("#acknowledgeItemModalLabel").text("Edit warning: " + uuid);
+      $("#warningToAcknowledge").val(uuid);
+      $("#acknowledgeModal").modal('show');
+    }
+
+    function updateItem(){
+      uuid = editedWarning
+      var updatedJSON = $("#jsonInput").val();
+      console.log("Info: updating warning");
+      $.post("{{ url_for('api') }}/warnings/update_warning?id=" + serverId + "&project=" + project + "&uuid=" + encodeURI(uuid), { json: updatedJSON },  function (data) {
+        console.log(data);
+        if (data.error_code >= 400){
+          alert(data.error);
+        }
+        //Sync type
+        setTimeout(() => { reloadPageContent(); }, 1000);
+        operationStatusCheck()
+      });
+    }
+
+    function updateItemStatus(){
+      var warningNewStatus = $("#newWarningStatus").val();
+      var warningToAcknowledge = $("#warningToAcknowledge").val();
+      console.log("Info: changing warning " + warningToAcknowledge);
+      $.post("{{ url_for('api') }}/warnings/update_warning?id=" + serverId + "&project=" + project + "&uuid=" + warningToAcknowledge, { 'status': warningNewStatus },  function (data) {
+        console.log(data);
+        if (data.error_code >= 400){
+          alert(data.error);
+        }
+        //Sync type
+        setTimeout(() => { reloadPageContent(); }, 1000);
+        operationStatusCheck()
+      });
+    } 
+
+    $(document).ready(function(){
+
+      //If id or project variables are missing redirect to servers page
+      if (!serverId || !project) {
+        window.location.href = "{{ url_for('servers') }}";
+      }
+      else {
+        loadPageContent()
+        operationStatusCheck()
+      }
+      
+    });
+
+  </script>
+{% endblock script %}

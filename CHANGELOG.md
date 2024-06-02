@@ -1,3 +1,7 @@
+# 0.5.4
+ - Added screenshots directory with screenshots
+ - Added system warnings page allowing user to acknowledge and delete warnings
+
 # 0.5.3
  - Updated instances list to handle Error status
 

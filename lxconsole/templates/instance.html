@@ -990,7 +990,7 @@
           if (data['started_at'] && data['started_at'] != '0001-01-01T00:00:00Z'){
             timestamp = new Date(data['started_at'])
             timestamp.setMilliseconds(0);
-            $("#startTime").text(timestamp.toISOString().replace(".000Z", "Z"));
+            $("#startTime").text(timestamp.toISOString().replace(".000Z", "Z").replace("T", " "));
           }
           else {
             $("#startTime").text('-')
