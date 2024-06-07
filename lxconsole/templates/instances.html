@@ -243,6 +243,8 @@
     }
 
     function loadContainersTable() {
+      pageLength =  localStorage.getItem('containerDataTable_pageLength') || 10;
+
       if ( ! $.fn.DataTable.isDataTable( '#containerDataTable' ) ) {
         // Configure Containers Datatable
         $('#containerDataTable').DataTable({
@@ -255,6 +257,7 @@
               console.log(xhr, code);
             }
           },
+          pageLength: parseInt(pageLength),
           columns: [
             { title: "Name", data: function (row, type, set) {
                 if (row.hasOwnProperty('name')) {
@@ -387,6 +390,7 @@
     }
 
     function loadVirtualMachinesTable() {
+      pageLength =  localStorage.getItem('virtualMachineDataTable_pageLength') || 10;
       if ( ! $.fn.DataTable.isDataTable( '#virtualMachineDataTable' ) ) {
         // Configure Datatable
         $('#virtualMachineDataTable').DataTable({
@@ -399,6 +403,7 @@
               console.log(xhr, code);
             }
           },
+          pageLength: parseInt(pageLength),
           columns: [
             { title: "Name", data: function (row, type, set) {
                 if (row.hasOwnProperty('name')) {
@@ -722,6 +727,15 @@
         })
         loadPageContent()
         operationStatusCheck()
+
+        // ID for pagelength change event is the id of your table + '_length"
+        $('#containerDataTable_length').on("change", 'select', function(){
+          localStorage.setItem('containerDataTable_pageLength',$(this).val());
+        })
+        $('#virtualMachineDataTable_length').on("change", 'select', function(){
+          localStorage.setItem('virtualMachineDataTable_pageLength',$(this).val());
+        })
+
       }
       
     });

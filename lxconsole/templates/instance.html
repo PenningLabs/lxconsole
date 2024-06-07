@@ -1131,7 +1131,7 @@
             },
             { title: "Size", data: function (row, type, set) {
                 if (row.hasOwnProperty('size')) {
-                  if (row.size){
+                  if (row.size && row.size > 0){
                     if (type === 'display') {
                       return (row.size / 1024 / 1024).toFixed(2) + ' MiB'
                     }
@@ -1143,8 +1143,11 @@
             },
             { title: "Created", data: function (row, type, set) {
                 if (row.hasOwnProperty('created_at')) {
-                  if (row.created_at)
-                    return row.created_at
+                  if (row.created_at){
+                    timestamp = new Date(row.created_at)
+                    timestamp.setMilliseconds(0);
+                    return timestamp.toISOString().replace(".000Z", "Z").replace("T", " ")
+                  }
                 }
                 return '-'
               },
@@ -1207,6 +1210,33 @@
                 return '-'
               },
             },
+            { title: "Status", data: function (row, type, set) {
+              status = ''
+                for (let i = 0; i < operations.length; i++) {
+                  if (operations[i].hasOwnProperty('description') && operations[i].description == 'Backing up instance') {
+                    if (operations[i].hasOwnProperty('resources') && operations[i].resources.hasOwnProperty('backups')) {
+                      if (operations[i].resources.backups[0] == "/1.0/instances/" + instance + '/backups/'+ row.name) {
+                        status = 'Pending'
+                        if (operations[i].hasOwnProperty('metadata') && operations[i].metadata != null && operations[i].metadata.hasOwnProperty('create_backup_progress')) {
+                          if (operations[i].metadata.create_backup_progress != null) {
+                            return 'Saving: ' + operations[i].metadata.create_backup_progress
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+
+                if (row.backup_file_exists) {
+                  return '<i class="fas fa-arrow-circle-down fa-sm text-success" aria-hidden="true"></i> Exported'
+                }
+                else
+                  if (status == 'Pending')
+                    return 'Pending'
+                  else
+                    return '<i class="fas fa-check-circle fa-sm text-success" aria-hidden="true"></i> Completed'
+              },
+            },
             { title: "Instance Only", data: function (row, type, set) {
                 if (row.hasOwnProperty('instance_only')) {
                   // Boolean field
@@ -1226,8 +1256,11 @@
 
             { title: "Created", data: function (row, type, set) {
                 if (row.hasOwnProperty('created_at')) {
-                  if (row.created_at)
-                    return row.created_at
+                  if (row.created_at){
+                    timestamp = new Date(row.created_at)
+                    timestamp.setMilliseconds(0);
+                    return timestamp.toISOString().replace(".000Z", "Z").replace("T", " ")
+                  }
                 }
                 return '-'
               },
@@ -1235,7 +1268,7 @@
             { title: "Expires", data: function (row, type, set) {
                 if (row.hasOwnProperty('expires_at')) {
                   if (row.expires_at) {
-                    if (row.expires_at == '0000-12-31T19:03:58-04:56')
+                    if (row.expires_at == '0000-12-31T19:03:58-04:56' || row.expires_at == '0001-01-01T00:00:00Z')
                       return 'never'
                     return row.expires_at
                   }
@@ -1261,9 +1294,20 @@
                 if (row.hasOwnProperty('name')) {
                   if (row.hasOwnProperty('backup_file_exists')) {
                     if (row.backup_file_exists)
-                      links += '<a><i class="fas fa-file-export fa-lg" style="color:#f1f1f1" title="Export Backup" aria-hidden="true"></i></a>'
-                    else 
-                      links += '<a onclick=exportBackup(\''+row.name+'\')><i class="fas fa-file-export fa-lg" title="Export Backup" aria-hidden="true"></i></a>'
+                      links = '<a><i class="fas fa-file-export fa-lg" style="color:#f1f1f1" title="Export Backup" aria-hidden="true"></i></a>'
+                    else {
+                      links = '<a onclick=exportBackup(\''+row.name+'\')><i class="fas fa-file-export fa-lg" title="Export Backup" aria-hidden="true"></i></a>'
+                      // Before allowing export, make sure no backup operations exists
+                      for (let i = 0; i < operations.length; i++) {
+                        if (operations[i].hasOwnProperty('description') && operations[i].description == 'Backing up instance') {
+                          if (operations[i].hasOwnProperty('resources') && operations[i].resources.hasOwnProperty('backups')) {
+                            if (operations[i].resources.backups[0] == "/1.0/instances/" + instance + '/backups/'+ row.name) {
+                              links = '<a><i class="fas fa-file-export fa-lg" style="color:#f1f1f1" title="Export Backup" aria-hidden="true"></i></a>'
+                            }
+                          }
+                        }
+                      }
+                    }
                     links += '&nbsp' + '&nbsp' 
                   }
                   links += '<a onclick=deleteBackup(\''+row.name+'\')><i class="fas fa-trash-alt fa-lg" title="Delete" aria-hidden="true"></i></a>'

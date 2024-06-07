@@ -74,7 +74,16 @@
         ajax: {
           url: "{{ url_for('api') }}/network-zones/list_network_zones?id="+serverId+"&project=" + project + "&recursion=1",
           dataType: "json",
-          dataSrc: "metadata",
+          //dataSrc: "metadata",
+          dataSrc: function ( d ) {
+            if (d.hasOwnProperty('metatdata') && d.metadata != null) {
+              return d.metadata;
+            }
+            else {
+              d.metadata = []
+              return d.metadata;
+            }
+          },
           contentType: "application/json",
           error: function (xhr, error, code) {
             console.log(xhr, code);
@@ -214,7 +223,11 @@
       else {
         loadPageContent()
         operationStatusCheck()
-
+        
+        // Redirect datatables errors to console log
+        $.fn.dataTable.ext.errMode = function ( settings, helpPage, message ) { 
+          console.log(message);
+        };
       }
       
     });

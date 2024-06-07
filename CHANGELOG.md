@@ -1,3 +1,9 @@
+# 0.5.5
+ - Added status to instance backups
+ - Updated datatables on Network Zones page to handle a returned error
+ - Added persistence for the number of table rows selected in instances page
+ - Updated display rendering of timestamps on instances page
+
 # 0.5.4
  - Added screenshots directory with screenshots
  - Added system warnings page allowing user to acknowledge and delete warnings

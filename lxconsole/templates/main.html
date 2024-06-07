@@ -40,7 +40,7 @@
 
       <footer class="main-footer">
         <div class="float-right d-none d-sm-block">
-          Version 0.5.4
+          Version 0.5.5
         </div>
         Copyright &copy; 2020-Present <a href="https://penninglabs.com">Penning Labs</a>. All rights reserved.
       </footer>
@@ -73,6 +73,8 @@
   
 
     <script>
+      operations = []
+
       function changeProject(project){
         window.location.href = "{{ url_for('server') }}?id=" + serverId + '&project=' + project;
         // var url = new URL(window.location);
@@ -166,6 +168,9 @@
           // Check if we have any running operations
           if (data.metadata.hasOwnProperty('running') && data.metadata.running.length > 0){
 
+            //Set operations results
+            operations = data.metadata.running
+
             // Loop through each operation to find one to display
             for (let i = 0; i < data.metadata.running.length; i++) {
 
@@ -251,6 +256,7 @@
           }
 
           else {
+            operations = []
             // If we had an existing running operation, reload page to update
             if (operationExists) {
               reloadPageContent()
