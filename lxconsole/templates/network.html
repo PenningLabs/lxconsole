@@ -48,7 +48,7 @@
               </div>
               <div class="card-body">
                 <div class="table-responsive">
-                  <table class="table" id="dhcpLeasesTable" width="100%" cellspacing="0">
+                  <table class="table" id="dhcpLeasesDataTable" width="100%" cellspacing="0">
                   </table>
                 </div>
               </div>
@@ -151,7 +151,7 @@
             </div>
             <div class="card-body">
               <div class="table-responsive">
-                <table class="table" id="forwardsTable" width="100%" cellspacing="0">
+                <table class="table" id="forwardsDataTable" width="100%" cellspacing="0">
                 </table>
               </div>
             </div>
@@ -180,7 +180,7 @@
             </div>
             <div class="card-body">
               <div class="table-responsive">
-                <table class="table" id="loadBalancersTable" width="100%" cellspacing="0">
+                <table class="table" id="loadBalancersDataTable" width="100%" cellspacing="0">
                 </table>
               </div>
             </div>
@@ -209,7 +209,7 @@
             </div>
             <div class="card-body">
               <div class="table-responsive">
-                <table class="table table" id="peersTable" width="100%" cellspacing="0">
+                <table class="table table" id="peersDataTable" width="100%" cellspacing="0">
                 </table>
               </div>
             </div>
@@ -319,9 +319,9 @@
     }
 
     function loadDhcpLeasesTable() {
-      if ( ! $.fn.DataTable.isDataTable( '#dhcpLeasesTable' ) ) {
+      if ( ! $.fn.DataTable.isDataTable( '#dhcpLeasesDataTable' ) ) {
         //Load DHCP Leases Table
-        $('#dhcpLeasesTable').DataTable({
+        $('#dhcpLeasesDataTable').DataTable({
           ajax: {
             url: "{{ url_for('api') }}/network/list_network_leases?id="+serverId+"&project="+project+"&name="+network,
             dataType: "json",
@@ -379,14 +379,14 @@
         });
       }
       else {
-        $('#dhcpLeasesTable').DataTable().ajax.reload(null, false);
+        $('#dhcpLeasesDataTable').DataTable().ajax.reload(null, false);
       }
     }
 
     function loadLoadBalancersTable(){
-      if ( ! $.fn.DataTable.isDataTable( '#loadBalancersTable' ) ) {
+      if ( ! $.fn.DataTable.isDataTable( '#loadBalancersDataTable' ) ) {
         //Load Load Balancers Table
-        var loadBalancersTable = $('#loadBalancersTable').DataTable({
+        var loadBalancersDataTable = $('#loadBalancersDataTable').DataTable({
             ajax: {
               url: "{{ url_for('api') }}/network/list_network_load_balancers?id="+serverId+"&project="+project+"&name="+network+"&recursion=1",
               dataType: "json",
@@ -439,14 +439,14 @@
         });
       }
       else {
-        $('#loadBalancersTable').DataTable().ajax.reload(null, false);
+        $('#loadBalancersDataTable').DataTable().ajax.reload(null, false);
       }  
     }
 
     function loadForwardsTable() {
-      if ( ! $.fn.DataTable.isDataTable( '#forwardsTable' ) ) {
+      if ( ! $.fn.DataTable.isDataTable( '#forwardsDataTable' ) ) {
         //Load Forwards Table
-        var forwardsTable = $('#forwardsTable').DataTable({
+        var forwardsDataTable = $('#forwardsDataTable').DataTable({
             ajax: {
               url: "{{ url_for('api') }}/network/list_network_forwards?id="+serverId+"&project="+project+"&name="+network+"&recursion=1",
               dataType: "json",
@@ -499,14 +499,14 @@
         });
       }
       else {
-        $('#forwardsTable').DataTable().ajax.reload(null, false);
+        $('#forwardsDataTable').DataTable().ajax.reload(null, false);
       }        
     }
 
     function loadPeersTables() {
-      if ( ! $.fn.DataTable.isDataTable( '#peersTable' ) ) {
-              //Load Peers Table
-        $('#peersTable').DataTable({
+      if ( ! $.fn.DataTable.isDataTable( '#peersDataTable' ) ) {
+        //Load Peers Table
+        $('#peersDataTable').DataTable({
           ajax: {
             url: "{{ url_for('api') }}/network/list_network_peers?id="+serverId+"&project="+project+"&name="+network+"&recursion=1",
             dataType: "json",
@@ -576,7 +576,7 @@
         });
       }
       else {
-        $('#peersTable').DataTable().ajax.reload(null, false);
+        $('#peersDataTable').DataTable().ajax.reload(null, false);
       }
     }
 

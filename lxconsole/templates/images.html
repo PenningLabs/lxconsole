@@ -16,16 +16,8 @@
 {% block content %}
   <div class="col-12">
     <div class="card">
-      <div class="card-header">
-        <h3 class="card-title">Images</h3>
-        <div class="card-tools">
-          <button type="button" class="btn btn-tool" onclick="reloadPageContent()" title="Refresh">
-          <i class="fas fa-sync"></i>
-          </button>
-        </div>
-      </div>
       <div class="card-body">
-        <table class="table" id="myDataTable" width="100%" cellspacing="0">
+        <table class="table" id="imagesDataTable" width="100%" cellspacing="0">
         </table>
       </div>
     </div>
@@ -34,6 +26,7 @@
 
 {% block modal %}
   {% include 'modals/images.html' %}
+  {% include 'toasts/images.html' %}
 {% endblock modal %}
 
 {% block script %}
@@ -43,6 +36,9 @@
     const urlParams = new URLSearchParams(queryString);
     const serverId = urlParams.get('id');
     const project = urlParams.get('project');
+    const refreshToastBootstrap = bootstrap.Toast.getOrCreateInstance(document.getElementById('refreshToast'))
+    const deleteToastBootstrap = bootstrap.Toast.getOrCreateInstance(document.getElementById('deleteToast'))
+    var scrollY =  localStorage.getItem('imagesDataTableScrollY') || '490px';
     var editedImage = ''
     applySidebarStyles();
     applySidebarLinks();
@@ -54,7 +50,7 @@
       clearTimeout(pageReloadTimeout);
 
       //Reload the datatables content
-      $('#myDataTable').DataTable().ajax.reload(null, false);
+      loadImagesTable()
 
       //Set the automatic page reload
       pageReloadTimeout = setTimeout(() => { reloadPageContent(); }, reloadTime);
@@ -70,106 +66,8 @@
       populateProjectSelectDropdown()
       
       // Configure Datatable
-      $('#myDataTable').DataTable({
-        ajax: {
-          url: "{{ url_for('api') }}/images/list_images?id="+serverId + "&project=" + project + "&recursion=1",
-          dataType: "json",
-          dataSrc: "metadata",
-          contentType: "application/json",
-          error: function (xhr, error, code) {
-            console.log(xhr, code);
-          }
-        },
-        columns: [
-          { title: "Alias", data: function (row, type, set) {
-            arr = []
-            if (row.hasOwnProperty('aliases')) {
-              for (item in row.aliases) {
-                if (row.aliases[item].hasOwnProperty('name')) {
-                  if (row.aliases[item].name != "") {
-                    arr.push(row.aliases[item].name)
-                  }
-                }
-              }
-              if (arr.length > 0) {
-                return arr.join(", ")
-              }
-            }
-            if (row.hasOwnProperty('update_source')) {
-              if (row.update_source.hasOwnProperty('alias')) {
-                if (row.update_source['alias'] != "") {
-                  return row.update_source['alias']
-                }
-              }
-            }
-            return '-'
-            },
-          },
-          { title: "Description", data: function (row, type, set) {
-            if (row.hasOwnProperty('properties')) {
-              if (row.properties.hasOwnProperty('description')) {
-                if (row.properties['description'] != "") {
-                  return row.properties['description']
-                }
-              }
-            }
-            return '-'
-            },
-          },
-          { title: "Update Server", data: function (row, type, set) {
-            if (row.hasOwnProperty('update_source')) {
-              if (row.update_source.hasOwnProperty('server')) {
-                return row.update_source['server']
-              }
-            }
-            return '-'
-            },
-          },
-          { title: "Fingerprint", data: function (row, type, set) {
-              if (row.hasOwnProperty('fingerprint')) {
-                if (row.fingerprint)
-                  return row.fingerprint.substring(0,11) + "...";
-              }
-              return '-'
-            },
-          },
-          { title: "Type", data: function (row, type, set) {
-              if (row.hasOwnProperty('type')) {
-                if (row.type)
-                  return row.type
-              }
-              return '-'
-            },
-          },
-          { title: "Size", data: function (row, type, set) {
-              if (row.hasOwnProperty('size')) {
-                if (row.size) {
-                  if (type === 'display'){
-                    size = row.size / 1024 / 1024
-                    return size.toFixed(2) + ' MiB'
-                  }
-                  return row.size
-                }
-              }
-              return '-'
-            },
-          },
-          { title: "Actions", data: function (row, type, set) {
-              links = ''
-              if (row.hasOwnProperty('fingerprint')) {
-                links = '<a href="#" onclick=editImage(\''+row.fingerprint+'\')><i class="fas fa-edit fa-lg" title="Edit" aria-hidden="true"></i></a>' +
-                  '&nbsp' + '&nbsp' +
-                  '<a href="#" onclick=refreshImage(\''+row.fingerprint+'\')><i class="fas fa-sync-alt fa-lg" title="Refresh" aria-hidden="true"></i></a>' +
-                  '&nbsp' + '&nbsp' +
-                  '<a href="#" onclick=deleteImage(\''+row.fingerprint+'\')><i class="fas fa-trash-alt fa-lg" title="Delete" aria-hidden="true"></i></a>'
-              }  
-              return links
-            },
-          },
-        ],
-        order: [],
-      });
-
+      loadImagesTable()
+      
       //Populate the Simplestreams dropdown in addModal
       $.getJSON("{{ url_for('api') }}/simplestreams/list_simplestreams?id="+serverId, function (data) {
         data = data.data
@@ -190,20 +88,247 @@
 
     }
 
-    function deleteImage(fingerprint){
-      console.log("Info: confirming deletion of image " + fingerprint);
-      if (confirm("Are you sure you want to delete image " + fingerprint.substring(0,11) + "...?") == true) {
-        console.log("Info: deleting image " + fingerprint);
-        $.post("{{ url_for('api') }}/images/delete_image?id=" + serverId + "&project=" + project, { fingerprint: fingerprint }, function (data) {
+    function loadImagesTable(){
+      if ( ! $.fn.DataTable.isDataTable( '#imagesDataTable' ) ) {
+        imagesDataTable = $('#imagesDataTable').DataTable({
+          ajax: {
+            url: "{{ url_for('api') }}/images/list_images?id="+serverId + "&project=" + project + "&recursion=1",
+            dataType: "json",
+            dataSrc: "metadata",
+            contentType: "application/json",
+            error: function (xhr, error, code) {
+              console.log(xhr, code);
+            }
+          },
+          columns: [
+            {
+              data: null,
+              orderable: false,
+              render: DataTable.render.select()
+            },
+            { title: "Alias", data: function (row, type, set) {
+              arr = []
+              if (row.hasOwnProperty('aliases')) {
+                for (item in row.aliases) {
+                  if (row.aliases[item].hasOwnProperty('name')) {
+                    if (row.aliases[item].name != "") {
+                      arr.push(row.aliases[item].name)
+                    }
+                  }
+                }
+                if (arr.length > 0) {
+                  if (type === 'display'){
+                    return arr.join(", ")
+                  }
+                  return arr.join(" ") 
+                }
+              }
+              if (row.hasOwnProperty('update_source')) {
+                if (row.update_source.hasOwnProperty('alias')) {
+                  if (row.update_source['alias'] != "") {
+                    return row.update_source['alias']
+                  }
+                }
+              }
+              return '-'
+              },
+            },
+            { title: "Description", data: function (row, type, set) {
+              if (row.hasOwnProperty('properties')) {
+                if (row.properties.hasOwnProperty('description')) {
+                  if (row.properties['description'] != "") {
+                    return row.properties['description']
+                  }
+                }
+              }
+              return '-'
+              },
+            },
+            { title: "Update Server", data: function (row, type, set) {
+              if (row.hasOwnProperty('update_source')) {
+                if (row.update_source.hasOwnProperty('server')) {
+                  return row.update_source['server']
+                }
+              }
+              return '-'
+              },
+            },
+            { title: "Fingerprint", data: function (row, type, set) {
+                if (row.hasOwnProperty('fingerprint')) {
+                  if (row.fingerprint){
+                    if (type === 'display'){
+                      return row.fingerprint.substring(0,12) + "...";
+                    }
+                    return row.fingerprint
+                  }
+                }
+                return '-'
+              },
+            },
+            { title: "Type", data: function (row, type, set) {
+                if (row.hasOwnProperty('type')) {
+                  if (row.type)
+                    return row.type
+                }
+                return '-'
+              },
+            },
+            { title: "Size", data: function (row, type, set) {
+                if (row.hasOwnProperty('size')) {
+                  if (row.size) {
+                    if (type === 'display'){
+                      size = row.size / 1024 / 1024
+                      return size.toFixed(2) + ' MiB'
+                    }
+                    return row.size
+                  }
+                }
+                return '-'
+              },
+            },
+          ],
+          layout: {
+            topStart: {
+              buttons: [
+                { text: 'Edit',
+                  action: function () { 
+                    rows = imagesDataTable.rows({ selected: true });
+                    editImage(rows.data()[0]['fingerprint']);
+                  },
+                  enabled: false,
+                },
+                'spacer',
+                { text: 'Refresh',
+                  action: function () { 
+                    arr = []
+                    imagesDataTable.rows('.selected').every( function() {
+                      refreshImage(this.data().fingerprint);
+                      arr.push(this.data().fingerprint)
+                    });
+                    //Send toast notification
+                    $('#refreshToastBody').text(arr.join(", "))
+                    refreshToastBootstrap.show()
+                  },
+                  enabled: false,
+                },
+                'spacer',
+                { text: 'Delete',
+                  action: function () { 
+                    arr = []
+                    imagesDataTable.rows('.selected').every( function() {
+                      arr.push(this.data().fingerprint)
+                    });
+                    $("#deleteImagesList").text(arr.join(", "));
+                    $("#deleteImagesHiddenInput").val(JSON.stringify(arr));
+                    $("#deleteModal").modal('show');                    
+                  },
+                  enabled: false,
+                },
+                'spacer',
+                'spacer',
+                'pageLength',
+                'spacer',
+                {
+                  extend: 'collection',
+                  text: 'More',
+                  dropup: true,
+                  buttons: [
+                    {
+                      extend: 'colvis',
+                      text: 'Visible columns',
+                      columns: [1,2,3,4,5,6],
+                    },
+                    // {
+                    //   extend: 'csv',
+                    //   exportOptions: {
+                    //     columns: [1,2,3,4,5,6],
+                    //     orthogonal: 'export',
+                    //   },
+                    //   text: 'Export to CSV',
+                    //   title: 'images',
+                    // },
+                    {
+                      text: (scrollY == '490px') ? 'Disable scrolling' : 'Enable scrolling',
+                      action: function ( e, dt, node, config ) {
+                        if (scrollY == '490px') {
+                          localStorage.setItem('imagesDataTableScrollY', false);
+                          scrollY = false
+                        }
+                        else {
+                          localStorage.setItem('imagesDataTableScrollY', '490px');
+                          scrollY = '490px'
+                        }
+                        dt.destroy()
+                        loadImagesTable()
+                      },
+                    },
+                    {
+                      text: 'Reset table state',
+                      action: function ( e, dt, node, config ) {
+                        dt.state.clear();
+                        window.location.reload();
+                      },
+                    },
+                  ]
+                }
+
+              ]
+            }
+          },
+          lengthMenu: [
+            [10, 25, 50, 100, -1],
+            [10, 25, 50, 100, 'All'],
+          ],
+          order: [
+            [1, 'asc'], 
+            [5, 'asc'], 
+            [2, 'asc'],
+          ],
+          rowId: 'fingerprint',
+          scrollCollapse: true,
+          scrollX: true,
+          scrollY: scrollY,
+          select: {
+            style: 'multi',
+            selector: 'td:first-child',
+            blurable: true,
+            headerCheckbox: 'select-page',
+          },
+          stateDuration: 0,
+          stateSave: true,
+        });
+      }
+      else {
+        $('#imagesDataTable').DataTable().ajax.reload(null, false);
+      }
+
+      imagesDataTable.on('select deselect', function () {
+        var selectedRows = imagesDataTable.rows({ selected: true }).count();
+        imagesDataTable.button(0).enable(selectedRows === 1);
+        imagesDataTable.button(2).enable(selectedRows > 0);
+        imagesDataTable.button(4).enable(selectedRows > 0);
+      });
+    }
+
+    function deleteImages(arr){
+      var deleteImagesHiddenInput = JSON.parse($("#deleteImagesHiddenInput").val());
+      console.log("Info: deleting images " + deleteImagesHiddenInput.join(", "));
+      for (let i = 0; i < deleteImagesHiddenInput.length; i++) {
+        $.post("{{ url_for('api') }}/images/delete_image?id=" + serverId + "&project=" + project, { fingerprint: deleteImagesHiddenInput[i] }, function (data) {
           console.log(data);
           if (data.error_code >= 400){
             alert(data.error);
           }
-          //Sync type
-          setTimeout(() => { reloadPageContent(); }, 1000);
-          operationStatusCheck()
         });
       }
+        
+      //Send toast notification
+      $('#deleteToastBody').text(deleteImagesHiddenInput.join(", "))
+      deleteToastBootstrap.show()
+
+      //Sync type
+      setTimeout(() => { reloadPageContent(); }, 1000);
+      operationStatusCheck()
     }
 
     function refreshImage(fingerprint){

@@ -38,7 +38,7 @@
           </div>
           <div class="card-body">
             <div class="table-responsive">
-              <table class="table" id="myDataTable" width="100%" cellspacing="0">
+              <table class="table" id="networkAclIngressDataTable" width="100%" cellspacing="0">
               </table>
             </div>
           </div>
@@ -57,7 +57,7 @@
           </div>
           <div class="card-body">
             <div class="table-responsive">
-              <table class="table" id="myDataTable2" width="100%" cellspacing="0">
+              <table class="table" id="networkAclEgressDataTable" width="100%" cellspacing="0">
               </table>
             </div>
           </div>
@@ -91,8 +91,8 @@
       clearTimeout(pageReloadTimeout);
 
       //Reload the datatables content
-      $('#myDataTable').DataTable().ajax.reload(null, false);
-      $('#myDataTable2').DataTable().ajax.reload(null, false);
+      $('#networkAclIngressDataTable').DataTable().ajax.reload(null, false);
+      $('#networkAclEgressDataTable').DataTable().ajax.reload(null, false);
 
       //Set the automatic page reload
       pageReloadTimeout = setTimeout(() => { reloadPageContent(); }, reloadTime);
@@ -108,7 +108,7 @@
       populateProjectSelectDropdown()
       
       //Get data using jquery call datatable within function, set data: data.ingress for one table and data.exgress for the other
-      $('#myDataTable').DataTable({
+      $('#networkAclIngressDataTable').DataTable({
         ajax: {
           url: "{{ url_for('api') }}/network-acl/list_network_acls?id="+serverId+"&project=" + project + "&acl=" + acl,
           dataType: "json",
@@ -212,7 +212,7 @@
         order: [],
       });
 
-      $('#myDataTable2').DataTable({
+      $('#networkAclEgressDataTable').DataTable({
         ajax: {
           url: "{{ url_for('api') }}/network-acl/list_network_acls?id="+serverId+"&project=" + project + "&acl=" + acl,
           dataType: "json",

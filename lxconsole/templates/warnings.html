@@ -21,7 +21,7 @@
       </div>
       <div class="card-body">
         <div class="table-responsive">
-          <table class="table" id="myDataTable" width="100%" cellspacing="0"></table>
+          <table class="table" id="warningsDataTable" width="100%" cellspacing="0"></table>
         </div>
       </div>
     </div>
@@ -50,7 +50,7 @@
       clearTimeout(pageReloadTimeout);
 
       //Reload the datatables content
-      $('#myDataTable').DataTable().ajax.reload(null, false);
+      $('#warningsDataTable').DataTable().ajax.reload(null, false);
 
       //Set the automatic page reload
       pageReloadTimeout = setTimeout(() => { reloadPageContent(); }, reloadTime);
@@ -66,7 +66,7 @@
       populateProjectSelectDropdown()
 
       // Configure Datatable
-      $('#myDataTable').DataTable({
+      $('#warningsDataTable').DataTable({
         ajax: {
           url: "{{ url_for('api') }}/warnings/list_warnings?id="+serverId+"&project=" + project + "&recursion=1",
           dataType: "json",
@@ -181,7 +181,7 @@
         ],
         order: [],
       });
-
+      
       //Set reload page content
       pageReloadTimeout = setTimeout(() => { reloadPageContent(); }, reloadTime);
 

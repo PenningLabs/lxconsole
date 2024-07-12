@@ -594,9 +594,10 @@ def api_instance_endpoint(endpoint):
     filename = 'backups/' + str(server.name) + '/' + project + '/' + instance + '/' + backup
     with requests.get(url, stream=True, verify=server.ssl_verify, cert=(client_cert, client_key)) as r:
       r.raise_for_status()
-      with open(filename, 'wb') as f:
+      with open(filename + '.download', 'wb') as f:
         for chunk in r.iter_content(chunk_size=8192): 
           f.write(chunk)
+    os.rename(filename + '.download', filename)
     return jsonify({"status": "Ok", "status_code": 200, "metadata": "{}"})
 
 
@@ -1084,12 +1085,20 @@ def api_instance_endpoint(endpoint):
           backup.update({'backup_file_exists': True})
           backup.update({'backup_file_size': os.path.getsize(filename)})
           backup.update({'backup_file_path': filename})
+          backup.update({'backup_file_exporting': False})
+        elif os.path.isfile(filename + '.download'):
+          backup.update({'backup_file_exists': False})
+          backup.update({'backup_file_size': os.path.getsize(filename + '.download')})
+          backup.update({'backup_file_path': filename})
+          backup.update({'backup_file_exporting': True})
         elif os.path.isfile('backups/' + str(server.id) + '/' + project + '/' + name + '/' + backup['name']):
           backup.update({'backup_file_exists': True})
           backup.update({'backup_file_size': os.path.getsize('backups/' + str(server.id) + '/' + project + '/' + name + '/' + backup['name'])})
           backup.update({'backup_file_path': 'backups/' + str(server.id) + '/' + project + '/' + name + '/' + backup['name']})
+          backup.update({'backup_file_exporting': False})
         else:
           backup.update({'backup_file_exists': False})
+          backup.update({'backup_file_exporting': False})
 
     return jsonify(backups)
 

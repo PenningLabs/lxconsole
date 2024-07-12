@@ -1,3 +1,8 @@
+# 0.5.6
+ - Added exporting status to instance backups table
+ - Added multirecord select functions to images table
+ - Added bootstrap toast notifications for images table actions
+
 # 0.5.5
  - Added status to instance backups
  - Updated datatables on Network Zones page to handle a returned error

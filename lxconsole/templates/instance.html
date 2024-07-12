@@ -70,7 +70,7 @@
               </div>
               <div class="card-body">
                 <div class="table-responsive">
-                  <table class="table" id="interfaceTableList" width="100%" cellspacing="0">
+                  <table class="table" id="instanceInterfacesDataTable" width="100%" cellspacing="0">
                   </table>
                 </div>
               </div>
@@ -93,7 +93,7 @@
               </div>
               <div class="card-body">
                 <div class="table-responsive">
-                  <table class="table" id="snapshotTableList" width="100%" cellspacing="0">
+                  <table class="table" id="instanceSnapshotsDataTable" width="100%" cellspacing="0">
                   </table>
                 </div>
               </div>
@@ -116,7 +116,7 @@
               </div>
               <div class="card-body">
                 <div class="table-responsive">
-                  <table class="table" id="backupTableList" width="100%" cellspacing="0">
+                  <table class="table" id="instanceBackupsDataTable" width="100%" cellspacing="0">
                   </table>
                 </div>
               </div>
@@ -131,7 +131,7 @@
               </div>
               <div class="card-body">
                 <div class="table-responsive">
-                  <table class="table" id="logTableList" width="100%" cellspacing="0">
+                  <table class="table" id="instanceLogsDataTable" width="100%" cellspacing="0">
                   </table>
                 </div>
               </div>
@@ -372,7 +372,7 @@
                   </div>
                   <div class="card-body">
                     <div class="table-responsive">
-                      <table class="table" id="diskDeviceTableList" width="100%" cellspacing="0">
+                      <table class="table" id="instanceDiskDevicesDataTable" width="100%" cellspacing="0">
                       </table>
                     </div>
                   </div>
@@ -397,7 +397,7 @@
                   </div>
                   <div class="card-body">
                     <div class="table-responsive">
-                      <table class="table" id="gpuDeviceTableList" width="100%" cellspacing="0">
+                      <table class="table" id="instanceGpuDevicesDataTable" width="100%" cellspacing="0">
                       </table>
                     </div>
                   </div>
@@ -422,7 +422,7 @@
                   </div>
                   <div class="card-body">
                     <div class="table-responsive">
-                      <table class="table" id="networkDeviceTableList" width="100%" cellspacing="0">
+                      <table class="table" id="instanceNetworkDevicesDataTable" width="100%" cellspacing="0">
                       </table>
                     </div>
                   </div>
@@ -447,7 +447,7 @@
                   </div>
                   <div class="card-body">
                     <div class="table-responsive">
-                      <table class="table" id="proxyDeviceTableList" width="100%" cellspacing="0">
+                      <table class="table" id="instanceProxyDevicesDataTable" width="100%" cellspacing="0">
                       </table>
                     </div>
                   </div>
@@ -472,7 +472,7 @@
                   </div>
                   <div class="card-body">
                     <div class="table-responsive">
-                      <table class="table" id="unixDeviceTableList" width="100%" cellspacing="0">
+                      <table class="table" id="instanceUnixDevicesDataTable" width="100%" cellspacing="0">
                       </table>
                     </div>
                   </div>
@@ -497,7 +497,7 @@
                   </div>
                   <div class="card-body">
                     <div class="table-responsive">
-                      <table class="table" id="usbDeviceTableList" width="100%" cellspacing="0">
+                      <table class="table" id="instanceUsbDevicesDataTable" width="100%" cellspacing="0">
                       </table>
                     </div>
                   </div>
@@ -1037,9 +1037,9 @@
 
     // ********************* HOME TAB TABLES **************************
     function loadInterfacesTable(){
-      if ( ! $.fn.DataTable.isDataTable( '#interfaceTableList' ) ) {
-        //Load Interfaces Table
-        $('#interfaceTableList').DataTable({
+      if ( ! $.fn.DataTable.isDataTable( '#instanceInterfacesDataTable' ) ) {
+        //Load Instance Interfaces Table
+        $('#instanceInterfacesDataTable').DataTable({
           ajax: {
             url: "{{ url_for('api') }}/instance/get_instance_interfaces?id="+serverId+"&project="+project+"&name="+instance+"&recursion=1",
             dataType: "json",
@@ -1095,14 +1095,14 @@
         });
       }
       else {
-        $('#interfaceTableList').DataTable().ajax.reload(null, false);
+        $('#instanceInterfacesDataTable').DataTable().ajax.reload(null, false);
       }
     }
 
     function loadSnapshotsTable() {
-      if ( ! $.fn.DataTable.isDataTable( '#snapshotTableList' ) ) {
-        //Load Snapshots Table
-        $('#snapshotTableList').DataTable({
+      if ( ! $.fn.DataTable.isDataTable( '#instanceSnapshotsDataTable' ) ) {
+        //Load Instance Snapshots Table
+        $('#instanceSnapshotsDataTable').DataTable({
           ajax: {
             url: "{{ url_for('api') }}/instance/list_instance_snapshots?id="+serverId+"&project="+project+"&name="+instance+"&recursion=1",
             dataType: "json",
@@ -1154,10 +1154,13 @@
             },
             { title: "Expires", data: function (row, type, set) {
                 if (row.hasOwnProperty('expires_at')) {
-                  if (row.expires_at)
-                    if (row.expires_at == '0001-01-01T00:00:00Z')
+                  if (row.expires_at && row.created_at) {
+                    if (row.expires_at < row.created_at)
                       return 'never'
-                    return row.expires_at
+                  }
+                  timestamp = new Date(row.expires_at)
+                  timestamp.setMilliseconds(0);
+                  return timestamp.toISOString().replace(".000Z", "Z").replace("T", " ")
                 }
                 return '-'
               },
@@ -1181,14 +1184,14 @@
         });
       }
       else {
-        $('#snapshotTableList').DataTable().ajax.reload(null, false);
+        $('#instanceSnapshotsDataTable').DataTable().ajax.reload(null, false);
       }
     }
 
     function loadBackupsTable() {
-      if ( ! $.fn.DataTable.isDataTable( '#backupTableList' ) ) {
-        //Load Backups Table
-        $('#backupTableList').DataTable({
+      if ( ! $.fn.DataTable.isDataTable( '#instanceBackupsDataTable' ) ) {
+        //Load Instance Backups Table
+        $('#instanceBackupsDataTable').DataTable({
           ajax: {
             url: "{{ url_for('api') }}/instance/list_instance_backups?id="+serverId+"&project="+project+"&name="+instance+"&recursion=1",
             dataType: "json",
@@ -1211,7 +1214,7 @@
               },
             },
             { title: "Status", data: function (row, type, set) {
-              status = ''
+                status = ''
                 for (let i = 0; i < operations.length; i++) {
                   if (operations[i].hasOwnProperty('description') && operations[i].description == 'Backing up instance') {
                     if (operations[i].hasOwnProperty('resources') && operations[i].resources.hasOwnProperty('backups')) {
@@ -1226,15 +1229,16 @@
                     }
                   }
                 }
-
-                if (row.backup_file_exists) {
+                if (row.hasOwnProperty('backup_file_exists') && row.backup_file_exists) {
                   return '<i class="fas fa-arrow-circle-down fa-sm text-success" aria-hidden="true"></i> Exported'
                 }
-                else
-                  if (status == 'Pending')
-                    return 'Pending'
-                  else
-                    return '<i class="fas fa-check-circle fa-sm text-success" aria-hidden="true"></i> Completed'
+                if (row.hasOwnProperty('backup_file_exporting') && row.backup_file_exporting) {
+                  return '<i class="fas fa-arrow-circle-down fa-sm text-info" aria-hidden="true"></i> Exporting'
+                }
+                if (status == 'Pending'){
+                  return 'Pending'
+                }  
+                return '<i class="fas fa-check-circle fa-sm text-success" aria-hidden="true"></i> Completed'
               },
             },
             { title: "Instance Only", data: function (row, type, set) {
@@ -1267,24 +1271,24 @@
             },
             { title: "Expires", data: function (row, type, set) {
                 if (row.hasOwnProperty('expires_at')) {
-                  if (row.expires_at) {
-                    if (row.expires_at == '0000-12-31T19:03:58-04:56' || row.expires_at == '0001-01-01T00:00:00Z')
+                  if (row.expires_at && row.created_at) {
+                    if (row.expires_at < row.created_at)
                       return 'never'
-                    return row.expires_at
                   }
+                  timestamp = new Date(row.expires_at)
+                  timestamp.setMilliseconds(0);
+                  return timestamp.toISOString().replace(".000Z", "Z").replace("T", " ")
                 }
                 return '-'
               },
             },
             { title: "File Size", data: function (row, type, set) {
-                if (row.hasOwnProperty('backup_file_exists') && row.hasOwnProperty('backup_file_size')) {
-                  if (row.backup_file_exists && row.backup_file_size){
-                    if (type === 'display') {
-                      size = row.backup_file_size / 1024 / 1024
-                      return size.toFixed(2) + ' MiB'
-                    }
-                    return row.backup_file_exists
+                if (row.hasOwnProperty('backup_file_size') && row.backup_file_size) {
+                  if (type === 'display') {
+                    size = row.backup_file_size / 1024 / 1024
+                    return size.toFixed(2) + ' MiB'
                   }
+                  return row.backup_file_exists
                 }
                 return '-'
               },
@@ -1320,14 +1324,14 @@
         });
       }
       else {
-        $('#backupTableList').DataTable().ajax.reload(null, false);
+        $('#instanceBackupsDataTable').DataTable().ajax.reload(null, false);
       }
     }
   
     function loadLogsTable() {
-      if ( ! $.fn.DataTable.isDataTable( '#logTableList' ) ) {
-        //Load Logs Table
-        $('#logTableList').DataTable({
+      if ( ! $.fn.DataTable.isDataTable( '#instanceLogsDataTable' ) ) {
+        //Load Instance Logs Table
+        $('#instanceLogsDataTable').DataTable({
           ajax: {
             url: "{{ url_for('api') }}/instance/list_instance_logs?id="+serverId+"&project="+project+"&name="+instance+"&recursion=1",
             dataType: "json",
@@ -1357,7 +1361,7 @@
         });
       }
       else {
-        $('#logTableList').DataTable().ajax.reload(null, false);
+        $('#instanceLogsDataTable').DataTable().ajax.reload(null, false);
       }
     }
 
@@ -1371,9 +1375,9 @@
 
     // ********************* DEVICES TAB TABLES **************************
     function loadDiskDevicesTable() {
-      if ( ! $.fn.DataTable.isDataTable( '#diskDeviceTableList' ) ) {
+      if ( ! $.fn.DataTable.isDataTable( '#instanceDiskDevicesDataTable' ) ) {
         //Load Disk Devices Table
-        $('#diskDeviceTableList').DataTable({
+        $('#instanceDiskDevicesDataTable').DataTable({
           ajax: {
             url: "{{ url_for('api') }}/instance/get_instance_disk_devices?id="+serverId+"&project="+project+"&name="+instance+"&recursion=1",
             dataType: "json",
@@ -1440,14 +1444,14 @@
         });
       }
       else {
-        $('#diskDeviceTableList').DataTable().ajax.reload(null, false);
+        $('#instanceDiskDevicesDataTable').DataTable().ajax.reload(null, false);
       }
     }
 
     function loadGpuDevicesTable() {
-      if ( ! $.fn.DataTable.isDataTable( '#gpuDeviceTableList' ) ) {
+      if ( ! $.fn.DataTable.isDataTable( '#instanceGpuDevicesDataTable' ) ) {
         //Load GPU Devices Table
-        $('#gpuDeviceTableList').DataTable({
+        $('#instanceGpuDevicesDataTable').DataTable({
           ajax: {
             url: "{{ url_for('api') }}/instance/get_instance_gpu_devices?id="+serverId+"&project="+project+"&name="+instance+"&recursion=1",
             dataType: "json",
@@ -1519,14 +1523,14 @@
         });
       }
       else {
-        $('#gpuDeviceTableList').DataTable().ajax.reload(null, false);
+        $('#instanceGpuDevicesDataTable').DataTable().ajax.reload(null, false);
       }
     }
 
     function loadNetworkDevicesTable() {
-      if ( ! $.fn.DataTable.isDataTable( '#networkDeviceTableList' ) ) {
+      if ( ! $.fn.DataTable.isDataTable( '#instanceNetworkDevicesDataTable' ) ) {
         //Load Network Devices Table
-        $('#networkDeviceTableList').DataTable({
+        $('#instanceNetworkDevicesDataTable').DataTable({
           ajax: {
             url: "{{ url_for('api') }}/instance/get_instance_network_devices?id="+serverId+"&project="+project+"&name="+instance+"&recursion=1",
             dataType: "json",
@@ -1590,14 +1594,14 @@
         });
       }
       else {
-        $('#networkDeviceTableList').DataTable().ajax.reload(null, false);
+        $('#instanceNetworkDevicesDataTable').DataTable().ajax.reload(null, false);
       }
     }
 
     function loadProxyDevicesTable() {
-      if ( ! $.fn.DataTable.isDataTable( '#proxyDeviceTableList' ) ) {
+      if ( ! $.fn.DataTable.isDataTable( '#instanceProxyDevicesDataTable' ) ) {
         //Load Proxy Devices Table
-        $('#proxyDeviceTableList').DataTable({
+        $('#instanceProxyDevicesDataTable').DataTable({
           ajax: {
             url: "{{ url_for('api') }}/instance/get_instance_proxy_devices?id="+serverId+"&project="+project+"&name="+instance+"&recursion=1",
             dataType: "json",
@@ -1653,14 +1657,14 @@
         });
       }
       else {
-        $('#proxyDeviceTableList').DataTable().ajax.reload(null, false);
+        $('#instanceProxyDevicesDataTable').DataTable().ajax.reload(null, false);
       }
     }
 
     function loadUnixDevicesTable() {
-      if ( ! $.fn.DataTable.isDataTable( '#unixDeviceTableList' ) ) {
+      if ( ! $.fn.DataTable.isDataTable( '#instanceUnixDevicesDataTable' ) ) {
         //Load Unix Devices Table
-        $('#unixDeviceTableList').DataTable({
+        $('#instanceUnixDevicesDataTable').DataTable({
           ajax: {
             url: "{{ url_for('api') }}/instance/get_instance_unix_devices?id="+serverId+"&project="+project+"&name="+instance+"&recursion=1",
             dataType: "json",
@@ -1732,14 +1736,14 @@
         });
       }
       else {
-        $('#unixDeviceTableList').DataTable().ajax.reload(null, false);
+        $('#instanceUnixDevicesDataTable').DataTable().ajax.reload(null, false);
       }
     }
 
     function loadUsbDevicesTable() {
-      if ( ! $.fn.DataTable.isDataTable( '#usbDeviceTableList' ) ) {
+      if ( ! $.fn.DataTable.isDataTable( '#instanceUsbDevicesDataTable' ) ) {
         //Load USB Devices Table
-        $('#usbDeviceTableList').DataTable({
+        $('#instanceUsbDevicesDataTable').DataTable({
           ajax: {
             url: "{{ url_for('api') }}/instance/get_instance_usb_devices?id="+serverId+"&project="+project+"&name="+instance+"&recursion=1",
             dataType: "json",
@@ -1808,10 +1812,10 @@
             },
           ],
           order: [],
-        });
+        });        
       }
       else {
-        $('#usbDeviceTableList').DataTable().ajax.reload(null, false);
+        $('#instanceUsbDevicesDataTable').DataTable().ajax.reload(null, false);
       }
     }
 

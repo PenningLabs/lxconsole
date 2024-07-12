@@ -19,12 +19,20 @@
   <!-- Xterm.js style -->
   <link rel="stylesheet" href="{{ url_for('static', filename='css/xterm/xterm.css') }}"/>
 
-  <!-- Datatables Bootstrap 5 - https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css -->
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/datatables/dataTables.bootstrap5.min.css') }}">
 
   <!-- Bootstrap 5 - https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.2.3/css/bootstrap.min.css -->
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap/bootstrap-5.2.3.min.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap/bootstrap-5.2.3.min.css') }}">  
 
+  <!-- CSS from https://datatables.net/download/
+   - Datatables Bootstrap v5.3.0 styling
+   - Datatables v2.0.8 package
+   - Buttons v3.0.2
+   - HTML5 Export 3.0.2
+   - Column Visibiility 3.0.2
+   - Select v2.0.3 extensions
+   https://cdn.datatables.net/v/bs5/dt-2.0.8/b-3.0.2/b-colvis-3.0.2/b-html5-3.0.2/sl-2.0.3/datatables.min.css -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/datatables/datatables.min.css') }}">
+ 
   <!-- Theme style -->
   <link rel="stylesheet" href="{{ url_for('static', filename='dist/css/adminlte.min.css') }}">
 

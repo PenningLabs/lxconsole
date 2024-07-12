@@ -25,7 +25,7 @@
         </div>
       </div>
       <div class="card-body">
-        <table class="table" id="myDataTable" width="100%" cellspacing="0">
+        <table class="table" id="simplestreamsDataTable" width="100%" cellspacing="0">
         </table>
       </div>
     </div>
@@ -53,7 +53,7 @@
       clearTimeout(pageReloadTimeout);
 
       //Reload the datatables content
-      $('#myDataTable').DataTable().ajax.reload(null, false);
+      $('#simplestreamsDataTable').DataTable().ajax.reload(null, false);
 
       //Set the automatic page reload
       pageReloadTimeout = setTimeout(() => { reloadPageContent(); }, reloadTime);
@@ -69,7 +69,7 @@
       populateProjectSelectDropdown()
 
       // Configure Datatable
-      $('#myDataTable').DataTable({
+      $('#simplestreamsDataTable').DataTable({
         ajax: {
           url: "{{ url_for('api') }}/simplestreams/list_simplestreams",
           dataType: "json",

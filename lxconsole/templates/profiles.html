@@ -25,7 +25,7 @@
         </div>
       </div>
       <div class="card-body">
-        <table class="table" id="myDataTable" width="100%" cellspacing="0">
+        <table class="table" id="profilesDataTable" width="100%" cellspacing="0">
         </table>
       </div>
     </div>
@@ -54,7 +54,7 @@
       clearTimeout(pageReloadTimeout);
 
       //Reload the datatables content
-      $('#myDataTable').DataTable().ajax.reload(null, false);
+      $('#profilesDataTable').DataTable().ajax.reload(null, false);
 
       //Set the automatic page reload
       pageReloadTimeout = setTimeout(() => { reloadPageContent(); }, reloadTime);
@@ -70,7 +70,7 @@
       populateProjectSelectDropdown()
 
       // Configure Datatable
-      $('#myDataTable').DataTable({
+      $('#profilesDataTable').DataTable({
         ajax: {
           url: "{{ url_for('api') }}/profiles/list_profiles?id="+serverId+"&project=" + project + "&recursion=1",
           dataType: "json",

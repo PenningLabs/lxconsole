@@ -1,4 +1,5 @@
 # 0.5.0+
+- Add select functionality to tables (see images table)
 - Add bootstrap toast notifications
 
 # 0.6.0
@@ -15,4 +16,14 @@
 
 # 1.0.0
 - Stable release
+
+# Additional features/updates to add
+- Edit image aliases
+- Export tables to CSV
+- Sort images list in creating new instance modal
+- Allow email notifications option
+- Combine cluster members and cluster groups into single page
+- Allow user to set table autoreload time
+
+
 

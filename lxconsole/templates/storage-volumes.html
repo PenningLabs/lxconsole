@@ -25,7 +25,7 @@
         </div>
       </div>
       <div class="card-body">
-        <table class="table" id="myDataTable" width="100%" cellspacing="0">
+        <table class="table" id="storageVolumesDataTable" width="100%" cellspacing="0">
         </table>
       </div>
     </div>
@@ -62,7 +62,7 @@
       clearTimeout(pageReloadTimeout);
 
       //Reload the datatables content
-      $('#myDataTable').DataTable().ajax.reload(null, false);
+      $('#storageVolumesDataTable').DataTable().ajax.reload(null, false);
 
       //Set the automatic page reload
       pageReloadTimeout = setTimeout(() => { reloadPageContent(); }, reloadTime);
@@ -78,7 +78,7 @@
       populateProjectSelectDropdown()
 
       // Configure Datatable
-      $('#myDataTable').DataTable({
+      $('#storageVolumesDataTable').DataTable({
         ajax: {
           url: "{{ url_for('api') }}/storage-volumes/list_storage_volumes?id="+serverId+"&project=" + project + "&recursion=1" + "&pool=" + pool,
           dataType: "json",
