@@ -3,7 +3,7 @@ import json
 import requests
 from lxconsole import db, bcrypt
 from lxconsole.models import AccessControl, Server, Group, UserGroup
-from flask_login import login_required, current_user
+from flask_login import login_required, logout_user, current_user
 
 
 def privilege_check(privilege, server_id = 0):
@@ -689,13 +689,17 @@ def privilege_check(privilege, server_id = 0):
       'update_warning',   
       ]
     }
-  for global_role in session['global_roles']:
-    if privilege in privileges[global_role]:
-      return True
-  # if session['host_roles'][server_id]:
-  #   for server_role in session['host_roles'][server_id]:
-  #     if privilege in privileges[host_role]:
-  #       return True
+
+  if 'global_roles' in session:
+    for global_role in session['global_roles']:
+      if privilege in privileges[global_role]:
+        return True
+    # if session['host_roles'][server_id]:
+    #   for server_role in session['host_roles'][server_id]:
+    #     if privilege in privileges[host_role]:
+    #       return True
+  else:
+    logout_user()
   return False
 
 

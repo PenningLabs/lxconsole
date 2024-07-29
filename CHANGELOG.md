@@ -1,3 +1,7 @@
+# 0.5.7
+ - Added check for session state
+ - Removed unused library from login and register pages
+
 # 0.5.6
  - Added exporting status to instance backups table
  - Added multirecord select functions to images table
