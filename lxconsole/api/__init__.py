@@ -15,6 +15,7 @@ from . import network_zones
 from . import profiles
 from . import operations
 from . import projects
+from . import registries
 from . import simplestreams
 from . import storage_pools
 from . import storage_volumes
@@ -24,6 +25,7 @@ from . import users
 from . import groups
 from . import roles
 from . import access_controls
+from . import settings
 #from . import logs
 
 
@@ -47,6 +49,7 @@ api.add_url_rule('/network-zones/<endpoint>', view_func=network_zones.api_networ
 api.add_url_rule('/profiles/<endpoint>', view_func=profiles.api_profiles_endpoint, methods=['GET', 'POST'])
 api.add_url_rule('/operations/<endpoint>', view_func=operations.api_operations_endpoint, methods=['GET', 'POST'])
 api.add_url_rule('/projects/<endpoint>', view_func=projects.api_projects_endpoint, methods=['GET', 'POST'])
+api.add_url_rule('/registries/<endpoint>', view_func=registries.api_registries_endpoint, methods=['GET', 'POST'])
 api.add_url_rule('/simplestreams/<endpoint>', view_func=simplestreams.api_simplestreams_endpoint, methods=['GET', 'POST'])
 api.add_url_rule('/storage-pools/<endpoint>', view_func=storage_pools.api_storage_pools_endpoint, methods=['GET', 'POST'])
 api.add_url_rule('/storage-volumes/<endpoint>', view_func=storage_volumes.api_storage_volumes_endpoint, methods=['GET', 'POST'])
@@ -56,4 +59,5 @@ api.add_url_rule('/users/<endpoint>', view_func=users.api_users_endpoint, method
 api.add_url_rule('/groups/<endpoint>', view_func=groups.api_groups_endpoint, methods=['GET', 'POST'])
 api.add_url_rule('/roles/<endpoint>', view_func=roles.api_roles_endpoint, methods=['GET', 'POST'])
 api.add_url_rule('/access-controls/<endpoint>', view_func=access_controls.api_access_controls_endpoint, methods=['GET', 'POST'])
+api.add_url_rule('/settings/<endpoint>', view_func=settings.api_settings_endpoint, methods=['GET', 'POST'])
 #api.add_url_rule('/logs/<endpoint>', view_func=logs.api_logs_endpoint, methods=['GET', 'POST'])

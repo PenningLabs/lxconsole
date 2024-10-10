@@ -16,14 +16,6 @@
 {% block content %}
   <div class="col-12">
     <div class="card">
-      <div class="card-header">
-        <h3 class="card-title">Certificates</h3>
-        <div class="card-tools">
-          <button type="button" class="btn btn-tool" onclick="reloadPageContent()" title="Refresh">
-          <i class="fas fa-sync"></i>
-          </button>
-        </div>
-      </div>
       <div class="card-body">
         <table class="table" id="certificatesDataTable" width="100%" cellspacing="0">
         </table>
@@ -43,6 +35,7 @@
     const urlParams = new URLSearchParams(queryString);
     const serverId = urlParams.get('id');
     const project = urlParams.get('project');
+    var scrollY =  localStorage.getItem('certificatesDataTableScrollY') || '490px';
     var editedCertificate = ''
     applySidebarStyles();
     applySidebarLinks();
@@ -54,7 +47,7 @@
       clearTimeout(pageReloadTimeout);
 
       //Reload the datatables content
-      $('#certificatesDataTable').DataTable().ajax.reload(null, false);
+      loadCertificatesTable()
 
       //Set the automatic page reload
       pageReloadTimeout = setTimeout(() => { reloadPageContent(); }, reloadTime);
@@ -70,81 +63,193 @@
       populateProjectSelectDropdown()
       
       // Configure Datatable
-      $('#certificatesDataTable').DataTable({
-        ajax: {
-          url: "{{ url_for('api') }}/certificates/list_certificates?id="+serverId+"&project=" + project + "&recursion=1",
-          dataType: "json",
-          dataSrc: "metadata",
-          contentType: "application/json",
-          error: function (xhr, error, code) {
-            console.log(xhr, code);
-          }
-        },
-        columns: [
-          { title: "Name", data: function (row, type, set) {
-              if (row.hasOwnProperty('name')) {
-                if (row.name)
-                  return row.name
-              }
-              return '-'
-            },
-          },
-          { title: "Type", data: function (row, type, set) {
-              if (row.hasOwnProperty('type')) {
-                if (row.type)
-                  return row.type
-              }
-              return '-'
-            },
-          },
-          { title: "Fingerprint", data: function (row, type, set) {
-              if (row.hasOwnProperty('fingerprint')) {
-                if (row.fingerprint)
-                  return row.fingerprint
-              }
-              return '-'
-            },
-          },
-          { title: "Restricted", data: function (row, type, set) {
-              if (row.hasOwnProperty('restricted')) {
-                // Boolean field
-                return row.restricted
-              }
-              return '-'
-            },
-          },
-          { title: "Projects", data: function (row, type, set) {
-              if (row.hasOwnProperty('projects')) {
-                if (Object.keys(row.projects).length > 0) {
-                  arr = []
-                  for (restricted_project in row.projects){
-                    arr.push(row.projects[restricted_project])
-                  }
-                  return arr.join(", ")
-                }
-              }
-              return '-'
-            },
-          },
-          { title: "Actions", data: function (row, type, set) {
-              links = ''
-              if (row.hasOwnProperty('fingerprint')) {
-                links += '<a href="#" onclick=editItem(\''+row.fingerprint+'\')><i class="fas fa-edit fa-lg" title="Edit" aria-hidden="true"></i></a>' +
-                  '&nbsp' + '&nbsp' +
-                  '<a href="#" onclick=confirmDeleteItem(\''+row.fingerprint+'\')><i class="fas fa-trash-alt fa-lg" title="Delete" aria-hidden="true"></i></a>'
-              }
-              return links
-            },
-          },
-        ],
-        order: [],
-      });
+      loadCertificatesTable()
 
       //Set reload page content
       pageReloadTimeout = setTimeout(() => { reloadPageContent(); }, reloadTime);
 
     }
 
+    function loadCertificatesTable(){
+      if ( ! $.fn.DataTable.isDataTable( '#certificatesDataTable' ) ) {
+        certificatesDataTable = $('#certificatesDataTable').DataTable({
+          ajax: {
+            url: "{{ url_for('api') }}/certificates/list_certificates?id="+serverId+"&project=" + project + "&recursion=1",
+            dataType: "json",
+            dataSrc: "metadata",
+            contentType: "application/json",
+            error: function (xhr, error, code) {
+              console.log(xhr, code);
+            }
+          },
+          columns: [
+            {
+              data: null,
+              orderable: false,
+              render: DataTable.render.select()
+            },
+            { title: "Name", data: function (row, type, set) {
+                if (row.hasOwnProperty('name')) {
+                  if (row.name)
+                    return row.name
+                }
+                return '-'
+              },
+            },
+            { title: "Type", data: function (row, type, set) {
+                if (row.hasOwnProperty('type')) {
+                  if (row.type)
+                    return row.type
+                }
+                return '-'
+              },
+            },
+            { title: "Description", data: function (row, type, set) {
+                if (row.hasOwnProperty('description')) {
+                  if (row.description)
+                    return row.description
+                }
+                return '-'
+              },
+            },
+            { title: "Fingerprint", data: function (row, type, set) {
+                if (row.hasOwnProperty('fingerprint')) {
+                  if (row.fingerprint){
+                    if (type === 'display'){
+                      return row.fingerprint.substring(0,12) + "...";
+                    }
+                    return row.fingerprint
+                  }
+                }
+                return '-'
+              },
+            },
+            { title: "Expiry Date", data: function (row, type, set) {
+                if (row.hasOwnProperty('expiry_date')) {
+                  if (row.expiry_date){}
+                    return row.expiry_date.replace("T", " ")
+                }
+                return '-'
+              },
+            },
+            { title: "Restricted", data: function (row, type, set) {
+                if (row.hasOwnProperty('restricted')) {
+                  // Boolean field
+                  return row.restricted
+                }
+                return '-'
+              },
+            },
+            { title: "Projects", data: function (row, type, set) {
+                if (row.hasOwnProperty('projects')) {
+                  if (Object.keys(row.projects).length > 0) {
+                    arr = []
+                    for (restricted_project in row.projects){
+                      arr.push(row.projects[restricted_project])
+                    }
+                    return arr.join(", ")
+                  }
+                }
+                return '-'
+              },
+            },
+          ],
+          layout: {
+            topStart: {
+              buttons: [
+                { text: 'Edit',
+                  action: function () { 
+                    rows = certificatesDataTable.rows({ selected: true });
+                    editItem(rows.data()[0]['fingerprint']);
+                  },
+                  enabled: false,
+                },
+                'spacer',
+                { text: 'Delete',
+                  action: function () { 
+                    arr = []
+                    certificatesDataTable.rows('.selected').every( function() {
+                      arr.push(this.data().fingerprint)
+                    });
+                    $("#deleteCertificatesList").text(arr.join(", "));
+                    $("#deleteCertificatesHiddenInput").val(JSON.stringify(arr));
+                    $("#deleteModal").modal('show');                    
+                  },
+                  enabled: false,
+                },
+                'spacer',
+                'spacer',
+                'pageLength',
+                'spacer',
+                {
+                  extend: 'collection',
+                  text: 'More',
+                  dropup: true,
+                  buttons: [
+                    {
+                      extend: 'colvis',
+                      text: 'Visible columns',
+                      columns: [1,2,3,4,5,6,7],
+                    },
+                    {
+                      text: (scrollY == '490px') ? 'Disable scrolling' : 'Enable scrolling',
+                      action: function ( e, dt, node, config ) {
+                        if (scrollY == '490px') {
+                          localStorage.setItem('certificatesDataTableScrollY', false);
+                          scrollY = false
+                        }
+                        else {
+                          localStorage.setItem('certificatesDataTableScrollY', '490px');
+                          scrollY = '490px'
+                        }
+                        dt.destroy()
+                        loadCertificatesTable()
+                      },
+                    },
+                    {
+                      text: 'Reset table state',
+                      action: function ( e, dt, node, config ) {
+                        dt.state.clear();
+                        window.location.reload();
+                      },
+                    },
+                  ]
+                }
+
+              ]
+            }
+          },
+          lengthMenu: [
+            [10, 25, 50, 100, -1],
+            [10, 25, 50, 100, 'All'],
+          ],
+          order: [
+            [1, 'asc'], [4, 'asc']
+          ],
+          rowId: 'fingerprint',
+          scrollCollapse: true,
+          scrollX: true,
+          scrollY: scrollY,
+          select: {
+            style: 'multi',
+            selector: 'td:first-child',
+            blurable: true,
+            headerCheckbox: 'select-page',
+          },
+          stateDuration: 0,
+          stateSave: true,
+        });
+      }
+      else {
+        $('#certificatesDataTable').DataTable().ajax.reload(null, false);
+      }
+
+      certificatesDataTable.on('select deselect', function () {
+        var selectedRows = certificatesDataTable.rows({ selected: true }).count();
+        certificatesDataTable.button(0).enable(selectedRows === 1);
+        certificatesDataTable.button(2).enable(selectedRows > 0);
+      });
+    }
 
     function addItem(){
       console.log("Info: adding new certificate");
@@ -158,13 +263,6 @@
         setTimeout(() => { reloadPageContent(); }, 1000);
         operationStatusCheck()
       });
-    }
-
-    function confirmDeleteItem(name){
-      console.log("Info: confirming deletion of certificate " + name);
-      if (confirm("Are you sure you want to delete certificate " + name + "?") == true) {
-        deleteItem(name);
-      }
     }
 
     function createItemUsingJSON(){
@@ -181,17 +279,26 @@
       });
     }
 
-    function deleteItem(name){
-      console.log("Info: deleting certificate " + name);
-      $.post("{{ url_for('api') }}/certificates/delete_certificate?id=" + serverId + "&project=" + project, { fingerprint: name }, function (data) {
-        console.log(data);
-        if (data.error_code >= 400){
-          alert(data.error);
-        }
-        //Sync type
-        setTimeout(() => { reloadPageContent(); }, 1000);
-        operationStatusCheck()
-      });
+    function deleteItems(){
+      var deleteCertificatesHiddenInput = JSON.parse($("#deleteCertificatesHiddenInput").val());
+      console.log("Info: deleting certificates " + deleteCertificatesHiddenInput.join(", "));
+      for (let i = 0; i < deleteCertificatesHiddenInput.length; i++) {
+        $.post("{{ url_for('api') }}/certificates/delete_certificate?id=" + serverId + "&project=" + project, { fingerprint: deleteCertificatesHiddenInput[i] }, function (data) {
+          console.log(data);
+          if (data.error_code >= 400){
+            alert(data.error);
+          }
+        });
+      }
+
+      //Send toast notification
+      $('#defaultToastHeader').text('Deleting Certificate(s)')
+      $('#defaultToastBody').text(deleteCertificatesHiddenInput.join(", "))
+      defaultToast.show()
+
+      //Sync type
+      setTimeout(() => { reloadPageContent(); }, 1000);
+      operationStatusCheck()
     }
 
     function editItem(name){
@@ -202,7 +309,7 @@
         if (data.error_code >= 400){
           alert(data.error);
         }
-        $("#certificateNameEditInput").text("Name: " + name);
+        $("#certificateNameEditInput").text("Fingerprint: " + name);
         $("#jsonInput").val(JSON.stringify(data.metadata, null, 2));
         $("#editModal").modal('show');
       });

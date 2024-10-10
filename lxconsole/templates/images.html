@@ -26,7 +26,6 @@
 
 {% block modal %}
   {% include 'modals/images.html' %}
-  {% include 'toasts/images.html' %}
 {% endblock modal %}
 
 {% block script %}
@@ -36,8 +35,6 @@
     const urlParams = new URLSearchParams(queryString);
     const serverId = urlParams.get('id');
     const project = urlParams.get('project');
-    const refreshToastBootstrap = bootstrap.Toast.getOrCreateInstance(document.getElementById('refreshToast'))
-    const deleteToastBootstrap = bootstrap.Toast.getOrCreateInstance(document.getElementById('deleteToast'))
     var scrollY =  localStorage.getItem('imagesDataTableScrollY') || '490px';
     var editedImage = ''
     applySidebarStyles();
@@ -68,12 +65,24 @@
       // Configure Datatable
       loadImagesTable()
       
+      //Populate the Registries dropdown in addModal
+      $.getJSON("{{ url_for('api') }}/registries/list_registries?id="+serverId, function (data) {
+        data = data.data
+        for (var index = 0; index < data.length; index++) {
+          if (data[index].alias == '')
+            optionText = "url: " + data[index].url + " (" + data[index].protocol + ")"
+          else
+            optionText = data[index].alias
+          $('#selectRegistryInput').append('<option value="' + data[index].id + '">' + optionText + '</option>');
+        }
+      })
+
       //Populate the Simplestreams dropdown in addModal
       $.getJSON("{{ url_for('api') }}/simplestreams/list_simplestreams?id="+serverId, function (data) {
         data = data.data
         for (var index = 0; index < data.length; index++) {
           if (data[index].alias == '')
-            optionText = data[index].addr
+            optionText = "url: " + data[index].url
           else
             optionText = data[index].alias
           $('#selectRepoInput').append('<option value="' + data[index].id + '">' + optionText + '</option>');
@@ -206,8 +215,9 @@
                       arr.push(this.data().fingerprint)
                     });
                     //Send toast notification
-                    $('#refreshToastBody').text(arr.join(", "))
-                    refreshToastBootstrap.show()
+                    $('#wideToastHeader').text('Refreshing Image(s)')
+                    $('#wideToastBody').text(arr.join(", "))
+                    wideToast.show()
                   },
                   enabled: false,
                 },
@@ -310,7 +320,7 @@
       });
     }
 
-    function deleteImages(arr){
+    function deleteImages(){
       var deleteImagesHiddenInput = JSON.parse($("#deleteImagesHiddenInput").val());
       console.log("Info: deleting images " + deleteImagesHiddenInput.join(", "));
       for (let i = 0; i < deleteImagesHiddenInput.length; i++) {
@@ -323,8 +333,9 @@
       }
         
       //Send toast notification
-      $('#deleteToastBody').text(deleteImagesHiddenInput.join(", "))
-      deleteToastBootstrap.show()
+      $('#wideToastHeader').text('Deleting Image(s)')
+      $('#wideToastBody').text(deleteImagesHiddenInput.join(", "))
+      wideToast.show()
 
       //Sync type
       setTimeout(() => { reloadPageContent(); }, 1000);
@@ -474,6 +485,16 @@
       }
     }
 
+    function updateRegistrySource(){
+      if ($("#selectRegistrySourceInput").val() == 'registries') {
+        $("#registryOption").show()
+        $("#simplestreamsOption").hide()
+      }
+      else {
+        $("#registryOption").hide()
+        $("#simplestreamsOption").show()
+      }
+    }
 
     $(document).ready(function(){
 

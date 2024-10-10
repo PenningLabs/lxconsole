@@ -1,0 +1,66 @@
+<!-- Edit User Groups Modal-->
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Edit User Groups</h5>
+          <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="modal-body">
+
+          <form id="editUserGroupsForm">
+            <div class="row">
+              <label class="col-3 col-form-label text-right">Action: </label>
+              <div class="col-7">
+                <div class="form-group">
+                  <select id="actionEditInput" onchange="changeActionInput()" class="form-select" required="required"  name="action">
+                    <option value="add_group">Add Group</option>
+                    <option value="remove_group">Remove Group</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-1">
+                <i class="far fa-sm fa-question-circle" title='Select to add or remove a group.'></i>
+              </div>
+            </div>
+
+            <div class="row" id="addGroupEditInputRow">
+              <label class="col-3 col-form-label text-right">Group: </label>
+              <div class="col-7">
+                <div class="form-group">
+                  <select id="addGroupEditInput" class="form-select" required="required"  name="add_group">
+                  </select>
+                </div>
+              </div>
+              <div class="col-1">
+                <i class="far fa-sm fa-question-circle" title='Select a group to add to the user.'></i>
+              </div>
+            </div>
+
+            <div class="row" id="removeGroupEditInputRow" style="display: none">
+              <label class="col-3 col-form-label text-right">Group: </label>
+              <div class="col-7">
+                <div class="form-group">
+                  <select id="removeGroupEditInput" class="form-select" required="required"  name="remove_group">
+                  </select>
+                </div>
+              </div>
+              <div class="col-1">
+                <i class="far fa-sm fa-question-circle" title='Select a group to remove from the user.'></i>
+              </div>
+            </div>
+
+            <input type="hidden" id="idUserGroupsEditInput" name="id">
+          </form>
+
+          <div class="modal-footer">
+            <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+            <a class="btn btn-primary" href="#" onclick="updateUserGroup()" data-bs-dismiss="modal">Update Group</a>
+          </div>
+
+        </div>
+    </div>
+  </div>
+</div>

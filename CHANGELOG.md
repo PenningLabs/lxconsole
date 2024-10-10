@@ -1,3 +1,14 @@
+# 0.6.0
+ - Added additional packages to python requirements.txt, notably pyotp and qrcode
+ - Updated the python requirements.txt version numbers for packages
+ - Added an Account page to enable the multi-factor authentication option
+ - Added an Expiry Date field to the Certificates table
+ - Added a Registries page to support OCI based registries
+ - Deprecated the Simplestreams page
+ - Added a new Settings page with password requirement settings
+ - Added timezone aware created_at default values for user account creation
+ - Fixed typo in Network Zones file
+
 # 0.5.7
  - Added check for session state
  - Removed unused library from login and register pages

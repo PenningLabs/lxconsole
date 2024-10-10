@@ -1,0 +1,149 @@
+<!-- Add Modal-->
+<div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Add Registry</h5>
+        <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        
+        <form id="addForm">
+          <div class="row">
+            <label class="col-3 col-form-label text-right">URL: <span class="text-danger">*</span></label>
+            <div class="col-7">
+              <div class="form-group">
+                <input type="text" class="form-control" required="required" placeholder="" name="url">
+              </div>
+            </div>
+            <div class="col-1">
+              <i class="far fa-sm fa-question-circle" title='(Required) - Enter in the URL of the registry. For example, https://images.linuxcontainers.org'></i>
+            </div>
+          </div>
+
+          <div class="row">
+            <label class="col-3 col-form-label text-right">Protocol: </label>
+            <div class="col-7">
+              <div class="form-group">
+                <select id="protocol" class="form-select" name="protocol">
+                  <option value="simplestreams" default>simplestreams</option>
+                  <option value="oci">oci</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-1">
+              <i class="far fa-sm fa-question-circle" title='Select the image registry protocol. For docker based registries select oci.'></i>
+            </div>
+          </div>
+  
+          <div class="row">
+            <label class="col-3 col-form-label text-right">Alias: </label>
+            <div class="col-7">
+              <div class="form-group">
+                <input type="text" class="form-control" placeholder="" name="alias">
+              </div>
+            </div>
+            <div class="col-1">
+              <i class="far fa-sm fa-question-circle" title='Enter in an alias that will be used to select the registry when downloading an image.'></i>
+            </div>
+          </div>
+        </form>
+
+      </div> <!-- End Modal Body-->
+      <div class="modal-footer">
+        <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+        <a class="btn btn-primary" href="#" onclick="addItem()" data-bs-dismiss="modal">Submit</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Delete Modal-->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Delete Registry(s)</h5>
+        <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to delete the following registry(s)?</p>
+        <span id="deleteRegistriesList"></span>
+        <input type="hidden" id="deleteRegistriesHiddenInput">
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+        <a class="btn btn-primary" href="#" onclick="deleteRegistries()" data-bs-dismiss="modal">Yes</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Edit Modal-->
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Edit Registry</h5>
+        <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body">  
+
+        <div class="row">
+          <label class="col-3 col-form-label text-right">URL: <span class="text-danger">*</span></label>
+          <div class="col-7">
+            <div class="form-group">
+              <input type="text" id="editModalUrl" class="form-control" required="required" placeholder="" name="edit_url">
+            </div>
+          </div>
+          <div class="col-1">
+            <i class="far fa-sm fa-question-circle" title='(Required) - Enter in the URL of the registry. For example, https://images.linuxcontainers.org'></i>
+          </div>
+        </div>
+
+        <div class="row">
+          <label class="col-3 col-form-label text-right">Protocol: </label>
+          <div class="col-7">
+            <div class="form-group">
+              <select id="editModalProtocol" class="form-select" name="edit_protocol">
+                <option value="simplestreams">simplestreams</option>
+                <option value="oci">oci</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-1">
+            <i class="far fa-sm fa-question-circle" title='Select the image registry protocol. For docker based registries select oci.'></i>
+          </div>
+        </div>
+
+        <div class="row">
+          <label class="col-3 col-form-label text-right">Alias: </label>
+          <div class="col-7">
+            <div class="form-group">
+              <input type="text" id="editModalAlias" class="form-control" placeholder="" name="edit_alias">
+            </div>
+          </div>
+          <div class="col-1">
+            <i class="far fa-sm fa-question-circle" title='Enter in an alias that will be used to select the registry when downloading an image.'></i>
+          </div>
+        </div>
+
+
+        <input type="hidden" id="editModalIdInput">
+
+      </div> <!-- End Modal Body-->
+      <div class="modal-footer">
+        <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+        <a class="btn btn-primary" href="#" onclick="updateRegistry()" data-bs-dismiss="modal">Submit</a>
+      </div>
+    </div>
+  </div>
+</div>

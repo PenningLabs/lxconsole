@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='assets/img/logo-light.svg') }}">
+    <title>lxconsole</title>
+  
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/fonts/source_sans_pro.css') }}">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/fontawesome-free/css/all.min.css') }}">
+
+    <!-- Bootstrap 5 - https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.2.3/css/bootstrap.min.css -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap/bootstrap-5.2.3.min.css') }}">
+
+    <!-- Theme style -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='dist/css/adminlte.min.css') }}">
+
+    <!-- LXD Dashboard style -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+
+    <style>
+        body {
+          background-image: url("{{ url_for('static', filename='assets/img/logo-bg.svg') }}") !important;
+          background-position: center center !important;
+          background-size: 100% auto !important;
+          background-repeat: no-repeat;
+          background-attachment: fixed;
+          background-color: #262626;
+        }
+      </style> 
+
+  </head>
+
+
+<body>
+<script>0</script>
+
+  <div class="container">
+
+    <!-- Outer Row -->
+    <div class="row justify-content-center">
+
+      <div class="col-xl-10 col-lg-12 col-md-9">
+
+        <div class="card o-hidden border-0 my-5">
+          <div class="card-body p-0">
+            <!-- Nested Row within Card Body -->
+            <div class="row">
+              <div class="col-lg-5 d-none d-lg-block border-right">
+                <div class="pt-5">
+                  <div class="text-center">
+                    <img src="{{ url_for('static', filename='assets/img/logo-light.svg') }}" width="50px" style="vertical-align: bottom !important;">
+                    <span class="h1"><strong>lxconsole</strong></span>
+                  </div>
+                </div>
+                <div class="pt-5">
+                  <div class="pl-4">
+                    <p class="h5">An open source management console for Incus and LXD servers and clusters.</p>
+                    <p class="h5 pt-3">For instructions on using lxconsole, visit <a href="https://lxconsole.com" target="_blank">https://lxconsole.com</a>.</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-lg-7 align-self-center">
+                <div class="p-5">
+                  {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                      {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">
+                          {{ message }}
+                        </div>
+                      {% endfor %}
+                    {% endif %}
+                  {% endwith %}
+
+                  {% block content %}
+                    <form method="POST" action="">
+                      {{ form.hidden_tag() }}
+                      <fieldset class="form-group">
+                        <legend class="border-bottom mb-4">One Time Password</legend>
+                        <div class="form-group">
+                          {{ form.token.label(class="form-control-label") }}
+                          {% if form.token.errors %}
+                            {{ form.token(class="form-control form-control-lg is-invalid") }}
+                            <div class="invalid-feedback">
+                              {% for error in form.token.errors %}
+                                <span>{{ error }}</span>
+                              {% endfor %}
+                            </div>
+                          {% else %}
+                            {{ form.token (class="form-control form-control-lg") }}
+                          {% endif %}
+                        </div>
+                      </fieldset>
+                      <div class="form-group">
+                        {{ form.submit(class="btn btn-primary") }}
+                      </div>
+                    </form>
+                  {% endblock content %}
+                
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+    <!-- jQuery - https://code.jquery.com/jquery-3.7.1.js -->
+    <script src="{{ url_for('static', filename='js/jquery/jquery-3.7.1.js') }}"></script>
+
+    <!-- Bootstrap 5 - https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js -->
+    <script src="{{ url_for('static', filename='js/bootstrap/bootstrap-5.2.3.bundle.min.js') }}"></script>
+  
+    <script src="{{ url_for('static', filename='js/jquery-knob/jquery.knob.min.js') }}"></script>
+    
+    <!-- AdminLTE App -->
+    <script src="{{ url_for('static', filename='dist/js/adminlte.min.js') }}"></script>
+
+    <!-- Page specific script -->
+    <script src="{{ url_for('static', filename='js/sidebar.js') }}"></script>
+    
+    <!-- Javascript popper - https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" -->
+    <script src="{{ url_for('static', filename='js/popper/popper.min.js') }}"></script>
+
+</body>
+
+<script>
+  
+  $(document).ready(function(){
+
+  });
+
+</script>
+
+</html>

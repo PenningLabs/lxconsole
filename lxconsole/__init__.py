@@ -4,8 +4,6 @@ from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
 import os
 import secrets
-import string
-
 
 app = Flask(__name__)
 
@@ -23,13 +21,15 @@ login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 login_manager.login_message_category = 'info'
 
-
 #Put below app declaration to prevent circular import
 from lxconsole import routes
 
 # Create database tables
 with app.app_context():
     db.create_all()
+    # To dynamically update table may be able to add try-catch for db.create_all() and then manually modify table if failure
+    #engine = SQLAlchemy.create_engine('sqlite:///db.sqlite3')
+    #engine.execute('alter table user add column otp_key String')
 
 #Create cert and key for application. Consider also writing to db, then checking db if exists  then write to file from db
 os.system('mkdir -p certs/')

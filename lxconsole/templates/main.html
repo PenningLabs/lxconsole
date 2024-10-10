@@ -38,9 +38,36 @@
       {% block modal %}
       {% endblock modal %}
 
+      <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div id="defaultToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+          <div class="toast-header">
+            <i class="fas fa-info-circle pr-2"></i>
+            <strong class="me-auto" id="defaultToastHeader"></strong>
+            <small>just now</small>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+          </div>
+          <div id="defaultToastBody" class="toast-body">
+          </div>
+        </div>
+      </div>
+      
+      <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div id="wideToast" class="toast" style="width:550px; max-width:550px;" role="alert" aria-live="assertive" aria-atomic="true">
+          <div class="toast-header">
+            <i class="fas fa-info-circle pr-2"></i>
+            <strong class="me-auto" id="wideToastHeader"></strong>
+            <small>just now</small>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+          </div>
+          <div id="wideToastBody" class="toast-body">
+          </div>
+        </div>
+      </div>
+
+
       <footer class="main-footer">
         <div class="float-right d-none d-sm-block">
-          Version 0.5.7
+          Version 0.6.0
         </div>
         Copyright &copy; 2020-Present <a href="https://penninglabs.com">Penning Labs</a>. All rights reserved.
       </footer>
@@ -78,6 +105,9 @@
 
     <script>
       operations = []
+     
+      const defaultToast = bootstrap.Toast.getOrCreateInstance(document.getElementById('defaultToast'))
+      const wideToast = bootstrap.Toast.getOrCreateInstance(document.getElementById('wideToast'))
 
       function changeProject(project){
         window.location.href = "{{ url_for('server') }}?id=" + serverId + '&project=' + project;
@@ -304,6 +334,7 @@
       operationReloadTimeout = ''
       operationReloadTime = 5000
       operationExists = false
+      pageReloadTimeout = ''
     </script>
 
     {% block script %}

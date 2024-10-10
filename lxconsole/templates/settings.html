@@ -1,0 +1,202 @@
+{% extends "main.html" %}
+
+{% block header %}
+  <div class="row mb-2">
+    <div class="col-sm-6">
+      <h1>{{ page_title | safe }}</h1>
+    </div>
+    <div class="col-sm-6">
+    </div>
+  </div>
+{% endblock header %}
+
+{% block content %}
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Password Settings</h3>
+        </div>
+        <div class="card-body">
+
+          <div class="row">
+            <label class="col-4 col-form-label">Minimum character length: </label>
+            <div class="col-7">
+              <div class="form-group">
+                <input type="number" min='0' id="minimumCharacterLength" onchange="updateSetting('minimumCharacterLength')" class="form-control" placeholder="" name="minimum_character_length">
+              </div>
+            </div>
+            <div class="col-1">
+              <i class="far fa-sm fa-question-circle" title='Sets the minimum number of character length in passwords'></i>
+            </div>
+          </div>
+
+          <div class="row">
+            <label class="col-4 col-form-label">Enable password complexity:</label>
+            <div class="col-7">
+              <div class="form-group">
+                <select id="enablePasswordComplexity" onchange="updateSetting('enablePasswordComplexity')" class="form-control" name="enable_password_complexity">
+                  <option value="" selected hidden></option>
+                  <option value="true">true</option>
+                  <option value="false">false</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-1">
+              <i class="far fa-sm fa-question-circle" title='Enabling password complexity allows the option to require selected characteristics of a password. It also requires at least an 8 character length'></i>
+            </div>
+          </div>
+          <ul>
+            <li>
+              <div class="row">
+                <label class="col-4 col-form-label">Require uppercase characters:</label>
+                <div class="col-7">
+                  <div class="form-group">
+                    <select id="requireUppercaseCharacters" onchange="updateSetting('requireUppercaseCharacters')" class="form-control" name="require_uppercase_characters">
+                      <option value="" selected hidden></option>
+                      <option value="true">true</option>
+                      <option value="false">false</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-1">
+                  <i class="far fa-sm fa-question-circle" title='Requires at least one uppercase letter within the password when password complexity is enabled'></i>
+                </div>
+              </div>
+            </li>
+            <li>
+              <div class="row">
+                <label class="col-4 col-form-label">Require lowercase characters:</label>
+                <div class="col-7">
+                  <div class="form-group">
+                    <select id="requireLowercaseCharacters" onchange="updateSetting('requireLowercaseCharacters')" class="form-control" name="require_lowercase_characters">
+                      <option value="" selected hidden></option>
+                      <option value="true">true</option>
+                      <option value="false">false</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-1">
+                  <i class="far fa-sm fa-question-circle" title='Requires at least one lowercase letter within the password when password complexity is enabled'></i>
+                </div>
+              </div>
+            </li>
+            <li>
+              <div class="row">
+                <label class="col-4 col-form-label">Require numbers:</label>
+                <div class="col-7">
+                  <div class="form-group">
+                    <select id="requireNumbers" onchange="updateSetting('requireNumbers')" class="form-control" name="require_numbers">
+                      <option value="" selected hidden></option>
+                      <option value="true">true</option>
+                      <option value="false">false</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-1">
+                  <i class="far fa-sm fa-question-circle" title='Requires at least one number within the password when password complexity is enabled'></i>
+                </div>
+              </div>
+            </li>
+            <li>
+              <div class="row">
+                <label class="col-4 col-form-label">Require special characters:</label>
+                <div class="col-7">
+                  <div class="form-group">
+                    <select id="requireSpecialCharacters" onchange="updateSetting('requireSpecialCharacters')" class="form-control" name="require_special_characters">
+                      <option value="" selected hidden></option>
+                      <option value="true">true</option>
+                      <option value="false">false</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-1">
+                  <i class="far fa-sm fa-question-circle" title='Requires at least one special character within the password when password complexity is enabled'></i>
+                </div>
+              </div>
+            </li>
+          </ul>
+
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock content %}
+
+{% block modal %}
+  {% include 'modals/account.html' %}
+{% endblock modal %}
+
+{% block script %}
+  <script>
+    var reloadTime = 10000;
+    
+    
+    function reloadPageContent() {
+      //Clear the automatic page reload
+      clearTimeout(pageReloadTimeout);
+
+      //Set the automatic page reload
+      pageReloadTimeout = setTimeout(() => { reloadPageContent(); }, reloadTime);
+    }
+
+    function loadPageContent(){
+
+      loadSettings()
+
+      //Clear the OTP Passcode TextBox
+      $('#oneTimePassword').val('');
+      
+      //Set reload page content
+      pageReloadTimeout = setTimeout(() => { reloadPageContent(); }, reloadTime);
+
+    }
+
+    // Load the user account information
+    function loadSettings(){
+      console.log("Info: loading settings");
+      $.get("{{ url_for('api') }}/settings/list_settings", function (data) {
+        data = data.data
+        console.log(data)
+        data.forEach(element => {
+          $("#"+element.name).val(element.value);
+        });
+
+        if ($("#enablePasswordComplexity").val() == 'true'){
+          $("#requireUppercaseCharacters").attr("disabled", false)
+          $("#requireLowercaseCharacters").attr("disabled", false)
+          $("#requireNumbers").attr("disabled", false)
+          $("#requireSpecialCharacters").attr("disabled", false)
+        }
+        else {
+          $("#requireUppercaseCharacters").attr("disabled", true)
+          $("#requireLowercaseCharacters").attr("disabled", true)
+          $("#requireNumbers").attr("disabled", true)
+          $("#requireSpecialCharacters").attr("disabled", true)
+        }
+
+      });
+    }
+
+    // Set Password Complexity
+    function updateSetting(name){
+      console.log("Info: updating settings");
+      value = $('#'+name).val()
+      console.log('value='+value)
+      $.post("{{ url_for('api') }}/settings/update_setting", { name: name, value: value }, function (data) {
+        console.log(data);
+        if (data.error_code >= 400){
+          alert(data.error);
+        }
+        loadSettings()
+        //Sync type
+        setTimeout(() => { reloadPageContent(); }, 1000);
+      });
+    }
+
+    $(document).ready(function(){
+      loadPageContent()
+    });
+
+  </script>
+{% endblock script %}

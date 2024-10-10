@@ -1191,3 +1191,970 @@
     </div>
   </div>
 </div>
+
+<!-- Delete Modal-->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-md" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Delete Instance(s)</h5>
+        <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to delete the following instance(s)?</p>
+        <span id="deleteInstancesList"></span>
+        <input type="hidden" id="deleteInstancesHiddenInput">
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+        <a class="btn btn-primary" href="#" onclick="deleteInstances()" data-bs-dismiss="modal">Yes</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Modal-->
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Edit Instance</h5>
+          <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <ul class="nav nav-tabs" id="myEditTab" role="tablist">
+            <li class="nav-item">
+              <a class="nav-link active" id="edit-form-tab" data-bs-toggle="tab" href="#edit-form" role="tab" aria-controls="edit-form" aria-selected="true">Form</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="edit-json-tab" data-bs-toggle="tab" href="#edit-json" role="tab" aria-controls="edit-json" aria-selected="false">JSON</a>
+            </li>
+          </ul>
+          <div class="tab-content" id="myTabContent">
+            
+            <div class="tab-pane fade show active" id="edit-form" role="tabpanel" aria-labelledby="form-tab">
+              <br />
+              <form id="editForm">
+                <div class="row">
+                  <label class="col-3 col-form-label text-right">Description: </label>
+                  <div class="col-7">
+                    <div class="form-group">
+                      <input type="text" id="instanceDescriptionInput" class="form-control" required="required" name="description">
+                    </div>
+                  </div>
+                  <div class="col-1">
+                    <i class="far fa-sm fa-question-circle" title='Enter in a description for this instance'></i>
+                  </div>
+                </div>
+                <hr>
+                <nav>
+                  <div class="nav nav-pills justify-content-center" id="edit-nav-tab" role="tablist">
+                    <a class="nav-link active" id="edit-nav-boot-tab" data-bs-toggle="tab" href="#edit-nav-boot" role="tab" aria-controls="edit-nav-boot" aria-selected="true">Boot</a>
+                    <a class="nav-link" id="edit-nav-cloud-init-tab" data-bs-toggle="tab" href="#edit-nav-cloud-init" role="tab" aria-controls="edit-nav-cloud-init" aria-selected="true">Cloud-init</a>
+                    <a class="nav-link" id="edit-nav-limits-tab" data-bs-toggle="tab" href="#edit-nav-limits" role="tab" aria-controls="edit-nav-limits" aria-selected="false">Limits</a>
+                    <a class="nav-link" id="edit-nav-migration-tab" data-bs-toggle="tab" href="#edit-nav-migration" role="tab" aria-controls="edit-nav-migration" aria-selected="false">Migration</a>
+                    <a class="nav-link" id="edit-nav-nvidia-tab" data-bs-toggle="tab" href="#edit-nav-nvidia" role="tab" aria-controls="edit-nav-nvidia" aria-selected="false">Nvidia</a>
+                    <a class="nav-link" id="edit-nav-other-tab" data-bs-toggle="tab" href="#edit-nav-other" role="tab" aria-controls="edit-nav-other" aria-selected="false">Other</a>
+                    <a class="nav-link" id="edit-nav-raw-tab" data-bs-toggle="tab" href="#edit-nav-raw" role="tab" aria-controls="edit-nav-raw" aria-selected="false">Raw</a>
+                    <a class="nav-link" id="edit-nav-security-tab" data-bs-toggle="tab" href="#edit-nav-security" role="tab" aria-controls="edit-nav-security" aria-selected="false">Security</a>
+                    <a class="nav-link" id="edit-nav-snapshots-config-tab" data-bs-toggle="tab" href="#edit-nav-snapshots-config" role="tab" aria-controls="edit-nav-snapshots-config" aria-selected="false">Snapshots</a>
+                  </div>
+                </nav>
+                <hr class="mt-2">
+                <div class="tab-content" id="edit-nav-tabContent">
+                  <div class="tab-pane fade show active" id="edit-nav-boot" role="tabpanel" aria-labelledby="edit-nav-boot-tab">
+                    <br>
+                    <div class="row">
+                      <label class="col-4 col-form-label text-right">Autostart: </label>
+                      <div class="col-6">
+                        <div class="form-group">
+                          <select id="boot.autostart" onchange="" class="form-select" name="boot.autostart">
+                            <option value="">(not set)</option>
+                            <option value="true">true</option>
+                            <option value="false">false</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-1">
+                        <i class="far fa-sm fa-question-circle" title='Select whether to automatically start the instance with LXD/Incus starts. If not set, defaults to instance last state.'></i>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <label class="col-4 col-form-label text-right">Autostart Delay: </label>
+                      <div class="col-6">
+                        <div class="form-group">
+                          <input type="number" id="instanceBootAutostartDelayInput" class="form-control" placeholder="" name="boot.autostart.delay">
+                        </div>
+                      </div>
+                      <div class="col-1">
+                        <i class="far fa-sm fa-question-circle" title='Enter in the number of seconds to wait after the instance starts to boot up the next instance. Default: 0.'></i>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <label class="col-4 col-form-label text-right">Autostart Priority: </label>
+                      <div class="col-6">
+                        <div class="form-group">
+                          <input type="number" id="instanceBootAutostartPriorityInput" class="form-control" placeholder="" name="boot.autostart.priority">
+                        </div>
+                      </div>
+                      <div class="col-1">
+                        <i class="far fa-sm fa-question-circle" title='Enter in a number to determine the order the instance boots, higher numbers being first. Default: 0.'></i>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <label class="col-4 col-form-label text-right">Host Shutdown Timeout: </label>
+                      <div class="col-6">
+                        <div class="form-group">
+                          <input type="number" id="instanceBootHostShutdownTimeoutInput" class="form-control" placeholder="" name="boot.host_shutdown_timeout">
+                        </div>
+                      </div>
+                      <div class="col-1">
+                        <i class="far fa-sm fa-question-circle" title='Enter in a the number of seconds to wait on host shutdown before forcefull shutdown of instance. Default: 30.'></i>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <label class="col-4 col-form-label text-right">Stop Priority: </label>
+                      <div class="col-6">
+                        <div class="form-group">
+                          <input type="number" id="instanceBootStopPriorityInput" class="form-control" placeholder="" name="boot.stop.priority">
+                        </div>
+                      </div>
+                      <div class="col-1">
+                        <i class="far fa-sm fa-question-circle" title='Enter in a number to determine the order the instance shutsdown, higher numbers being first. Default: 0.'></i>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="tab-pane fade" id="edit-nav-cloud-init" role="tabpanel" aria-labelledby="edit-nav-cloud-init-tab">
+                    <br>
+                    <div class="row">
+                      <label class="col-4 col-form-label text-right">Network Config: </label>
+                      <div class="col-6">
+                        <div class="form-group">
+                          <textarea class="form-control" name="cloud-init.network-config"></textarea>
+                        </div>
+                      </div>
+                      <div class="col-1">
+                        <i class="far fa-sm fa-question-circle" title='Support for this option depends on the instance image. Enter in network configuration. Default: not set.'></i>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <label class="col-4 col-form-label text-right">User Data: </label>
+                      <div class="col-6">
+                        <div class="form-group">
+                          <textarea class="form-control" name="cloud-init.user-data"></textarea>
+                        </div>
+                      </div>
+                      <div class="col-1">
+                        <i class="far fa-sm fa-question-circle" title='Support for this option depends on the instance image. Enter in user data configuration. If both cloud-init.user-data and cloud-init.vendor-data exist, the contents of both are merged. Default: not set.'></i>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <label class="col-4 col-form-label text-right">Vendor Data: </label>
+                      <div class="col-6">
+                        <div class="form-group">
+                          <textarea class="form-control" name="cloud-init.vendor-data"></textarea>
+                        </div>
+                      </div>
+                      <div class="col-1">
+                        <i class="far fa-sm fa-question-circle" title='Support for this option depends on the instance image. Enter in vendor data configuration. If both cloud-init.user-data and cloud-init.vendor-data exist, the contents of both are merged. Default: not set.'></i>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="tab-pane fade" id="edit-nav-limits" role="tabpanel" aria-labelledby="edit-nav-limits-tab">
+                    <br>
+                    <div class="row">
+                      <label class="col-4 col-form-label text-right">CPU: </label>
+                      <div class="col-6">
+                        <div class="form-group">
+                          <input type="text" id="instanceLimitsCpuInput" class="form-control" placeholder="" name="limits.cpu">
+                        </div>
+                      </div>
+                      <div class="col-1">
+                        <i class="far fa-sm fa-question-circle" title='Enter in the number or range of CPUs to expose to the instance.'></i>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <label class="col-4 col-form-label text-right">CPU Allowance: </label>
+                      <div class="col-6">
+                        <div class="form-group">
+                          <input type="text" id="instanceLimitsCpuAllowanceInput" class="form-control" placeholder="" name="limits.cpu.allowance">
+                        </div>
+                      </div>
+                      <div class="col-1">
+                        <i class="far fa-sm fa-question-circle" title='Enter in the amount of Host CPU allowed to the instance. This can be a percentage or a chunk of time. For example, 50% or 25ms/100ms. Default: 100%) '></i>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <label class="col-4 col-form-label text-right">CPU Priority: </label>
+                      <div class="col-6">
+                        <div class="form-group">
+                          <input type="number" id="instanceLimitsCpuPriorityInput" class="form-control" placeholder="" name="limits.cpu.priority">
+                        </div>
+                      </div>
+                      <div class="col-1">
+                        <i class="far fa-sm fa-question-circle" title='Enter in an integer between 0 (min) and 10 (max) to schedule the CPU priority compared to other instances. Default: 10.'></i>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <label class="col-4 col-form-label text-right">Disk Priority: </label>
+                      <div class="col-6">
+                        <div class="form-group">
+                          <input type="number" id="instanceLimitsDiskPriorityInput" class="form-control" placeholder="" name="limits.disk.priority">
+                        </div>
+                      </div>
+                      <div class="col-1">
+                        <i class="far fa-sm fa-question-circle" title='Enter in an integer between 0 (min) and 10 (max) to schedule disk I/O request priority compared to other instances. Default: 5.'></i>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <label class="col-4 col-form-label text-right">Hugepages - 64KB: </label>
+                      <div class="col-6">
+                        <div class="form-group">
+                          <input type="number" id="instanceLimitsHugepages64KBInput" class="form-control" placeholder="" name="limits.hugepages.64KB">
+                        </div>
+                      </div>
+                      <div class="col-1">
+                        <i class="far fa-sm fa-question-circle" title='Enter in a fixed value in bytes to limit the number of 64 KB hugepages. Default: (not set).'></i>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <label class="col-4 col-form-label text-right">Hugepages - 1MB: </label>
+                      <div class="col-6">
+                        <div class="form-group">
+                          <input type="number" id="instanceLimitsHugepages1MBInput" class="form-control" placeholder="" name="limits.hugepages.1MB">
+                        </div>
+                      </div>
+                      <div class="col-1">
+                        <i class="far fa-sm fa-question-circle" title='Enter in a fixed value in bytes to limit the number of 1 MB hugepages. Default: (not set).'></i>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <label class="col-4 col-form-label text-right">Hugepages - 2MB: </label>
+                      <div class="col-6">
+                        <div class="form-group">
+                          <input type="number" id="instanceLimitsHugepages2MBInput" class="form-control" placeholder="" name="limits.hugepages.2MB">
+                        </div>
+                      </div>
+                      <div class="col-1">
+                        <i class="far fa-sm fa-question-circle" title='Enter in a fixed value in bytes to limit the number of 2 MB hugepages. Default: (not set).'></i>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <label class="col-4 col-form-label text-right">Hugepages - 1GB: </label>
+                      <div class="col-6">
+                        <div class="form-group">
+                          <input type="number" id="instanceLimitsHugepages1GBInput" class="form-control" placeholder="" name="limits.hugepages.1GB">
+                        </div>
+                      </div>
+                      <div class="col-1">
+                        <i class="far fa-sm fa-question-circle" title='Enter in a fixed value in bytes to limit the number of 1 GB hugepages. Default: (not set).'></i>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <label class="col-4 col-form-label text-right">Memory: </label>
+                      <div class="col-6">
+                        <div class="form-group">
+                          <input type="text" id="instanceLimitsMemoryInput" class="form-control" placeholder="" name="limits.memory">
+                        </div>
+                      </div>
+                      <div class="col-1">
+                        <i class="far fa-sm fa-question-circle" title="Enter in a percentage of the host's memory or enter in a fixed value of bytes."></i>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <label class="col-4 col-form-label text-right">Memory Enforce: </label>
+                      <div class="col-6">
+                        <div class="form-group">
+                          <select id="instanceLimitsMemoryEnforceInput" onchange="" class="form-select" name="limits.memory.enforce">
+                            <option value="">(not set)</option>
+                            <option value="hard">hard</option>
+                            <option value="soft">soft</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-1">
+                        <i class="far fa-sm fa-question-circle" title="Select whether to put a hard stop on the memory limit or use a soft stop to exceed the limit if extra memory is available. Default: hard."></i>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <label class="col-4 col-form-label text-right">Memory Hugepages: </label>
+                      <div class="col-6">
+                        <div class="form-group">
+                          <select class="form-select" id="instanceLimitsMemoryHugepagesInput" name="limits.memory.hugepages">
+                            <option value="">(not set)</option>
+                            <option value="true">true</option>
+                            <option value="false">false</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-1">
+                        <i class="far fa-sm fa-question-circle" title="Select whether to back the instance using hugepages rather than regular system memory. Default: false."></i>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <label class="col-4 col-form-label text-right">Memory Swap: </label>
+                      <div class="col-6">
+                        <div class="form-group">
+                          <select id="instanceLimitsMemorySwapInput" onchange="" class="form-select" name="limits.memory.swap">
+                            <option value="">(not set)</option>
+                            <option value="true">true</option>
+                            <option value="false">false</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-1">
+                        <i class="far fa-sm fa-question-circle" title="Select whether to encorage swapping less used pages for the instance. Default: true."></i>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <label class="col-4 col-form-label text-right">Memory Swap Priority: </label>
+                      <div class="col-6">
+                        <div class="form-group">
+                          <input type="number" id="instanceLimitsMemorySwapPriorityInput" class="form-control" placeholder="" name="limits.memory.swap.priority">
+                        </div>
+                      </div>
+                      <div class="col-1">
+                        <i class="far fa-sm fa-question-circle" title="Enter in the priority that the instance will be less likely to swap to disk, with 10 being the maxium less likeliness. Default 10."></i>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <label class="col-4 col-form-label text-right">Network Priority: </label>
+                      <div class="col-6">
+                        <div class="form-group">
+                          <input type="number" id="instanceLimitsNetworkPriorityInput" class="form-control" placeholder="" name="limits.network.priority">
+                        </div>
+                      </div>
+                      <div class="col-1">
+                        <i class="far fa-sm fa-question-circle" title="Enter in the priority for the instance network when the host is under, with 10 being the priority. Default 0."></i>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <label class="col-4 col-form-label text-right">Processes: </label>
+                      <div class="col-6">
+                        <div class="form-group">
+                          <input type="number" id="instanceLimitsProcessesInput" class="form-control" placeholder="" name="limits.processes">
+                        </div>
+                      </div>
+                      <div class="col-1">
+                        <i class="far fa-sm fa-question-circle" title="Enter in the maximum number of processes that can run in an instance. Default (not set)."></i>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="tab-pane fade" id="edit-nav-migration" role="tabpanel" aria-labelledby="edit-nav-migration-tab">
+                    <br>
+                    <div class="row">
+                      <label class="col-4 col-form-label text-right">Incremental Memory: </label>
+                      <div class="col-6">
+                        <div class="form-group">
+                          <select id="instanceMigrationIncrementalMemoryInput" onchange="" class="form-select" name="migration.incremental.memory">
+                            <option value="">(not set)</option>
+                            <option value="true">true</option>
+                            <option value="false">false</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-1">
+                        <i class="far fa-sm fa-question-circle" title="Select whether to allow incremental memory transfer of the instance's memory to reduce downtime. Default: false."></i>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <label class="col-4 col-form-label text-right">Incremental Memory Goal: </label>
+                      <div class="col-6">
+                        <div class="form-group">
+                          <input type="number" id="instanceMigrationIncrementalMemoryGoalInput" class="form-control" placeholder="" name="migration.incremental.memory.goal">
+                        </div>
+                      </div>
+                      <div class="col-1">
+                        <i class="far fa-sm fa-question-circle" title="Enter in the percentage number of memory to have in sync before stopping the instance. Default: 70."></i>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <label class="col-4 col-form-label text-right">Incremental Memory Iterations: </label>
+                      <div class="col-6">
+                        <div class="form-group">
+                          <input type="number" id="instanceMigrationIncrementalMemoryIterationsInput" class="form-control" placeholder="" name="migration.incremental.memory.iterations">
+                        </div>
+                      </div>
+                      <div class="col-1">
+                        <i class="far fa-sm fa-question-circle" title="Enter in the maximum number of transfer operations to go through before stopping the instance. Default: 10."></i>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <label class="col-4 col-form-label text-right">Stateful: </label>
+                      <div class="col-6">
+                        <div class="form-group">
+                          <select class="form-select" id="instanceMigrationStatefulInput" name="migration.stateful">
+                            <option value="">(not set)</option>
+                            <option value="true">true</option>
+                            <option value="false">false</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-1">
+                        <i class="far fa-sm fa-question-circle" title="Select whether to allow for stateful stop/start and snapshots. This will prevent the use of some features that are incompatible with it. Default: false."></i>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="tab-pane fade" id="edit-nav-nvidia" role="tabpanel" aria-labelledby="edit-nav-nvidia-tab">
+                    <br>
+                    <div class="row">
+                      <label class="col-4 col-form-label text-right">Driver Capabilities: </label>
+                      <div class="col-6">
+                        <div class="form-group">
+                          <input type="text" id="instanceNvidiaDriverCapabilitiesInput" class="form-control" placeholder="" name="nvidia.driver.capabilities">
+                        </div>
+                      </div>
+                      <div class="col-1">
+                        <i class="far fa-sm fa-question-circle" title="Enter in what driver capabilities the instance needs (sets libnvidia-container NVIDIA_DRIVER_CAPABILITIES). Default: compute,utility."></i>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <label class="col-4 col-form-label text-right">Runtime: </label>
+                      <div class="col-6">
+                        <div class="form-group">
+                          <select id="instanceNvidiaRuntimeInput" onchange="" class="form-select" name="nvidia.runtime">
+                            <option value="">(not set)</option>
+                            <option value="true">true</option>
+                            <option value="false">false</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-1">
+                        <i class="far fa-sm fa-question-circle" title="Select whether to pass the host NVIDIA and CUDA runtime libraries into the instance. Default: false."></i>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <label class="col-4 col-form-label text-right">Require Cuda: </label>
+                      <div class="col-6">
+                        <div class="form-group">
+                          <input type="text" id="instanceNvidiaRequireCudaInput" class="form-control" placeholder="" name="nvidia.require.cuda">
+                        </div>
+                      </div>
+                      <div class="col-1">
+                        <i class="far fa-sm fa-question-circle" title="Enter in the version expression for the required CUDA version (sets libnvidia-container NVIDIA_REQUIRE_CUDA). Default: (not set)."></i>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <label class="col-4 col-form-label text-right">Require Driver: </label>
+                      <div class="col-6">
+                        <div class="form-group">
+                          <input type="text" id="instanceNvidiaRequireDriverInput" class="form-control" placeholder="" name="nvidia.require.driver">
+                        </div>
+                      </div>
+                      <div class="col-1">
+                        <i class="far fa-sm fa-question-circle" title="Enter in the version expression for the required driver version (sets libnvidia-container NVIDIA_REQUIRE_DRIVER). Default: (not set)."></i>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="tab-pane fade" id="edit-nav-other" role="tabpanel" aria-labelledby="edit-nav-other-tab">
+                    <br>
+                    <div class="row">
+                      <label class="col-4 col-form-label text-right">Cluster Evacuate: </label>
+                      <div class="col-6">
+                        <div class="form-group">
+                          <select id="instanceClusterEvacuateInput" onchange="" class="form-select" name="cluster.evacuate">
+                            <option value="">(not set)</option>
+                            <option value="auto">auto</option>
+                            <option value="migrate">migrate</option>
+                            <option value="stop">stop</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-1">
+                        <i class="far fa-sm fa-question-circle" title='Select what to do when evacuating the instance. Default: auto'></i>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <label class="col-4 col-form-label text-right">Kernel Modules: </label>
+                      <div class="col-6">
+                        <div class="form-group">
+                          <input type="text" id="instanceLinuxKernelModulesInput" class="form-control" placeholder="" name="linux.kernel_modules">
+                        </div>
+                      </div>
+                      <div class="col-1">
+                        <i class="far fa-sm fa-question-circle" title="Enter in a comma separated list of kernel modules to load before starting the instance. Default (not set)."></i>
+                      </div>
+                    </div>
+
+                  </div>
+                  <div class="tab-pane fade" id="edit-nav-raw" role="tabpanel" aria-labelledby="edit-nav-raw-tab">
+                    <br>
+                    <div class="row">
+                      <label class="col-4 col-form-label text-right">Apparmor: </label>
+                      <div class="col-6">
+                        <div class="form-group">
+                          <input type="text" id="instanceRawApparmorInput" class="form-control" placeholder="" name="raw.apparmor">
+                        </div>
+                      </div>
+                      <div class="col-1">
+                        <i class="far fa-sm fa-question-circle" title="Enter in apparmor profile entries to be appended to the profile. Default: (not set)."></i>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <label class="col-4 col-form-label text-right">Idmap: </label>
+                      <div class="col-6">
+                        <div class="form-group">
+                          <input type="text" id="instanceRawIdmapInput" class="form-control" placeholder="" name="raw.idmap">
+                        </div>
+                      </div>
+                      <div class="col-1">
+                        <i class="far fa-sm fa-question-circle" title="Enter in a raw idmap configuration (e.g. 'both 1000 1000'). Default: (not set)."></i>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <label class="col-4 col-form-label text-right">Lxc: </label>
+                      <div class="col-6">
+                        <div class="form-group">
+                          <input type="text" id="instanceRawLxcInput" class="form-control" placeholder="" name="raw.lxc">
+                        </div>
+                      </div>
+                      <div class="col-1">
+                        <i class="far fa-sm fa-question-circle" title="Enter in a raw LXC configuration to be appended to current configuration. Default: (not set)."></i>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <label class="col-4 col-form-label text-right">Seccomp: </label>
+                      <div class="col-6">
+                        <div class="form-group">
+                          <input type="text" id="instanceRawSeccompInput" class="form-control" placeholder="" name="raw.seccomp">
+                        </div>
+                      </div>
+                      <div class="col-1">
+                        <i class="far fa-sm fa-question-circle" title="Enter in a raw Seccomp configuration. Default: (not set)."></i>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <label class="col-4 col-form-label text-right">Qemu: </label>
+                      <div class="col-6">
+                        <div class="form-group">
+                          <input type="text" class="form-select" id="instanceRawQemuInput" name="raw.qemu">
+                        </div>
+                      </div>
+                      <div class="col-1">
+                        <i class="far fa-sm fa-question-circle" title="Enter raw QEMU configuration to be appended to the generated command line. Default: (not set)."></i>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <label class="col-4 col-form-label text-right">Qemu.conf: </label>
+                      <div class="col-6">
+                        <div class="form-group">
+                          <input type="text" class="form-select" id="instanceRawQemuConfInput" name="raw.qemu.conf">
+                        </div>
+                      </div>
+                      <div class="col-1">
+                        <i class="far fa-sm fa-question-circle" title="Enter in addition/override to the generated qemu.conf file. Default: (not set)."></i>
+                      </div>
+                    </div>
+
+                  </div>
+                  <div class="tab-pane fade" id="edit-nav-security" role="tabpanel" aria-labelledby="edit-nav-security-tab">
+                    <br>
+                    <div class="row">
+                      <label class="col-4 col-form-label text-right">Agent Metrics: </label>
+                      <div class="col-6">
+                        <div class="form-group">
+                          <select class="form-select" id="instanceSecurityAgentMetricsInput" name="security.agent.metrics">
+                            <option value="">(not set)</option>
+                            <option value="true">true</option>
+                            <option value="false">false</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-1">
+                        <i class="far fa-sm fa-question-circle" title="Select whether the lxd-agent/incus-agent is queried for state information and metrics. Default: true."></i>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <label class="col-4 col-form-label text-right">Devlxd: </label>
+                      <div class="col-6">
+                        <div class="form-group">
+                          <select id="instanceSecurityDevLxdInput" onchange="" class="form-select" name="security.devlxd">
+                            <option value="">(not set)</option>
+                            <option value="true">true</option>
+                            <option value="false">false</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-1">
+                        <i class="far fa-sm fa-question-circle" title="Select whether to control the presence of /dev/lxd in the instance. Default: true."></i>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <label class="col-4 col-form-label text-right">Devlxd Images: </label>
+                      <div class="col-6">
+                        <div class="form-group">
+                          <select id="instanceSecurityDevLxdImagesInput" onchange="" class="form-select" name="security.devlxd.images">
+                            <option value="">(not set)</option>
+                            <option value="true">true</option>
+                            <option value="false">false</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-1">
+                        <i class="far fa-sm fa-question-circle" title="Select whether to make the /1.0/images API available over devlxd. Default: false."></i>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <label class="col-4 col-form-label text-right">Idmap Base: </label>
+                      <div class="col-6">
+                        <div class="form-group">
+                          <input type="number" id="instanceSecurityIdmapBaseInput" class="form-control" placeholder="" name="security.idmap.base">
+                        </div>
+                      </div>
+                      <div class="col-1">
+                        <i class="far fa-sm fa-question-circle" title="Enter in the base Host ID to use for allocation. Default: (auto detection)."></i>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <label class="col-4 col-form-label text-right">Idmap Isolated: </label>
+                      <div class="col-6">
+                        <div class="form-group">
+                          <select id="instanceSecurityIdmapIsolatedInput" onchange="" class="form-select" name="security.idmap.isolated">
+                            <option value="">(not set)</option>
+                            <option value="true">true</option>
+                            <option value="false">false</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-1">
+                        <i class="far fa-sm fa-question-circle" title="Select whether to use an idmap for the instance that is unique amoung instances with isolate enabled. Default: false."></i>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <label class="col-4 col-form-label text-right">Idmap Size: </label>
+                      <div class="col-6">
+                        <div class="form-group">
+                          <input type="number" id="instanceSecurityIdmapSizeInput" class="form-control" placeholder="" name="security.idmap.size">
+                        </div>
+                      </div>
+                      <div class="col-1">
+                        <i class="far fa-sm fa-question-circle" title="Enter in the size of the idmap to use. Default: (not set)."></i>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <label class="col-4 col-form-label text-right">Nesting: </label>
+                      <div class="col-6">
+                        <div class="form-group">
+                          <select id="instanceSecurityNestingInput" onchange="" class="form-select" name="security.nesting">
+                            <option value="">(not set)</option>
+                            <option value="true">true</option>
+                            <option value="false">false</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-1">
+                        <i class="far fa-sm fa-question-circle" title="Select whether to support running LXD/Incus inside the instance. Default: false."></i>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <label class="col-4 col-form-label text-right">Privileged: </label>
+                      <div class="col-6">
+                        <div class="form-group">
+                          <select id="instanceSecurityPrivilegedInput" onchange="" class="form-select" name="security.privileged">
+                            <option value="">(not set)</option>
+                            <option value="true">true</option>
+                            <option value="false">false</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-1">
+                        <i class="far fa-sm fa-question-circle" title="Select whether to run the instance in privileged mode. Default: false."></i>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <label class="col-4 col-form-label text-right">Protection Delete: </label>
+                      <div class="col-6">
+                        <div class="form-group">
+                          <select id="instanceSecurityProtectionDeleteInput" onchange="" class="form-select" name="security.protection.delete">
+                            <option value="">(not set)</option>
+                            <option value="true">true</option>
+                            <option value="false">false</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-1">
+                        <i class="far fa-sm fa-question-circle" title="Select whether to prevent the instance from being deleted. Default: false."></i>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <label class="col-4 col-form-label text-right">Protection Shift: </label>
+                      <div class="col-6">
+                        <div class="form-group">
+                          <select id="instanceSecurityProtectionShiftInput" onchange="" class="form-select" name="security.protection.shift">
+                            <option value="">(not set)</option>
+                            <option value="true">true</option>
+                            <option value="false">false</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-1">
+                        <i class="far fa-sm fa-question-circle" title="Select whether to prevent the instance filesystem from being uid/gid shifted on startup. Default: false."></i>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <label class="col-4 col-form-label text-right">Secureboot: </label>
+                      <div class="col-6">
+                        <div class="form-group">
+                          <select class="form-select" id="instanceSecuritySecurebootInput" name="security.secureboot">
+                            <option value="">(not set)</option>
+                            <option value="true">true</option>
+                            <option value="false">false</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-1">
+                        <i class="far fa-sm fa-question-circle" title="Select whether whether UEFI secure boot is enabled with the default Microsoft keys. Default: true."></i>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <label class="col-4 col-form-label text-right">Syscalls Allow: </label>
+                      <div class="col-6">
+                        <div class="form-group">
+                          <input type="text" id="instanceSecuritySyscallsAllowInput" class="form-control" placeholder="" name="security.syscalls.allow">
+                        </div>
+                      </div>
+                      <div class="col-1">
+                        <i class="far fa-sm fa-question-circle" title="Enter in a '\n' separated list of syscalls to allow. Default: (not set)."></i>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <label class="col-4 col-form-label text-right">Syscalls Deny: </label>
+                      <div class="col-6">
+                        <div class="form-group">
+                          <input type="text" id="instanceSecuritySyscallsDenyInput" class="form-control" placeholder="" name="security.syscalls.deny">
+                        </div>
+                      </div>
+                      <div class="col-1">
+                        <i class="far fa-sm fa-question-circle" title="Enter in a '\n' separated list of syscalls to deny. Default: (not set)."></i>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <label class="col-4 col-form-label text-right">Syscalls Deny Compat: </label>
+                      <div class="col-6">
+                        <div class="form-group">
+                          <select id="instanceSecuritySyscallsDenyCompatInput" onchange="" class="form-select" name="security.syscalls.deny_compat">
+                            <option value="">(not set)</option>
+                            <option value="true">true</option>
+                            <option value="false">false</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-1">
+                        <i class="far fa-sm fa-question-circle" title="Select whether to enable on x86_64 the blocking of compat_* syscalls. Default: false."></i>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <label class="col-4 col-form-label text-right">Syscalls Deny Default: </label>
+                      <div class="col-6">
+                        <div class="form-group">
+                          <select id="instanceSecuritySyscallsDenyDefaultInput" onchange="" class="form-select" name="security.syscalls.deny_default">
+                            <option value="">(not set)</option>
+                            <option value="true">true</option>
+                            <option value="false">false</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-1">
+                        <i class="far fa-sm fa-question-circle" title="Select whether to enable the default syscall deny. Default: true."></i>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <label class="col-4 col-form-label text-right">Syscalls Intercept Bpf: </label>
+                      <div class="col-6">
+                        <div class="form-group">
+                          <select id="instanceSecuritySyscallsInterceptBpfInput" onchange="" class="form-select" name="security.syscalls.intercept.bpf">
+                            <option value="">(not set)</option>
+                            <option value="true">true</option>
+                            <option value="false">false</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-1">
+                        <i class="far fa-sm fa-question-circle" title="Select whether to handle tehe bpf system call. Default: false."></i>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <label class="col-4 col-form-label text-right">Syscalls Intercept Bpf Devices: </label>
+                      <div class="col-6">
+                        <div class="form-group">
+                          <select id="instanceSecuritySyscallsInterceptBpfDevicesInput" onchange="" class="form-select" name="security.syscalls.intercept.bpf.devices">
+                            <option value="">(not set)</option>
+                            <option value="true">true</option>
+                            <option value="false">false</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-1">
+                        <i class="far fa-sm fa-question-circle" title="Select whether to allow bpf programs for the devices cgroup in the unified hierarchy to be loaded. Default: false."></i>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <label class="col-4 col-form-label text-right">Syscalls Intercept Mknod: </label>
+                      <div class="col-6">
+                        <div class="form-group">
+                          <select id="instanceSecuritySyscallsInterceptMknodInput" onchange="" class="form-select" name="security.syscalls.intercept.mknod">
+                            <option value="">(not set)</option>
+                            <option value="true">true</option>
+                            <option value="false">false</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-1">
+                        <i class="far fa-sm fa-question-circle" title="Select whether to handle the mknod and mknodat system calls. Default: false."></i>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <label class="col-4 col-form-label text-right">Syscalls Intercept Mount: </label>
+                      <div class="col-6">
+                        <div class="form-group">
+                          <select id="instanceSecuritySyscallsInterceptMountInput" onchange="" class="form-select" name="security.syscalls.intercept.mount">
+                            <option value="">(not set)</option>
+                            <option value="true">true</option>
+                            <option value="false">false</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-1">
+                        <i class="far fa-sm fa-question-circle" title="Select whether to handle the mount system calls. Default: false."></i>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <label class="col-4 col-form-label text-right">Syscalls Intercept Mount Allowed: </label>
+                      <div class="col-6">
+                        <div class="form-group">
+                          <input type="text" id="instanceSecuritySyscallsInterceptMountAllowedInput" class="form-control" placeholder="" name="security.syscalls.intercept.mount.allowed">
+                        </div>
+                      </div>
+                      <div class="col-1">
+                        <i class="far fa-sm fa-question-circle" title="Enter in a comma-separated list of filesystems that are safe to mount for processes within the instance. Default: (not set)."></i>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <label class="col-4 col-form-label text-right">Syscalls Intercept Mount Fuse: </label>
+                      <div class="col-6">
+                        <div class="form-group">
+                          <input type="text" id="instanceSecuritySyscallsInterceptMountFuseInput" class="form-control" placeholder="" name="security.syscalls.intercept.mount.fuse">
+                        </div>
+                      </div>
+                      <div class="col-1">
+                        <i class="far fa-sm fa-question-circle" title="Enter in redirect mounts of a given filesystem to their fuse implemenation (e.g. ext4=fuse2fs). Default: (not set)."></i>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <label class="col-4 col-form-label text-right">Syscalls Intercept Mount Shift: </label>
+                      <div class="col-6">
+                        <div class="form-group">
+                          <select id="instanceSecuritySyscallsInterceptMountShiftInput" onchange="" class="form-select" name="security.syscalls.intercept.mount.shift">
+                            <option value="">(not set)</option>
+                            <option value="true">true</option>
+                            <option value="false">false</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-1">
+                        <i class="far fa-sm fa-question-circle" title="Select Whether to mount shiftfs on top of filesystems handled through mount syscall interception. Default: false."></i>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <label class="col-4 col-form-label text-right">Syscalls Intercept Mount Setxattr: </label>
+                      <div class="col-6">
+                        <div class="form-group">
+                          <select id="instanceSecuritySyscallsInterceptSetxattrInput" onchange="" class="form-select" name="security.syscalls.intercept.setxattr">
+                            <option value="">(not set)</option>
+                            <option value="true">true</option>
+                            <option value="false">false</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-1">
+                        <i class="far fa-sm fa-question-circle" title="Select whether to handle the setxattr system call. Default: false."></i>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="tab-pane fade" id="edit-nav-snapshots-config" role="tabpanel" aria-labelledby="edit-nav-snapshots-config-tab">
+                    <br>
+                    <div class="row">
+                      <label class="col-4 col-form-label text-right">Schedule: </label>
+                      <div class="col-6">
+                        <div class="form-group">
+                          <input type="text" id="instanceSnapshotsScheduleInput" class="form-control" placeholder="" name="snapshots.schedule">
+                        </div>
+                      </div>
+                      <div class="col-1">
+                        <i class="far fa-sm fa-question-circle" title="Enter in a cron expression (<minute> <hour> <dom> <month> <dow>), or a comma separated list of schedule aliases <@hourly> <@daily> <@midnight> <@weekly> <@monthly> <@annually> <@yearly> <@startup>. Default: (not set)."></i>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <label class="col-4 col-form-label text-right">Schedule Stopped: </label>
+                      <div class="col-6">
+                        <div class="form-group">
+                          <select id="instanceSnapshotsScheduleStoppedInput" onchange="" class="form-control" name="snapshots.schedule.stopped">
+                            <option value="">(not set)</option>
+                            <option value="true">true</option>
+                            <option value="false">false</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-1">
+                        <i class="far fa-sm fa-question-circle" title="Select whether stopped instances are to be snapshoted automatically. Default: false."></i>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <label class="col-4 col-form-label text-right">Pattern: </label>
+                      <div class="col-6">
+                        <div class="form-group">
+                          <input type="text" id="instanceSnapshotsPatternInput" class="form-control" placeholder="" name="snapshots.pattern">
+                        </div>
+                      </div>
+                      <div class="col-1">
+                        <i class="far fa-sm fa-question-circle" title="Enter in a pongo2 template string representing the snapshot name. Default: snap%d."></i>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <label class="col-4 col-form-label text-right">Expiry: </label>
+                      <div class="col-6">
+                        <div class="form-group">
+                          <input type="text" id="instanceSnapshotsExpiryInput" class="form-control" placeholder="" name="snapshots.expiry">
+                        </div>
+                      </div>
+                      <div class="col-1">
+                        <i class="far fa-sm fa-question-circle" title="Enter in time controls when snapshots are to be deleted (expects expressions like 1M 2H 3d 4w 5m 6y). Default: (not set)."></i>
+                      </div>
+                    </div>
+                    
+                  </div>
+                </div>
+              </form>
+              <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+                <a class="btn btn-primary" href="#" id="editFormSubmit" onclick="updateInstanceForm()" data-bs-dismiss="modal">Submit</a>
+              </div>
+            </div>
+      
+            <div class="tab-pane fade" id="edit-json" role="tabpanel" aria-labelledby="json-tab">
+              <br />
+              <div class="row">
+                <label class="col-12 col-form-label" id="instanceNameEditInput"></label>
+                <div class="col-12">
+                  <div class="form-group text-right">
+                    <pre>
+                      <textarea name="json" class="form-control" id="jsonEditInput" rows="16" placeholder="Enter JSON data"></textarea>
+                    </pre>
+                  </div>
+                </div>
+                <input type="hidden" id="instanceEditHiddenInput" name="instanceEditHiddenInput">
+              </div>
+              <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+                <a class="btn btn-primary" href="#" onclick="updateInstanceJson()" data-bs-dismiss="modal">Save</a>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+  </div>
+</div>

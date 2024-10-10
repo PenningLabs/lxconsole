@@ -4,6 +4,9 @@ from lxconsole import db
 from lxconsole.models import Server
 from flask_login import login_required
 from lxconsole.api.access_controls import privilege_check
+import json
+from datetime import datetime
+import OpenSSL
 
 
 def get_client_crt():
@@ -69,10 +72,18 @@ def api_certificates_endpoint(endpoint):
       url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/certificates?recursion=1&project=' + project
     else:
       url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/certificates?project=' + project
+
     client_cert = get_client_crt()
     client_key = get_client_key()
     results = requests.get(url, verify=server.ssl_verify, cert=(client_cert, client_key))
-    return jsonify(results.json())
+    certificates = json.dumps(results.json())
+    certificates = json.loads(certificates)
+    for certificate in certificates['metadata']:
+      if certificate['certificate']:
+        x509 = OpenSSL.crypto.load_certificate(OpenSSL.crypto.FILETYPE_PEM, certificate['certificate'])
+        notAfter = datetime.strptime(x509.get_notAfter().decode('ascii'), '%Y%m%d%H%M%SZ').isoformat() + 'Z'
+        certificate.update({'expiry_date': notAfter})
+    return jsonify(certificates)
   
   
   if endpoint == 'load_certificate':

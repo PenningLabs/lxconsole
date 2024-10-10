@@ -16,14 +16,6 @@
 {% block content %}
   <div class="col-12">
     <div class="card">
-      <div class="card-header">
-        <h3 class="card-title">Groups</h3>
-        <div class="card-tools">
-          <button type="button" class="btn btn-tool" onclick="reloadPageContent()" title="Refresh">
-          <i class="fas fa-sync"></i>
-          </button>
-        </div>
-      </div>
       <div class="card-body">
         <table class="table" id="groupsDataTable" width="100%" cellspacing="0">
         </table>
@@ -39,13 +31,14 @@
 {% block script %}
   <script>
     var reloadTime = 10000;
+    var scrollY =  localStorage.getItem('groupsDataTableScrollY') || '490px';
 
     function reloadPageContent() {
       //Clear the automatic page reload
       clearTimeout(pageReloadTimeout);
 
       //Reload the datatables content
-      $('#groupsDataTable').DataTable().ajax.reload(null, false);
+      loadGroupsTable()
 
       //Set the automatic page reload
       pageReloadTimeout = setTimeout(() => { reloadPageContent(); }, reloadTime);
@@ -54,50 +47,151 @@
     function loadPageContent(){
 
       // Configure Datatable
-      $('#groupsDataTable').DataTable({
-        ajax: {
-          url: "{{ url_for('api') }}/groups/list_groups",
-          dataType: "json",
-          dataSrc: "data",
-          contentType: "application/json",
-          error: function (xhr, error, code) {
-            console.log(xhr, code);
-          }
-        },
-        columns: [
-          { title: "Name", data: function (row, type, set) {
-              if (row.hasOwnProperty('name')) {
-                if (row.name)
-                  return row.name
-              }
-              return '-'
-            },
-          },
-          { title: "Description", data: function (row, type, set) {
-              if (row.hasOwnProperty('description')) {
-                if (row.description)
-                  return row.description
-              }
-              return '-'
-            },
-          },
-          { title: "Actions", data: function (row, type, set) {
-              links = ''
-              if (row.hasOwnProperty('id') && row.hasOwnProperty('name')) {
-                links = '<a href="#" onclick=editGroup(\''+row.id+'\',\''+row.name+'\')> <i class="fas fa-edit fa-lg" title="Edit" aria-hidden="true"></i> </a>' +
-                '&nbsp' +
-                '<a href="#" onclick=deleteGroup(\''+row.id+'\',\''+row.name+'\')> <i class="fas fa-trash-alt fa-lg" title="Delete" aria-hidden="true"></i> </a>'
-              }
-              return links
-            },
-          },
-        ],
-        order: [],
-      });
+      loadGroupsTable()
 
       //Set reload page content
       pageReloadTimeout = setTimeout(() => { reloadPageContent(); }, reloadTime);
 
+    }
+
+    function loadGroupsTable(){
+      if ( ! $.fn.DataTable.isDataTable( '#groupsDataTable' ) ) {
+        groupsDataTable = $('#groupsDataTable').DataTable({
+          ajax: {
+            url: "{{ url_for('api') }}/groups/list_groups",
+            dataType: "json",
+            dataSrc: "data",
+            contentType: "application/json",
+            error: function (xhr, error, code) {
+              console.log(xhr, code);
+            }
+          },
+          columns: [
+            {
+              data: null,
+              orderable: false,
+              render: DataTable.render.select()
+            },
+            { title: "Id", className: 'text-start dt-head-left', data: function (row, type, set) {
+                if (row.hasOwnProperty('id')) {
+                  if (row.id)
+                    return row.id
+                }
+                return '-'
+              },
+            },
+            { title: "Name", data: function (row, type, set) {
+                if (row.hasOwnProperty('name')) {
+                  if (row.name)
+                    return row.name
+                }
+                return '-'
+              },
+            },
+            { title: "Description", data: function (row, type, set) {
+                if (row.hasOwnProperty('description')) {
+                  if (row.description)
+                    return row.description
+                }
+                return '-'
+              },
+            },
+          ],
+          layout: {
+            topStart: {
+              buttons: [
+                { text: 'Edit',
+                  action: function () { 
+                    rows = groupsDataTable.rows({ selected: true });
+                    editGroup(rows.data()[0]['id'], rows.data()[0]['name']);
+                  },
+                  enabled: false,
+                },
+                'spacer',
+                { text: 'Delete',
+                  action: function () { 
+                    arr = []
+                    groupsDataTable.rows('.selected').every( function() {
+                      arr.push(this.data().id)
+                    });
+                    $("#deleteGroupsList").text(arr.join(", "));
+                    $("#deleteGroupsHiddenInput").val(JSON.stringify(arr));
+                    $("#deleteModal").modal('show');                    
+                  },
+                  enabled: false,
+                },
+                'spacer',
+                'spacer',
+                'pageLength',
+                'spacer',
+                {
+                  extend: 'collection',
+                  text: 'More',
+                  dropup: true,
+                  buttons: [
+                    {
+                      extend: 'colvis',
+                      text: 'Visible columns',
+                      columns: [1,2,3],
+                    },
+                    {
+                      text: (scrollY == '490px') ? 'Disable scrolling' : 'Enable scrolling',
+                      action: function ( e, dt, node, config ) {
+                        if (scrollY == '490px') {
+                          localStorage.setItem('groupsDataTableScrollY', false);
+                          scrollY = false
+                        }
+                        else {
+                          localStorage.setItem('groupsDataTableScrollY', '490px');
+                          scrollY = '490px'
+                        }
+                        dt.destroy()
+                        loadGroupsTable()
+                      },
+                    },
+                    {
+                      text: 'Reset table state',
+                      action: function ( e, dt, node, config ) {
+                        dt.state.clear();
+                        window.location.reload();
+                      },
+                    },
+                  ]
+                }
+
+              ]
+            }
+          },
+          lengthMenu: [
+            [10, 25, 50, 100, -1],
+            [10, 25, 50, 100, 'All'],
+          ],
+          order: [
+            [1, 'asc'], 
+          ],
+          rowId: 'id',
+          scrollCollapse: true,
+          scrollX: true,
+          scrollY: scrollY,
+          select: {
+            style: 'multi',
+            selector: 'td:first-child',
+            blurable: true,
+            headerCheckbox: 'select-page',
+          },
+          stateDuration: 0,
+          stateSave: true,
+        });
+      }
+      else {
+        $('#groupsDataTable').DataTable().ajax.reload(null, false);
+      }
+
+      groupsDataTable.on('select deselect', function () {
+        var selectedRows = groupsDataTable.rows({ selected: true }).count();
+        groupsDataTable.button(0).enable(selectedRows === 1);
+        groupsDataTable.button(2).enable(selectedRows > 0);
+      });
     }
 
     function loadInstructionsModal(){
@@ -146,17 +240,28 @@
         setTimeout(() => { reloadPageContent(); }, 2000);
       });
     }
+
     // Delete group
-    function deleteGroup(id, name){
-      console.log("Info: confirming removal of group " + name);
-      if (confirm("Are you sure you want to remove group " + name + "?") == true) {
-        console.log("Info: deleting group " + name);
-        $.post("{{ url_for('api') }}/groups/delete_group", {id: id}, function (data) {
-          setTimeout(() => { reloadPageContent(); }, 1000);
+    function deleteGroups(){
+      var deleteGroupsHiddenInput = JSON.parse($("#deleteGroupsHiddenInput").val());
+      console.log("Info: deleting groups " + deleteGroupsHiddenInput.join(", "));
+      for (let i = 0; i < deleteGroupsHiddenInput.length; i++) {
+        $.post("{{ url_for('api') }}/groups/delete_group", { id: deleteGroupsHiddenInput[i] }, function (data) {
+          console.log(data);
+          if (data.error_code >= 400){
+            alert(data.error);
+          }
         });
       }
-    }
 
+      //Send toast notification
+      $('#defaultToastHeader').text('Deleting Group(s)')
+      $('#defaultToastBody').text(deleteGroupsHiddenInput.join(", "))
+      defaultToast.show()
+
+      //Sync type
+      setTimeout(() => { reloadPageContent(); }, 1000);
+    }
 
     $(document).ready(function(){
 

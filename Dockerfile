@@ -10,7 +10,7 @@ ADD lxconsole /opt/lxconsole/lxconsole
 COPY run.py /opt/lxconsole/run.py
 
 RUN apt update
-RUN apt install sqlite3
+RUN apt install sqlite3 -y
 
 WORKDIR /opt/lxconsole
 

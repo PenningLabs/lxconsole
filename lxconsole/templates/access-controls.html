@@ -16,14 +16,6 @@
 {% block content %}
   <div class="col-12">
     <div class="card">
-      <div class="card-header">
-        <h3 class="card-title">Access Controls</h3>
-        <div class="card-tools">
-          <button type="button" class="btn btn-tool" onclick="reloadPageContent()" title="Refresh">
-          <i class="fas fa-sync"></i>
-          </button>
-        </div>
-      </div>
       <div class="card-body">
         <table class="table" id="accessControlsDataTable" width="100%" cellspacing="0">
         </table>
@@ -39,13 +31,14 @@
 {% block script %}
   <script>
     var reloadTime = 10000;
+    var scrollY =  localStorage.getItem('accesControlsDataTableScrollY') || '490px';
 
     function reloadPageContent() {
       //Clear the automatic page reload
       clearTimeout(pageReloadTimeout);
 
       //Reload the datatables content
-      $('#accessControlsDataTable').DataTable().ajax.reload(null, false);
+      loadAccessControlsTable()
 
       //Set the automatic page reload
       pageReloadTimeout = setTimeout(() => { reloadPageContent(); }, reloadTime);
@@ -54,78 +47,7 @@
     function loadPageContent(){
       
       // Configure Datatable
-      $('#accessControlsDataTable').DataTable({
-        ajax: {
-          url: "{{ url_for('api') }}/access-controls/list_access_controls",
-          dataType: "json",
-          dataSrc: "data",
-          contentType: "application/json",
-          error: function (xhr, error, code) {
-            console.log(xhr, code);
-          }
-        },
-        columns: [
-        { title: "Id", data: function (row, type, set) {
-              if (row.hasOwnProperty('id')) {
-                if (row.id)
-                  return row.id
-              }
-              return '-'
-            },
-          },
-          { title: "Group", data: function (row, type, set) {
-              if (row.hasOwnProperty('group_name')) {
-                if (row.group_name)
-                  return row.group_name
-              }
-              return '-'
-            },
-          },
-          { title: "Role", data: function (row, type, set) {
-              if (row.hasOwnProperty('role_name')) {
-                if (row.role_name)
-                  return row.role_name
-              }
-              return '-'
-            },
-          },
-          { title: "Scope", data: function (row, type, set) {
-              if (row.hasOwnProperty('scope')) {
-                if (row.scope)
-                  return row.scope
-              }
-              return '-'
-            },
-          },
-          { title: "Description", data: function (row, type, set) {
-              if (row.hasOwnProperty('description')) {
-                if (row.description)
-                  return row.description
-              }
-              return '-'
-            },
-          },
-          // { title: "Server", data: function (row, type, set) {
-          //     if (row.hasOwnProperty('server_addr')) {
-          //       if (row.server_addr)
-          //         return row.server_addr
-          //     }
-          //     return '-'
-          //   },
-          // },
-          { title: "Actions", data: function (row, type, set) {
-              links = ''
-              if (row.hasOwnProperty('id')) {
-                links = '<a href="#" onclick=editAccessControl(\''+row.id+'\')> <i class="fas fa-edit fa-lg" title="Edit" aria-hidden="true"></i> </a>' +
-                '&nbsp' +
-                '<a href="#" onclick=deleteAccessContol(\''+row.id+'\')> <i class="fas fa-trash-alt fa-lg" title="Delete" aria-hidden="true"></i> </a>'
-              }
-              return links
-            },
-          },
-        ],
-        order: [],
-      });
+      loadAccessControlsTable()
 
       //Set reload page content
       pageReloadTimeout = setTimeout(() => { reloadPageContent(); }, reloadTime);
@@ -148,6 +70,170 @@
         }
       })
 
+    }
+
+    function loadAccessControlsTable(){
+      if ( ! $.fn.DataTable.isDataTable( '#accessControlsDataTable' ) ) {
+        accessControlsDataTable = $('#accessControlsDataTable').DataTable({
+          ajax: {
+            url: "{{ url_for('api') }}/access-controls/list_access_controls",
+            dataType: "json",
+            dataSrc: "data",
+            contentType: "application/json",
+            error: function (xhr, error, code) {
+              console.log(xhr, code);
+            }
+          },
+          columns: [
+            {
+              data: null,
+              orderable: false,
+              render: DataTable.render.select()
+            },
+            { title: "Id", className: 'text-start dt-head-left', data: function (row, type, set) {
+              if (row.hasOwnProperty('id')) {
+                if (row.id)
+                  return row.id
+              }
+              return '-'
+            },
+            },
+            { title: "Group", data: function (row, type, set) {
+                if (row.hasOwnProperty('group_name')) {
+                  if (row.group_name)
+                    return row.group_name
+                }
+                return '-'
+              },
+            },
+            { title: "Role", data: function (row, type, set) {
+                if (row.hasOwnProperty('role_name')) {
+                  if (row.role_name)
+                    return row.role_name
+                }
+                return '-'
+              },
+            },
+            { title: "Scope", data: function (row, type, set) {
+                if (row.hasOwnProperty('scope')) {
+                  if (row.scope)
+                    return row.scope
+                }
+                return '-'
+              },
+            },
+            { title: "Description", data: function (row, type, set) {
+                if (row.hasOwnProperty('description')) {
+                  if (row.description)
+                    return row.description
+                }
+                return '-'
+              },
+            },
+            // { title: "Server", data: function (row, type, set) {
+            //     if (row.hasOwnProperty('server_addr')) {
+            //       if (row.server_addr)
+            //         return row.server_addr
+            //     }
+            //     return '-'
+            //   },
+            // },
+          ],
+          layout: {
+            topStart: {
+              buttons: [
+                { text: 'Edit',
+                  action: function () { 
+                    rows = accessControlsDataTable.rows({ selected: true });
+                    editAccessControl(rows.data()[0]['id']);
+                  },
+                  enabled: false,
+                },
+                'spacer',
+                { text: 'Delete',
+                  action: function () { 
+                    arr = []
+                    accessControlsDataTable.rows('.selected').every( function() {
+                      arr.push(this.data().id)
+                    });
+                    $("#deleteAccessControlsList").text(arr.join(", "));
+                    $("#deleteAccessControlsHiddenInput").val(JSON.stringify(arr));
+                    $("#deleteModal").modal('show');                    
+                  },
+                  enabled: false,
+                },
+                'spacer',
+                'spacer',
+                'pageLength',
+                'spacer',
+                {
+                  extend: 'collection',
+                  text: 'More',
+                  dropup: true,
+                  buttons: [
+                    {
+                      extend: 'colvis',
+                      text: 'Visible columns',
+                      columns: [1,2,3,4,5],
+                    },
+                    {
+                      text: (scrollY == '490px') ? 'Disable scrolling' : 'Enable scrolling',
+                      action: function ( e, dt, node, config ) {
+                        if (scrollY == '490px') {
+                          localStorage.setItem('accessControlsDataTableScrollY', false);
+                          scrollY = false
+                        }
+                        else {
+                          localStorage.setItem('accessControlsDataTableScrollY', '490px');
+                          scrollY = '490px'
+                        }
+                        dt.destroy()
+                        loadAccessControlsTable()
+                      },
+                    },
+                    {
+                      text: 'Reset table state',
+                      action: function ( e, dt, node, config ) {
+                        dt.state.clear();
+                        window.location.reload();
+                      },
+                    },
+                  ]
+                }
+
+              ]
+            }
+          },
+          lengthMenu: [
+            [10, 25, 50, 100, -1],
+            [10, 25, 50, 100, 'All'],
+          ],
+          order: [
+            [1, 'asc'], 
+          ],
+          rowId: 'id',
+          scrollCollapse: true,
+          scrollX: true,
+          scrollY: scrollY,
+          select: {
+            style: 'multi',
+            selector: 'td:first-child',
+            blurable: true,
+            headerCheckbox: 'select-page',
+          },
+          stateDuration: 0,
+          stateSave: true,
+        });
+      }
+      else {
+        $('#accessControlsDataTable').DataTable().ajax.reload(null, false);
+      }
+
+      accessControlsDataTable.on('select deselect', function () {
+        var selectedRows = accessControlsDataTable.rows({ selected: true }).count();
+        accessControlsDataTable.button(0).enable(selectedRows === 1);
+        accessControlsDataTable.button(2).enable(selectedRows > 0);
+      });
     }
 
     function loadInstructionsModal(){
@@ -199,14 +285,25 @@
     }
 
     // Delete access control
-    function deleteAccessContol(id){
-      console.log("Info: confirming removal of access control " + id);
-      if (confirm("Are you sure you want to remove access control " + id + "?") == true) {
-        console.log("Info: deleting access control " + id);
-        $.post("{{ url_for('api') }}/access-controls/delete_access_control", {id: id}, function (data) {
-          setTimeout(() => { reloadPageContent(); }, 1000);
+    function deleteAccessControls(){
+      var deleteAccessControlsHiddenInput = JSON.parse($("#deleteAccessControlsHiddenInput").val());
+      console.log("Info: deleting access controls " + deleteAccessControlsHiddenInput.join(", "));
+      for (let i = 0; i < deleteAccessControlsHiddenInput.length; i++) {
+        $.post("{{ url_for('api') }}/access-controls/delete_access_control", { id: deleteAccessControlsHiddenInput[i] }, function (data) {
+          console.log(data);
+          if (data.error_code >= 400){
+            alert(data.error);
+          }
         });
       }
+
+      //Send toast notification
+      $('#defaultToastHeader').text('Deleting Access Control(s)')
+      $('#defaultToastBody').text(deleteAccessControlsHiddenInput.join(", "))
+      defaultToast.show()
+
+      //Sync type
+      setTimeout(() => { reloadPageContent(); }, 1000);
     }
 
 

@@ -1,9 +1,13 @@
 from flask import render_template, send_file, url_for, flash, redirect, request, session
 from lxconsole import app, db, bcrypt
-from lxconsole.forms import RegistrationForm, LoginForm
-from lxconsole.models import User, Server, Simplestream, Group, AccessControl, UserGroup
+from lxconsole.forms import RegistrationForm, LoginForm, OTPForm
+from lxconsole.models import User, Server, Simplestream, Registry, Group, AccessControl, UserGroup, TOTP
 from flask_login import login_user, current_user, logout_user, login_required
 from lxconsole.api import api
+import pyotp
+import qrcode
+from io import BytesIO
+from base64 import b64encode
 
 app.register_blueprint(api)
 
@@ -14,6 +18,7 @@ def home():
   else:
     if User.query.first():
       return redirect(url_for('login'))
+    # Populate Simplestreams and Registry table with default values on initial installation setup
     if not Simplestream.query.first():
       images_simplestream = Simplestream(url='https://images.linuxcontainers.org', alias='images')
       ubuntu_simplestream = Simplestream(url='https://cloud-images.ubuntu.com/releases', alias='ubuntu')
@@ -21,6 +26,16 @@ def home():
       db.session.add(images_simplestream)
       db.session.add(ubuntu_simplestream)
       db.session.add(ubuntu_daily_simplestream)
+      db.session.commit()
+    if not Registry.query.first():
+      images_registry = Registry(url='https://images.linuxcontainers.org', protocol='simplestreams', alias='images')
+      ubuntu_registry = Registry(url='https://cloud-images.ubuntu.com/releases', protocol='simplestreams', alias='ubuntu')
+      ubuntu_daily_registry = Registry(url='https://cloud-images.ubuntu.com/daily', protocol='simplestreams', alias='ubuntu-daily')
+      docker_registry = Registry(url='https://docker.io', protocol='oci', alias='docker')
+      db.session.add(images_registry)
+      db.session.add(ubuntu_registry)
+      db.session.add(ubuntu_daily_registry)
+      db.session.add(docker_registry)
       db.session.commit()
     if not Group.query.first():
       administrators_group = Group(name='Administrators', description='Default administrators group')
@@ -114,6 +129,11 @@ def profiles():
 def projects():
   return render_template('projects.html', page_title='Projects', page_user_id=current_user.id, page_username=current_user.username,)
 
+@app.route("/registries")
+@login_required
+def registries():
+  return render_template('registries.html', page_title='Registries', page_user_id=current_user.id, page_username=current_user.username,)
+
 @app.route("/server")
 @login_required
 def server():
@@ -149,7 +169,57 @@ def warnings():
 def backups(serverId, project, instance, filename):
   return send_file('../backups/' + serverId + '/' + project + '/' + instance + '/' + filename )
 
+@app.route("/login_otp", methods=['GET', 'POST'])
+def login_otp():
+  if current_user.is_authenticated:
+    return redirect(url_for('servers'))
+  if session['otp_user_id'] and session['otp_passwd_authenticated'] and session['otp_key']:
+    form = OTPForm()
+    if form.validate_on_submit():
+      otp_token = form.token.data
+      totp = pyotp.TOTP(session['otp_key'])
+      if totp.verify(otp_token):
+        user = User.query.filter_by(id=session['otp_user_id']).first()
+        login_user(user)
+        next_page = request.args.get('next')
 
+        with open('certs/client.crt', 'r') as file:
+          session['client_crt'] = file.read()
+
+        session['roles'] = [
+          {'id': 1, 'name': 'Administrator', 'description': 'Default role with full privileges'},
+          {'id': 2, 'name': 'Operator', 'description': 'Default role granting all LXD-based privileges'},
+          {'id': 3, 'name': 'User', 'description': 'Default role with limited privileges'},
+          {'id': 4, 'name': 'Auditor', 'description': 'Default role with read-only privileges'},
+        ]
+        session['global_roles'] = []
+        session['host_roles'] = []
+        
+        groups = UserGroup.query.filter_by(user_id=session['otp_user_id']).all()
+        for group in groups:
+          access_controls = AccessControl.query.filter_by(group_id=group.group_id).all()
+          for access_control in access_controls:
+            if access_control.scope == 'global':
+              for role in session['roles']:
+                if role['id'] == access_control.role_id:
+                  session['global_roles'].append(str(role['name']))
+            if access_control.scope == 'host':
+              for role in session['roles']:
+                if role['id'] == access_control.role_id:
+                  session['host_roles'][access_control.server_id].append(str(role['name']))
+
+        session.pop('otp_user_id', default=None)
+        session.pop('otp_passwd_authenticated', default=None)
+        session.pop('otp_key', default=None)
+
+        return redirect(next_page) if next_page else redirect(url_for('servers'))
+
+      else:
+        flash('Your time-based one time password was incorrect. Try again', 'danger')
+    return render_template('login_otp.html', title='OTP', form=form)
+  else:
+    return redirect(url_for('login'))
+  
 @app.route("/register", methods=['GET', 'POST'])
 def register():
   if current_user.is_authenticated:
@@ -170,17 +240,26 @@ def register():
       return redirect(url_for('login'))
     return render_template('register.html', title='Register', form=form)
 
-
 @app.route("/login", methods=['GET', 'POST'])
 def login():
   if current_user.is_authenticated:
     return redirect(url_for('servers'))
-  form = LoginForm()
-  if form.validate_on_submit():
-    user = User.query.filter_by(username=form.username.data).first()
-    if user and bcrypt.check_password_hash(user.password, form.password.data):
-      login_user(user, remember=form.remember.data)
-      next_page = request.args.get('next')
+  login_form = LoginForm()
+  if login_form.validate_on_submit():
+    user = User.query.filter_by(username=login_form.username.data).first()
+    if user and bcrypt.check_password_hash(user.password, login_form.password.data):
+      # I need to check to see if otp is enabled for the user. If it is I need to set a session variable for session['user_pass_authenticated'] = true
+      # then return redirect of login_otp page. May need to also set next_page as session var
+      otp = TOTP.query.filter_by(user_id=user.id).first()
+      if otp and otp.enabled:
+        session['otp_user_id'] = user.id
+        session['otp_passwd_authenticated'] = True
+        session['otp_key'] = otp.key
+        session['otp_next_page'] = request.args.get('next')
+        return redirect(url_for('login_otp'))
+      else:
+        login_user(user, remember=login_form.remember.data)
+        next_page = request.args.get('next')
 
       with open('certs/client.crt', 'r') as file:
         session['client_crt'] = file.read()
@@ -193,23 +272,15 @@ def login():
       ]
       session['global_roles'] = []
       session['host_roles'] = []
+      
       groups = UserGroup.query.filter_by(user_id=current_user.id).all()
-      print(groups)
       for group in groups:
-        print(group)
-        print(group.group_id)
         access_controls = AccessControl.query.filter_by(group_id=group.group_id).all()
-        print(access_controls)
         for access_control in access_controls:
-          print(access_control)
           if access_control.scope == 'global':
-            print(access_control.scope)
             for role in session['roles']:
-              print(role['id'])
-              print(access_control.role_id)
               if role['id'] == access_control.role_id:
                 session['global_roles'].append(str(role['name']))
-                print(role['name'])
           if access_control.scope == 'host':
             for role in session['roles']:
               if role['id'] == access_control.role_id:
@@ -218,19 +289,45 @@ def login():
       return redirect(next_page) if next_page else redirect(url_for('servers'))
     else:
       flash('Login Unsuccessful. Please check username and password', 'danger')
-  return render_template('login.html', title='Login', form=form)
-
+  return render_template('login.html', title='Login', form=login_form)
 
 @app.route("/logout")
 def logout():
   logout_user()
   return redirect(url_for('home'))
 
-
 @app.route("/account")
 @login_required
 def account():
-  return render_template('account.html', title='Account')
+  otp = TOTP.query.filter_by(user_id=current_user.id).first()
+  if otp:
+    if otp.key:
+      otp_key = otp.key
+    else:
+      otp_key = pyotp.random_base32()
+      otp.key = otp_key
+      db.session.commit()
+  else:
+    otp_key = pyotp.random_base32()
+    otp_record = TOTP(user_id=current_user.id, key=otp_key)
+    db.session.add(otp_record)
+    db.session.commit()
+
+  qr_data = pyotp.totp.TOTP(otp_key).provisioning_uri(name=current_user.username, issuer_name='LXConsole')
+  # qr = qrcode.make(qr_data)
+  # buffered = BytesIO()
+  # qr.save(buffered, format="PNG")
+  # qr_img_bytes = base64.b64encode(buffered.getvalue()).decode()
+
+  qr = qrcode.QRCode(version=1, box_size=10, border=2)
+  qr.add_data(qr_data)
+  qr.make(fit=True)
+  img = qr.make_image(fill_color='black', back_color='white')
+  buffered = BytesIO()
+  img.save(buffered)
+  qr_img_bytes = b64encode(buffered.getvalue()).decode("utf-8")
+  
+  return render_template('account.html', page_title='Account', qr_img=qr_img_bytes, page_user_id=current_user.id, page_username=current_user.username,)
 
 @app.route("/users")
 @login_required
@@ -251,6 +348,11 @@ def roles():
 @login_required
 def access_controls():
   return render_template('access-controls.html', page_title='Access Controls', page_user_id=current_user.id, page_username=current_user.username,)
+
+@app.route("/settings")
+@login_required
+def settings():
+  return render_template('settings.html', page_title='Settings', page_user_id=current_user.id, page_username=current_user.username,)
 
 @app.route("/logs")
 @login_required

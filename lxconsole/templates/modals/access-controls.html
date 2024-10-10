@@ -91,6 +91,28 @@
   </div>
 </div>
 
+<!-- Delete Modal-->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-md" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Delete Access Control(s)</h5>
+        <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to delete the following access control(s)?</p>
+        <span id="deleteAccessControlsList"></span>
+        <input type="hidden" id="deleteAccessControlsHiddenInput">
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+        <a class="btn btn-primary" href="#" onclick="deleteAccessControls()" data-bs-dismiss="modal">Yes</a>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- Edit Access Control Modal-->
 <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">

@@ -21,9 +21,12 @@ class RegistrationForm(FlaskForm):
         if user:
             raise ValidationError('That email is taken. Please choose a different one.')
 
-
 class LoginForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired(), Length(min=2, max=255)])
     password = PasswordField('Password', validators=[DataRequired()])
     remember = BooleanField('Remember Me')
     submit = SubmitField('Login')
+
+class OTPForm(FlaskForm):
+    token = StringField('OTP Token', validators=[DataRequired(), Length(min=6, max=6)])
+    submit = SubmitField('Submit')

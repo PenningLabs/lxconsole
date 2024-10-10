@@ -1,11 +1,3 @@
-# 0.5.0+
-- Add select functionality to tables (see images table)
-- Add bootstrap toast notifications
-
-# 0.6.0
-- Add two factor authentication option
-- Add password complexity requirements option
-
 # 0.7.0
 - Add support for MariaDB and Postgres database backends
 - Add logs page
@@ -23,7 +15,8 @@
 - Sort images list in creating new instance modal
 - Allow email notifications option
 - Combine cluster members and cluster groups into single page
-- Allow user to set table autoreload time
+- Allow user to set table auto reload time
+- Add environment config to instance creation and editing
 
 
 

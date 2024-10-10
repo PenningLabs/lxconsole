@@ -67,7 +67,8 @@ function applySidebarLinks() {
   $("#operationsLinkSidebar").attr("href", "operations?id=" + encodeURI(serverId) + "&project=" + encodeURI(project));
   $("#warningsLinkSidebar").attr("href", "warnings?id=" + encodeURI(serverId) + "&project=" + encodeURI(project));
   $("#certificatesLinkSidebar").attr("href", "certificates?id=" + encodeURI(serverId) + "&project=" + encodeURI(project));
-  $("#simplestreamsLinkSidebar").attr("href", "simplestreams?id=" + encodeURI(serverId) + "&project=" + encodeURI(project));  
+  $("#registriesLinkSidebar").attr("href", "registries?id=" + encodeURI(serverId) + "&project=" + encodeURI(project));
+  $("#simplestreamsLinkSidebar").attr("href", "simplestreams?id=" + encodeURI(serverId) + "&project=" + encodeURI(project));
 }
 
 function  applySidebarStyles() {
@@ -118,6 +119,10 @@ function  applySidebarStyles() {
     if (location.pathname == "/certificates"){
       $('#certificatesSpan').css('color','#fff');
       $('#certificatesIcon').css('color','#fff');
+    }
+    if (location.pathname == "/registries"){
+      $('#registriesSpan').css('color','#fff');
+      $('#registriesIcon').css('color','#fff');
     }
     if (location.pathname == "/simplestreams"){
       $('#simplestreamsSpan').css('color','#fff');

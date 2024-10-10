@@ -142,6 +142,12 @@
         if (data.error_code >= 400){
           alert(data.error);
         }
+        else {
+          //Send toast notification
+          $('#defaultToastHeader').text('New User')
+          $('#defaultToastBody').text(data.alert)
+          defaultToast.show()
+        }
         //Aync type
         setTimeout(() => { reloadPageContent(); }, 2000);
       });
@@ -184,8 +190,9 @@
 
     // Update user
     function updateUser(){
-      console.log("Info: adding new user");
+      console.log("Info: updating new user");
       data = $('#editForm').serialize();
+      data += '&action=update_user_details';
       $.post("{{ url_for('api') }}/users/update_user", data, function (data) {
         console.log(data);
         if (data.error_code >= 400){
@@ -214,10 +221,17 @@
     function updateUserPassword(){
       console.log("Info: editing user password");
       data = $('#editUserPasswordForm').serialize();
+      data += '&action=update_password';
       $.post("{{ url_for('api') }}/users/update_user", data, function (data) {
         console.log(data);
         if (data.error_code >= 400){
           alert(data.error);
+        }
+        else {
+          //Send toast notification
+          $('#defaultToastHeader').text('User Password')
+          $('#defaultToastBody').text(data.alert)
+          defaultToast.show()
         }
         //Sync type
         setTimeout(() => { reloadPageContent(); }, 1000);
@@ -238,7 +252,7 @@
     function changeActionInput(){
       var actionEditInput = $("#actionEditInput").val();
     
-      if (actionEditInput == "add"){
+      if (actionEditInput == "add_group"){
         $("#addGroupEditInputRow").show()
         $("#removeGroupEditInputRow").hide()
       }

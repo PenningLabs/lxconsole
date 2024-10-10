@@ -23,44 +23,20 @@
     </nav>
     <div class="tab-content" id="nav-page-content">
       <div class="tab-pane fade show active" id="nav-containers" role="tabpanel" aria-labelledby="nav-containers-tab">
-        <br />
         <div class="card">
-          <div class="card-header">
-            <h3 class="card-title">Containers</h3>
-            <div class="card-tools">
-              <button type="button" class="btn btn-tool" onclick="reloadPageContent()" title="Refresh">
-              <i class="fas fa-sync"></i>
-              </button>
-            </div>
-          </div>
           <div class="card-body">
-            <div class="table-responsive">
-              <table class="table" id="containerDataTable" width="100%" cellspacing="0"></table>
-            </div>
+            <table class="table" id="containersDataTable" width="100%" cellspacing="0"></table>
           </div>
         </div>
       </div>
       <div class="tab-pane fade" id="nav-virtual-machines" role="tabpanel" aria-labelledby="nav-virtual-machines-tab">
-        <br />
         <div class="card">
-          <div class="card-header">
-            <h3 class="card-title">Virtual Machines</h3>
-            <div class="card-tools">
-              <button type="button" class="btn btn-tool" onclick="reloadPageContent()" title="Refresh">
-              <i class="fas fa-sync"></i>
-              </button>
-            </div>
-          </div>
           <div class="card-body">
-            <div class="table-responsive">
-              <table class="table" id="virtualMachineDataTable" width="100%" cellspacing="0"></table>
-            </div>
+            <table class="table" id="virtualMachinesDataTable" width="100%" cellspacing="0"></table>
           </div>
         </div>
       </div>
     </div>
-
-
   </div>
 {% endblock content %}
 
@@ -76,6 +52,7 @@
     const serverId = urlParams.get('id');
     const project = urlParams.get('project');
     const hash = document.location.hash;
+    var scrollY =  localStorage.getItem('instancesDataTableScrollY') || '490px';
     applySidebarStyles();
     applySidebarLinks();
     populateSidebarLinks();
@@ -140,6 +117,7 @@
           $('#instanceLocationInput').append('<option value="' + optionText + '">' + optionText + '</option>');
         }
       })
+
       $.getJSON("{{ url_for('api') }}/cluster-groups/list_cluster_groups?id="+serverId+"&project="+project, function (data) {
         data = data.metadata
         for (var index = 0; index < data.length; index++) {
@@ -243,11 +221,8 @@
     }
 
     function loadContainersTable() {
-      pageLength =  localStorage.getItem('containerDataTable_pageLength') || 10;
-
-      if ( ! $.fn.DataTable.isDataTable( '#containerDataTable' ) ) {
-        // Configure Containers Datatable
-        $('#containerDataTable').DataTable({
+      if ( ! $.fn.DataTable.isDataTable( '#containersDataTable' ) ) {
+        containersDataTable = $('#containersDataTable').DataTable({
           ajax: {
             url: "{{ url_for('api') }}/instances/list_instances?id=" + serverId + "&filter=container" + "&project=" + project + "&recursion=2",
             dataType: "json",
@@ -257,8 +232,12 @@
               console.log(xhr, code);
             }
           },
-          pageLength: parseInt(pageLength),
           columns: [
+            {
+              data: null,
+              orderable: false,
+              render: DataTable.render.select()
+            },
             { title: "Name", data: function (row, type, set) {
                 if (row.hasOwnProperty('name')) {
                   if (row.name)
@@ -274,7 +253,7 @@
                       return '<i class="fas fa-check-circle fa-sm text-success mr-1" aria-hidden="true"></i> Running'
                     }
                     if (row.status == "Stopped") {
-                      return '<i class="fas fa-minus-circle fa-sm text-danger mr-1" aria-hidden="true"></i> Stopped'
+                      return '<i class="fas fa-minus-circle fa-sm text-secondary mr-1" aria-hidden="true"></i> Stopped'
                     }
                     if (row.status == "Frozen") {
                       return '<i class="fas fa-pause-circle fa-sm text-info mr-1" aria-hidden="true"></i> Frozen'
@@ -363,37 +342,148 @@
                 return '-'
               },
             },
-            { title: "Actions", data: function (row, type, set) {
-                links = ''
-                if (row.hasOwnProperty('name') && row.hasOwnProperty('status')) {
-                  if (row.name && row.status){
-                    if (row.status == 'Frozen')
-                      links += '<a href="#" onclick=changeItemState(\''+row.name+'\',\'unfreeze\')><i class="fas fa-pause fa-lg" title="Unfreeze" aria-hidden="true"></i></a>'
-                    else if (row.status == 'Stopped' || row.status == 'Error')
-                      links += '<a href="#" onclick=changeItemState(\''+row.name+'\',\'start\')><i class="fas fa-play fa-lg" title="Start" aria-hidden="true"></i></a>'
-                    else if (row.status == 'Running')
-                      links += '<a href="#" onclick=changeItemState(\''+row.name+'\',\'stop\')><i class="fas fa-stop fa-lg" title="Stop" aria-hidden="true"></i></a>'
-                    links += '&nbsp' + '&nbsp' 
-                    links += '<a href="#" onclick=deleteInstance(\''+row.name+'\')><i class="fas fa-trash-alt fa-lg" title="Delete" aria-hidden="true"></i></a>'
-                  }
-                }
-                return links
-              },
-            },
           ],
-          order: [],
+          layout: {
+            topStart: {
+              buttons: [
+                {
+                  extend: 'collection',
+                  text: 'State',
+                  autoClose: true,
+                  enabled: false,
+                  buttons: [
+                    {
+                      text: 'Start',
+                      action: function () { 
+                        containersDataTable.rows('.selected').every( function() {
+                          changeItemState(this.data().name, 'start')
+                        })
+                      },
+                    },
+                    {
+                      text: 'Stop',
+                      action: function () { 
+                        containersDataTable.rows('.selected').every( function() {
+                          changeItemState(this.data().name, 'stop')
+                        })
+                      },
+                    },
+                    {
+                      text: 'Unfreeze',
+                      action: function () { 
+                        containersDataTable.rows('.selected').every( function() {
+                          changeItemState(this.data().name, 'unfreeze')
+                        })
+                      },
+                    },
+                    {
+                      text: 'Freeze',
+                      action: function () { 
+                        containersDataTable.rows('.selected').every( function() {
+                          changeItemState(this.data().name, 'freeze')
+                        })
+                      },
+                    },
+                  ],
+                },
+                'spacer',
+                { text: 'Edit',
+                  action: function () { 
+                    rows = containersDataTable.rows({ selected: true });
+                    editInstance(rows.data()[0]['name'], rows.data()[0]['name']);
+                  },
+                  enabled: false,
+                },
+                'spacer',
+                { text: 'Delete',
+                  action: function () { 
+                    arr = []
+                    containersDataTable.rows('.selected').every( function() {
+                      arr.push(this.data().name)
+                    });
+                    $("#deleteInstancesList").text(arr.join(", "));
+                    $("#deleteInstancesHiddenInput").val(JSON.stringify(arr));
+                    $("#deleteModal").modal('show');                    
+                  },
+                  enabled: false,
+                },
+                'spacer',
+                'spacer',
+                'pageLength',
+                'spacer',
+                {
+                  extend: 'collection',
+                  text: 'More',
+                  
+                  buttons: [
+                    {
+                      extend: 'colvis',
+                      text: 'Visible columns',
+                      columns: [1,2,3,4,5,6,7,8,9],
+                    },
+                    {
+                      text: (scrollY == '490px') ? 'Disable scrolling' : 'Enable scrolling',
+                      action: function ( e, dt, node, config ) {
+                        if (scrollY == '490px') {
+                          localStorage.setItem('instancesDataTableScrollY', false);
+                          scrollY = false
+                        }
+                        else {
+                          localStorage.setItem('instancesDataTableScrollY', '490px');
+                          scrollY = '490px'
+                        }
+                        dt.destroy()
+                        loadContainersTable()
+                      },
+                    },
+                    {
+                      text: 'Reset table state',
+                      action: function ( e, dt, node, config ) {
+                        dt.state.clear();
+                        window.location.reload();
+                      },
+                    },
+                  ]
+                },
+              ]
+            }
+          },
+          lengthMenu: [
+            [10, 25, 50, 100, -1],
+            [10, 25, 50, 100, 'All'],
+          ],
+          order: [
+            [1, 'asc'], 
+          ],
+          rowId: 'name',
+          scrollCollapse: true,
+          scrollX: true,
+          scrollY: scrollY,
+          select: {
+            style: 'multi',
+            selector: 'td:first-child',
+            blurable: true,
+            headerCheckbox: 'select-page',
+          },
+          stateDuration: 0,
+          stateSave: true,
         });
       }
       else {
-        $('#containerDataTable').DataTable().ajax.reload(null, false);
+        $('#containersDataTable').DataTable().ajax.reload(null, false);
       }
+
+      containersDataTable.on('select deselect', function () {
+        var selectedRows = containersDataTable.rows({ selected: true }).count();
+        containersDataTable.button(0).enable(selectedRows > 0);
+        containersDataTable.button(2).enable(selectedRows === 1);
+        containersDataTable.button(4).enable(selectedRows > 0);
+      });
     }
 
     function loadVirtualMachinesTable() {
-      pageLength =  localStorage.getItem('virtualMachineDataTable_pageLength') || 10;
-      if ( ! $.fn.DataTable.isDataTable( '#virtualMachineDataTable' ) ) {
-        // Configure Datatable
-        $('#virtualMachineDataTable').DataTable({
+      if ( ! $.fn.DataTable.isDataTable( '#virtualMachinesDataTable' ) ) {
+        virtualMachinesDataTable = $('#virtualMachinesDataTable').DataTable({
           ajax: {
             url: "{{ url_for('api') }}/instances/list_instances?id=" + serverId + "&filter=virtual-machine" + "&project=" + project + "&recursion=2",
             dataType: "json",
@@ -403,12 +493,16 @@
               console.log(xhr, code);
             }
           },
-          pageLength: parseInt(pageLength),
           columns: [
+            {
+              data: null,
+              orderable: false,
+              render: DataTable.render.select()
+            },
             { title: "Name", data: function (row, type, set) {
                 if (row.hasOwnProperty('name')) {
                   if (row.name)
-                    return "<a href=\"{{ url_for('instance') }}?id=" + serverId + '&project=' + project + '&instance=' + row.name + '&type=virtual-machine">' + row.name + '</a>';
+                  return "<a href=\"{{ url_for('instance') }}?id=" + serverId + '&project=' + project + '&instance=' + row.name + '&type=virtual-machine">' + row.name + '</a>';
                 }
                 return '-'
               },
@@ -420,7 +514,7 @@
                       return '<i class="fas fa-check-circle fa-sm text-success mr-1" aria-hidden="true"></i> Running'
                     }
                     if (row.status == "Stopped") {
-                      return '<i class="fas fa-minus-circle fa-sm text-danger mr-1" aria-hidden="true"></i> Stopped'
+                      return '<i class="fas fa-minus-circle fa-sm text-secondary mr-1" aria-hidden="true"></i> Stopped'
                     }
                     if (row.status == "Frozen") {
                       return '<i class="fas fa-pause-circle fa-sm text-info mr-1" aria-hidden="true"></i> Frozen'
@@ -509,36 +603,149 @@
                 return '-'
               },
             },
-            { title: "Actions", data: function (row, type, set) {
-                links = ''
-                if (row.hasOwnProperty('name') && row.hasOwnProperty('status')) {
-                  if (row.name && row.status){
-                    if (row.status == 'Frozen')
-                      links += '<a href="#" onclick=changeItemState(\''+row.name+'\',\'unfreeze\')><i class="fas fa-pause fa-lg" title="Unfreeze" aria-hidden="true"></i></a>'
-                    else if (row.status == 'Stopped' || row.status == 'Error')
-                      links += '<a href="#" onclick=changeItemState(\''+row.name+'\',\'start\')><i class="fas fa-play fa-lg" title="Start" aria-hidden="true"></i></a>'
-                    else if (row.status == 'Running')
-                      links += '<a href="#" onclick=changeItemState(\''+row.name+'\',\'stop\')><i class="fas fa-stop fa-lg" title="Stop" aria-hidden="true"></i></a>'
-                    links += '&nbsp' + '&nbsp' 
-                    links += '<a href="#" onclick=deleteInstance(\''+row.name+'\')><i class="fas fa-trash-alt fa-lg" title="Delete" aria-hidden="true"></i></a>'
-                  }
-                }
-                return links
-              },
-            },
           ],
-          order: [],
+          layout: {
+            topStart: {
+              buttons: [
+                {
+                  extend: 'collection',
+                  text: 'State',
+                  autoClose: true,
+                  enabled: false,
+                  buttons: [
+                    {
+                      text: 'Start',
+                      action: function (e, dt, node, config) { 
+                        virtualMachinesDataTable.rows('.selected').every( function() {
+                          changeItemState(this.data().name, 'start')
+                        })
+                      },
+                    },
+                    {
+                      text: 'Stop',
+                      action: function () { 
+                        virtualMachinesDataTable.rows('.selected').every( function() {
+                          changeItemState(this.data().name, 'stop')
+                        })
+                      },
+                    },
+                    {
+                      text: 'Unfreeze',
+                      action: function () { 
+                        virtualMachinesDataTable.rows('.selected').every( function() {
+                          changeItemState(this.data().name, 'unfreeze')
+                        })
+                      },
+                    },
+                    {
+                      text: 'Freeze',
+                      action: function () { 
+                        virtualMachinesDataTable.rows('.selected').every( function() {
+                          changeItemState(this.data().name, 'freeze')
+                        })
+                      },
+                    },
+                  ],
+                },
+                'spacer',
+                { text: 'Edit',
+                  action: function () { 
+                    rows = virtualMachinesDataTable.rows({ selected: true });
+                    editInstance(rows.data()[0]['name'], rows.data()[0]['name']);
+                  },
+                  enabled: false,
+                },
+                'spacer',
+                { text: 'Delete',
+                  action: function () { 
+                    arr = []
+                    virtualMachinesDataTable.rows('.selected').every( function() {
+                      arr.push(this.data().name)
+                    });
+                    $("#deleteInstancesList").text(arr.join(", "));
+                    $("#deleteInstancesHiddenInput").val(JSON.stringify(arr));
+                    $("#deleteModal").modal('show');                    
+                  },
+                  enabled: false,
+                },
+                'spacer',
+                'spacer',
+                'pageLength',
+                'spacer',
+                {
+                  extend: 'collection',
+                  text: 'More',
+                  
+                  buttons: [
+                    {
+                      extend: 'colvis',
+                      text: 'Visible columns',
+                      columns: [1,2,3,4,5,6,7,8,9],
+                    },
+                    {
+                      text: (scrollY == '490px') ? 'Disable scrolling' : 'Enable scrolling',
+                      action: function ( e, dt, node, config ) {
+                        if (scrollY == '490px') {
+                          localStorage.setItem('instancesDataTableScrollY', false);
+                          scrollY = false
+                        }
+                        else {
+                          localStorage.setItem('instancesDataTableScrollY', '490px');
+                          scrollY = '490px'
+                        }
+                        dt.destroy()
+                        loadContainersTable()
+                      },
+                    },
+                    {
+                      text: 'Reset table state',
+                      action: function ( e, dt, node, config ) {
+                        dt.state.clear();
+                        window.location.reload();
+                      },
+                    },
+                  ]
+                },
+              ]
+            }
+          },
+          lengthMenu: [
+            [10, 25, 50, 100, -1],
+            [10, 25, 50, 100, 'All'],
+          ],
+          order: [
+            [1, 'asc'], 
+          ],
+          rowId: 'name',
+          scrollCollapse: true,
+          scrollX: true,
+          scrollY: scrollY,
+          select: {
+            style: 'multi',
+            selector: 'td:first-child',
+            blurable: true,
+            headerCheckbox: 'select-page',
+          },
+          stateDuration: 0,
+          stateSave: true,
         });
       }
       else {
-        $('#virtualMachineDataTable').DataTable().ajax.reload(null, false);
+        $('#virtualMachinesDataTable').DataTable().ajax.reload(null, false);
       }
-    }
 
+      virtualMachinesDataTable.on('select deselect', function () {
+        var selectedRows = virtualMachinesDataTable.rows({ selected: true }).count();
+        virtualMachinesDataTable.button(0).enable(selectedRows > 0);
+        virtualMachinesDataTable.button(2).enable(selectedRows === 1);
+        virtualMachinesDataTable.button(4).enable(selectedRows > 0);
+      });
+
+    }
 
     // Change state start/stop of instance
     function changeItemState(name, action){
-      console.log("Info: starting instance " + name);
+      console.log("Info: Changing instance state to " + action + " for instance " + name);
       $.post("{{ url_for('api') }}/instances/change_instance_state?id=" + serverId + "&project=" + project, { name: name, action: action }, function (data) {
         console.log(data);
         if (data.error_code >= 400){
@@ -580,6 +787,29 @@
           operationStatusCheck()
         });
       }
+    }
+
+    // Delete instances
+    function deleteInstances(){
+      var deleteInstancesHiddenInput = JSON.parse($("#deleteInstancesHiddenInput").val());
+      console.log("Info: deleting instances " + deleteInstancesHiddenInput.join(", "));
+      for (let i = 0; i < deleteInstancesHiddenInput.length; i++) {
+        $.post("{{ url_for('api') }}/instances/delete_instance?id=" + serverId + "&project=" + project, { name: deleteInstancesHiddenInput[i] }, function (data) {
+          console.log(data);
+          if (data.error_code >= 400){
+            alert(data.error);
+          }
+        });
+      }
+
+      //Send toast notification
+      $('#defaultToastHeader').text('Deleting Instance(s)')
+      $('#defaultToastBody').text(deleteInstancesHiddenInput.join(", "))
+      defaultToast.show()
+
+      //Async type
+      setTimeout(() => { reloadPageContent(); }, 2000);
+      operationStatusCheck()
     }
 
     // Create instance from JSON
@@ -708,7 +938,91 @@
       }
     }
 
+    // Show the edit instance modal
+    function editInstance(name){
+      console.log("Info: viewing instance " + name);
+      $.get("{{ url_for('api') }}/instance/get_instance?id="+serverId+"&project="+project+"&name="+name+"&recursion=1", function (data) {
+        data = data.metadata;
 
+        if (data.error_code >= 400){
+          alert(data.error);
+        }
+
+        //Clean all values in form
+        $("#editModal").find('input, select, textarea').val('');
+
+        //Set existing description value in form
+        if (data.hasOwnProperty('description')) { $("#instanceDescriptionInput").val(data.description); }
+
+        //Set existing values from config in form
+        $.each(data.config, function(key, value) {
+          item = "#"+key
+          $(`[name="${key}"]`).val(value);
+          console.log(item + "=" + value)
+        })
+
+        //Set instance name on form
+        $("#instanceNameEditInput").text("Name: " + name);
+        $("#instanceEditHiddenInput").val(name);
+
+        //Set json tab content
+        $("#jsonEditInput").val(JSON.stringify(data, null, 2));
+
+        //Show modal with form and json
+        $("#editModal").modal('show');
+
+      });
+    }
+
+    // Update the instance from the edit instance modal form
+    function updateInstanceForm(){
+      var name = $("#instanceEditHiddenInput").val();
+      console.log("Info: updating instance " + name);
+      data = $('#editForm').serialize();
+      $.post("{{ url_for('api') }}/instance/update_instance?id=" + serverId + "&project=" + project + "&instance=" + encodeURI(name), data,  function (data) {
+        console.log(data);
+        if (data.error_code >= 400){
+          alert(data.error);
+        }
+        //Sync type
+        setTimeout(() => { reloadPageContent(); }, 1000);
+        operationStatusCheck()
+      });
+    }
+
+    // Update the instance from the edit instance modal json
+    function updateInstanceJson(){
+      var name = $("#instanceEditHiddenInput").val();
+      var instanceJSON = $("#jsonEditInput").val();
+      console.log("Info: updating instance " + name);
+      $.post("{{ url_for('api') }}/instance/update_instance?id=" + serverId + "&project=" + project + "&instance=" + encodeURI(name), { 
+        json: instanceJSON 
+        },  function (data) {
+          console.log(data);
+          if (data.error_code >= 400){
+            alert(data.error);
+          }
+          //Sync type
+          setTimeout(() => { reloadPageContent(); }, 1000);
+          operationStatusCheck()
+      });
+    }
+
+
+    // Rename the instance
+    function renameInstance(){
+      var renameName = $("#renameName").val();
+      console.log("Info: renaming instance " + instance + " to " + renameName);
+      $.post("{{ url_for('api') }}/instance/rename_instance?id="+serverId+"&project="+project+"&instance="+instance, { name: renameName },  function (data) {
+        console.log(data);
+        if (data.error_code >= 400){
+          alert(data.error);
+        }
+        else {
+          window.location.href = "{{ url_for('instance') }}?id=" + serverId + '&project=' + project + '&instance=' + renameName;
+        }
+      });
+    }
     $(document).ready(function(){
 
       //If id or project variables are missing redirect to servers page
@@ -720,22 +1034,17 @@
           $('#nav-virtual-machines-tab').tab('show')
         }
         $('button[data-bs-toggle="tab"]').on('shown.bs.tab', function (e) {
-          if (e.target.id == 'nav-virtual-machines-tab')
+          if (e.target.id == 'nav-virtual-machines-tab'){
+            virtualMachinesDataTable.columns.adjust()
             window.location.hash = 'virtual-machines'
-          else
+          }
+          else {
+            containersDataTable.columns.adjust()
             window.location.hash = 'containers'
+          }
         })
         loadPageContent()
         operationStatusCheck()
-
-        // ID for pagelength change event is the id of your table + '_length"
-        $('#containerDataTable_length').on("change", 'select', function(){
-          localStorage.setItem('containerDataTable_pageLength',$(this).val());
-        })
-        $('#virtualMachineDataTable_length').on("change", 'select', function(){
-          localStorage.setItem('virtualMachineDataTable_pageLength',$(this).val());
-        })
-
       }
       
     });

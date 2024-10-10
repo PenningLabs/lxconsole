@@ -1,0 +1,430 @@
+{% extends "main.html" %}
+
+{% block header %}
+  <div class="row mb-2">
+    <div class="col-sm-6">
+      <h1>{{ page_title | safe }}</h1>
+    </div>
+    <div class="col-sm-6">
+    </div>
+  </div>
+{% endblock header %}
+
+{% block content %}
+  <div class="row">
+    <div class="col-8">
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Account Details</h3>
+          <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <i class="fa fa-bars"></i>
+            </button>
+            <div class="dropdown-menu dropdown-menu-right">
+              <a class="dropdown-item" onclick="editUserGroups()" title="Edit User Groups">Edit User Groups</a>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+
+          <div class="row">
+            <label class="col-4 col-form-label">Username:</label>
+            <div class="col-7">
+              <div class="form-group">
+                <input type="text" id="accountUsername" class="form-control" required="required" placeholder="" name="username" disabled>
+              </div>
+            </div>
+            <div class="col-1"></div>
+          </div>
+                
+          <div class="row">
+            <label class="col-4 col-form-label">First Name: </label>
+            <div class="col-7">
+              <div class="form-group">
+                <input type="text" id="accountFirstName" class="form-control" placeholder="" name="first_name">
+              </div>
+            </div>
+            <div class="col-1"></div>
+          </div>
+        
+          <div class="row">
+            <label class="col-4 col-form-label">Last Name: </label>
+            <div class="col-7">
+              <div class="form-group">
+                <input type="text" id="accountLastName" class="form-control" placeholder="" name="last_name">
+              </div>
+            </div>
+            <div class="col-1"></div>
+          </div>
+        
+          <div class="row">
+            <label class="col-4 col-form-label">Email: </label>
+            <div class="col-7">
+              <div class="form-group">
+                <input type="text" id="accountEmail" class="form-control" required="required" placeholder="" name="email">
+              </div>
+            </div>
+            <div class="col-1"></div>
+          </div>
+  
+          <div class="row">
+            <label class="col-4 col-form-label">Created:</label>
+            <div class="col-7">
+              <div class="form-group">
+                <input type="text" id="accountCreatedAt" class="form-control" required="required" placeholder="" name="created_at" disabled>
+              </div>
+            </div>
+            <div class="col-1"></div>
+          </div>
+
+          <div class="row">
+            <label class="col-4 col-form-label">Groups:</label>
+            <div class="col-7">
+              <div class="form-group">
+                <select id="accountGroups" class="form-select" size="1" name="groups" disabled multiple></select>
+              </div>
+            </div>
+            <div class="col-1"></div>
+          </div>
+
+          <div class="col-12 text-right">
+            <button type="button" class="btn btn-sm btn-primary" onclick="updateAccount()" title="Update User">Update</button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+    <div class="col-4">
+      <div class="col-12">
+
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Password</h3>
+            <div class="card-tools">
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <label class="col-4 col-form-label">New Password:</label>
+              <div class="col-7">
+                <div class="form-group">
+                  <input type="password" id="accountPassword" class="form-control" required="required" placeholder="" name="password">
+                </div>
+              </div>
+              <div class="col-1"></div>
+            </div>
+            <div class="row">
+              <label class="col-4 col-form-label">Confirm Password:</label>
+              <div class="col-7">
+                <div class="form-group">
+                  <input type="password" id="accountConfirmPassword" class="form-control" required="required" placeholder="" name="confirm_password">
+                </div>
+              </div>
+              <div class="col-1"></div>
+            </div>
+            <div class="col-12 text-right">
+              <button type="button" class="btn btn-sm btn-primary" onclick="updateAccountPassword()" title="Update Password">Update</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card collapsed-card">
+          <div class="card-header">
+            <h3 class="card-title">Multifactor Authentication: <span id="mfaTitle"></span></h3>
+            <div class="card-tools">
+              <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-plus"></i></button>
+            </div>
+          </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-5 text-center mb-4">
+                  <img src="data:image/png;base64, {{ qr_img }}" alt="Secret Token" style="width:100%;"/>
+                </div>
+                <div class="col-7">
+                  <div class="col-12">
+                    Multifactor authentication can be enabled by using a time-based one-time password application such as <a href="https://authy.com/" target="_blank">Authy</a> or <a href="https://en.wikipedia.org/wiki/Google_Authenticator" target="_blank">Google Authenticator</a>. Scan the QRcode with an application and enter the current one-time password (OTP) to enable.
+                  </div>
+                  <div class="row">
+                    <div class="col-5">
+                      <label class="col-form-label ml-2">OTP:</label>
+                    </div>
+                    <div class="col-7">
+                      <div class="form-group">
+                        <input type="text" id="oneTimePassword" class="form-control" required="required" placeholder="" onkeyup="checkOTPLength()" name="one_time_password" >
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-12 text-right">
+                    <button class="btn btn-sm btn-primary" id="enableMFAButton" type="button" onclick="enableMFA()" disabled>Enable</button>
+                    <button class="btn btn-sm btn-primary" id="disableMFAButton" type="button" onclick="disableMFA()" style="display: none;">Disable</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+{% endblock content %}
+
+{% block modal %}
+  {% include 'modals/account.html' %}
+{% endblock modal %}
+
+{% block script %}
+  <script>
+    var reloadTime = 10000;
+    
+    
+    function reloadPageContent() {
+      //Clear the automatic page reload
+      clearTimeout(pageReloadTimeout);
+
+      loadAccount()
+
+      //Check the user's MFA status
+      checkMFAStatus()
+
+      //Set the automatic page reload
+      pageReloadTimeout = setTimeout(() => { reloadPageContent(); }, reloadTime);
+    }
+
+    function loadPageContent(){
+
+      loadAccount()
+
+      //Clear the OTP Passcode TextBox
+      $('#oneTimePassword').val('');
+
+      //Check the user's MFA status
+      checkMFAStatus()
+      
+      //Set reload page content
+      pageReloadTimeout = setTimeout(() => { reloadPageContent(); }, reloadTime);
+
+    }
+
+    // Load the user account information
+    function loadAccount(){
+      console.log("Info: loading account");
+      $.get("{{ url_for('api') }}/users/get_user?id={{ page_user_id }}", function (data) {
+        data = data.metadata
+        $("#accountUsername").val(data.username);
+        $("#accountFirstName").val(data.first_name);
+        $("#accountLastName").val(data.last_name);
+        $("#accountEmail").val(data.email);
+        $("#accountCreatedAt").val(data.created_at);
+
+        $("#accountGroups").empty();
+        if (data.groups.length > 0) {
+          $('#accountGroups').attr('size', data.groups.length)
+        }
+        else {
+          $('#accountGroups').attr('size', 1)
+        }
+        for (var index = 0; index < data.groups.length; index++) {
+          $('#accountGroups').append('<option value="' + data.groups[index] + '">' + data.groups[index] + '</option>');
+        }
+        
+      });
+    }
+
+    // Enable OTP for the user
+    function enableMFA(){
+      console.log("Info: enabling MFA");
+      id = "{{ page_user_id }}"
+      otp = $('#oneTimePassword').val();
+      action = 'enable_mfa';
+      $.post("{{ url_for('api') }}/users/update_user", { id: id, action: action, otp: otp }, function (data) {
+        console.log(data);
+        if (data.error_code >= 400){
+          alert(data.error);
+        }
+        else {
+          //Send toast notification
+          $('#defaultToastHeader').text('Multifactor Authentication')
+          $('#defaultToastBody').text('MFA has been enabled')
+          defaultToast.show()
+        }
+        checkMFAStatus()
+        //Sync type
+        setTimeout(() => { reloadPageContent(); }, 1000);
+
+      });
+    }
+
+    // Disable OTP for the user
+    function disableMFA(){
+      console.log("Info: disabling MFA");
+      id = "{{ page_user_id }}"
+      action = 'disable_mfa';
+      $.post("{{ url_for('api') }}/users/update_user", { id: id, action: action }, function (data) {
+        console.log(data);
+        if (data.error_code >= 400){
+          alert(data.error);
+        }
+        else {
+          //Send toast notification
+          $('#defaultToastHeader').text('Multifactor Authentication')
+          $('#defaultToastBody').text('MFA has been disabled')
+          defaultToast.show()
+        }
+        checkMFAStatus()
+        //Sync type
+        setTimeout(() => { reloadPageContent(); }, 1000);
+      });
+    }
+
+    // Check minimum length for OTP
+    function checkOTPLength(){
+      otp = $('#oneTimePassword').val();
+      if (otp.length >= 6) {
+        console.log('MFA enable button enabled')
+        $('#enableMFAButton').prop('disabled', false);
+      }
+      else {
+        console.log(('MFA enable button disabled'))
+        $('#enableMFAButton').prop('disabled', true);
+      }
+    }
+
+    // Check if MFA is enabled/disabled for the user
+    function checkMFAStatus(){
+      $.get("{{ url_for('api') }}/users/get_mfa_status?id={{ page_user_id }}", function (data) {
+        data = data.enabled
+        if (data == true) {
+          $('#mfaTitle').text("enabled")
+          $('#mfaTitle').addClass('text-success')
+          $('#mfaTitle').removeClass('text-danger')
+          $('#enableMFAButton').hide()
+          $('#disableMFAButton').show()
+          $('#oneTimePassword').prop('disabled', true);
+        }
+        else {
+          $('#mfaTitle').text("disabled")
+          $('#mfaTitle').addClass('text-danger')
+          $('#mfaTitle').removeClass('text-sucess')
+          $('#enableMFAButton').show()
+          $('#disableMFAButton').hide()
+          $('#oneTimePassword').prop('disabled', false);
+        }
+      });
+    }
+
+    // Show edit modal for user groups
+    function editUserGroups(){
+      id = "{{ page_user_id }}"
+
+      //Retrieve the current groups for the user
+      $.get("{{ url_for('api') }}/users/get_user", { id: id,}, function (data) {
+        data = data.metadata        
+        user_groups = data.groups
+        $('#idUserGroupsEditInput').val(data.id);
+
+        //Populate the Groups dropdown in the modal form
+        $.getJSON("{{ url_for('api') }}/groups/list_groups", function (data) {
+          groups = data.data
+          $("#addGroupEditInput").empty();
+          $("#removeGroupEditInput").empty();
+          for (var index = 0; index < groups.length; index++) {
+            if (user_groups.includes(groups[index].name))
+              $('#removeGroupEditInput').append('<option value="' + groups[index].id + '">' + groups[index].name + '</option>');
+            else
+              $('#addGroupEditInput').append('<option value="' + groups[index].id + '">' + groups[index].name + '</option>');
+          }
+        })
+
+        $("#editModal").modal('show');
+      });
+    }
+
+    // Update user account
+    function updateAccount(){
+      console.log("Info: updating user");
+      id = "{{ page_user_id }}"
+      first_name = $("#accountFirstName").val();
+      last_name = $("#accountLastName").val();
+      email = $("#accountEmail").val();
+      action = 'update_user_details'
+      $.post("{{ url_for('api') }}/users/update_user", { id: id, action: action, first_name: first_name, last_name: last_name, email: email }, function (data) {
+        console.log(data);
+        if (data.error_code >= 400){
+          alert(data.error);
+        }
+        else {
+          //Send toast notification
+          $('#defaultToastHeader').text('User Account')
+          $('#defaultToastBody').text('User account has been updated')
+          defaultToast.show()
+        }
+
+        //Sync type
+        setTimeout(() => { reloadPageContent(); }, 1000);
+      });
+    }
+
+    // Update user account
+    function updateAccountPassword(){
+      console.log("Info: updating user password");
+      id = "{{ page_user_id }}"
+      password = $("#accountPassword").val();
+      confirm_password = $("#accountConfirmPassword").val();
+      action = 'update_password'
+      $.post("{{ url_for('api') }}/users/update_user", { id: id, action: action, password: password, confirm_password: confirm_password }, function (data) {
+        console.log(data);
+        if (data.error_code >= 400){
+          alert(data.error);
+        }
+        else {
+          //Send toast notification
+          $('#defaultToastHeader').text('User Password')
+          $('#defaultToastBody').text(data.alert)
+          defaultToast.show()
+        }
+
+        //Sync type
+        setTimeout(() => { reloadPageContent(); }, 1000);
+      });
+    }
+
+    // Update user group
+    function updateUserGroup(){
+      console.log("Info: editing user group");
+      data = $('#editUserGroupsForm').serialize();
+      $.post("{{ url_for('api') }}/users/update_user", data, function (data) {
+        console.log(data);
+        if (data.error_code >= 400){
+          alert(data.error);
+        }
+        else {
+          //Send toast notification
+          $('#defaultToastHeader').text('User Groups')
+          $('#defaultToastBody').text('User groups have been updated')
+          defaultToast.show()  
+        }
+        //Sync type
+        setTimeout(() => { reloadPageContent(); }, 1000);
+      });
+    }
+
+    // Change the groups listed in modal based on action
+    function changeActionInput(){
+      var actionEditInput = $("#actionEditInput").val();
+    
+      if (actionEditInput == "add_group"){
+        $("#addGroupEditInputRow").show()
+        $("#removeGroupEditInputRow").hide()
+      }
+      else {
+        $("#addGroupEditInputRow").hide()
+        $("#removeGroupEditInputRow").show()
+      }
+    }
+
+    $(document).ready(function(){
+      loadPageContent()
+    });
+
+  </script>
+{% endblock script %}

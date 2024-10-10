@@ -1,7 +1,7 @@
 from flask import jsonify, request, json
 import requests
 from lxconsole import db
-from lxconsole.models import Server,Simplestream
+from lxconsole.models import Server, Simplestream, Registry
 from flask_login import login_required
 from lxconsole.api.access_controls import privilege_check
 
@@ -50,15 +50,22 @@ def api_images_endpoint(endpoint):
     source = {}
     source.update({'alias': image})
     source.update({'certificate': ''})
-    source.update({'protocol': 'simplestreams'})
     
-    # When using the manual form, the server address needs pulled from local simplestreams database
-    if request.form.get('simplestreams_id'):
-      simplestreams_id = request.form.get('simplestreams_id')
-      simplestream = Simplestream.query.filter_by(id=simplestreams_id).first()
-      source.update({'server': simplestream.url})
+    # When using the manual form, the server address needs pulled from local registry or simplestreams database
+    if request.form.get('registry_source'):
+      if request.form.get('registry_source') == 'registries':
+        registry_id = request.form.get('registry_id')
+        registry = Registry.query.filter_by(id=registry_id).first()
+        source.update({'server': registry.url})
+        source.update({'protocol': registry.protocol})
+      else:
+        simplestreams_id = request.form.get('simplestreams_id')
+        simplestream = Simplestream.query.filter_by(id=simplestreams_id).first()
+        source.update({'server': simplestream.url})
+        source.update({'protocol': 'simplestreams'})
     else:
       source.update({'server': catalog_source})
+      source.update({'protocol': 'simplestreams'})
 
     if request.form.get('image_type') == 'virtual-machine':
       source.update({'image_type': 'virtual-machine'})

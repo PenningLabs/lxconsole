@@ -85,40 +85,74 @@
             </div>
             <div class="tab-pane fade" id="form" role="tabpanel" aria-labelledby="form-tab">
               <form id="addForm">
-                <div class="row mt-4">
+                <div class="mt-4">
+                  
+                  <div class="row">
+                    <label class="col-2 col-form-label text-right">Image/Alias: <span class="text-danger">*</span></label>
+                    <div class="col-8">
+                      <div class="form-group">
+                        <input type="text" class="form-control" required="required" placeholder="" name="image">
+                      </div>
+                    </div>
+                    <div class="col-1">
+                      <i class="far fa-sm fa-question-circle" data-bs-toggle="tooltip" data-html="true" title='(Required) - Enter in the repository specific name. For example, ubuntu/20.04 would be used for the images repository and simply 20.04 would be used for the ubuntu repositories.'></i>
+                    </div>
+                  </div>
+    
+                  <div class="row">
+                    <label class="col-2 col-form-label text-right">Registry Source: </label>
+                    <div class="col-8">
+                      <div class="form-group">
+                        <select id="selectRegistrySourceInput" class="form-select" onchange="updateRegistrySource()" name="registry_source">
+                          <option value="registries">Registries</option>
+                          <option value="simplestreams">Simplestreams</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="col-1">
+                      <i class="far fa-sm fa-question-circle" title='With the additional of OCI protocol, the Simplestreams page is now deprecated to allow for additional registry types'></i>
+                    </div>
+                  </div>
 
-                  <label class="col-2 col-form-label text-right">Image/Alias: <span class="text-danger">*</span></label>
-                  <div class="col-8">
-                    <div class="form-group">
-                      <input type="text" class="form-control" required="required" placeholder="" name="image">
+                  <div class="row" id="registryOption">
+                    <label class="col-2 col-form-label text-right">Registry: </label>
+                    <div class="col-8">
+                      <div class="form-group">
+                        <select id="selectRegistryInput" class="form-select" name="registry_id">
+                        </select>
+                      </div>
+                    </div>
+                    <div class="col-1">
+                      <i class="far fa-sm fa-question-circle" title='Select a repository from the configured registries page.'></i>
                     </div>
                   </div>
-                  <div class="col-1">
-                    <i class="far fa-sm fa-question-circle" data-bs-toggle="tooltip" data-html="true" title='(Required) - Enter in the repository specific name. For example, ubuntu/20.04 would be used for the images repository and simply 20.04 would be used for the ubuntu repositories.'></i>
+
+                  <div class="row" id="simplestreamsOption" style="display:none;">
+                    <label class="col-2 col-form-label text-right">Simplestream: </label>
+                    <div class="col-8">
+                      <div class="form-group">
+                        <select id="selectRepoInput" class="form-select" name="simplestreams_id">
+                        </select>
+                      </div>
+                    </div>
+                    <div class="col-1">
+                      <i class="far fa-sm fa-question-circle" title='Select a repository from the configured simplestreams page.'></i>
+                    </div>
                   </div>
     
-                  <label class="col-2 col-form-label text-right">Repository: </label>
-                  <div class="col-8">
-                    <div class="form-group">
-                      <select id="selectRepoInput" class="form-select" name="simplestreams_id">
-                      </select>
+                  <div class="row">
+                    <label class="col-2 col-form-label text-right">Image Type:</label>
+                    <div class="col-8 text-right">
+                      <div class="form-group">
+                        <select class="form-select" name="image_type">
+                          <option value="container" selected>container</option>
+                          <option value="virtual-machine">virtual-machine</option>
+                        </select>
+                      </div>
                     </div>
-                  </div>
-                  <div class="col-1">
-                    <i class="far fa-sm fa-question-circle" title='Select a repository from the configured simplestreams.'></i>
-                  </div>
-    
-                  <label class="col-2 col-form-label text-right">Image Type:</label>
-                  <div class="col-8 text-right">
-                    <div class="form-group">
-                      <select class="form-select" name="image_type">
-                        <option value="container" selected>container</option>
-                        <option value="virtual-machine">virtual-machine</option>
-                      </select>
+                    <div class="col-1">
+                      <i class="far fa-sm fa-question-circle" title='Select whether to download a container based image or virtual machine. Default: container'></i>
                     </div>
-                  </div>
-                  <div class="col-1">
-                    <i class="far fa-sm fa-question-circle" title='Select whether to download a container based image or virtual machine. Default: container'></i>
                   </div>
 
                 </div>
