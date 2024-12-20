@@ -1,3 +1,18 @@
+# 0.6.1
+ - Converted remaining tables to new format
+ - Renamed Proxy to WebSocket Proxy in servers table fields
+ - Added additional fields to network zones, including network records per zone
+ - Added metadata to operations table
+ - Updated remaining datatable layouts
+ - Added acknowledging status for warnings
+ - Added metadata field to operations table
+ - Now displaying key alongside the TOTP QR Code
+ - Updated datatables and components to newer versions
+ - Fixed additional configuration properties when adding new project
+ - Added .gitignore file
+ - Added fix for permanent login sessions
+ - Added cleanup of records when deleting groups or users
+
 # 0.6.0
  - Added additional packages to python requirements.txt, notably pyotp and qrcode
  - Updated the python requirements.txt version numbers for packages

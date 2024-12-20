@@ -138,7 +138,7 @@
             <div class="card-body">
               <div class="row">
                 <div class="col-5 text-center mb-4">
-                  <img src="data:image/png;base64, {{ qr_img }}" alt="Secret Token" style="width:100%;"/>
+                  <img src="data:image/png;base64, {{ qr_img }}" alt="Secret Token" style="width:100%;"/>    
                 </div>
                 <div class="col-7">
                   <div class="col-12">
@@ -158,6 +158,9 @@
                     <button class="btn btn-sm btn-primary" id="enableMFAButton" type="button" onclick="enableMFA()" disabled>Enable</button>
                     <button class="btn btn-sm btn-primary" id="disableMFAButton" type="button" onclick="disableMFA()" style="display: none;">Disable</button>
                   </div>
+                </div>
+                <div class="col-12 text-sm">
+                  Key: {{ totp_key }}
                 </div>
               </div>
             </div>

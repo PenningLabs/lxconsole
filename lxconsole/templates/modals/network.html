@@ -29,7 +29,7 @@
                     </div>
                   </div>
                   <div class="col-1">
-                    <i class="far fa-sm fa-question-circle" title='(Required) - Enter in the name of the listening network address.'></i>
+                    <i class="far fa-sm fa-question-circle" title='(Required) - Enter in the listening ip address.'></i>
                   </div>
                 </div>
                 <div class="row">
@@ -40,7 +40,7 @@
                     </div>
                   </div>
                   <div class="col-1">
-                    <i class="far fa-sm fa-question-circle" title='Enter in a description for the network load balancer.'></i>
+                    <i class="far fa-sm fa-question-circle" title='Enter in a description for the network forward.'></i>
                   </div>
                 </div>
                 <hr>
@@ -65,7 +65,7 @@
                     </div>
                   </div>
                   <div class="col-1">
-                    <i class="far fa-sm fa-question-circle" title='Enter in a description for the network load balancer.'></i>
+                    <i class="far fa-sm fa-question-circle" title='Enter in the listening ports for the address. For example: 80,8080-8090'></i>
                   </div>
                 </div>
 
@@ -74,13 +74,14 @@
                   <div class="col-7">
                     <div class="form-group">
                       <select class="form-select" name="port_protocol">
+                        <option value="">(not set)</option>
                         <option value="tcp">TCP</option>
                         <option value="udp">UDP</option>
                       </select>
                     </div>
                   </div>
                   <div class="col-1">
-                    <i class="far fa-sm fa-question-circle" title='Enter in a description for the network load balancer.'></i>
+                    <i class="far fa-sm fa-question-circle" title='Select the protocol used for the ports.'></i>
                   </div>
                 </div>
 
@@ -92,7 +93,7 @@
                     </div>
                   </div>
                   <div class="col-1">
-                    <i class="far fa-sm fa-question-circle" title='Enter in a description for the network load balancer.'></i>
+                    <i class="far fa-sm fa-question-circle" title='Enter in the IP address to forwared to.'></i>
                   </div>
                 </div>
 
@@ -104,7 +105,7 @@
                     </div>
                   </div>
                   <div class="col-1">
-                    <i class="far fa-sm fa-question-circle" title='Enter in a description for the network load balancer.'></i>
+                    <i class="far fa-sm fa-question-circle" title='Enter in the ports address to forward to. For example: 80,8080-8090'></i>
                   </div>
                 </div>
 
@@ -205,7 +206,7 @@
                     </div>
                   </div>
                   <div class="col-1">
-                    <i class="far fa-sm fa-question-circle" title='Enter in a description for the network load balancer.'></i>
+                    <i class="far fa-sm fa-question-circle" title='Enter in a name for the network load balancer.'></i>
                   </div>
                 </div>
 
@@ -217,7 +218,7 @@
                     </div>
                   </div>
                   <div class="col-1">
-                    <i class="far fa-sm fa-question-circle" title='Enter in a description for the network load balancer.'></i>
+                    <i class="far fa-sm fa-question-circle" title='Enter in the IP address for the network load balancer to forward to.'></i>
                   </div>
                 </div>
 
@@ -229,7 +230,7 @@
                     </div>
                   </div>
                   <div class="col-1">
-                    <i class="far fa-sm fa-question-circle" title='Enter in a description for the network load balancer.'></i>
+                    <i class="far fa-sm fa-question-circle" title='Enter in the ports for the network load balancer to forward to.'></i>
                   </div>
                 </div>
 
@@ -255,7 +256,7 @@
                     </div>
                   </div>
                   <div class="col-1">
-                    <i class="far fa-sm fa-question-circle" title='Enter in a description for the network load balancer.'></i>
+                    <i class="far fa-sm fa-question-circle" title='Enter in the ports for the network load balancer to listen to.'></i>
                   </div>
                 </div>
 
@@ -264,13 +265,14 @@
                   <div class="col-7">
                     <div class="form-group">
                       <select class="form-select" name="port_protocol">
+                        <option value="">(not set)</option>
                         <option value="tcp">TCP</option>
                         <option value="udp">UDP</option>
                       </select>
                     </div>
                   </div>
                   <div class="col-1">
-                    <i class="far fa-sm fa-question-circle" title='Enter in a description for the network load balancer.'></i>
+                    <i class="far fa-sm fa-question-circle" title='Select a protocol for the ports.'></i>
                   </div>
                 </div>
 
@@ -282,7 +284,7 @@
                     </div>
                   </div>
                   <div class="col-1">
-                    <i class="far fa-sm fa-question-circle" title='Enter in a description for the network load balancer.'></i>
+                    <i class="far fa-sm fa-question-circle" title='Enter in a list of backends to forward to.'></i>
                   </div>
                 </div>
 
@@ -356,7 +358,7 @@
                     </div>
                   </div>
                   <div class="col-1">
-                    <i class="far fa-sm fa-question-circle" title='Enter in a description for the network load balancer.'></i>
+                    <i class="far fa-sm fa-question-circle" title='Enter in a description for the network peer.'></i>
                   </div>
                 </div>
                 <div class="row">
@@ -367,7 +369,7 @@
                     </div>
                   </div>
                   <div class="col-1">
-                    <i class="far fa-sm fa-question-circle" title='Enter in a description for the network load balancer.'></i>
+                    <i class="far fa-sm fa-question-circle" title='Enter in which network to create a peer with.'></i>
                   </div>
                 </div>
                 <div class="row">
@@ -378,7 +380,7 @@
                     </div>
                   </div>
                   <div class="col-1">
-                    <i class="far fa-sm fa-question-circle" title='Enter in a description for the network load balancer.'></i>
+                    <i class="far fa-sm fa-question-circle" title='Enter in which project the target network exists in.'></i>
                   </div>
                 </div>
 
@@ -530,6 +532,75 @@
             </div>
           </div>
         </div>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Forwards Modal-->
+<div class="modal fade" id="deleteForwardsModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Delete Forward(s)</h5>
+        <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to delete the following forward(s)?</p>
+        <span class="text-danger" id="deleteForwardsList"></span>
+        <input type="hidden" id="deleteForwardsHiddenInput">
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+        <a class="btn btn-primary" href="#" onclick="deleteForwards()" data-bs-dismiss="modal">Yes</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Load Balancers Modal-->
+<div class="modal fade" id="deleteLoadBalancersModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Delete Load Balancer(s)</h5>
+        <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to delete the following load balancer(s)?</p>
+        <span class="text-danger" id="deleteLoadBalancersList"></span>
+        <input type="hidden" id="deleteLoadBalancersHiddenInput">
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+        <a class="btn btn-primary" href="#" onclick="deleteLoadBalancers()" data-bs-dismiss="modal">Yes</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Peers Modal-->
+<div class="modal fade" id="deletePeersModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Delete Peer(s)</h5>
+        <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to delete the following peer(s)?</p>
+        <span class="text-danger" id="deletePeersList"></span>
+        <input type="hidden" id="deletePeersHiddenInput">
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+        <a class="btn btn-primary" href="#" onclick="deletePeers()" data-bs-dismiss="modal">Yes</a>
+      </div>
     </div>
   </div>
 </div>

@@ -16,14 +16,6 @@
 {% block content %}
   <div class="col-12">
     <div class="card">
-      <div class="card-header">
-        <h3 class="card-title">Network Zones</h3>
-        <div class="card-tools">
-          <button type="button" class="btn btn-tool" onclick="reloadPageContent()" title="Refresh">
-          <i class="fas fa-sync"></i>
-          </button>
-        </div>
-      </div>
       <div class="card-body">
         <table class="table" id="networkZonesDataTable" width="100%" cellspacing="0">
         </table>
@@ -44,6 +36,7 @@
     const serverId = urlParams.get('id');
     const project = urlParams.get('project');
     var editedNetworkZone = ''
+    var scrollY =  localStorage.getItem('networkZonesDataTableScrollY') || '490px';
     applySidebarStyles();
     applySidebarLinks();
     populateSidebarLinks();
@@ -54,7 +47,7 @@
       clearTimeout(pageReloadTimeout);
 
       //Reload the datatables content
-      $('#networkZonesDataTable').DataTable().ajax.reload(null, false);
+      loadNetworkZonesTable()
 
       //Set the automatic page reload
       pageReloadTimeout = setTimeout(() => { reloadPageContent(); }, reloadTime);
@@ -70,61 +63,190 @@
       populateProjectSelectDropdown()
       
       // Configure Datatable
-      $('#networkZonesDataTable').DataTable({
-        ajax: {
-          url: "{{ url_for('api') }}/network-zones/list_network_zones?id="+serverId+"&project=" + project + "&recursion=1",
-          dataType: "json",
-          //dataSrc: "metadata",
-          dataSrc: function ( d ) {
-            if (d.hasOwnProperty('metadata') && d.metadata != null) {
-              return d.metadata;
-            }
-            else {
-              d.metadata = []
-              return d.metadata;
-            }
-          },
-          contentType: "application/json",
-          error: function (xhr, error, code) {
-            console.log(xhr, code);
-          }
-        },
-        columns: [
-          { title: "Name", data: function (row, type, set) {
-              if (row.hasOwnProperty('name')) {
-                if (row.name)
-                  return row.name
-              }
-              return '-'
-            },
-          },
-          { title: "Description", data: function (row, type, set) {
-              if (row.hasOwnProperty('description')) {
-                if (row.description)
-                  return row.description
-              }
-              return '-'
-            },
-          },
-
-          { title: "Actions", data: function (row, type, set) {
-              links = ''
-              if (row.hasOwnProperty('name')) {
-                links += '<a href="#" onclick=editItem(\''+row.name+'\')><i class="fas fa-edit fa-lg" title="Edit" aria-hidden="true"></i></a>' +
-                '&nbsp' + '&nbsp' +
-                '<a href="#" onclick=confirmDeleteItem(\''+row.name+'\')><i class="fas fa-trash-alt fa-lg" title="Delete" aria-hidden="true"></i></a>'
-              }
-              return links
-            },
-          },
-
-        ],
-        order: [],
-      });
+      loadNetworkZonesTable()
 
       //Set reload page content
       pageReloadTimeout = setTimeout(() => { reloadPageContent(); }, reloadTime);
 
+    }
+
+    function loadNetworkZonesTable() {
+      if ( ! $.fn.DataTable.isDataTable( '#networkZonesDataTable' ) ) {
+        networkZonesDataTable = $('#networkZonesDataTable').DataTable({
+          ajax: {
+            url: "{{ url_for('api') }}/network-zones/list_network_zones?id="+serverId+"&project=" + project + "&recursion=1",
+            dataType: "json",
+            //dataSrc: "metadata",
+            dataSrc: function ( d ) {
+              if (d.hasOwnProperty('metadata') && d.metadata != null) {
+                return d.metadata;
+              }
+              else {
+                d.metadata = []
+                return d.metadata;
+              }
+            },
+            contentType: "application/json",
+            error: function (xhr, error, code) {
+              console.log(xhr, code);
+            }
+          },
+          columns: [
+            {
+              data: null,
+              orderable: false,
+              render: DataTable.render.select()
+            },
+            { title: "Name", data: function (row, type, set) {
+                if (row.hasOwnProperty('name')) {
+                  if (row.name)
+                    return "<a href=\"{{ url_for('network_records') }}?id=" + serverId + '&project=' + project + '&zone=' + row.name + '">' + row.name + '</a>';
+                }
+                return '-'
+              },
+            },
+            { title: "Description", data: function (row, type, set) {
+                if (row.hasOwnProperty('description')) {
+                  if (row.description)
+                    return row.description
+                }
+                return '-'
+              },
+            },
+            { title: "DNS Nameservers", data: function (row, type, set) {
+                if (row.hasOwnProperty('config')) {
+                  if (row.config.hasOwnProperty('dns.nameservers')) {
+                    return row.config['dns.nameservers']
+                  }
+                }
+                return '-'
+              },
+            },
+            { title: "Network NAT", data: function (row, type, set) {
+                if (row.hasOwnProperty('config')) {
+                  if (row.config.hasOwnProperty('network.nat')) {
+                    return row.config['network.nat']
+                  }
+                }
+                return '-'
+              },
+            },
+            { title: "Used by", data: function (row, type, set) {
+                if (row.hasOwnProperty('used_by')) {
+                  if (row.used_by){
+                    if (Object.keys(row.used_by).length > 0){
+                      arr = []
+                      row.used_by.forEach(element => {
+                        item = element.replace('/1.0/networks/', '')
+                        if (item.length > 24) {
+                          arr.push(item.substring(0,23) + "...")
+                        }
+                        else {
+                          arr.push(item)
+                        }
+                      });
+                      return arr.join(", ")
+                    }
+                  }
+                }
+                return '-'
+              },
+            },
+          ],
+          layout: {
+            topStart: {
+              buttons: [
+                { text: 'Edit',
+                  action: function () { 
+                    rows = networkZonesDataTable.rows({ selected: true });
+                    editItem(rows.data()[0]['name']);
+                  },
+                  enabled: false,
+                },
+                'spacer',
+                { text: 'Delete',
+                  action: function () { 
+                    arr = []
+                    networkZonesDataTable.rows('.selected').every( function() {
+                      arr.push(this.data().name)
+                    });
+                    $("#deleteNetworkZonesList").text(arr.join(", "));
+                    $("#deleteNetworkZonesHiddenInput").val(JSON.stringify(arr));
+                    $("#deleteModal").modal('show');                    
+                  },
+                  enabled: false,
+                },
+                'spacer',
+                'spacer',
+                'pageLength',
+                'spacer',
+                {
+                  extend: 'collection',
+                  text: 'More',
+                  buttons: [
+                    {
+                      extend: 'colvis',
+                      text: 'Visible columns',
+                      columns: [1,2,3,4,5],
+                    },
+                    {
+                      text: (scrollY == '490px') ? 'Disable scrolling' : 'Enable scrolling',
+                      action: function ( e, dt, node, config ) {
+                        if (scrollY == '490px') {
+                          localStorage.setItem('networkZonesDataTableScrollY', false);
+                          scrollY = false
+                        }
+                        else {
+                          localStorage.setItem('networkZonesDataTableScrollY', '490px');
+                          scrollY = '490px'
+                        }
+                        dt.destroy()
+                        loadNetworkZonesTable()
+                      },
+                    },
+                    {
+                      text: 'Reset table state',
+                      action: function ( e, dt, node, config ) {
+                        dt.state.clear();
+                        window.location.reload();
+                      },
+                    },
+                  ]
+                }
+
+              ]
+            }
+          },
+          lengthMenu: [
+            [10, 25, 50, 100, -1],
+            [10, 25, 50, 100, 'All'],
+          ],
+          order: [
+            [1, 'asc']
+          ],
+          rowId: 'name',
+          scrollCollapse: true,
+          scrollX: true,
+          scrollY: scrollY,
+          select: {
+            style: 'multi',
+            selector: 'td:first-child',
+            blurable: true,
+            headerCheckbox: 'select-page',
+          },
+          stateDuration: 0,
+          stateSave: true,
+        });
+      }
+      else {
+        $('#networkZonesDataTable').DataTable().ajax.reload(null, false);
+      }
+
+      networkZonesDataTable.on('select deselect', function () {
+        var selectedRows = networkZonesDataTable.rows({ selected: true }).count();
+        networkZonesDataTable.button(0).enable(selectedRows === 1);
+        networkZonesDataTable.button(2).enable(selectedRows > 0);
+      });
     }
 
     function addItem(){
@@ -140,13 +262,6 @@
       });
     }
 
-    function confirmDeleteItem(name){
-      console.log("Info: confirming deletion of item " + name);
-      $("#deleteQuestionText").text("Are you sure you want to remove the network zone " + name + "?");
-      $("#networkZone").val(name);
-      $("#deleteModal").modal('show');
-    }
-
     function createItemUsingJSON(){
       var json = $("#jsonCreateInput").val();
       console.log("Info: adding new network zone");
@@ -160,17 +275,26 @@
       });
     }
 
-    function deleteItem(){
-      name = $("#networkZone").val();
-      console.log("Info: deleting item " + name);
-      $.post("{{ url_for('api') }}/network-zones/delete_network_zone?id=" + serverId + "&project=" + project, { name: name }, function (data) {
-        console.log(data);
-        if (data.error_code >= 400){
-          alert(data.error);
-        }
-        //Sync type
-        reloadPageContent();
-      });
+    function deleteItems(){
+      var deleteNetworkZonesHiddenInput = JSON.parse($("#deleteNetworkZonesHiddenInput").val());
+      console.log("Info: deleting network zones " + deleteNetworkZonesHiddenInput.join(", "));
+      for (let i = 0; i < deleteNetworkZonesHiddenInput.length; i++) {
+        $.post("{{ url_for('api') }}/network-zones/delete_network_zone?id=" + serverId + "&project=" + project, { name: deleteNetworkZonesHiddenInput[i] }, function (data) {
+          console.log(data);
+          if (data.error_code >= 400){
+            alert(data.error);
+          }
+        });
+      }
+
+      //Send toast notification
+      $('#defaultToastHeader').text('Deleting Network Zone(s)')
+      $('#defaultToastBody').text($("#deleteNetworkZonesList").text())
+      defaultToast.show()
+
+      //Sync type
+      setTimeout(() => { reloadPageContent(); }, 1000);
+      operationStatusCheck()
     }
 
     function editItem(name){

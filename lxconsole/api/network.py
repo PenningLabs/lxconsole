@@ -39,17 +39,20 @@ def api_network_endpoint(endpoint):
     data = {}
     data.update({'listen_address': request.form.get('listen_address')})
     data.update({'description': request.form.get('description')})
+
     #config = {}
     #config.update({'user.mykey': request.form.get('user.mykey')}) if request.form.get('user.mykey') else False
-    port = {}
-    port.update({'description': request.form.get('port_description')}) if request.form.get('port_description') else False
-    port.update({'listen_port': request.form.get('port_listen_port')}) if request.form.get('port_listen_port') else False
-    port.update({'protocol': request.form.get('port_protocol')}) if request.form.get('port_protocol') else False
-    port.update({'target_address': [ request.form.get('port_target_address') ]}) if request.form.get('port_target_address') else False
-    port.update({'target_port': [ request.form.get('port_target_port') ]}) if request.form.get('port_target_port') else False
-
     #data.update({'config': config})
-    data.update({'ports': [ port ]})
+
+    if request.form.get('port_description') or request.form.get('port_listen_port') or request.form.get('port_protocol') or request.form.get('port_target_address') or request.form.get('port_target_port'):
+      port = {}
+      port.update({'description': request.form.get('port_description')}) if request.form.get('port_description') else False
+      port.update({'listen_port': request.form.get('port_listen_port')}) if request.form.get('port_listen_port') else False
+      port.update({'protocol': request.form.get('port_protocol')}) if request.form.get('port_protocol') else False
+      port.update({'target_address': [ request.form.get('port_target_address') ]}) if request.form.get('port_target_address') else False
+      port.update({'target_port': [ request.form.get('port_target_port') ]}) if request.form.get('port_target_port') else False 
+      data.update({'ports': [ port ]})
+
     results = requests.post(url, verify=server.ssl_verify, cert=(client_cert, client_key), json=data)
     
     return jsonify(results.json())
@@ -72,22 +75,27 @@ def api_network_endpoint(endpoint):
     data = {}
     data.update({'listen_address': request.form.get('listen_address')})
     data.update({'description': request.form.get('description')})
-    backend = {}
-    backend.update({'description': request.form.get('backend_description')}) if request.form.get('backend_description') else False
-    backend.update({'name': request.form.get('backend_name')}) if request.form.get('backend_name') else False
-    backend.update({'target_address': request.form.get('backend_target_address')}) if request.form.get('backend_target_address') else False
-    backend.update({'target_port': request.form.get('backend_target_port')}) if request.form.get('backend_target_port') else False
+    if request.form.get('backend_description') or request.form.get('backend_name') or request.form.get('backend_target_address') or request.form.get('backend_target_port'):
+      backend = {}
+      backend.update({'description': request.form.get('backend_description')}) if request.form.get('backend_description') else False
+      backend.update({'name': request.form.get('backend_name')}) if request.form.get('backend_name') else False
+      backend.update({'target_address': request.form.get('backend_target_address')}) if request.form.get('backend_target_address') else False
+      backend.update({'target_port': request.form.get('backend_target_port')}) if request.form.get('backend_target_port') else False
+      data.update({'backends': [ backend ]})
+
     #config = {}
     #config.update({'user.mykey': request.form.get('user.mykey')}) if request.form.get('user.mykey') else False
-    port = {}
-    port.update({'description': request.form.get('port_description')}) if request.form.get('port_description') else False
-    port.update({'listen_port': request.form.get('port_listen_port')}) if request.form.get('port_listen_port') else False
-    port.update({'protocol': request.form.get('port_protocol')}) if request.form.get('port_protocol') else False
-    port.update({'target_backend': [ request.form.get('port_target_backend') ]}) if request.form.get('port_target_backend') else False
-
-    data.update({'backends': [ backend ]})
     #data.update({'config': config})
-    data.update({'ports': [ port ]})
+
+    if request.form.get('port_description') or request.form.get('port_listen_port') or request.form.get('port_protocol') or request.form.get('port_target_backend'):
+      port = {}
+      port.update({'description': request.form.get('port_description')}) if request.form.get('port_description') else False
+      port.update({'listen_port': request.form.get('port_listen_port')}) if request.form.get('port_listen_port') else False
+      port.update({'protocol': request.form.get('port_protocol')}) if request.form.get('port_protocol') else False
+      port.update({'target_backend': [ request.form.get('port_target_backend') ]}) if request.form.get('port_target_backend') else False
+      data.update({'ports': [ port ]})
+      
+    
     results = requests.post(url, verify=server.ssl_verify, cert=(client_cert, client_key), json=data)
     
     return jsonify(results.json())
@@ -112,10 +120,11 @@ def api_network_endpoint(endpoint):
     data.update({'description': request.form.get('description')})
     data.update({'target_network': request.form.get('target_network')})
     data.update({'target_project': request.form.get('target_network')})
+    
     #config = {}
     #config.update({'user.mykey': request.form.get('user.mykey')}) if request.form.get('user.mykey') else False
-
     #data.update({'config': config})
+
     results = requests.post(url, verify=server.ssl_verify, cert=(client_cert, client_key), json=data)
     
     return jsonify(results.json())
@@ -159,6 +168,24 @@ def api_network_endpoint(endpoint):
     results = requests.delete(url, verify=server.ssl_verify, cert=(client_cert, client_key))
     return jsonify(results.json())
 
+
+  if endpoint == 'get_network':
+    id = request.args.get('id')
+    project = request.args.get('project')
+    server = Server.query.filter_by(id=id).first()
+    name = request.args.get('name')
+    url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/networks/' + name + '?project=' + project
+    client_cert = get_client_crt()
+    client_key = get_client_key()
+
+    try:
+      results = requests.get(url, verify=server.ssl_verify, cert=(client_cert, client_key), timeout=5)
+      results.raise_for_status()
+    except requests.exceptions.RequestException as errex:
+      return jsonify({'metadata': []})
+
+    return jsonify(results.json())
+  
 
   if endpoint == 'get_network_state':
     id = request.args.get('id')

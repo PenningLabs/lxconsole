@@ -11,14 +11,6 @@
 {% block content %}
   <div class="col-12">
     <div class="card">
-      <div class="card-header">
-        <h3 class="card-title">Warnings</h3>
-        <div class="card-tools">
-          <button type="button" class="btn btn-tool" onclick="reloadPageContent()" title="Refresh">
-          <i class="fas fa-sync"></i>
-          </button>
-        </div>
-      </div>
       <div class="card-body">
         <div class="table-responsive">
           <table class="table" id="warningsDataTable" width="100%" cellspacing="0"></table>
@@ -39,6 +31,7 @@
     const urlParams = new URLSearchParams(queryString);
     const serverId = urlParams.get('id');
     const project = urlParams.get('project');
+    var scrollY =  localStorage.getItem('warningsDataTableScrollY') || '490px';
     var editedWarning = ''
     applySidebarStyles();
     applySidebarLinks();
@@ -50,7 +43,7 @@
       clearTimeout(pageReloadTimeout);
 
       //Reload the datatables content
-      $('#warningsDataTable').DataTable().ajax.reload(null, false);
+      loadWarningsTable()
 
       //Set the automatic page reload
       pageReloadTimeout = setTimeout(() => { reloadPageContent(); }, reloadTime);
@@ -66,145 +59,265 @@
       populateProjectSelectDropdown()
 
       // Configure Datatable
-      $('#warningsDataTable').DataTable({
-        ajax: {
-          url: "{{ url_for('api') }}/warnings/list_warnings?id="+serverId+"&project=" + project + "&recursion=1",
-          dataType: "json",
-          dataSrc: "metadata",
-          contentType: "application/json",
-          error: function (xhr, error, code) {
-            console.log(xhr, code);
-          }
-        },
-        columns: [
-          /*
-            {
-              "entity_url": "/1.0/instances/c1?project=default",
-              "first_seen_at": "2021-03-23T17:38:37.753398689-04:00",
-            }
-          */
-          { title: "Type", data: function (row, type, set) {
-              if (row.hasOwnProperty('type')) {
-                if (row.type)
-                  return row.type
-              }
-              return '-'
-            },
-          },
-          { title: "Status", data: function (row, type, set) {
-                if (row.hasOwnProperty('status')) {
-                  if (row.status){
-                    if (row.status == "resolved") {
-                      return '<i class="fas fa-check-circle fa-sm text-success mr-1" aria-hidden="true"></i> resolved'
-                    }
-                    if (row.status == "new") {
-                      return '<i class="fas fa-exclamation-circle fa-sm text-danger mr-1" aria-hidden="true"></i> new'
-                    }
-                    if (row.status == "acknowledged") {
-                      return '<i class="fas fa-dot-circle fa-sm text-info mr-1" aria-hidden="true"></i> acknowledged'
-                    }
-                    return row.status
-                  }
-                }
-                return '-'
-              },
-            },
-          { title: "Message", data: function (row, type, set) {
-              if (row.hasOwnProperty('last_message')) {
-                if (row.last_message)
-                  return row.last_message
-              }
-              return '-'
-            },
-          },
-          { title: "Severity", data: function (row, type, set) {
-              if (row.hasOwnProperty('severity')) {
-                if (row.severity)
-                  return row.severity
-              }
-              return '-'
-            },
-          },
-          { title: "UUID", data: function (row, type, set) {
-              if (row.hasOwnProperty('uuid')) {
-                if (row.uuid)
-                  return row.uuid.substring(0,8) + "...";
-              }
-              return '-'
-            },
-          },
-          { title: "Count", data: function (row, type, set) {
-              if (row.hasOwnProperty('count')) {
-                if (row.count)
-                  return row.count
-              }
-              return '-'
-            },
-          },
-          { title: "Project", data: function (row, type, set) {
-              if (row.hasOwnProperty('project')) {
-                if (row.project)
-                  return row.project
-              }
-              return '-'
-            },
-          },
-          { title: "Location", data: function (row, type, set) {
-              if (row.hasOwnProperty('location')) {
-                if (row.location)
-                  return row.location
-              }
-              return '-'
-            },
-          },
-          { title: "Last Seen", data: function (row, type, set) {
-              if (row.hasOwnProperty('last_seen_at')) {
-                if (row.last_seen_at){
-                  timestamp = new Date(row.last_seen_at)
-                  timestamp.setMilliseconds(0);
-                  return timestamp.toISOString().replace(".000Z", "Z").replace("T", " ");
-                }
-              }
-              return '-'
-            },
-          },
-          { title: "Actions", data: function (row, type, set) {
-              links = ''
-              if (row.hasOwnProperty('uuid')) {
-                links = '<a href="#" onclick=editItemStatus(\''+row.uuid+'\')><i class="fas fa-edit fa-lg" title="Edit" aria-hidden="true"></i></a>' +
-                '&nbsp' + '&nbsp' +
-                '<a href="#" onclick=confirmDeleteItem(\''+row.uuid+'\')><i class="fas fa-trash-alt fa-lg" title="Delete" aria-hidden="true"></i></a>'
-              }
-              return links
-            },
-          },
-        ],
-        order: [],
-      });
-      
+      loadWarningsTable()
+    
       //Set reload page content
       pageReloadTimeout = setTimeout(() => { reloadPageContent(); }, reloadTime);
 
     }
 
-    function confirmDeleteItem(uuid){
-      console.log("Info: confirming deletion of warning " + uuid);
-      if (confirm("Are you sure you want to delete warning " + uuid + "?") == true) {
-        deleteItem(uuid);
+    function loadWarningsTable() {
+      if ( ! $.fn.DataTable.isDataTable( '#warningsDataTable' ) ) {
+        warningsDataTable = $('#warningsDataTable').DataTable({
+          ajax: {
+            url: "{{ url_for('api') }}/warnings/list_warnings?id="+serverId+"&project=" + project + "&recursion=1",
+            dataType: "json",
+            dataSrc: "metadata",
+            contentType: "application/json",
+            error: function (xhr, error, code) {
+              console.log(xhr, code);
+            }
+          },
+          columns: [
+            {
+              data: null,
+              orderable: false,
+              render: DataTable.render.select()
+            },
+            /*
+            {
+              "entity_url": "/1.0/instances/c1?project=default",
+              "first_seen_at": "2021-03-23T17:38:37.753398689-04:00",
+            }
+            */
+            { title: "Type", data: function (row, type, set) {
+                if (row.hasOwnProperty('type')) {
+                  if (row.type)
+                    return row.type
+                }
+                return '-'
+              },
+            },
+            { title: "Status", data: function (row, type, set) {
+                  if (row.hasOwnProperty('status')) {
+                    if (row.status){
+                      if (row.status == "resolved") {
+                        return '<i class="fas fa-check-circle fa-sm text-success mr-1" aria-hidden="true"></i> resolved'
+                      }
+                      if (row.status == "new") {
+                        return '<i class="fas fa-exclamation-circle fa-sm text-danger mr-1" aria-hidden="true"></i> new'
+                      }
+                      if (row.status == "acknowledged") {
+                        return '<i class="fas fa-dot-circle fa-sm text-info mr-1" aria-hidden="true"></i> acknowledged'
+                      }
+                      return row.status
+                    }
+                  }
+                  return '-'
+                },
+              },
+            { title: "Message", data: function (row, type, set) {
+                if (row.hasOwnProperty('last_message')) {
+                  if (row.last_message)
+                    return row.last_message
+                }
+                return '-'
+              },
+            },
+            { title: "Severity", data: function (row, type, set) {
+                if (row.hasOwnProperty('severity')) {
+                  if (row.severity)
+                    return row.severity
+                }
+                return '-'
+              },
+            },
+            { title: "UUID", data: function (row, type, set) {
+                if (row.hasOwnProperty('uuid')) {
+                  if (row.uuid)
+                    return row.uuid.substring(0,8) + "...";
+                }
+                return '-'
+              },
+            },
+            { title: "Count", data: function (row, type, set) {
+                if (row.hasOwnProperty('count')) {
+                  if (row.count)
+                    return row.count
+                }
+                return '-'
+              },
+            },
+            { title: "Project", data: function (row, type, set) {
+                if (row.hasOwnProperty('project')) {
+                  if (row.project)
+                    return row.project
+                }
+                return '-'
+              },
+            },
+            { title: "Location", data: function (row, type, set) {
+                if (row.hasOwnProperty('location')) {
+                  if (row.location)
+                    return row.location
+                }
+                return '-'
+              },
+            },
+            { title: "Last Seen", data: function (row, type, set) {
+                if (row.hasOwnProperty('last_seen_at')) {
+                  if (row.last_seen_at){
+                    timestamp = new Date(row.last_seen_at)
+                    timestamp.setMilliseconds(0);
+                    return timestamp.toISOString().replace(".000Z", "Z").replace("T", " ");
+                  }
+                }
+                return '-'
+              },
+            },
+          ],
+          layout: {
+            topStart: {
+              buttons: [
+                {
+                  extend: 'collection',
+                  text: 'Status',
+                  autoClose: true,
+                  enabled: false,
+                  buttons: [
+                    {
+                      text: 'Acknowledged',
+                      action: function () { 
+                        warningsDataTable.rows('.selected').every( function() {
+                          changeItemStatus(this.data().uuid, 'acknowledged')
+                        })
+                      },
+                    },
+                    {
+                      text: 'New',
+                      action: function () { 
+                        warningsDataTable.rows('.selected').every( function() {
+                          changeItemStatus(this.data().uuid, 'new')
+                        })
+                      },
+                    },
+                  ],
+                },
+                'spacer',
+                { text: 'Edit',
+                  action: function () { 
+                    rows = warningsDataTable.rows({ selected: true });
+                    editItem(rows.data()[0]['uuid']);
+                  },
+                  enabled: false,
+                },
+                'spacer',
+                { text: 'Delete',
+                  action: function () { 
+                    arr = []
+                    warningsDataTable.rows('.selected').every( function() {
+                      arr.push(this.data().uuid)
+                    });
+                    $("#deleteWarningsList").text(arr.join(", "));
+                    $("#deleteWarningsHiddenInput").val(JSON.stringify(arr));
+                    $("#deleteModal").modal('show');                    
+                  },
+                  enabled: false,
+                },
+                'spacer',
+                'spacer',
+                'pageLength',
+                'spacer',
+                {
+                  extend: 'collection',
+                  text: 'More',
+                  buttons: [
+                    {
+                      extend: 'colvis',
+                      text: 'Visible columns',
+                      columns: [1,2,3,4,5,6,7,8,9],
+                    },
+                    {
+                      text: (scrollY == '490px') ? 'Disable scrolling' : 'Enable scrolling',
+                      action: function ( e, dt, node, config ) {
+                        if (scrollY == '490px') {
+                          localStorage.setItem('warningsDataTableScrollY', false);
+                          scrollY = false
+                        }
+                        else {
+                          localStorage.setItem('warningsDataTableScrollY', '490px');
+                          scrollY = '490px'
+                        }
+                        dt.destroy()
+                        loadWarningsTable()
+                      },
+                    },
+                    {
+                      text: 'Reset table state',
+                      action: function ( e, dt, node, config ) {
+                        dt.state.clear();
+                        window.location.reload();
+                      },
+                    },
+                  ]
+                }
+
+              ]
+            }
+          },
+          lengthMenu: [
+            [10, 25, 50, 100, -1],
+            [10, 25, 50, 100, 'All'],
+          ],
+          order: [
+            [9, 'asc']
+          ],
+          rowId: 'uuid',
+          scrollCollapse: true,
+          scrollX: true,
+          scrollY: scrollY,
+          select: {
+            style: 'multi',
+            selector: 'td:first-child',
+            blurable: true,
+            headerCheckbox: 'select-page',
+          },
+          stateDuration: 0,
+          stateSave: true,
+        });
       }
+      else {
+        $('#warningsDataTable').DataTable().ajax.reload(null, false);
+      }
+
+      warningsDataTable.on('select deselect', function () {
+        var selectedRows = warningsDataTable.rows({ selected: true }).count();
+        warningsDataTable.button(0).enable(selectedRows > 0);
+        warningsDataTable.button(2).enable(selectedRows === 1);
+        warningsDataTable.button(4).enable(selectedRows > 0);
+      });
     }
 
-    function deleteItem(uuid){
-      console.log("Info: deleting warning " + uuid);
-      $.post("{{ url_for('api') }}/warnings/delete_warning?id=" + serverId + "&project=" + project, { uuid: uuid }, function (data) {
-        console.log(data);
-        if (data.error_code >= 400){
-          alert(data.error);
-        }
-        //Sync type
-        setTimeout(() => { reloadPageContent(); }, 1000);
-        operationStatusCheck()
-      });
+    function deleteItems(){
+      var deleteWarningsHiddenInput = JSON.parse($("#deleteWarningsHiddenInput").val());
+      console.log("Info: deleting warnings " + deleteWarningsHiddenInput.join(", "));
+      for (let i = 0; i < deleteWarningsHiddenInput.length; i++) {
+        $.post("{{ url_for('api') }}/warnings/delete_warning?id=" + serverId + "&project=" + project, { uuid: deleteWarningsHiddenInput[i] }, function (data) {
+          console.log(data);
+          if (data.error_code >= 400){
+            alert(data.error);
+          }
+        });
+      }
+
+      //Send toast notification
+      $('#defaultToastHeader').text('Deleting Warning(s)')
+      $('#defaultToastBody').text($("#deleteWarningsList").text())
+      defaultToast.show()
+
+      //Sync type
+      setTimeout(() => { reloadPageContent(); }, 1000);
+      operationStatusCheck()
     }
 
     function editItem(uuid){
@@ -257,6 +370,20 @@
         operationStatusCheck()
       });
     } 
+
+    function changeItemStatus(uuid, status){
+      console.log("Info: Changing warning status to " + status + " for warning " + uuid);
+      $.post("{{ url_for('api') }}/warnings/update_warning?id=" + serverId + "&project=" + project + "&uuid=" + uuid, { status: status }, function (data) {
+        console.log(data);
+        if (data.error_code >= 400){
+          alert(data.error);
+        }
+        //Async type
+        setTimeout(() => { reloadPageContent(); }, 2000);
+        operationStatusCheck()
+      });
+    }
+
 
     $(document).ready(function(){
 

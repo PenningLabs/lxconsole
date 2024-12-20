@@ -11,6 +11,7 @@ from . import network
 from . import networks
 from . import network_acl
 from . import network_acls
+from . import network_records
 from . import network_zones
 from . import profiles
 from . import operations
@@ -45,6 +46,7 @@ api.add_url_rule('/network/<endpoint>', view_func=network.api_network_endpoint, 
 api.add_url_rule('/networks/<endpoint>', view_func=networks.api_networks_endpoint, methods=['GET', 'POST'])
 api.add_url_rule('/network-acl/<endpoint>', view_func=network_acl.api_network_acl_endpoint, methods=['GET', 'POST'])
 api.add_url_rule('/network-acls/<endpoint>', view_func=network_acls.api_network_acls_endpoint, methods=['GET', 'POST'])
+api.add_url_rule('/network-records/<endpoint>', view_func=network_records.api_network_records_endpoint, methods=['GET', 'POST'])
 api.add_url_rule('/network-zones/<endpoint>', view_func=network_zones.api_network_zones_endpoint, methods=['GET', 'POST'])
 api.add_url_rule('/profiles/<endpoint>', view_func=profiles.api_profiles_endpoint, methods=['GET', 'POST'])
 api.add_url_rule('/operations/<endpoint>', view_func=operations.api_operations_endpoint, methods=['GET', 'POST'])

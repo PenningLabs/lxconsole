@@ -16,14 +16,6 @@
 {% block content %}
   <div class="col-12">
     <div class="card">
-      <div class="card-header">
-        <h3 class="card-title">Cluster Groups</h3>
-        <div class="card-tools">
-          <button type="button" class="btn btn-tool" onclick="reloadPageContent()" title="Refresh">
-          <i class="fas fa-sync"></i>
-          </button>
-        </div>
-      </div>
       <div class="card-body">
         <table class="table" id="clusterGroupsDataTable" width="100%" cellspacing="0">
         </table>
@@ -43,7 +35,8 @@
     const urlParams = new URLSearchParams(queryString);
     const serverId = urlParams.get('id');
     const project = urlParams.get('project');
-    var editedClusterMember = ''
+    var editedClusterGroup = ''
+    var scrollY =  localStorage.getItem('clusterGroupsDataTableScrollY') || '490px';
     applySidebarStyles();
     applySidebarLinks();
     populateSidebarLinks();
@@ -54,7 +47,7 @@
       clearTimeout(pageReloadTimeout);
 
       //Reload the datatables content
-      $('#clusterGroupsDataTable').DataTable().ajax.reload(null, false);
+      loadClusterGroupsTable()
 
       //Set the automatic page reload
       pageReloadTimeout = setTimeout(() => { reloadPageContent(); }, reloadTime);
@@ -70,65 +63,154 @@
       populateProjectSelectDropdown()
       
       // Configure Datatable
-      $('#clusterGroupsDataTable').DataTable({
-        ajax: {
-          url: "{{ url_for('api') }}/cluster-groups/list_cluster_groups?id="+serverId+"&project=" + project + "&recursion=1",
-          dataType: "json",
-          dataSrc: "metadata",
-          contentType: "application/json",
-          error: function (xhr, error, code) {
-            console.log(xhr, code);
-          }
-        },
-        columns: [
-          { title: "Name", data: function (row, type, set) {
-              if (row.hasOwnProperty('name')) {
-                if (row.name)
-                  return row.name
-              }
-              return '-'
-            },
-          },
-          { title: "Description", data: function (row, type, set) {
-              if (row.hasOwnProperty('description')) {
-                if (row.description)
-                  return row.description
-              }
-              return '-'
-            },
-          },
-          { title: "Members", data: function (row, type, set) {
-              if (row.hasOwnProperty('members')) {
-                if (Object.keys(row.members).length > 0) {
-                  arr = []
-                  for (let i = 0; i < row.members.length; i++) {
-                    arr.push(row.members[i]);
-                  }
-                  return arr.join(", ")
-                }
-              }
-              return '-'
-            },
-          },
-
-          { title: "Actions", data: function (row, type, set) {
-              links = ''
-              if (row.hasOwnProperty('name')) {
-                links += '<a href="#" onclick=editItem(\''+row.name+'\')><i class="fas fa-edit fa-lg" title="Edit" aria-hidden="true"></i></a>' +
-                '&nbsp' + '&nbsp' +
-                '<a href="#" onclick=confirmDeleteItem(\''+row.name+'\')><i class="fas fa-trash-alt fa-lg" title="Delete" aria-hidden="true"></i></a>'
-              }
-              return links
-            },
-          },
-
-        ],
-        order: [],
-      });
+      loadClusterGroupsTable()
 
       //Set reload page content
       pageReloadTimeout = setTimeout(() => { reloadPageContent(); }, reloadTime);
+    }
 
+    function loadClusterGroupsTable() {
+      if ( ! $.fn.DataTable.isDataTable( '#clusterGroupsDataTable' ) ) {
+        clusterGroupsDataTable = $('#clusterGroupsDataTable').DataTable({
+          ajax: {
+            url: "{{ url_for('api') }}/cluster-groups/list_cluster_groups?id="+serverId+"&project=" + project + "&recursion=1",
+            dataType: "json",
+            dataSrc: "metadata",
+            contentType: "application/json",
+            error: function (xhr, error, code) {
+              console.log(xhr, code);
+            }
+          },
+          columns: [
+            {
+              data: null,
+              orderable: false,
+              render: DataTable.render.select()
+            },
+            { title: "Name", data: function (row, type, set) {
+                if (row.hasOwnProperty('name')) {
+                  if (row.name)
+                    return row.name
+                }
+                return '-'
+              },
+            },
+            { title: "Description", data: function (row, type, set) {
+                if (row.hasOwnProperty('description')) {
+                  if (row.description)
+                    return row.description
+                }
+                return '-'
+              },
+            },
+            { title: "Members", data: function (row, type, set) {
+                if (row.hasOwnProperty('members')) {
+                  if (Object.keys(row.members).length > 0) {
+                    arr = []
+                    for (let i = 0; i < row.members.length; i++) {
+                      arr.push(row.members[i]);
+                    }
+                    return arr.join(", ")
+                  }
+                }
+                return '-'
+              },
+            },
+          ],
+          layout: {
+            topStart: {
+              buttons: [
+                { text: 'Edit',
+                  action: function () { 
+                    rows = clusterGroupsDataTable.rows({ selected: true });
+                    editItem(rows.data()[0]['name']);
+                  },
+                  enabled: false,
+                },
+                'spacer',
+                { text: 'Delete',
+                  action: function () { 
+                    arr = []
+                    clusterGroupsDataTable.rows('.selected').every( function() {
+                      arr.push(this.data().name)
+                    });
+                    $("#deleteClusterGroupsList").text(arr.join(", "));
+                    $("#deleteClusterGroupsHiddenInput").val(JSON.stringify(arr));
+                    $("#deleteModal").modal('show');                    
+                  },
+                  enabled: false,
+                },
+                'spacer',
+                'spacer',
+                'pageLength',
+                'spacer',
+                {
+                  extend: 'collection',
+                  text: 'More',
+                  buttons: [
+                    {
+                      extend: 'colvis',
+                      text: 'Visible columns',
+                      columns: [1,2,3],
+                    },
+                    {
+                      text: (scrollY == '490px') ? 'Disable scrolling' : 'Enable scrolling',
+                      action: function ( e, dt, node, config ) {
+                        if (scrollY == '490px') {
+                          localStorage.setItem('clusterGroupsDataTableScrollY', false);
+                          scrollY = false
+                        }
+                        else {
+                          localStorage.setItem('clusterGroupsDataTableScrollY', '490px');
+                          scrollY = '490px'
+                        }
+                        dt.destroy()
+                        loadClusterGroupsTable()
+                      },
+                    },
+                    {
+                      text: 'Reset table state',
+                      action: function ( e, dt, node, config ) {
+                        dt.state.clear();
+                        window.location.reload();
+                      },
+                    },
+                  ]
+                }
+
+              ]
+            }
+          },
+          lengthMenu: [
+            [10, 25, 50, 100, -1],
+            [10, 25, 50, 100, 'All'],
+          ],
+          order: [
+            [1, 'asc']
+          ],
+          rowId: 'name',
+          scrollCollapse: true,
+          scrollX: true,
+          scrollY: scrollY,
+          select: {
+            style: 'multi',
+            selector: 'td:first-child',
+            blurable: true,
+            headerCheckbox: 'select-page',
+          },
+          stateDuration: 0,
+          stateSave: true,
+        });
+      }
+      else {
+        $('#clusterGroupsDataTable').DataTable().ajax.reload(null, false);
+      }
+
+      clusterGroupsDataTable.on('select deselect', function () {
+        var selectedRows = clusterGroupsDataTable.rows({ selected: true }).count();
+        clusterGroupsDataTable.button(0).enable(selectedRows === 1);
+        clusterGroupsDataTable.button(2).enable(selectedRows > 0);
+      });
     }
 
     function addItem(){
@@ -144,13 +226,6 @@
       });
     }
 
-    function confirmDeleteItem(name){
-      console.log("Info: confirming deletion of item " + name);
-      $("#deleteQuestionText").text("Are you sure you want to remove the cluster group " + name + "?");
-      $("#clusterGroup").val(name);
-      $("#deleteModal").modal('show');
-    }
-
     function createItemUsingJSON(){
       var json = $("#jsonCreateInput").val();
       console.log("Info: adding new cluster group");
@@ -164,21 +239,31 @@
       });
     }
 
-    function deleteItem(){
-      name = $("#clusterGroup").val();
-      console.log("Info: deleting item " + name);
-      $.post("{{ url_for('api') }}/cluster-groups/delete_cluster_group?id=" + serverId + "&project=" + project, { name: name }, function (data) {
-        console.log(data);
-        if (data.error_code >= 400){
-          alert(data.error);
-        }
-        //Sync type
-        reloadPageContent();
-      });
+    function deleteItems(){
+      var deleteClusterGroupsHiddenInput = JSON.parse($("#deleteClusterGroupsHiddenInput").val());
+      console.log("Info: deleting cluster groups " + deleteClusterGroupsHiddenInput.join(", "));
+      for (let i = 0; i < deleteClusterGroupsHiddenInput.length; i++) {
+        $.post("{{ url_for('api') }}/cluster-groups/delete_cluster_group?id=" + serverId + "&project=" + project, { name: deleteClusterGroupsHiddenInput[i] }, function (data) {
+          console.log(data);
+          if (data.error_code >= 400){
+            alert(data.error);
+          }
+        });
+      }
+
+      //Send toast notification
+      $('#defaultToastHeader').text('Deleting Cluster Group(s)')
+      $('#defaultToastBody').text(deleteClusterGroupsHiddenInput.join(", "))
+      defaultToast.show()
+
+      //Sync type
+      setTimeout(() => { reloadPageContent(); }, 1000);
+      operationStatusCheck()
     }
 
+
     function editItem(name){
-      editedClusterMember = name
+      editedClusterGroup = name
       console.log("Info: loading cluster member " + name);
       $.post("{{ url_for('api') }}/cluster-groups/load_cluster_group?id=" + serverId + "&project=" + project, { name: name }, function (data) {
         console.log(data);
@@ -191,7 +276,7 @@
     }
 
     function renameItem(){
-      name = editedClusterMember
+      name = editedClusterGroup
       console.log("Info: renaming cluster group");
       data = $('#renameForm').serialize();
       $.post("{{ url_for('api') }}/cluster-groups/update_cluster_group?id=" + serverId + "&project=" + project + "&name=" + encodeURI(name), data, function (data) {
@@ -205,7 +290,7 @@
     }
 
     function updateItem(){
-      name = editedClusterMember
+      name = editedClusterGroup
       var updatedJSON = $("#jsonInput").val();
       console.log("Info: updating cluster group");
       $.post("{{ url_for('api') }}/cluster-groups/update_cluster_group?id=" + serverId + "&project=" + project + "&name=" + encodeURI(name), { json: updatedJSON },  function (data) {
@@ -236,9 +321,7 @@
             $('#clusterMembersInput').append('<option value="' + optionText + '">' + optionText + '</option>');
           }
         })
-
       }
-      
     });
 
   </script>

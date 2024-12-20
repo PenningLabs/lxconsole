@@ -198,3 +198,8 @@ color:#ff0000 ;
 .form-check-input {
   margin-left: auto;
 }
+
+/* Fix dropdown arrow in More button in datatables */
+div.dt-buttons div.dropdown-menu .dt-button.dropdown-toggle::after {
+  position: unset;
+}

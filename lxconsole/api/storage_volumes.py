@@ -63,8 +63,9 @@ def api_storage_volumes_endpoint(endpoint):
     project = request.args.get('project')
     pool = request.args.get('pool')
     name = request.form.get('name')
+    vol_type = request.form.get('type')
     server = Server.query.filter_by(id=id).first()
-    url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/storage-pools/' + pool + '/volumes/' + name + '?project=' + project
+    url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/storage-pools/' + pool + '/volumes/' + vol_type + '/' + name + '?project=' + project
     client_cert = get_client_crt()
     client_key = get_client_key()
     results = requests.delete(url, verify=server.ssl_verify, cert=(client_cert, client_key))
@@ -93,9 +94,10 @@ def api_storage_volumes_endpoint(endpoint):
     project = request.args.get('project')
     pool = request.args.get('pool')
     name = request.form.get('name')
+    vol_type = request.form.get('type')
     server = Server.query.filter_by(id=id).first()
    
-    url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/storage-pools/' + pool + '/volumes/' + name + '?project=' + project
+    url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/storage-pools/' + pool + '/volumes/' + vol_type + '/' + name + '?project=' + project
     client_cert = get_client_crt()
     client_key = get_client_key()
     results = requests.get(url, verify=server.ssl_verify, cert=(client_cert, client_key))
@@ -106,9 +108,10 @@ def api_storage_volumes_endpoint(endpoint):
     id = request.args.get('id')
     project = request.args.get('project')
     name = request.args.get('name')
+    vol_type = request.args.get('type')
     server = Server.query.filter_by(id=id).first()
     pool = request.args.get('pool')
-    url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/storage-pools/' + pool + '/volumes/' + name + '?project=' + project
+    url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/storage-pools/' + pool + '/volumes/' + vol_type + '/' + name + '?project=' + project
     client_cert = get_client_crt()
     client_key = get_client_key()
 

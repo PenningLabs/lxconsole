@@ -16,14 +16,6 @@
 {% block content %}
   <div class="col-12">
     <div class="card">
-      <div class="card-header">
-        <h3 class="card-title">Users</h3>
-        <div class="card-tools">
-          <button type="button" class="btn btn-tool" onclick="reloadPageContent()" title="Refresh">
-          <i class="fas fa-sync"></i>
-          </button>
-        </div>
-      </div>
       <div class="card-body">
         <table class="table" id="usersDataTable" width="100%" cellspacing="0">
         </table>
@@ -39,13 +31,14 @@
 {% block script %}
   <script>
     var reloadTime = 10000;
+    var scrollY =  localStorage.getItem('usersDataTableScrollY') || '490px';
 
     function reloadPageContent() {
       //Clear the automatic page reload
       clearTimeout(pageReloadTimeout);
 
       //Reload the datatables content
-      $('#usersDataTable').DataTable().ajax.reload(null, false);
+      loadUsersTable()
 
       //Set the automatic page reload
       pageReloadTimeout = setTimeout(() => { reloadPageContent(); }, reloadTime);
@@ -54,70 +47,7 @@
     function loadPageContent(){
 
       // Configure Datatable
-      $('#usersDataTable').DataTable({
-        ajax: {
-          url: "{{ url_for('api') }}/users/list_users",
-          dataType: "json",
-          dataSrc: "data",
-          contentType: "application/json",
-          error: function (xhr, error, code) {
-            console.log(xhr, code);
-          }
-        },
-        columns: [
-          { title: "Username", data: function (row, type, set) {
-              if (row.hasOwnProperty('username')) {
-                if (row.username)
-                  return row.username
-              }
-              return '-'
-            },
-          },
-          { title: "Email", data: function (row, type, set) {
-              if (row.hasOwnProperty('email')) {
-                if (row.email)
-                  return row.email
-              }
-              return '-'
-            },
-          },
-          { title: "First Name", data: function (row, type, set) {
-              if (row.hasOwnProperty('first_name')) {
-                if (row.first_name)
-                  return row.first_name
-              }
-              return '-'
-            },
-          },
-          { title: "Last Name", data: function (row, type, set) {
-              if (row.hasOwnProperty('last_name')) {
-                if (row.last_name)
-                  return row.last_name
-              }
-              return '-'
-            },
-          },
-          { title: "Groups", data: function (row, type, set) {
-              if (row.hasOwnProperty('groups')) {
-                if (row.groups)
-                  return row.groups.sort().join(', ')
-              }
-              return '-'
-            },
-          },
-          { title: "Actions", data: function (row, type, set) {
-              links = ''
-              if (row.hasOwnProperty('id') && row.hasOwnProperty('username')) {
-                links = '<a href="#" onclick=editUser(\''+row.id+'\',\''+row.username+'\')> <i class="fas fa-edit fa-lg" title="Edit" aria-hidden="true"></i> </a>' +
-                '&nbsp' +
-                '<a href="#" onclick=deleteUser(\''+row.id+'\',\''+row.username+'\')> <i class="fas fa-trash-alt fa-lg" title="Delete" aria-hidden="true"></i> </a>'
-              }
-              return links
-            },
-          },
-        ],
-        order: [],
-      });
+      loadUsersTable()
 
       //Populate the Groups dropdown in the add modal form
       $.getJSON("{{ url_for('api') }}/groups/list_groups", function (data) {
@@ -132,6 +62,165 @@
       pageReloadTimeout = setTimeout(() => { reloadPageContent(); }, reloadTime);
 
     }
+
+
+    function loadUsersTable() {
+      if ( ! $.fn.DataTable.isDataTable( '#usersDataTable' ) ) {
+        usersDataTable = $('#usersDataTable').DataTable({
+          ajax: {
+            url: "{{ url_for('api') }}/users/list_users",
+            dataType: "json",
+            dataSrc: "data",
+            contentType: "application/json",
+            error: function (xhr, error, code) {
+              console.log(xhr, code);
+            }
+          },
+          columns: [
+            {
+              data: null,
+              orderable: false,
+              render: DataTable.render.select()
+            },
+            { title: "Username", data: function (row, type, set) {
+                if (row.hasOwnProperty('username')) {
+                  if (row.username)
+                    return row.username
+                }
+                return '-'
+              },
+            },
+            { title: "Email", data: function (row, type, set) {
+                if (row.hasOwnProperty('email')) {
+                  if (row.email)
+                    return row.email
+                }
+                return '-'
+              },
+            },
+            { title: "First Name", data: function (row, type, set) {
+                if (row.hasOwnProperty('first_name')) {
+                  if (row.first_name)
+                    return row.first_name
+                }
+                return '-'
+              },
+            },
+            { title: "Last Name", data: function (row, type, set) {
+                if (row.hasOwnProperty('last_name')) {
+                  if (row.last_name)
+                    return row.last_name
+                }
+                return '-'
+              },
+            },
+            { title: "Groups", data: function (row, type, set) {
+                if (row.hasOwnProperty('groups')) {
+                  if (row.groups && row.groups.length > 0)
+                    return row.groups.sort().join(', ')
+                }
+                return '-'
+              },
+            },
+          ],
+          layout: {
+            topStart: {
+              buttons: [
+                { text: 'Edit',
+                  action: function () { 
+                    rows = usersDataTable.rows({ selected: true });
+                    editUser(rows.data()[0]['id'], rows.data()[0]['username']);
+                  },
+                  enabled: false,
+                },
+                'spacer',
+                { text: 'Delete',
+                  action: function () { 
+                    arr = []
+                    arr2 = []
+                    usersDataTable.rows('.selected').every( function() {
+                      arr.push(this.data().id)
+                      arr2.push(this.data().username)
+                    });
+                    $("#deleteUsersList").text(arr2.join(", "));
+                    $("#deleteUsersHiddenInput").val(JSON.stringify(arr));
+                    $("#deleteModal").modal('show');                    
+                  },
+                  enabled: false,
+                },
+                'spacer',
+                'spacer',
+                'pageLength',
+                'spacer',
+                {
+                  extend: 'collection',
+                  text: 'More',
+                  buttons: [
+                    {
+                      extend: 'colvis',
+                      text: 'Visible columns',
+                      columns: [1,2,3,4,5],
+                    },
+                    {
+                      text: (scrollY == '490px') ? 'Disable scrolling' : 'Enable scrolling',
+                      action: function ( e, dt, node, config ) {
+                        if (scrollY == '490px') {
+                          localStorage.setItem('usersDataTableScrollY', false);
+                          scrollY = false
+                        }
+                        else {
+                          localStorage.setItem('usersDataTableScrollY', '490px');
+                          scrollY = '490px'
+                        }
+                        dt.destroy()
+                        loadUsersTable()
+                      },
+                    },
+                    {
+                      text: 'Reset table state',
+                      action: function ( e, dt, node, config ) {
+                        dt.state.clear();
+                        window.location.reload();
+                      },
+                    },
+                  ]
+                }
+
+              ]
+            }
+          },
+          lengthMenu: [
+            [10, 25, 50, 100, -1],
+            [10, 25, 50, 100, 'All'],
+          ],
+          order: [
+            [1, 'asc']
+          ],
+          rowId: 'id',
+          scrollCollapse: true,
+          scrollX: true,
+          scrollY: scrollY,
+          select: {
+            style: 'multi',
+            selector: 'td:first-child',
+            blurable: true,
+            headerCheckbox: 'select-page',
+          },
+          stateDuration: 0,
+          stateSave: true,
+        });
+      }
+      else {
+        $('#usersDataTable').DataTable().ajax.reload(null, false);
+      }
+
+      usersDataTable.on('select deselect', function () {
+        var selectedRows = usersDataTable.rows({ selected: true }).count();
+        usersDataTable.button(0).enable(selectedRows === 1);
+        usersDataTable.button(2).enable(selectedRows > 0);
+      });
+    }
+
 
     // Add user
     function addUser(){
@@ -239,14 +328,25 @@
     }
 
     // Delete user
-    function deleteUser(id, username){
-      console.log("Info: confirming removal of user" + username);
-      if (confirm("Are you sure you want to remove user " + username + "?") == true) {
-        console.log("Info: deleting user " + username);
-        $.post("{{ url_for('api') }}/users/delete_user", {id: id}, function (data) {
-          setTimeout(() => { reloadPageContent(); }, 1000);
+    function deleteItems(){
+      var deleteUsersHiddenInput = JSON.parse($("#deleteUsersHiddenInput").val());
+      console.log("Info: deleting user ids " + deleteUsersHiddenInput.join(", "));
+      for (let i = 0; i < deleteUsersHiddenInput.length; i++) {
+        $.post("{{ url_for('api') }}/users/delete_user", { id: deleteUsersHiddenInput[i] }, function (data) {
+          console.log(data);
+          if (data.error_code >= 400){
+            alert(data.error);
+          }
         });
       }
+
+      //Send toast notification
+      $('#defaultToastHeader').text('Deleting User(s)')
+      $('#defaultToastBody').text($("#deleteUsersList").text())
+      defaultToast.show()
+
+      //Sync type
+      setTimeout(() => { reloadPageContent(); }, 1000);
     }
 
     function changeActionInput(){

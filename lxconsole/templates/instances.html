@@ -1008,7 +1008,6 @@
       });
     }
 
-
     // Rename the instance
     function renameInstance(){
       var renameName = $("#renameName").val();
@@ -1030,6 +1029,8 @@
         window.location.href = "{{ url_for('servers') }}";
       }
       else {
+        loadPageContent()
+        
         if (hash == '#virtual-machines'){
           $('#nav-virtual-machines-tab').tab('show')
         }
@@ -1043,7 +1044,7 @@
             window.location.hash = 'containers'
           }
         })
-        loadPageContent()
+        
         operationStatusCheck()
       }
       

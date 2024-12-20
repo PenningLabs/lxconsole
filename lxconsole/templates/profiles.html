@@ -16,14 +16,6 @@
 {% block content %}
   <div class="col-12">
     <div class="card">
-      <div class="card-header">
-        <h3 class="card-title">Profiles</h3>
-        <div class="card-tools">
-          <button type="button" class="btn btn-tool" onclick="reloadPageContent()" title="Refresh">
-          <i class="fas fa-sync"></i>
-          </button>
-        </div>
-      </div>
       <div class="card-body">
         <table class="table" id="profilesDataTable" width="100%" cellspacing="0">
         </table>
@@ -44,6 +36,7 @@
     const serverId = urlParams.get('id');
     const project = urlParams.get('project');
     var editedProfile = ''
+    var scrollY =  localStorage.getItem('profilesDataTableScrollY') || '490px';
     applySidebarStyles();
     applySidebarLinks();
     populateSidebarLinks();
@@ -54,7 +47,7 @@
       clearTimeout(pageReloadTimeout);
 
       //Reload the datatables content
-      $('#profilesDataTable').DataTable().ajax.reload(null, false);
+      loadProfilesTable()
 
       //Set the automatic page reload
       pageReloadTimeout = setTimeout(() => { reloadPageContent(); }, reloadTime);
@@ -70,65 +63,155 @@
       populateProjectSelectDropdown()
 
       // Configure Datatable
-      $('#profilesDataTable').DataTable({
-        ajax: {
-          url: "{{ url_for('api') }}/profiles/list_profiles?id="+serverId+"&project=" + project + "&recursion=1",
-          dataType: "json",
-          dataSrc: "metadata",
-          contentType: "application/json",
-          error: function (xhr, error, code) {
-            console.log(xhr, code);
-          }
-        },
-        columns: [
-          { title: "Name", data: function (row, type, set) {
-              if (row.hasOwnProperty('name')) {
-                if (row.name)
-                  return row.name
-              }
-              return '-'
-            },
-          },
-          { title: "Description", data: function (row, type, set) {
-              if (row.hasOwnProperty('description')) {
-                if (row.description)
-                  return row.description
-              }
-              return '-'
-            },
-          },
-          { title: "Devices", data: function (row, type, set) {
-              if (row.hasOwnProperty('devices')) {
-                if (Object.keys(row.devices).length > 0) {
-                  arr = []
-                  for (item in row.devices){
-                    arr.push(item)
-                  }
-                  return arr.join(", ")
-                }
-              }
-              return '-'
-            },
-          },
-          { title: "Actions", data: function (row, type, set) {
-              links = ''
-              if (row.hasOwnProperty('name')) {
-                links = '<a href="#" onclick=editItem(\''+row.name+'\')><i class="fas fa-edit fa-lg" title="Edit" aria-hidden="true"></i></a>' +
-                '&nbsp' + '&nbsp' +
-                '<a href="#" onclick=renameItem(\''+row.name+'\')><i class="fas fa-tag fa-lg" title="Rename" aria-hidden="true"></i></a>' +
-                '&nbsp' + '&nbsp' +
-                '<a href="#" onclick=confirmDeleteItem(\''+row.name+'\')><i class="fas fa-trash-alt fa-lg" title="Delete" aria-hidden="true"></i></a>'
-              }
-              return links
-            },
-          },
-        ],
-        order: [],
-      });
+      loadProfilesTable()
 
       //Set reload page content
       pageReloadTimeout = setTimeout(() => { reloadPageContent(); }, reloadTime);
 
+    }
+
+    function loadProfilesTable() {
+      if ( ! $.fn.DataTable.isDataTable( '#profilesDataTable' ) ) {
+        profilesDataTable = $('#profilesDataTable').DataTable({
+          ajax: {
+            url: "{{ url_for('api') }}/profiles/list_profiles?id="+serverId+"&project=" + project + "&recursion=1",
+            dataType: "json",
+            dataSrc: "metadata",
+            contentType: "application/json",
+            error: function (xhr, error, code) {
+              console.log(xhr, code);
+            }
+          },
+          columns: [
+            {
+              data: null,
+              orderable: false,
+              render: DataTable.render.select()
+            },
+            { title: "Name", data: function (row, type, set) {
+                if (row.hasOwnProperty('name')) {
+                  if (row.name)
+                    return row.name
+                }
+                return '-'
+              },
+            },
+            { title: "Description", data: function (row, type, set) {
+                if (row.hasOwnProperty('description')) {
+                  if (row.description)
+                    return row.description
+                }
+                return '-'
+              },
+            },
+            { title: "Devices", data: function (row, type, set) {
+                if (row.hasOwnProperty('devices')) {
+                  if (Object.keys(row.devices).length > 0) {
+                    arr = []
+                    for (item in row.devices){
+                      arr.push(item)
+                    }
+                    return arr.join(", ")
+                  }
+                }
+                return '-'
+              },
+            },
+          ],
+          layout: {
+            topStart: {
+              buttons: [
+                { text: 'Edit',
+                  action: function () { 
+                    rows = profilesDataTable.rows({ selected: true });
+                    editItem(rows.data()[0]['name']);
+                  },
+                  enabled: false,
+                },
+                'spacer',
+                { text: 'Delete',
+                  action: function () { 
+                    arr = []
+                    profilesDataTable.rows('.selected').every( function() {
+                      arr.push(this.data().name)
+                    });
+                    $("#deleteProfilesList").text(arr.join(", "));
+                    $("#deleteProfilesHiddenInput").val(JSON.stringify(arr));
+                    $("#deleteModal").modal('show');                    
+                  },
+                  enabled: false,
+                },
+                'spacer',
+                'spacer',
+                'pageLength',
+                'spacer',
+                {
+                  extend: 'collection',
+                  text: 'More',
+                  buttons: [
+                    {
+                      extend: 'colvis',
+                      text: 'Visible columns',
+                      columns: [1,2,3],
+                    },
+                    {
+                      text: (scrollY == '490px') ? 'Disable scrolling' : 'Enable scrolling',
+                      action: function ( e, dt, node, config ) {
+                        if (scrollY == '490px') {
+                          localStorage.setItem('profilesDataTableScrollY', false);
+                          scrollY = false
+                        }
+                        else {
+                          localStorage.setItem('profilesDataTableScrollY', '490px');
+                          scrollY = '490px'
+                        }
+                        dt.destroy()
+                        loadProfilesTable()
+                      },
+                    },
+                    {
+                      text: 'Reset table state',
+                      action: function ( e, dt, node, config ) {
+                        dt.state.clear();
+                        window.location.reload();
+                      },
+                    },
+                  ]
+                }
+
+              ]
+            }
+          },
+          lengthMenu: [
+            [10, 25, 50, 100, -1],
+            [10, 25, 50, 100, 'All'],
+          ],
+          order: [
+            [1, 'asc']
+          ],
+          rowId: 'name',
+          scrollCollapse: true,
+          scrollX: true,
+          scrollY: scrollY,
+          select: {
+            style: 'multi',
+            selector: 'td:first-child',
+            blurable: true,
+            headerCheckbox: 'select-page',
+          },
+          stateDuration: 0,
+          stateSave: true,
+        });
+      }
+      else {
+        $('#profilesDataTable').DataTable().ajax.reload(null, false);
+      }
+
+      profilesDataTable.on('select deselect', function () {
+        var selectedRows = profilesDataTable.rows({ selected: true }).count();
+        profilesDataTable.button(0).enable(selectedRows === 1);
+        profilesDataTable.button(2).enable(selectedRows > 0);
+      });
     }
 
     function addItem(){
@@ -145,13 +228,6 @@
       });
     }
 
-    function confirmDeleteItem(name){
-      console.log("Info: confirming deletion of profile " + name);
-      if (confirm("Are you sure you want to delete profile " + name + "?") == true) {
-        deleteItem(name);
-      }
-    }
-
     function createItemUsingJSON(){
       var json = $("#jsonCreateInput").val();
       console.log("Info: adding new project");
@@ -166,21 +242,31 @@
       });
     }
 
-    function deleteItem(name){
-      console.log("Info: deleting profile " + name);
-      $.post("{{ url_for('api') }}/profiles/delete_profile?id=" + serverId + "&project=" + project, { name: name }, function (data) {
-        console.log(data);
-        if (data.error_code >= 400){
-          alert(data.error);
-        }
-        //Sync type
-        setTimeout(() => { reloadPageContent(); }, 1000);
-        operationStatusCheck()
-      });
+    function deleteItems(){
+      var deleteProfilesHiddenInput = JSON.parse($("#deleteProfilesHiddenInput").val());
+      console.log("Info: deleting profiles " + deleteProfilesHiddenInput.join(", "));
+      for (let i = 0; i < deleteProfilesHiddenInput.length; i++) {
+        $.post("{{ url_for('api') }}/profiles/delete_profile?id=" + serverId + "&project=" + project, { name: deleteProfilesHiddenInput[i] }, function (data) {
+          console.log(data);
+          if (data.error_code >= 400){
+            alert(data.error);
+          }
+        });
+      }
+
+      //Send toast notification
+      $('#defaultToastHeader').text('Deleting Profile(s)')
+      $('#defaultToastBody').text($("#deleteProfilesList").text())
+      defaultToast.show()
+
+      //Sync type
+      setTimeout(() => { reloadPageContent(); }, 1000);
+      operationStatusCheck()
     }
 
     function editItem(name){
       editedProfile = name
+      $("#profileToRename").val(name);
       console.log("Info: loading profile " + name);
       $.post("{{ url_for('api') }}/profiles/load_profile?id=" + serverId + "&project=" + project, { name: name }, function (data) {
         console.log(data);
@@ -191,13 +277,6 @@
         $("#jsonInput").val(JSON.stringify(data.metadata, null, 2));
         $("#editModal").modal('show');
       });
-    }
-
-    function renameItem(name){
-      console.log("Loading rename modal for profile " + name)
-      $("#renameItemModalLabel").text("Rename profile: " + name);
-      $("#profileToRename").val(name);
-      $("#renameModal").modal('show');
     }
 
     function updateItem(){

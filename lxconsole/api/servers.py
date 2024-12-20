@@ -62,8 +62,9 @@ def api_servers_endpoint(endpoint):
 
 
   if endpoint == 'remove_server':
-    id = request.args.get('id')
+    id = request.form.get('id')
     server = Server.query.filter_by(id=id).first()
+    # With server specific access-controls, will need to remove access controls assinged to deleted server
     db.session.delete(server)
     db.session.commit()
     json_object = json.loads('{"status": 200}')

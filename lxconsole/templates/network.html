@@ -10,11 +10,10 @@
         Network Actions
       </button>
       <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
-        <a class="dropdown-item text-primary" href="#" data-bs-toggle="modal" data-bs-target="#addLoadBalancerModal" id="addLoadBalancer"><i class="fas fa-save fa-sm fa-fw mr-2"></i>Add Load Balancer</a>
-        <a class="dropdown-item text-primary" href="#" data-bs-toggle="modal" data-bs-target="#addForwardModal" id="addForward"><i class="fas fa-save fa-sm fa-fw mr-2"></i>Add Forward</a>
-        <a class="dropdown-item text-primary" href="#" data-bs-toggle="modal" data-bs-target="#addPeerModal" id="addPeer"><i class="fas fa-save fa-sm fa-fw mr-2"></i>Add Peer</a>
+        <a class="dropdown-item disabled" href="#" data-bs-toggle="modal" data-bs-target="#addForwardModal" id="addForward">Add Forward</a>
+        <a class="dropdown-item disabled" href="#" data-bs-toggle="modal" data-bs-target="#addLoadBalancerModal" id="addLoadBalancer">Add Load Balancer</a>
+        <a class="dropdown-item disabled" href="#" data-bs-toggle="modal" data-bs-target="#addPeerModal" id="addPeer">Add Peer</a>
       </div>
-
     </div>
   </div>
 {% endblock header %}
@@ -24,28 +23,21 @@
 
     <nav>
       <div class="nav nav-tabs" id="nav-page-tab" role="tablist">
-        <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Home</button>
-        <button class="nav-link" id="nav-forwards-tab" data-bs-toggle="tab" data-bs-target="#nav-forwards" type="button" role="tab" aria-controls="nav-forwards" aria-selected="false">Forwards</button>
-        <button class="nav-link" id="nav-load-balancers-tab" data-bs-toggle="tab" data-bs-target="#nav-load-balancers" type="button" role="tab" aria-controls="nav-load-balancers" aria-selected="false">Load Balancers</button>
-        <button class="nav-link" id="nav-peers-tab" data-bs-toggle="tab" data-bs-target="#nav-peers" type="button" role="tab" aria-controls="nav-peers" aria-selected="false">Peers</button>
+        <button class="nav-link active" id="nav-dhcp-tab" data-bs-toggle="tab" data-bs-target="#nav-dhcp" type="button" role="tab" aria-controls="nav-dhcp" aria-selected="true">DHCP Leases</button>
+        <button class="nav-link disabled" id="nav-forwards-tab" data-bs-toggle="tab" data-bs-target="#nav-forwards" type="button" role="tab" aria-controls="nav-forwards" aria-selected="false">Forwards</button>
+        <button class="nav-link disabled" id="nav-load-balancers-tab" data-bs-toggle="tab" data-bs-target="#nav-load-balancers" type="button" role="tab" aria-controls="nav-load-balancers" aria-selected="false">Load Balancers</button>
+        <button class="nav-link disabled" id="nav-peers-tab" data-bs-toggle="tab" data-bs-target="#nav-peers" type="button" role="tab" aria-controls="nav-peers" aria-selected="false">Peers</button>
       </div>
     </nav>
-    <div class="tab-content" id="nav-page-content">
-      <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
-        <br />
-        <div class="row">
-          <div class="col-9">
-      
+   
+    <div class="row">
+      <div class="col-9">
+        <div class="tab-content" id="nav-page-content">
+
+          <div class="tab-pane fade show active" id="nav-dhcp" role="tabpanel" aria-labelledby="nav-dhcp-tab">
+            <br />
             <!-- DHCP Leases Card-->
             <div class="card" id="dhcpLeasesCard">
-              <div class="card-header">
-                <h3 class="card-title text-primary" data-card-widget="collapse">
-                    DHCP Leases
-                </h3>
-                <div class="card-tools">
-                  <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
-                </div>
-              </div>
               <div class="card-body">
                 <div class="table-responsive">
                   <table class="table" id="dhcpLeasesDataTable" width="100%" cellspacing="0">
@@ -53,171 +45,129 @@
                 </div>
               </div>
             </div>
-    
           </div>
 
-          <div class="col-3">
-      
-            <div class="accordion" id="accordionExample">
-      
-              <!-- Network State Card-->
-              <div class="card">
-                <div class="card-header">
-                  <h3 class="card-title text-primary" data-card-widget="collapse">
-                    Network State
-                  </h3>
-                  <div class="card-tools">
-                    <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
+          <div class="tab-pane fade" id="nav-forwards" role="tabpanel" aria-labelledby="nav-forwards-tab">
+            <br />
+            <div class="col-12">
+              <!-- Forwards Card-->
+              <div class="card" id="forwardsCard">
+                <div class="card-body">
+                  <div class="table-responsive">
+                    <table class="table" id="forwardsDataTable" width="100%" cellspacing="0">
+                    </table>
                   </div>
                 </div>
-                <div class="card-body">
-                  <table class="table table-sm h6">
-                    <tr><td class="pr-3">HWAddr:</td> <td><span id="hwaddr">-</span></td></tr>
-                    <tr><td class="pr-3">MTU:</td> <td><span id="mtu">-</span></td></tr>
-                    <tr><td class="pr-3">State:</td> <td><span id="state">-</span></td></tr>
-                    <tr><td class="pr-3">Type:</td> <td><span id="type">-</span></td></tr>
-                    <tr><td class="pr-3">Bond:</td> <td><span id="bond">-</span></td></tr>
-                    <tr><td class="pr-3">OVN:</td> <td><span id="ovn">-</span></td></tr>
-                    <tr><td class="pr-3">VLAN:</td> <td><span id="vlan">-</span></td></tr>
-                  </table>
-                </div>
               </div>
+            </div>
+          </div>
 
-              <!-- Network Counters Card-->
-              <div class="card">
-                <div class="card-header">
-                  <h3 class="card-title text-primary" data-card-widget="collapse">
-                    Network Counters
-                  </h3>
-                  <div class="card-tools">
-                    <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
+          <div class="tab-pane fade" id="nav-load-balancers" role="tabpanel" aria-labelledby="nav-load-balancers-tab">
+            <br />
+            <div class="col-12">
+              <!-- Load Balancers Card-->
+              <div class="card" id="loadBalancersCard">
+                <div class="card-body">
+                  <div class="table-responsive">
+                    <table class="table" id="loadBalancersDataTable" width="100%" cellspacing="0">
+                    </table>
                   </div>
                 </div>
-                <div class="card-body">
-                  <table class="table table-sm h6">
-                    <tr><td class="pr-3">bytes_received:</td> <td><span id="counters_bytes_received">-</span></td></tr>
-                    <tr><td class="pr-3">bytes_sent:</td> <td><span id="counters_bytes_sent">-</span></td></tr>
-                    <tr><td class="pr-3">packets_received:</td> <td><span id="packets_bytes_received">-</span></td></tr>
-                    <tr><td class="pr-3">packets_sent:</td> <td><span id="packets_bytes_sent">-</span></td></tr>
-                  </table>
-                </div>
               </div>
+            </div>
+          </div>
 
-              <!-- Network Bridge Card-->
-              <div class="card">
-                <div class="card-header">
-                  <h3 class="card-title text-primary" data-card-widget="collapse">
-                    Network Bridge
-                  </h3>
-                  <div class="card-tools">
-                    <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
+          <div class="tab-pane fade" id="nav-peers" role="tabpanel" aria-labelledby="nav-peers-tab">
+            <br />
+            <div class="col-12">
+              <!-- Peers Card-->
+              <div class="card" id="peersCard">
+                <div class="card-body">
+                  <div class="table-responsive">
+                    <table class="table table" id="peersDataTable" width="100%" cellspacing="0">
+                    </table>
                   </div>
                 </div>
-                <div class="card-body">
-                  <table class="table table-sm h6">
-                    <tr><td class="pr-3">forward_delay:</td> <td><span id="bridge_forward_delay">-</span></td></tr>
-                    <tr><td class="pr-3">id:</td> <td><span id="bridge_id">-</span></td></tr>
-                    <tr><td class="pr-3">stp:</td> <td><span id="bridge_stp">-</span></td></tr>
-                    <tr><td class="pr-3">upper_devices:</td> <td><span id="bridge_upper_devices">-</span></td></tr>
-                    <tr><td class="pr-3">vlan_default:</td> <td><span id="bridge_vlan_default">-</span></td></tr>
-                    <tr><td class="pr-3">vlan_filtering:</td> <td><span id="bridge_vlan_filtering">-</span></td></tr>
-                  </table>
-                </div>
               </div>
-            
             </div>
           </div>
 
         </div>
       </div>
-      <div class="tab-pane fade" id="nav-forwards" role="tabpanel" aria-labelledby="nav-forwards-tab">
+
+      <div class="col-3">
         <br />
-        <div class="col-12">
-          <!-- Forwards Card-->
-          <div class="card" id="forwardsCard">
+        <div class="accordion" id="accordionExample">
+
+          <!-- Network State Card-->
+          <div class="card">
             <div class="card-header">
               <h3 class="card-title text-primary" data-card-widget="collapse">
-                Network Forwards <span class="text-secondary small">(Available only on Bridge or OVN networks)</span>
+                Network State
               </h3>
               <div class="card-tools">
                 <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
-                <button type="button" class="btn btn-tool" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  <i class="fa fa-bars"></i>
-                </button>
-                <div class="dropdown-menu dropdown-menu-right">
-                  <a href="#" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#addForwardModal" title="Create Forward">Create Forward</a>
-                </div>
               </div>
             </div>
-            <div class="card-body">
-              <div class="table-responsive">
-                <table class="table" id="forwardsDataTable" width="100%" cellspacing="0">
-                </table>
-              </div>
+            <div class="card-body pt-1">
+              <table class="table table-sm h6">
+                <tr><td class="pr-3 border-top-0">Networks:</td> <td class="border-top-0"><span id="network_addresses">-</span></td></tr>
+                <tr><td class="pr-3">HWAddr:</td> <td><span id="hwaddr">-</span></td></tr>
+                <tr><td class="pr-3">MTU:</td> <td><span id="mtu">-</span></td></tr>
+                <tr><td class="pr-3">State:</td> <td><span id="state">-</span></td></tr>
+                <tr><td class="pr-3">Type:</td> <td><span id="type">-</span></td></tr>
+                <tr><td class="pr-3">Bond:</td> <td><span id="bond">-</span></td></tr>
+                <tr><td class="pr-3">OVN:</td> <td><span id="ovn">-</span></td></tr>
+                <tr><td class="pr-3">VLAN:</td> <td><span id="vlan">-</span></td></tr>
+              </table>
             </div>
           </div>
-        </div>
 
-      </div>
-      <div class="tab-pane fade" id="nav-load-balancers" role="tabpanel" aria-labelledby="nav-load-balancers-tab">
-        <br />
-        <div class="col-12">
-          <!-- Load Balancers Card-->
-          <div class="card" id="loadBalancersCard">
+          <!-- Network Counters Card-->
+          <div class="card">
             <div class="card-header">
               <h3 class="card-title text-primary" data-card-widget="collapse">
-                Network Load Balancers <span class="text-secondary small">(Available only on OVN networks)</span>
+                Network Counters
               </h3>
               <div class="card-tools">
                 <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
-                <button type="button" class="btn btn-tool" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  <i class="fa fa-bars"></i>
-                </button>
-                <div class="dropdown-menu dropdown-menu-right">
-                  <a href="#" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#addLoadBalancerModal" title="Create Load Balancer">Create Load Balancer</a>
-                </div>
               </div>
             </div>
-            <div class="card-body">
-              <div class="table-responsive">
-                <table class="table" id="loadBalancersDataTable" width="100%" cellspacing="0">
-                </table>
-              </div>
+            <div class="card-body pt-1">
+              <table class="table table-sm h6">
+                <tr><td class="pr-3 border-top-0">bytes_received:</td> <td class="border-top-0"><span id="counters_bytes_received">-</span></td></tr>
+                <tr><td class="pr-3">bytes_sent:</td> <td><span id="counters_bytes_sent">-</span></td></tr>
+                <tr><td class="pr-3">packets_received:</td> <td><span id="packets_bytes_received">-</span></td></tr>
+                <tr><td class="pr-3">packets_sent:</td> <td><span id="packets_bytes_sent">-</span></td></tr>
+              </table>
             </div>
           </div>
-        </div>
 
-      </div>
-      <div class="tab-pane fade" id="nav-peers" role="tabpanel" aria-labelledby="nav-peers-tab">
-        <br />
-        <div class="col-12">
-          <!-- Peers Card-->
-          <div class="card" id="peersCard">
+          <!-- Network Bridge Card-->
+          <div class="card">
             <div class="card-header">
               <h3 class="card-title text-primary" data-card-widget="collapse">
-                Network Peers <span class="text-secondary small">(Available only on OVN networks)</span>
+                Network Bridge
               </h3>
               <div class="card-tools">
-                <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-plus"></i></button>
-                <button type="button" class="btn btn-tool" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  <i class="fa fa-bars"></i>
-                </button>
-                <div class="dropdown-menu dropdown-menu-right">
-                  <a href="#" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#addPeerModal" title="Create Peer">Create Peer</a>
-                </div>
+                <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
               </div>
             </div>
-            <div class="card-body">
-              <div class="table-responsive">
-                <table class="table table" id="peersDataTable" width="100%" cellspacing="0">
-                </table>
-              </div>
+            <div class="card-body pt-1">
+              <table class="table table-sm h6">
+                <tr><td class="pr-3 border-top-0">forward_delay:</td> <td class="border-top-0"><span id="bridge_forward_delay">-</span></td></tr>
+                <tr><td class="pr-3">id:</td> <td><span id="bridge_id">-</span></td></tr>
+                <tr><td class="pr-3">stp:</td> <td><span id="bridge_stp">-</span></td></tr>
+                <tr><td class="pr-3">upper_devices:</td> <td><span id="bridge_upper_devices">-</span></td></tr>
+                <tr><td class="pr-3">vlan_default:</td> <td><span id="bridge_vlan_default">-</span></td></tr>
+                <tr><td class="pr-3">vlan_filtering:</td> <td><span id="bridge_vlan_filtering">-</span></td></tr>
+              </table>
             </div>
           </div>
+        
         </div>
       </div>
     </div>
-
 
   </div>
 {% endblock content %}
@@ -237,6 +187,11 @@
     const project = urlParams.get('project');
     const network = urlParams.get('network');
     const network_type = urlParams.get('network_type');
+    const hash = document.location.hash;
+    var dhcpLeasesDataTableScrollY =  localStorage.getItem('dhcpLeasesDataTableScrollY') || '490px';
+    var loadBalancersDataTableScrollY =  localStorage.getItem('loadBalancersDataTableScrollY') || '490px';
+    var forwardsDataTableScrollY =  localStorage.getItem('forwardsDataTableScrollY') || '490px';
+    var peersDataTableScrollY =  localStorage.getItem('peersDataTableScrollY') || '490px';
     var editedNetwork
 
     populateSidebarLinks();
@@ -281,19 +236,27 @@
 
     }
 
-
     function loadNetworkState() {
       $.get("{{ url_for('api') }}/network/get_network_state?id="+serverId+"&project="+project+"&name="+network+"&recursion=1", function (data) {
-
         data = data.metadata;
-        console.log(data)
 
+        if (data.hasOwnProperty('addresses')) {
+          networkAddresses = []
+          for (var i = 0; i < data.addresses.length; i++) {
+            if (data.addresses[i].hasOwnProperty('address') && data.addresses[i].hasOwnProperty('netmask') && data.addresses[i].hasOwnProperty('family')) {
+              networkAddresses.push(data.addresses[i].address + '/' + data.addresses[i].netmask)
+            }
+          }
+          if (networkAddresses.length > 0) {
+            $("#network_addresses").text(networkAddresses.join(', '));
+          }
+        } 
         if (data.hasOwnProperty('hwaddr') && data.hwaddr) { $("#hwaddr").text(data.hwaddr); }
         if (data.hasOwnProperty('mtu') && data.mtu) { $("#mtu").text(data.mtu); }
         if (data.hasOwnProperty('state') && data.state) { $("#state").text(data.state); }
         if (data.hasOwnProperty('type') && data.type) { $("#type").text(data.type); }
         if (data.hasOwnProperty('bond') && data.bond) { $("#bond").text(data.bond); }
-        if (data.hasOwnProperty('ovn') && data.ovn) { $("#ovn").text(data.ovn); }
+        if (data.hasOwnProperty('ovn') && data.ovn) { $("#ovn").text(JSON.stringify(data.ovn)); }
         if (data.hasOwnProperty('vlan') && data.vlan) { $("#vlan").text(data.vlan); }
 
         if (data.hasOwnProperty('counters') && data.counters){
@@ -321,7 +284,7 @@
     function loadDhcpLeasesTable() {
       if ( ! $.fn.DataTable.isDataTable( '#dhcpLeasesDataTable' ) ) {
         //Load DHCP Leases Table
-        $('#dhcpLeasesDataTable').DataTable({
+        dhcpLeasesDataTable = $('#dhcpLeasesDataTable').DataTable({
           ajax: {
             url: "{{ url_for('api') }}/network/list_network_leases?id="+serverId+"&project="+project+"&name="+network,
             dataType: "json",
@@ -331,8 +294,6 @@
               console.log(xhr, code);
             }
           },
-          rowId: 'id',
-          stateSave: true,
           columns: [
             { title: "Address", data: function (row, type, set) {
                 if (row.hasOwnProperty('address')) {
@@ -375,7 +336,67 @@
               },
             },
           ],
-          order: [],
+          layout: {
+            topStart: {
+              buttons: [
+                'pageLength',
+                'spacer',
+                {
+                  extend: 'collection',
+                  text: 'More',
+                  buttons: [
+                    {
+                      extend: 'colvis',
+                      text: 'Visible columns',
+                      columns: [0,1,2,3,4],
+                    },
+                    {
+                      text: (dhcpLeasesDataTableScrollY == '490px') ? 'Disable scrolling' : 'Enable scrolling',
+                      action: function ( e, dt, node, config ) {
+                        if (dhcpLeasesDataTableScrollY == '490px') {
+                          localStorage.setItem('dhcpLeasesDataTableScrollY', false);
+                          dhcpLeasesDataTableScrollY = false
+                        }
+                        else {
+                          localStorage.setItem('dhcpLeasesDataTableScrollY', '490px');
+                          dhcpLeasesDataTableScrollY = '490px'
+                        }
+                        dt.destroy()
+                        loadDhcpLeasesTable()
+                      },
+                    },
+                    {
+                      text: 'Reset table state',
+                      action: function ( e, dt, node, config ) {
+                        dt.state.clear();
+                        window.location.reload();
+                      },
+                    },
+                  ]
+                }
+
+              ]
+            }
+          },
+          lengthMenu: [
+            [10, 25, 50, 100, -1],
+            [10, 25, 50, 100, 'All'],
+          ],
+          order: [
+            [1, 'asc']
+          ],
+          rowId: 'address',
+          scrollCollapse: true,
+          scrollX: true,
+          scrollY: dhcpLeasesDataTableScrollY,
+          select: {
+            style: 'multi',
+            selector: 'td:first-child',
+            blurable: true,
+            headerCheckbox: 'select-page',
+          },
+          stateDuration: 0,
+          stateSave: true,
         });
       }
       else {
@@ -385,128 +406,286 @@
 
     function loadLoadBalancersTable(){
       if ( ! $.fn.DataTable.isDataTable( '#loadBalancersDataTable' ) ) {
-        //Load Load Balancers Table
-        var loadBalancersDataTable = $('#loadBalancersDataTable').DataTable({
-            ajax: {
-              url: "{{ url_for('api') }}/network/list_network_load_balancers?id="+serverId+"&project="+project+"&name="+network+"&recursion=1",
-              dataType: "json",
-              dataSrc: "metadata",
-              contentType: "application/json",
-              error: function (xhr, error, code) {
-                console.log(xhr, code);
-              }
+        loadBalancersDataTable = $('#loadBalancersDataTable').DataTable({
+          ajax: {
+            url: "{{ url_for('api') }}/network/list_network_load_balancers?id="+serverId+"&project="+project+"&name="+network+"&recursion=1",
+            dataType: "json",
+            dataSrc: "metadata",
+            contentType: "application/json",
+            error: function (xhr, error, code) {
+              console.log(xhr, code);
+            }
+          },
+          columns: [
+            {
+              data: null,
+              orderable: false,
+              render: DataTable.render.select()
             },
-            stateSave: true,
-            columns: [
-              { title: "Listen Address", data: function (row, type, set) {
-                  if (row.hasOwnProperty('listen_address')) {
-                    if (row.listen_address)
-                      return row.listen_address
-                  }
-                  return '-'
-                },
-              },
-              { title: "Description", data: function (row, type, set) {
-                  if (row.hasOwnProperty('description')) {
-                    if (row.description)
-                      return row.description
-                  }
-                  return '-'
-                },
-              },
-              { title: "Location", data: function (row, type, set) {
-                  if (row.hasOwnProperty('location')) {
-                    if (row.location)
-                      return row.location
-                  }
-                  return '-'
-                },
-              },
-              { title: "Actions", data: function (row, type, set) {
-                links = ''
+            { title: "Listen Address", data: function (row, type, set) {
                 if (row.hasOwnProperty('listen_address')) {
-                  if (row.listen_address){
-                    links = '<a href="#" onclick=editLoadBalancer(\''+row.listen_address+'\')><i class="fas fa-edit fa-lg" title="Edit" aria-hidden="true"></i></a>' +
-                    '&nbsp' + '&nbsp' +
-                    '<a href="#" onclick=deleteItem(\''+row.listen_address+'\',\'load_balancer\')><i class="fas fa-trash-alt fa-lg" title="Delete" aria-hidden="true"></i></a>'
-                  }
+                  if (row.listen_address)
+                    return row.listen_address
                 }
-                return links
+                return '-'
               },
             },
-            ],
-            order: [],
+            { title: "Description", data: function (row, type, set) {
+                if (row.hasOwnProperty('description')) {
+                  if (row.description)
+                    return row.description
+                }
+                return '-'
+              },
+            },
+            { title: "Location", data: function (row, type, set) {
+                if (row.hasOwnProperty('location')) {
+                  if (row.location)
+                    return row.location
+                }
+                return '-'
+              },
+            },
+          ],
+          layout: {
+            topStart: {
+              buttons: [
+                { text: 'Edit',
+                  action: function () { 
+                    rows = loadBalancersDataTable.rows({ selected: true });
+                    editLoadBalancer(rows.data()[0]['listen_address']);
+                  },
+                  enabled: false,
+                },
+                'spacer',
+                { text: 'Delete',
+                  action: function () { 
+                    arr = []
+                    loadBalancersDataTable.rows('.selected').every( function() {
+                      arr.push(this.data().listen_address)
+                    });
+                    $("#deleteLoadBalancersList").text(arr.join(", "));
+                    $("#deleteLoadBalancersHiddenInput").val(JSON.stringify(arr));
+                    $("#deleteLoadBalancersModal").modal('show');                    
+                  },
+                  enabled: false,
+                },
+                'spacer',
+                'spacer',
+                'pageLength',
+                'spacer',
+                {
+                  extend: 'collection',
+                  text: 'More',
+                  buttons: [
+                    {
+                      extend: 'colvis',
+                      text: 'Visible columns',
+                      columns: [1,2,3],
+                    },
+                    {
+                      text: (loadBalancersDataTableScrollY == '490px') ? 'Disable scrolling' : 'Enable scrolling',
+                      action: function ( e, dt, node, config ) {
+                        if (loadBalancersDataTableScrollY == '490px') {
+                          localStorage.setItem('loadBalancersDataTableScrollY', false);
+                          loadBalancersDataTableScrollY = false
+                        }
+                        else {
+                          localStorage.setItem('loadBalancersDataTableScrollY', '490px');
+                          loadBalancersDataTableScrollY = '490px'
+                        }
+                        dt.destroy()
+                        loadLoadBalancersTable()
+                      },
+                    },
+                    {
+                      text: 'Reset table state',
+                      action: function ( e, dt, node, config ) {
+                        dt.state.clear();
+                        window.location.reload();
+                      },
+                    },
+                  ]
+                }
+
+              ]
+            }
+          },
+          lengthMenu: [
+            [10, 25, 50, 100, -1],
+            [10, 25, 50, 100, 'All'],
+          ],
+          order: [
+            [1, 'asc']
+          ],
+          rowId: 'listen_address',
+          scrollCollapse: true,
+          scrollX: true,
+          scrollY: loadBalancersDataTableScrollY,
+          select: {
+            style: 'multi',
+            selector: 'td:first-child',
+            blurable: true,
+            headerCheckbox: 'select-page',
+          },
+          stateDuration: 0,
+          stateSave: true,
         });
       }
       else {
         $('#loadBalancersDataTable').DataTable().ajax.reload(null, false);
-      }  
+      }
+
+      loadBalancersDataTable.on('select deselect', function () {
+        var selectedRows = loadBalancersDataTable.rows({ selected: true }).count();
+        loadBalancersDataTable.button(0).enable(selectedRows === 1);
+        loadBalancersDataTable.button(2).enable(selectedRows > 0);
+      });
     }
 
-    function loadForwardsTable() {
+    function loadForwardsTable() {      
       if ( ! $.fn.DataTable.isDataTable( '#forwardsDataTable' ) ) {
-        //Load Forwards Table
-        var forwardsDataTable = $('#forwardsDataTable').DataTable({
-            ajax: {
-              url: "{{ url_for('api') }}/network/list_network_forwards?id="+serverId+"&project="+project+"&name="+network+"&recursion=1",
-              dataType: "json",
-              dataSrc: "metadata",
-              contentType: "application/json",
-              error: function (xhr, error, code) {
-                console.log(xhr, code);
-              }
+        forwardsDataTable = $('#forwardsDataTable').DataTable({
+          ajax: {
+            url: "{{ url_for('api') }}/network/list_network_forwards?id="+serverId+"&project="+project+"&name="+network+"&recursion=1",
+            dataType: "json",
+            dataSrc: "metadata",
+            contentType: "application/json",
+            error: function (xhr, error, code) {
+              console.log(xhr, code);
+            }
+          },
+          columns: [
+            {
+              data: null,
+              orderable: false,
+              render: DataTable.render.select()
             },
-            stateSave: true,
-            columns: [
-              { title: "Listen Address", data: function (row, type, set) {
-                  if (row.hasOwnProperty('listen_address')) {
-                    if (row.listen_address)
-                      return row.listen_address
-                  }
-                  return '-'
-                },
-              },
-              { title: "Description", data: function (row, type, set) {
-                  if (row.hasOwnProperty('description')) {
-                    if (row.description)
-                      return row.description
-                  }
-                  return '-'
-                },
-              },
-              { title: "Location", data: function (row, type, set) {
-                  if (row.hasOwnProperty('location')) {
-                    if (row.location)
-                      return row.location
-                  }
-                  return '-'
-                },
-              },
-              { title: "Actions", data: function (row, type, set) {
-                links = ''
+            { title: "Listen Address", data: function (row, type, set) {
                 if (row.hasOwnProperty('listen_address')) {
-                  if (row.listen_address){
-                    links = '<a href="#" onclick=editForward(\''+row.listen_address+'\')><i class="fas fa-edit fa-lg" title="Edit" aria-hidden="true"></i></a>' +
-                    '&nbsp' + '&nbsp' +
-                    '<a href="#" onclick=deleteItem(\''+row.listen_address+'\',\'forward\')><i class="fas fa-trash-alt fa-lg" title="Delete" aria-hidden="true"></i></a>'
-                  }
+                  if (row.listen_address)
+                    return row.listen_address
                 }
-                return links
+                return '-'
               },
             },
-            ],
-            order: [],
+            { title: "Description", data: function (row, type, set) {
+                if (row.hasOwnProperty('description')) {
+                  if (row.description)
+                    return row.description
+                }
+                return '-'
+              },
+            },
+            { title: "Location", data: function (row, type, set) {
+                if (row.hasOwnProperty('location')) {
+                  if (row.location)
+                    return row.location
+                }
+                return '-'
+              },
+            },
+          ],
+          layout: {
+            topStart: {
+              buttons: [
+                { text: 'Edit',
+                  action: function () { 
+                    rows = forwardsDataTable.rows({ selected: true });
+                    editForward(rows.data()[0]['listen_address']);
+                  },
+                  enabled: false,
+                },
+                'spacer',
+                { text: 'Delete',
+                  action: function () { 
+                    arr = []
+                    forwardsDataTable.rows('.selected').every( function() {
+                      arr.push(this.data().listen_address)
+                    });
+                    $("#deleteForwardsList").text(arr.join(", "));
+                    $("#deleteForwardsHiddenInput").val(JSON.stringify(arr));
+                    $("#deleteForwardsModal").modal('show');                    
+                  },
+                  enabled: false,
+                },
+                'spacer',
+                'spacer',
+                'pageLength',
+                'spacer',
+                {
+                  extend: 'collection',
+                  text: 'More',
+                  buttons: [
+                    {
+                      extend: 'colvis',
+                      text: 'Visible columns',
+                      columns: [1,2,3],
+                    },
+                    {
+                      text: (forwardsDataTableScrollY == '490px') ? 'Disable scrolling' : 'Enable scrolling',
+                      action: function ( e, dt, node, config ) {
+                        if (forwardsDataTableScrollY == '490px') {
+                          localStorage.setItem('forwardsDataTableScrollY', false);
+                          forwardsDataTableScrollY = false
+                        }
+                        else {
+                          localStorage.setItem('forwardsDataTableScrollY', '490px');
+                          forwardsDataTableScrollY = '490px'
+                        }
+                        dt.destroy()
+                        loadForwardsTable()
+                      },
+                    },
+                    {
+                      text: 'Reset table state',
+                      action: function ( e, dt, node, config ) {
+                        dt.state.clear();
+                        window.location.reload();
+                      },
+                    },
+                  ]
+                }
+
+              ]
+            }
+          },
+          lengthMenu: [
+            [10, 25, 50, 100, -1],
+            [10, 25, 50, 100, 'All'],
+          ],
+          order: [
+            [1, 'asc']
+          ],
+          rowId: 'listen_address',
+          scrollCollapse: true,
+          scrollX: true,
+          scrollY: forwardsDataTableScrollY,
+          select: {
+            style: 'multi',
+            selector: 'td:first-child',
+            blurable: true,
+            headerCheckbox: 'select-page',
+          },
+          stateDuration: 0,
+          stateSave: true,
         });
       }
       else {
         $('#forwardsDataTable').DataTable().ajax.reload(null, false);
-      }        
+      }
+
+      forwardsDataTable.on('select deselect', function () {
+        var selectedRows = forwardsDataTable.rows({ selected: true }).count();
+        forwardsDataTable.button(0).enable(selectedRows === 1);
+        forwardsDataTable.button(2).enable(selectedRows > 0);
+      });
+
     }
 
     function loadPeersTables() {
       if ( ! $.fn.DataTable.isDataTable( '#peersDataTable' ) ) {
-        //Load Peers Table
-        $('#peersDataTable').DataTable({
+        peersDataTable = $('#peersDataTable').DataTable({
           ajax: {
             url: "{{ url_for('api') }}/network/list_network_peers?id="+serverId+"&project="+project+"&name="+network+"&recursion=1",
             dataType: "json",
@@ -516,9 +695,12 @@
               console.log(xhr, code);
             }
           },
-          rowId: 'id',
-          stateSave: true,
           columns: [
+            {
+              data: null,
+              orderable: false,
+              render: DataTable.render.select()
+            },
             { title: "Name", data: function (row, type, set) {
                 if (row.hasOwnProperty('name')) {
                   if (row.name)
@@ -559,25 +741,101 @@
                 return '-'
               },
             },
-            { title: "Actions", data: function (row, type, set) {
-              links = ''
-              if (row.hasOwnProperty('name')) {
-                if (row.name){
-                  links = '<a href="#" onclick=editPeer(\''+row.name+'\')><i class="fas fa-edit fa-lg" title="Edit" aria-hidden="true"></i></a>' +
-                  '&nbsp' + '&nbsp' +
-                  '<a href="#" onclick=deleteItem(\''+row.name+'\',\'peer\')><i class="fas fa-trash-alt fa-lg" title="Delete" aria-hidden="true"></i></a>'
-                }
-              }
-              return links
-            },
-          },
           ],
-          order: [],
+          layout: {
+            topStart: {
+              buttons: [
+                { text: 'Edit',
+                  action: function () { 
+                    rows = peersDataTable.rows({ selected: true });
+                    editPeer(rows.data()[0]['name']);
+                  },
+                  enabled: false,
+                },
+                'spacer',
+                { text: 'Delete',
+                  action: function () { 
+                    arr = []
+                    peersDataTable.rows('.selected').every( function() {
+                      arr.push(this.data().name)
+                    });
+                    $("#deletePeersList").text(arr.join(", "));
+                    $("#deletePeersHiddenInput").val(JSON.stringify(arr));
+                    $("#deletePeersModal").modal('show');                    
+                  },
+                  enabled: false,
+                },
+                'spacer',
+                'spacer',
+                'pageLength',
+                'spacer',
+                {
+                  extend: 'collection',
+                  text: 'More',
+                  buttons: [
+                    {
+                      extend: 'colvis',
+                      text: 'Visible columns',
+                      columns: [1,2,3,4,5],
+                    },
+                    {
+                      text: (peersDataTableScrollY == '490px') ? 'Disable scrolling' : 'Enable scrolling',
+                      action: function ( e, dt, node, config ) {
+                        if (peersDataTableScrollY == '490px') {
+                          localStorage.setItem('peersDataTableScrollY', false);
+                          peersDataTableScrollY = false
+                        }
+                        else {
+                          localStorage.setItem('peersDataTableScrollY', '490px');
+                          peersDataTableScrollY = '490px'
+                        }
+                        dt.destroy()
+                        loadPeersTable()
+                      },
+                    },
+                    {
+                      text: 'Reset table state',
+                      action: function ( e, dt, node, config ) {
+                        dt.state.clear();
+                        window.location.reload();
+                      },
+                    },
+                  ]
+                }
+
+              ]
+            }
+          },
+          lengthMenu: [
+            [10, 25, 50, 100, -1],
+            [10, 25, 50, 100, 'All'],
+          ],
+          order: [
+            [1, 'asc']
+          ],
+          rowId: 'name',
+          scrollCollapse: true,
+          scrollX: true,
+          scrollY: peersDataTableScrollY,
+          select: {
+            style: 'multi',
+            selector: 'td:first-child',
+            blurable: true,
+            headerCheckbox: 'select-page',
+          },
+          stateDuration: 0,
+          stateSave: true,
         });
       }
       else {
         $('#peersDataTable').DataTable().ajax.reload(null, false);
       }
+
+      peersDataTable.on('select deselect', function () {
+        var selectedRows = peersDataTable.rows({ selected: true }).count();
+        peersDataTable.button(0).enable(selectedRows === 1);
+        peersDataTable.button(2).enable(selectedRows > 0);
+      });
     }
 
     function addItem(type){
@@ -622,20 +880,70 @@
       });
     }
 
-    function deleteItem(name, type){
-      console.log("Info: confirming deletion of " + type + " " + name);
-      if (confirm("Are you sure you want to delete " + type + " " + name + "?") == true) {
-        console.log("Info: deleting " + type + " " + name);
-        $.post("{{ url_for('api') }}/network/delete_network_" + type + "?id=" + serverId + "&project=" + project + "&network=" + network, { name: name }, function (data) {
+    function deleteForwards(){
+      var deleteForwardsHiddenInput = JSON.parse($("#deleteForwardsHiddenInput").val());
+      console.log("Info: deleting forwards " + deleteForwardsHiddenInput.join(", "));
+      for (let i = 0; i < deleteForwardsHiddenInput.length; i++) {
+        $.post("{{ url_for('api') }}/network/delete_network_forward?id=" + serverId + "&project=" + project + "&network=" + network, { name: deleteForwardsHiddenInput[i] }, function (data) {
           console.log(data);
           if (data.error_code >= 400){
             alert(data.error);
           }
-          //Sync type
-          setTimeout(() => { reloadPageContent(); }, 1000);
-          operationStatusCheck()
         });
       }
+
+      //Send toast notification
+      $('#defaultToastHeader').text('Deleting Forward(s)')
+      $('#defaultToastBody').text($("#deleteForwardsList").text())
+      defaultToast.show()
+
+      //Sync type
+      setTimeout(() => { reloadPageContent(); }, 1000);
+      operationStatusCheck()
+    }
+
+    function deleteLoadBalancers(){
+      var deleteLoadBalancersHiddenInput = JSON.parse($("#deleteLoadBalancersHiddenInput").val());
+      console.log("Info: deleting load balancers " + deleteLoadBalancersHiddenInput.join(", "));
+      for (let i = 0; i < deleteLoadBalancersHiddenInput.length; i++) {
+        $.post("{{ url_for('api') }}/network/delete_network_load_balancer?id=" + serverId + "&project=" + project + "&network=" + network, { name: deleteLoadBalancersHiddenInput[i] }, function (data) {
+          console.log(data);
+          if (data.error_code >= 400){
+            alert(data.error);
+          }
+        });
+      }
+
+      //Send toast notification
+      $('#defaultToastHeader').text('Deleting Load Balancer(s)')
+      $('#defaultToastBody').text($("#deleteLoadBalancersList").text())
+      defaultToast.show()
+
+      //Sync type
+      setTimeout(() => { reloadPageContent(); }, 1000);
+      operationStatusCheck()
+    }
+
+    function deletePeers(){
+      var deletePeersHiddenInput = JSON.parse($("#deletePeersHiddenInput").val());
+      console.log("Info: deleting peers " + deletePeersHiddenInput.join(", "));
+      for (let i = 0; i < deletePeersHiddenInput.length; i++) {
+        $.post("{{ url_for('api') }}/network/delete_network_peer?id=" + serverId + "&project=" + project + "&network=" + network, { name: deletePeersHiddenInput[i] }, function (data) {
+          console.log(data);
+          if (data.error_code >= 400){
+            alert(data.error);
+          }
+        });
+      }
+
+      //Send toast notification
+      $('#defaultToastHeader').text('Deleting Peer(s)')
+      $('#defaultToastBody').text($("#deletePeersList").text())
+      defaultToast.show()
+
+      //Sync type
+      setTimeout(() => { reloadPageContent(); }, 1000);
+      operationStatusCheck()
     }
 
     function editForward(name){
@@ -729,6 +1037,57 @@
       else {
         $("#network_title").text(network);
         loadPageContent()
+
+        if (network_type == 'ovn') {
+          $('#nav-forwards-tab').removeClass('disabled')
+          $('#nav-load-balancers-tab').removeClass('disabled')
+          $('#nav-peers-tab').removeClass('disabled')
+          $('#addForward').removeClass('disabled')
+          $('#addLoadBalancer').removeClass('disabled')
+          $('#addPeer').removeClass('disabled')
+          $('#addForward').addClass('text-primary')
+          $('#addLoadBalancer').addClass('text-primary')
+          $('#addPeer').addClass('text-primary')
+        }
+
+        if (network_type == 'bridge') {
+          $('#nav-forwards-tab').removeClass('disabled')
+          $('#addForward').removeClass('disabled')
+          $('#addForward').addClass('text-primary')
+        }
+
+        if (hash == '#forwards'){
+          $('#nav-forwards-tab').tab('show')
+        }
+
+        if (hash == '#load-balancers'){
+          $('#nav-load-balancers-tab').tab('show')
+        }
+
+        if (hash == '#peers'){
+          $('#nav-peers-tab').tab('show')
+        }
+
+  
+        $('button[data-bs-toggle="tab"]').on('shown.bs.tab', function (e) {
+          if (e.target.id == 'nav-forwards-tab'){
+            forwardsDataTable.columns.adjust()
+            window.location.hash = 'forwards'
+          }
+          else if (e.target.id == 'nav-load-balancers-tab'){
+            loadBalancersDataTable.columns.adjust()
+            window.location.hash = 'load-balancers'
+          }
+          else if (e.target.id == 'nav-peers-tab'){
+            peersDataTable.columns.adjust()
+            window.location.hash = 'peers'
+          }
+          else {
+            dhcpLeasesDataTable.columns.adjust()
+            window.location.hash = ''
+          }
+        })
+
         operationStatusCheck()
       }
     

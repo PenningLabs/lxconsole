@@ -99,6 +99,11 @@ def network_acl():
 def network_acls():
   return render_template('network-acls.html', page_title='Network ACLs', page_user_id=current_user.id, page_username=current_user.username,)
 
+@app.route("/network-records")
+@login_required
+def network_records():
+  return render_template('network-records.html', page_title='Network Records', page_user_id=current_user.id, page_username=current_user.username,)
+
 @app.route("/network-zones")
 @login_required
 def network_zones():
@@ -248,16 +253,17 @@ def login():
   if login_form.validate_on_submit():
     user = User.query.filter_by(username=login_form.username.data).first()
     if user and bcrypt.check_password_hash(user.password, login_form.password.data):
-      # I need to check to see if otp is enabled for the user. If it is I need to set a session variable for session['user_pass_authenticated'] = true
-      # then return redirect of login_otp page. May need to also set next_page as session var
+      # Check to see if otp is enabled for the user. If it is return redirect of login_otp page
       otp = TOTP.query.filter_by(user_id=user.id).first()
       if otp and otp.enabled:
+        session.permanent = login_form.remember.data
         session['otp_user_id'] = user.id
         session['otp_passwd_authenticated'] = True
         session['otp_key'] = otp.key
         session['otp_next_page'] = request.args.get('next')
         return redirect(url_for('login_otp'))
       else:
+        session.permanent = login_form.remember.data
         login_user(user, remember=login_form.remember.data)
         next_page = request.args.get('next')
 
@@ -313,21 +319,19 @@ def account():
     db.session.add(otp_record)
     db.session.commit()
 
-  qr_data = pyotp.totp.TOTP(otp_key).provisioning_uri(name=current_user.username, issuer_name='LXConsole')
-  # qr = qrcode.make(qr_data)
-  # buffered = BytesIO()
-  # qr.save(buffered, format="PNG")
-  # qr_img_bytes = base64.b64encode(buffered.getvalue()).decode()
+  # Create the totp URI used to generate QRCode and set username and issuer
+  totp_uri = pyotp.totp.TOTP(otp_key).provisioning_uri(name=current_user.username, issuer_name='LXConsole')
 
+  # Generate QRCode
   qr = qrcode.QRCode(version=1, box_size=10, border=2)
-  qr.add_data(qr_data)
+  qr.add_data(totp_uri)
   qr.make(fit=True)
   img = qr.make_image(fill_color='black', back_color='white')
   buffered = BytesIO()
   img.save(buffered)
   qr_img_bytes = b64encode(buffered.getvalue()).decode("utf-8")
   
-  return render_template('account.html', page_title='Account', qr_img=qr_img_bytes, page_user_id=current_user.id, page_username=current_user.username,)
+  return render_template('account.html', page_title='Account', qr_img=qr_img_bytes, totp_key=otp_key, page_user_id=current_user.id, page_username=current_user.username,)
 
 @app.route("/users")
 @login_required

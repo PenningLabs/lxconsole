@@ -2,7 +2,7 @@ from flask import jsonify, request
 import json
 import requests
 from lxconsole import db, bcrypt
-from lxconsole.models import Group
+from lxconsole.models import Group, UserGroup, AccessControl
 from flask_login import login_required
 from lxconsole.api.access_controls import privilege_check
 
@@ -35,8 +35,19 @@ def api_groups_endpoint(endpoint):
 
 
   if endpoint == 'delete_group':
+    # May want to query by group name too
     id = request.form.get('id')
     group = Group.query.filter_by(id=id).first()
+
+    # Delete user+group relationships
+    UserGroup.query.filter_by(group_id=id).delete()
+    db.session.commit()
+
+    # Delete access-control linked to group
+    AccessControl.query.filter_by(group_id=id).delete()
+    db.session.commit()
+
+    # Delete group
     db.session.delete(group)
     db.session.commit()
     json_object = json.loads('{"status": 200}')

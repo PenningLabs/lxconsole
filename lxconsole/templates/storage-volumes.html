@@ -16,14 +16,6 @@
 {% block content %}
   <div class="col-12">
     <div class="card">
-      <div class="card-header">
-        <h3 class="card-title">Storage Volumes</h3>
-        <div class="card-tools">
-          <button type="button" class="btn btn-tool" onclick="reloadPageContent()" title="Refresh">
-          <i class="fas fa-sync"></i>
-          </button>
-        </div>
-      </div>
       <div class="card-body">
         <table class="table" id="storageVolumesDataTable" width="100%" cellspacing="0">
         </table>
@@ -50,8 +42,9 @@
     else {
       var filter = ''
     }
-
     var editedStorageVolume = ''
+    var editedStorageVolumeType = ''
+    var scrollY =  localStorage.getItem('storageVolumesDataTableScrollY') || '490px';
     applySidebarStyles();
     applySidebarLinks();
     populateSidebarLinks();
@@ -62,7 +55,7 @@
       clearTimeout(pageReloadTimeout);
 
       //Reload the datatables content
-      $('#storageVolumesDataTable').DataTable().ajax.reload(null, false);
+      loadStorageVolumesTable()
 
       //Set the automatic page reload
       pageReloadTimeout = setTimeout(() => { reloadPageContent(); }, reloadTime);
@@ -78,106 +71,203 @@
       populateProjectSelectDropdown()
 
       // Configure Datatable
-      $('#storageVolumesDataTable').DataTable({
-        ajax: {
-          url: "{{ url_for('api') }}/storage-volumes/list_storage_volumes?id="+serverId+"&project=" + project + "&recursion=1" + "&pool=" + pool,
-          dataType: "json",
-          dataSrc: "metadata",
-          contentType: "application/json",
-          error: function (xhr, error, code) {
-            console.log(xhr, code);
-          }
-        },
-        columns: [
-          { title: "Name", data: function (row, type, set) {
-              if (row.hasOwnProperty('name')) {
-                if (row.name){
-                  if (row.name.length > 27) {
-                    return row.name.substring(0,23) + "...";
-                  }
-                  return row.name
-                }
-              }
-              return '-'
-            },
-          },
-          { title: "Type", data: function (row, type, set) {
-              if (row.hasOwnProperty('type')) {
-                if (row.type)
-                  return row.type
-              }
-              return '-'
-            },
-          },
-          { title: "Location", data: function (row, type, set) {
-              if (row.hasOwnProperty('location')) {
-                if (row.location)
-                  return row.location
-              }
-              return '-'
-            },
-          },
-          { title: "Content Type", data: function (row, type, set) {
-              if (row.hasOwnProperty('content_type')) {
-                if (row.content_type)
-                  return row.content_type
-              }
-              return '-'
-            },
-          },
-          { title: "Used by", data: function (row, type, set) {
-              if (row.hasOwnProperty('used_by')) {
-                if (row.used_by){
-                  if (Object.keys(row.used_by).length > 0){
-                    arr = []
-                    row.used_by.forEach(element => {
-                      item = element.replace('/1.0/instances/', '')
-                      item = item.replace('/1.0/containers/', '')
-                      item = item.replace('/1.0/virtual-machines/', '')
-                      item = item.replace('/1.0/images/', '')
-                      if (item.length > 24) {
-                        arr.push(item.substring(0,23) + "...")
-                      }
-                      else {
-                        arr.push(item)
-                      }
-                    });
-                    return arr.join(", ")
-                  }
-                }
-              }
-              return '-'
-            },
-          },
-          { title: "Actions", data: function (row, type, set) {
-              links = ''
-              if (row.hasOwnProperty('type') && row.hasOwnProperty('name')) {
-                if (row.type == 'custom') {
-                  links = '<a href="#" onclick=editStorageVolume(\''+row.type+'/'+row.name+'\')><i class="fas fa-edit fa-lg" title="Edit" aria-hidden="true"></i></a>' +
-                    '&nbsp' + '&nbsp' +
-                    '<a href="#" onclick=confirmDeleteStorageVolume(\''+row.type+'/'+row.name+'\')><i class="fas fa-trash-alt fa-lg" title="Delete" aria-hidden="true"></i></a>'
-                }
-              }
-              return links
-            },
-          },
-        ],
-        searchCols: [
-          null,
-          {"search":filter},
-          null,
-          null,
-          null,
-          null,
-
-        ],
-        order: [],
-
-      });
+      loadStorageVolumesTable()
 
       //Set reload page content
       pageReloadTimeout = setTimeout(() => { reloadPageContent(); }, reloadTime);
 
+    }
+    
+    function loadStorageVolumesTable() {
+      if ( ! $.fn.DataTable.isDataTable( '#storageVolumesDataTable' ) ) {
+        storageVolumesDataTable = $('#storageVolumesDataTable').DataTable({
+          ajax: {
+            url: "{{ url_for('api') }}/storage-volumes/list_storage_volumes?id="+serverId+"&project=" + project + "&recursion=1" + "&pool=" + pool,
+            dataType: "json",
+            dataSrc: "metadata",
+            contentType: "application/json",
+            error: function (xhr, error, code) {
+              console.log(xhr, code);
+            }
+          },
+          columns: [
+            {
+              data: null,
+              orderable: false,
+              render: DataTable.render.select()
+            },
+            { title: "Name", data: function (row, type, set) {
+                if (row.hasOwnProperty('name')) {
+                  if (row.name){
+                    if (row.name.length > 27) {
+                      return row.name.substring(0,23) + "...";
+                    }
+                    return row.name
+                  }
+                }
+                return '-'
+              },
+            },
+            { title: "Description", data: function (row, type, set) {
+                if (row.hasOwnProperty('description')) {
+                  if (row.description)
+                    return row.description
+                }
+                return '-'
+              },
+            },
+            { title: "Type", data: function (row, type, set) {
+                if (row.hasOwnProperty('type')) {
+                  if (row.type)
+                    return row.type
+                }
+                return '-'
+              },
+            },
+            { title: "Location", data: function (row, type, set) {
+                if (row.hasOwnProperty('location')) {
+                  if (row.location)
+                    return row.location
+                }
+                return '-'
+              },
+            },
+            { title: "Content Type", data: function (row, type, set) {
+                if (row.hasOwnProperty('content_type')) {
+                  if (row.content_type)
+                    return row.content_type
+                }
+                return '-'
+              },
+            },
+            { title: "Used by", data: function (row, type, set) {
+                if (row.hasOwnProperty('used_by')) {
+                  if (row.used_by){
+                    if (Object.keys(row.used_by).length > 0){
+                      arr = []
+                      row.used_by.forEach(element => {
+                        item = element.replace('/1.0/instances/', '')
+                        item = item.replace('/1.0/containers/', '')
+                        item = item.replace('/1.0/virtual-machines/', '')
+                        item = item.replace('/1.0/images/', '')
+                        if (item.length > 24) {
+                          arr.push(item.substring(0,23) + "...")
+                        }
+                        else {
+                          arr.push(item)
+                        }
+                      });
+                      return arr.join(", ")
+                    }
+                  }
+                }
+                return '-'
+              },
+            },
+          ],
+          layout: {
+            topStart: {
+              buttons: [
+                { text: 'Edit',
+                  action: function () { 
+                    rows = storageVolumesDataTable.rows({ selected: true });
+                    editItem(rows.data()[0]['name'], rows.data()[0]['type']);
+                  },
+                  enabled: false,
+                },
+                'spacer',
+                { text: 'Delete',
+                  action: function () { 
+                    arr = []
+                    arr2 = []
+                    storageVolumesDataTable.rows('.selected').every( function() {
+                      arr.push(this.data().name)
+                      arr2.push(this.data().type)
+                    });
+                    $("#deleteStorageVolumesList").text(arr.join(", "));
+                    $("#deleteStorageVolumesHiddenInput").val(JSON.stringify(arr));
+                    $("#deleteStorageVolumesHiddenTypeInput").val(JSON.stringify(arr2));
+                    $("#deleteModal").modal('show');                    
+                  },
+                  enabled: false,
+                },
+                'spacer',
+                'spacer',
+                'pageLength',
+                'spacer',
+                {
+                  extend: 'collection',
+                  text: 'More',
+                  buttons: [
+                    {
+                      extend: 'colvis',
+                      text: 'Visible columns',
+                      columns: [1,2,3,4,5,6],
+                    },
+                    {
+                      text: (scrollY == '490px') ? 'Disable scrolling' : 'Enable scrolling',
+                      action: function ( e, dt, node, config ) {
+                        if (scrollY == '490px') {
+                          localStorage.setItem('storageVolumesDataTableScrollY', false);
+                          scrollY = false
+                        }
+                        else {
+                          localStorage.setItem('storageVolumesDataTableScrollY', '490px');
+                          scrollY = '490px'
+                        }
+                        dt.destroy()
+                        loadStorageVolumesTable()
+                      },
+                    },
+                    {
+                      text: 'Reset table state',
+                      action: function ( e, dt, node, config ) {
+                        dt.state.clear();
+                        window.location.reload();
+                      },
+                    },
+                  ]
+                }
+
+              ]
+            }
+          },
+          lengthMenu: [
+            [10, 25, 50, 100, -1],
+            [10, 25, 50, 100, 'All'],
+          ],
+          order: [
+            [1, 'asc']
+          ],
+          rowId: 'name',
+          scrollCollapse: true,
+          scrollX: true,
+          scrollY: scrollY,
+          select: {
+            selectable: function (rowData) {
+              if (rowData.hasOwnProperty('type')) {
+                return rowData.type === 'custom'; 
+              }
+              return false; 
+            },
+            style: 'multi',
+            selector: 'td:first-child',
+            blurable: true,
+            headerCheckbox: 'select-page',
+          },
+          stateDuration: 0,
+          stateSave: true,
+        });
+      }
+      else {
+        $('#storageVolumesDataTable').DataTable().ajax.reload(null, false);
+      }
+
+      storageVolumesDataTable.on('select deselect', function () {
+        var selectedRows = storageVolumesDataTable.rows({ selected: true }).count();
+        storageVolumesDataTable.button(0).enable(selectedRows === 1);
+        storageVolumesDataTable.button(2).enable(selectedRows > 0);
+      });
     }
 
     function addItem(){
@@ -194,13 +284,6 @@
       });
     }
 
-    function confirmDeleteStorageVolume(name){
-      console.log("Info: confirming deletion of storage volume " + name);
-      if (confirm("Are you sure you want to delete storage volume " + name + "?") == true) {
-        deleteStorageVolume(name);
-      }
-    }
-
     function createStorageVolumeUsingJSON(){
       var json = $("#jsonCreateInput").val();
       console.log("Info: adding new storage volume");
@@ -215,23 +298,34 @@
       });
     }
 
-    function deleteStorageVolume(name){
-      console.log("Info: deleting storage volume " + name);
-      $.post("{{ url_for('api') }}/storage-volumes/delete_storage_volume?id="+encodeURI(serverId)+"&project="+encodeURI(project)+"&pool="+pool, { name: name }, function (data) {
-        console.log(data);
-        if (data.error_code >= 400){
-          alert(data.error);
-        }
-        //Sync type
-        setTimeout(() => { reloadPageContent(); }, 1000);
-        operationStatusCheck()
-      });
+    function deleteItems(){
+      var deleteStorageVolumesHiddenInput = JSON.parse($("#deleteStorageVolumesHiddenInput").val());
+      var deleteStorageVolumesHiddenTypeInput = JSON.parse($("#deleteStorageVolumesHiddenTypeInput").val());
+      console.log("Info: deleting storage volumes " + deleteStorageVolumesHiddenInput.join(", "));
+      for (let i = 0; i < deleteStorageVolumesHiddenInput.length; i++) {
+        $.post("{{ url_for('api') }}/storage-volumes/delete_storage_volume?id=" + serverId + "&project=" + project + "&pool=" + pool, { name: deleteStorageVolumesHiddenInput[i], type: deleteStorageVolumesHiddenTypeInput[i] }, function (data) {
+          console.log(data);
+          if (data.error_code >= 400){
+            alert(data.error);
+          }
+        });
+      }
+
+      //Send toast notification
+      $('#defaultToastHeader').text('Deleting Storage Volume(s)')
+      $('#defaultToastBody').text($("#deleteStorageVolumesList").text())
+      defaultToast.show()
+
+      //Sync type
+      setTimeout(() => { reloadPageContent(); }, 1000);
+      operationStatusCheck()
     }
 
-    function editStorageVolume(name){
+    function editItem(name, type){
       editedStorageVolume = name
+      editedStorageVolumeType = type
       console.log("Info: loading storage volume " + name);
-      $.post("{{ url_for('api') }}/storage-volumes/load_storage_volume?id="+encodeURI(serverId)+"&project="+encodeURI(project)+"&pool="+pool, { name: name }, function (data) {
+      $.post("{{ url_for('api') }}/storage-volumes/load_storage_volume?id="+encodeURI(serverId)+"&project="+encodeURI(project)+"&pool="+pool, { name: name, type: type }, function (data) {
         console.log(data);
         if (data.error_code >= 400){
           alert(data.error);
@@ -244,9 +338,10 @@
 
     function updateStorageVolume(){
       name = editedStorageVolume
+      type = editedStorageVolumeType
       var updatedJSON = $("#jsonInput").val();
       console.log("Info: updating storage volume");
-      $.post("{{ url_for('api') }}/storage-volumes/update_storage_volume?id="+encodeURI(serverId)+"&project="+encodeURI(project)+"&pool="+pool+"&name="+encodeURI(name), { json: updatedJSON },  function (data) {
+      $.post("{{ url_for('api') }}/storage-volumes/update_storage_volume?id="+encodeURI(serverId)+"&project="+encodeURI(project)+"&pool="+pool+"&name="+encodeURI(name)+"&type="+encodeURI(type), { json: updatedJSON },  function (data) {
         console.log(data);
         if (data.error_code >= 400){
           alert(data.error);

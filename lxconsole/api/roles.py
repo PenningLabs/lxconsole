@@ -20,6 +20,9 @@ def api_roles_endpoint(endpoint):
 
   if endpoint == 'delete_role':
     pass
+  # Delete access-control if role is deleted
+    # AccessControl.query.filter_by(role_id=id).delete()
+    # db.session.commit()
 
   if endpoint == 'list_roles':
     return jsonify({"data": session['roles']})

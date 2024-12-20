@@ -16,14 +16,6 @@
 {% block content %}
   <div class="col-12">
     <div class="card">
-      <div class="card-header">
-        <h3 class="card-title">Projects</h3>
-        <div class="card-tools">
-          <button type="button" class="btn btn-tool" onclick="reloadPageContent()" title="Refresh">
-          <i class="fas fa-sync"></i>
-          </button>
-        </div>
-      </div>
       <div class="card-body">
         <table class="table" id="projectsDataTable" width="100%" cellspacing="0">
         </table>
@@ -44,6 +36,7 @@
     const serverId = urlParams.get('id');
     const project = urlParams.get('project');
     var editedProject = ''
+    var scrollY =  localStorage.getItem('projectsDataTableScrollY') || '490px';
     applySidebarStyles();
     applySidebarLinks();
     populateSidebarLinks();
@@ -54,7 +47,7 @@
       clearTimeout(pageReloadTimeout);
 
       //Reload the datatables content
-      $('#projectsDataTable').DataTable().ajax.reload(null, false);
+      loadProjectsTable()
 
       //Set the automatic page reload
       pageReloadTimeout = setTimeout(() => { reloadPageContent(); }, reloadTime);
@@ -70,65 +63,155 @@
       populateProjectSelectDropdown()
 
       // Configure Datatable
-      $('#projectsDataTable').DataTable({
-        ajax: {
-          url: "{{ url_for('api') }}/projects/list_projects?id="+serverId+"&project="+project+"&recursion=1",
-          dataType: "json",
-          dataSrc: "metadata",
-          contentType: "application/json",
-          error: function (xhr, error, code) {
-            console.log(xhr, code);
-          }
-        },
-        columns: [
-          { title: "Name", data: function (row, type, set) {
-              if (row.hasOwnProperty('name')) {
-                if (row.name)
-                  return row.name
-              }
-              return '-'
-            },
-          },
-          { title: "Description", data: function (row, type, set) {
-              if (row.hasOwnProperty('description')) {
-                if (row.description)
-                  return row.description
-              }
-              return '-'
-            },
-          },
-          { title: "Featured Items", data: function (row, type, set) {
-              arr = []
-              for (item in row.config) {
-                if (item.startsWith('features.')) {
-                  if (row.config[item] == 'true')
-                    arr.push(item.replace('features.',''))
-                }
-              }
-              if (arr.length > 0)
-                return arr.join(", ")
-              return '-'
-            },
-          },
-          { title: "Actions", data: function (row, type, set) {
-              links = ''
-              if (row.hasOwnProperty('name')) {
-                links = '<a href="#" onclick=editProject(\''+row.name+'\')><i class="fas fa-edit fa-lg" title="Edit" aria-hidden="true"></i></a>' +
-                '&nbsp' + '&nbsp' +
-                '<a href="#" onclick=renameProject(\''+row.name+'\')><i class="fas fa-tag fa-lg" title="Rename" aria-hidden="true"></i></a>' +
-                '&nbsp' + '&nbsp' +
-                '<a href="#" onclick=confirmDeleteProject(\''+row.name+'\')><i class="fas fa-trash-alt fa-lg" title="Delete" aria-hidden="true"></i></a>'
-              }
-              return links
-            },
-          },
-        ],
-        order: [],
-      });
+      loadProjectsTable()
 
       //Set reload page content
       pageReloadTimeout = setTimeout(() => { reloadPageContent(); }, reloadTime);
 
+    }
+
+    function loadProjectsTable() {
+      if ( ! $.fn.DataTable.isDataTable( '#projectsDataTable' ) ) {
+        projectsDataTable = $('#projectsDataTable').DataTable({
+          ajax: {
+            url: "{{ url_for('api') }}/projects/list_projects?id="+serverId+"&project="+project+"&recursion=1",
+            dataType: "json",
+            dataSrc: "metadata",
+            contentType: "application/json",
+            error: function (xhr, error, code) {
+              console.log(xhr, code);
+            }
+          },
+          columns: [
+            {
+              data: null,
+              orderable: false,
+              render: DataTable.render.select()
+            },
+            { title: "Name", data: function (row, type, set) {
+                if (row.hasOwnProperty('name')) {
+                  if (row.name)
+                    return row.name
+                }
+                return '-'
+              },
+            },
+            { title: "Description", data: function (row, type, set) {
+                if (row.hasOwnProperty('description')) {
+                  if (row.description)
+                    return row.description
+                }
+                return '-'
+              },
+            },
+            { title: "Featured Items", data: function (row, type, set) {
+                arr = []
+                for (item in row.config) {
+                  if (item.startsWith('features.')) {
+                    if (row.config[item] == 'true')
+                      arr.push(item.replace('features.',''))
+                  }
+                }
+                if (arr.length > 0)
+                  return arr.join(", ")
+                return '-'
+              },
+            },
+          ],
+          layout: {
+            topStart: {
+              buttons: [
+                { text: 'Edit',
+                  action: function () { 
+                    rows = projectsDataTable.rows({ selected: true });
+                    editItem(rows.data()[0]['name']);
+                  },
+                  enabled: false,
+                },
+                'spacer',
+                { text: 'Delete',
+                  action: function () { 
+                    arr = []
+                    projectsDataTable.rows('.selected').every( function() {
+                      arr.push(this.data().name)
+                    });
+                    $("#deleteProjectsList").text(arr.join(", "));
+                    $("#deleteProjectsHiddenInput").val(JSON.stringify(arr));
+                    $("#deleteModal").modal('show');                    
+                  },
+                  enabled: false,
+                },
+                'spacer',
+                'spacer',
+                'pageLength',
+                'spacer',
+                {
+                  extend: 'collection',
+                  text: 'More',
+                  buttons: [
+                    {
+                      extend: 'colvis',
+                      text: 'Visible columns',
+                      columns: [1,2,3],
+                    },
+                    {
+                      text: (scrollY == '490px') ? 'Disable scrolling' : 'Enable scrolling',
+                      action: function ( e, dt, node, config ) {
+                        if (scrollY == '490px') {
+                          localStorage.setItem('projectsDataTableScrollY', false);
+                          scrollY = false
+                        }
+                        else {
+                          localStorage.setItem('projectsDataTableScrollY', '490px');
+                          scrollY = '490px'
+                        }
+                        dt.destroy()
+                        loadProjectsTable()
+                      },
+                    },
+                    {
+                      text: 'Reset table state',
+                      action: function ( e, dt, node, config ) {
+                        dt.state.clear();
+                        window.location.reload();
+                      },
+                    },
+                  ]
+                }
+
+              ]
+            }
+          },
+          lengthMenu: [
+            [10, 25, 50, 100, -1],
+            [10, 25, 50, 100, 'All'],
+          ],
+          order: [
+            [1, 'asc']
+          ],
+          rowId: 'name',
+          scrollCollapse: true,
+          scrollX: true,
+          scrollY: scrollY,
+          select: {
+            style: 'multi',
+            selector: 'td:first-child',
+            blurable: true,
+            headerCheckbox: 'select-page',
+          },
+          stateDuration: 0,
+          stateSave: true,
+        });
+      }
+      else {
+        $('#projectsDataTable').DataTable().ajax.reload(null, false);
+      }
+
+      projectsDataTable.on('select deselect', function () {
+        var selectedRows = projectsDataTable.rows({ selected: true }).count();
+        projectsDataTable.button(0).enable(selectedRows === 1);
+        projectsDataTable.button(2).enable(selectedRows > 0);
+      });
     }
 
     function changeRestrictedOptionsDisplay(){
@@ -178,13 +261,6 @@
       }
     }
 
-    function confirmDeleteProject(projectToDelete){
-      console.log("Info: confirming deletion of project " + projectToDelete);
-      if (confirm("Are you sure you want to delete project " + projectToDelete + "?") == true) {
-        deleteProject(projectToDelete);
-      }
-    }
-
     function addItem(){
       console.log("Info: adding new project");
       data = $('#addForm').serialize();
@@ -213,21 +289,31 @@
       });
     }
 
-    function deleteProject(projectToDelete){
-      console.log("Info: deleting project " + projectToDelete);
-      $.get("{{ url_for('api') }}/projects/delete_project?id=" + serverId + "&project=" + project + "&name=" + encodeURI(projectToDelete), function (data) {
-        console.log(data);
-        if (data.error_code >= 400){
-          alert(data.error);
-        }
-        //Sync type
-        setTimeout(() => { reloadPageContent(); }, 1000);
-        operationStatusCheck()
-      });
+    function deleteItems(){
+      var deleteProjectsHiddenInput = JSON.parse($("#deleteProjectsHiddenInput").val());
+      console.log("Info: deleting projects " + deleteProjectsHiddenInput.join(", "));
+      for (let i = 0; i < deleteProjectsHiddenInput.length; i++) {
+        $.post("{{ url_for('api') }}/projects/delete_project?id=" + serverId + "&project=" + project, { name: deleteProjectsHiddenInput[i] }, function (data) {
+          console.log(data);
+          if (data.error_code >= 400){
+            alert(data.error);
+          }
+        });
+      }
+
+      //Send toast notification
+      $('#defaultToastHeader').text('Deleting Project(s)')
+      $('#defaultToastBody').text($("#deleteProjectsList").text())
+      defaultToast.show()
+
+      //Sync type
+      setTimeout(() => { reloadPageContent(); }, 1000);
+      operationStatusCheck()
     }
 
-    function editProject(name){
+    function editItem(name){
       editedProject = name
+      $("#projectToRename").val(name);
       console.log("Info: loading project " + name);
       $.get("{{ url_for('api') }}/projects/load_project?id=" + serverId + "&project=" + project + "&name=" + encodeURI(name), function (data) {
         console.log(data);
@@ -238,13 +324,6 @@
         $("#jsonInput").val(JSON.stringify(data.metadata, null, 2));
         $("#editModal").modal('show');
       });
-    }
-
-    function renameProject(name){
-      console.log("Loading rename modal for project " + name)
-      $("#renameProjectModalLabel").text("Rename project: " + name);
-      $("#projectToRename").val(name);
-      $("#renameModal").modal('show');
     }
 
     function updateProject(){

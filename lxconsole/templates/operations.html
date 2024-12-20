@@ -13,14 +13,6 @@
 {% block content %}
   <div class="col-12">
     <div class="card">
-      <div class="card-header">
-        <h3 class="card-title">Operations</h3>
-        <div class="card-tools">
-          <button type="button" class="btn btn-tool" onclick="reloadPageContent()" title="Refresh">
-          <i class="fas fa-sync"></i>
-          </button>
-        </div>
-      </div>
       <div class="card-body">
         <table class="table" id="operationsDataTable" width="100%" cellspacing="0">
         </table>
@@ -40,6 +32,7 @@
     const urlParams = new URLSearchParams(queryString);
     const serverId = urlParams.get('id');
     const project = urlParams.get('project');
+    var scrollY =  localStorage.getItem('operationsDataTableScrollY') || '490px';
     applySidebarStyles();
     applySidebarLinks();
     populateSidebarLinks();
@@ -50,7 +43,7 @@
       clearTimeout(pageReloadTimeout);
 
       //Reload the datatables content
-      $('#operationsDataTable').DataTable().ajax.reload(null, false);
+      loadOperationsTable()
 
       //Set the automatic page reload
       pageReloadTimeout = setTimeout(() => { reloadPageContent(); }, reloadTime);
@@ -66,90 +59,180 @@
       populateProjectSelectDropdown()
 
       // Configure Datatable
-      $('#operationsDataTable').DataTable({
-        ajax: {
-          url: "{{ url_for('api') }}/operations/list_operations?id="+serverId+"&project=" + project + "&recursion=1",
-          dataType: "json",
-          dataSrc: "metadata.running",
-          contentType: "application/json",
-          error: function (xhr, error, code) {
-            console.log(xhr, code);
-          }
-        },
-        columns: [
-          { title: "ID", data: function (row, type, set) {
-              if (row.hasOwnProperty('id')) {
-                if (row.id)
-                return '<a href="#" onclick=viewItem(\''+row.id+'\')>'+row.id+'</a>'
-              }
-              return '-'
-            },
-          },
-          { title: "Class", data: function (row, type, set) {
-              if (row.hasOwnProperty('class')) {
-                if (row.class)
-                  return row.class
-              }
-              return '-'
-            },
-          },
-          { title: "Description", data: function (row, type, set) {
-              if (row.hasOwnProperty('description')) {
-                if (row.description)
-                  return row.description
-              }
-              return '-'
-            },
-          },
-          { title: "Status", data: function (row, type, set) {
-              if (row.hasOwnProperty('status')) {
-                if (row.status)
-                  return row.status
-              }
-              return '-'
-            },
-          },
-          { title: "Created", data: function (row, type, set) {
-              if (row.hasOwnProperty('created_at')) {
-                if (row.created_at)
-                  return row.created_at
-              }
-              return '-'
-            },
-          },
-          { title: "Cancelable", data: function (row, type, set) {
-              if (row.hasOwnProperty('may_cancel')) {
-                // Boolean field
-                return row.may_cancel
-              }
-              return '-'
-            },
-          },
-
-          { title: "Actions", data: function (row, type, set) {
-              links = ''
-              if (row.hasOwnProperty('id') && row.hasOwnProperty('may_cancel')) {
-                if (row.may_cancel){
-                  links = '<a href="#" onclick=confirmDeleteItem(\''+row.id+'\')><i class="fas fa-trash-alt fa-lg" title="Delete" aria-hidden="true"></i></a>' 
-                }
-              }
-              return links
-            },
-          },
-        ],
-        order: [],
-      });
+      loadOperationsTable()
 
       //Set reload page content
       pageReloadTimeout = setTimeout(() => { reloadPageContent(); }, reloadTime);
 
     }
 
-    function confirmDeleteItem(name){
-      console.log("Info: confirming deletion of operation " + name);
-      if (confirm("Are you sure you want to delete operation " + name + "?") == true) {
-        deleteItem(name);
+    function loadOperationsTable() {
+      if ( ! $.fn.DataTable.isDataTable( '#operationsDataTable' ) ) {
+        operationsDataTable = $('#operationsDataTable').DataTable({
+          ajax: {
+            url: "{{ url_for('api') }}/operations/list_operations?id="+serverId+"&project=" + project + "&recursion=1",
+            dataType: "json",
+            dataSrc: "metadata.running",
+            contentType: "application/json",
+            error: function (xhr, error, code) {
+              console.log(xhr, code);
+            }
+          },
+          columns: [
+            {
+              data: null,
+              orderable: false,
+              render: DataTable.render.select()
+            },
+            { title: "ID", data: function (row, type, set) {
+                if (row.hasOwnProperty('id')) {
+                  if (row.id)
+                  return '<a href="#" onclick=viewItem(\''+row.id+'\')>'+row.id+'</a>'
+                }
+                return '-'
+              },
+            },
+            { title: "Class", data: function (row, type, set) {
+                if (row.hasOwnProperty('class')) {
+                  if (row.class)
+                    return row.class
+                }
+                return '-'
+              },
+            },
+            { title: "Description", data: function (row, type, set) {
+                if (row.hasOwnProperty('description')) {
+                  if (row.description)
+                    return row.description
+                }
+                return '-'
+              },
+            },
+            { title: "Status", data: function (row, type, set) {
+                if (row.hasOwnProperty('status')) {
+                  if (row.status)
+                    return row.status
+                }
+                return '-'
+              },
+            },
+            { title: "Created", data: function (row, type, set) {
+                if (row.hasOwnProperty('created_at')) {
+                  if (row.created_at)
+                    return row.created_at
+                }
+                return '-'
+              },
+            },
+            { title: "Cancelable", data: function (row, type, set) {
+                if (row.hasOwnProperty('may_cancel')) {
+                  // Boolean field
+                  return row.may_cancel
+                }
+                return '-'
+              },
+            },
+            { title: "Metadata", data: function (row, type, set) {
+                if (row.hasOwnProperty('metadata')) {
+                  if (row.metadata){
+                    return JSON.stringify(row.metadata)
+                  }                  
+                }
+                return '-'
+              },
+            },
+          ],
+          layout: {
+            topStart: {
+              buttons: [
+                { text: 'Delete',
+                  action: function () { 
+                    arr = []
+                    operationsDataTable.rows('.selected').every( function() {
+                      arr.push(this.data().id)
+                    });
+                    $("#deleteOperationsList").text(arr.join(", "));
+                    $("#deleteOperationsHiddenInput").val(JSON.stringify(arr));
+                    $("#deleteModal").modal('show');                    
+                  },
+                  enabled: false,
+                },
+                'spacer',
+                'spacer',
+                'pageLength',
+                'spacer',
+                {
+                  extend: 'collection',
+                  text: 'More',
+                  buttons: [
+                    {
+                      extend: 'colvis',
+                      text: 'Visible columns',
+                      columns: [1,2,3,4,5,6,7],
+                    },
+                    {
+                      text: (scrollY == '490px') ? 'Disable scrolling' : 'Enable scrolling',
+                      action: function ( e, dt, node, config ) {
+                        if (scrollY == '490px') {
+                          localStorage.setItem('operationsDataTableScrollY', false);
+                          scrollY = false
+                        }
+                        else {
+                          localStorage.setItem('operationsDataTableScrollY', '490px');
+                          scrollY = '490px'
+                        }
+                        dt.destroy()
+                        loadOperationsTable()
+                      },
+                    },
+                    {
+                      text: 'Reset table state',
+                      action: function ( e, dt, node, config ) {
+                        dt.state.clear();
+                        window.location.reload();
+                      },
+                    },
+                  ]
+                }
+
+              ]
+            }
+          },
+          lengthMenu: [
+            [10, 25, 50, 100, -1],
+            [10, 25, 50, 100, 'All'],
+          ],
+          order: [
+            [1, 'asc']
+          ],
+          rowId: 'id',
+          scrollCollapse: true,
+          scrollX: true,
+          scrollY: scrollY,
+          select: {
+            selectable: function (rowData) {
+              if (rowData.hasOwnProperty('may_cancel')) {
+                return rowData.may_cancel 
+              }
+              return false; 
+            },
+            style: 'multi',
+            selector: 'td:first-child',
+            blurable: true,
+            headerCheckbox: 'select-page',
+          },
+          stateDuration: 0,
+          stateSave: true,
+        });
       }
+      else {
+        $('#operationsDataTable').DataTable().ajax.reload(null, false);
+      }
+
+      operationsDataTable.on('select deselect', function () {
+        var selectedRows = operationsDataTable.rows({ selected: true }).count();
+        operationsDataTable.button(0).enable(selectedRows > 0);
+      });
     }
 
     function deleteItem(name){
@@ -164,6 +247,29 @@
         operationStatusCheck()
       });
     }
+
+    function deleteItems(){
+      var deleteOperationsHiddenInput = JSON.parse($("#deleteOperationsHiddenInput").val());
+      console.log("Info: deleting operations " + deleteOperationsHiddenInput.join(", "));
+      for (let i = 0; i < deleteOperationsHiddenInput.length; i++) {
+        $.post("{{ url_for('api') }}/operations/delete_operation?id=" + serverId + "&project=" + project, { id: deleteOperationsHiddenInput[i] }, function (data) {
+          console.log(data);
+          if (data.error_code >= 400){
+            alert(data.error);
+          }
+        });
+      }
+
+      //Send toast notification
+      $('#defaultToastHeader').text('Deleting Operation(s)')
+      $('#defaultToastBody').text($("#deleteOperationsList").text())
+      defaultToast.show()
+
+      //Sync type
+      setTimeout(() => { reloadPageContent(); }, 1000);
+      operationStatusCheck()
+    }
+
 
     function viewItem(name){
       console.log("Info: loading operation " + name);

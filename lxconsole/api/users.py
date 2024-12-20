@@ -101,8 +101,19 @@ def api_users_endpoint(endpoint):
 
 
   if endpoint == 'delete_user':
+    # May want to query by username too
     id = request.form.get('id')
     user = User.query.filter_by(id=id).first()
+
+    # Delete user+group relationships
+    UserGroup.query.filter_by(user_id=id).delete()
+    db.session.commit()
+
+    # Delete User TOTP Information
+    TOTP.query.filter_by(user_id=id).delete()
+    db.session.commit()
+
+    # Delete user
     db.session.delete(user)
     db.session.commit()
     json_object = json.loads('{"status": 200}')

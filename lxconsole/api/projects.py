@@ -42,20 +42,20 @@ def api_projects_endpoint(endpoint):
     config.update({'features.storage.volumes': request.form.get('features.storage.volumes')}) if request.form.get('features.storage.volumes') else False
     config.update({'features.storage.buckets': request.form.get('features.storage.buckets')}) if request.form.get('features.storage.buckets') else False
 
-    config.update({'features.backups.compression_algorithm': request.form.get('features.backups.compression_algorithm')}) if request.form.get('features.backups.compression_algorithm') else False
-    config.update({'features.images.auto_update_cached': request.form.get('features.images.auto_update_cached')}) if request.form.get('features.images.auto_update_cached') else False
-    config.update({'features.images.auto_update_interval': request.form.get('features.images.auto_update_interval')}) if request.form.get('features.images.auto_update_interval') else False
-    config.update({'features.images.compression_algorithm': request.form.get('features.images.compression_algorithm')}) if request.form.get('features.images.compression_algorithm') else False
-    config.update({'features.images.default_architecture': request.form.get('features.images.default_architecture')}) if request.form.get('features.images.default_architecture') else False
-    config.update({'features.images.remote_cache_expiry': request.form.get('features.images.remote_cache_expiry')}) if request.form.get('features.images.remote_cache_expiry') else False
-    config.update({'features.limits.containers': request.form.get('features.limits.containers')}) if request.form.get('features.limits.containers') else False
-    config.update({'features.limits.cpu': request.form.get('features.limits.cpu')}) if request.form.get('features.limits.cpu') else False
-    config.update({'features.limits.disk': request.form.get('features.limits.disk')}) if request.form.get('features.limits.disk') else False
-    config.update({'features.limits.instances': request.form.get('features.limits.instances')}) if request.form.get('features.limits.instances') else False
-    config.update({'features.limits.memory': request.form.get('features.limits.memory')}) if request.form.get('features.limits.memory') else False
-    config.update({'features.limits.networks': request.form.get('features.limits.networks')}) if request.form.get('features.limits.networks') else False
-    config.update({'features.limits.processes': request.form.get('features.limits.processes')}) if request.form.get('features.limits.processes') else False
-    config.update({'features.limits.virtual-machines': request.form.get('features.limits.virtual-machines')}) if request.form.get('features.limits.virtual-machines') else False
+    config.update({'backups.compression_algorithm': request.form.get('backups.compression_algorithm')}) if request.form.get('backups.compression_algorithm') else False
+    config.update({'images.auto_update_cached': request.form.get('images.auto_update_cached')}) if request.form.get('images.auto_update_cached') else False
+    config.update({'images.auto_update_interval': request.form.get('images.auto_update_interval')}) if request.form.get('images.auto_update_interval') else False
+    config.update({'images.compression_algorithm': request.form.get('images.compression_algorithm')}) if request.form.get('images.compression_algorithm') else False
+    config.update({'images.default_architecture': request.form.get('images.default_architecture')}) if request.form.get('images.default_architecture') else False
+    config.update({'images.remote_cache_expiry': request.form.get('images.remote_cache_expiry')}) if request.form.get('images.remote_cache_expiry') else False
+    config.update({'limits.containers': request.form.get('limits.containers')}) if request.form.get('limits.containers') else False
+    config.update({'limits.cpu': request.form.get('limits.cpu')}) if request.form.get('limits.cpu') else False
+    config.update({'limits.disk': request.form.get('limits.disk')}) if request.form.get('limits.disk') else False
+    config.update({'limits.instances': request.form.get('limits.instances')}) if request.form.get('limits.instances') else False
+    config.update({'limits.memory': request.form.get('limits.memory')}) if request.form.get('limits.memory') else False
+    config.update({'limits.networks': request.form.get('limits.networks')}) if request.form.get('limits.networks') else False
+    config.update({'limits.processes': request.form.get('limits.processes')}) if request.form.get('limits.processes') else False
+    config.update({'limits.virtual-machines': request.form.get('limits.virtual-machines')}) if request.form.get('limits.virtual-machines') else False
 
     restricted = config.update({'restricted': request.form.get('restricted')}) if request.form.get('restricted') else False
     if restricted:
@@ -88,7 +88,7 @@ def api_projects_endpoint(endpoint):
   if endpoint == 'delete_project':
     id = request.args.get('id')
     project = request.args.get('project')
-    name = request.args.get('name')
+    name = request.form.get('name')
     server = Server.query.filter_by(id=id).first()
     url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/projects/' + name + '?project=' + project
     client_cert = get_client_crt()

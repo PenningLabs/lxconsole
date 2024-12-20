@@ -16,14 +16,6 @@
 {% block content %}
   <div class="col-12">
     <div class="card">
-      <div class="card-header">
-        <h3 class="card-title">Servers</h3>
-        <div class="card-tools">
-          <button type="button" class="btn btn-tool" onclick="reloadPageContent()" title="Refresh">
-          <i class="fas fa-sync"></i>
-          </button>
-        </div>
-      </div>
       <div class="card-body">
         <table class="table" id="serversDataTable" width="100%" cellspacing="0">
         </table>
@@ -39,13 +31,14 @@
 {% block script %}
   <script>
     var reloadTime = 10000;
+    var scrollY =  localStorage.getItem('serversDataTableScrollY') || '490px';
 
     function reloadPageContent() {
       //Clear the automatic page reload
       clearTimeout(pageReloadTimeout);
 
       //Reload the datatables content
-      $('#serversDataTable').DataTable().ajax.reload(null, false);
+      loadServersTable()
 
       //Set the automatic page reload
       pageReloadTimeout = setTimeout(() => { reloadPageContent(); }, reloadTime);
@@ -54,75 +47,167 @@
     function loadPageContent(){
 
       // Configure Datatable
-      $('#serversDataTable').DataTable({
-        ajax: {
-          url: "{{ url_for('api') }}/servers/list_servers",
-          dataType: "json",
-          dataSrc: "data",
-          contentType: "application/json",
-          error: function (xhr, error, code) {
-            console.log(xhr, code);
-          }
-        },
-        columns: [
-          { title: "Name", data: function (row, type, set) {
-              if (row.hasOwnProperty('id') && row.hasOwnProperty('name')) {
-                if (row.name)
-                  return '<a href="server?id=' + row.id + '">' + row.name + '</a>'
-                  return row.name
-              }
-              return '-'
-            },
-          },
-          { title: "Addr", data: function (row, type, set) {
-              if (row.hasOwnProperty('id') && row.hasOwnProperty('addr')) {
-                if (row.addr)
-                  return row.addr
-              }
-              return '-'
-            },
-          },
-          { title: "Port", data: function (row, type, set) {
-              if (row.hasOwnProperty('port')) {
-                if (row.port)
-                  return row.port
-              }
-              return '-'
-            },
-          },
-          { title: "Proxy", data: function (row, type, set) {
-              if (row.hasOwnProperty('proxy')) {
-                if (row.proxy)
-                  return row.proxy
-              }
-              return '-'
-            },
-          },
-          { title: "SSL Verify", data: function (row, type, set) {
-              if (row.hasOwnProperty('ssl_verify')) {
-                return row.ssl_verify
-              }
-              return '-'
-            },
-          },
-          { title: "Actions", data: function (row, type, set) {
-            links = ''
-            if (row.hasOwnProperty('id') && row.hasOwnProperty('addr') && row.hasOwnProperty('port') && row.hasOwnProperty('name')) {
-              links = '<a href="#" onclick=editServer(\''+row.id+'\')> <i class="fas fa-edit fa-lg" title="Edit" aria-hidden="true"></i> </a>' +
-              '&nbsp' +
-              '<a href="#" onclick=confirmDeleteServer(\''+row.id+'\',\''+row.addr+'\',\''+row.port+'\',\''+row.name+'\')> <i class="fas fa-trash-alt fa-lg" title="Delete" aria-hidden="true"></i> </a>'
-            }
-            return links
-              
-            },
-          },
-        ],
-        order: [],
-      });
+      loadServersTable()
 
       //Set reload page content
       pageReloadTimeout = setTimeout(() => { reloadPageContent(); }, reloadTime);
+    }
 
+    function loadServersTable() {
+      if ( ! $.fn.DataTable.isDataTable( '#serversDataTable' ) ) {
+        serversDataTable = $('#serversDataTable').DataTable({
+          ajax: {
+            url: "{{ url_for('api') }}/servers/list_servers",
+            dataType: "json",
+            dataSrc: "data",
+            contentType: "application/json",
+            error: function (xhr, error, code) {
+              console.log(xhr, code);
+            }
+          },
+          columns: [
+            {
+              data: null,
+              orderable: false,
+              render: DataTable.render.select()
+            },
+            { title: "Name", className: 'text-start dt-head-left', data: function (row, type, set) {
+                if (row.hasOwnProperty('id') && row.hasOwnProperty('name')) {
+                  if (row.name)
+                    return '<a href="server?id=' + row.id + '">' + row.name + '</a>'
+                    return row.name
+                }
+                return '-'
+              },
+            },
+            { title: "Addr", className: 'text-start dt-head-left', data: function (row, type, set) {
+                if (row.hasOwnProperty('id') && row.hasOwnProperty('addr')) {
+                  if (row.addr)
+                    return row.addr
+                }
+                return '-'
+              },
+            },
+            { title: "Port", className: 'text-start dt-head-left', data: function (row, type, set) {
+                if (row.hasOwnProperty('port')) {
+                  if (row.port)
+                    return row.port
+                }
+                return '-'
+              },
+            },
+            { title: "WebSocket Proxy", className: 'text-start dt-head-left', data: function (row, type, set) {
+                if (row.hasOwnProperty('proxy')) {
+                  if (row.proxy)
+                    return row.proxy
+                }
+                return '-'
+              },
+            },
+            { title: "SSL Verify", className: 'text-start dt-head-left', data: function (row, type, set) {
+                if (row.hasOwnProperty('ssl_verify')) {
+                  return row.ssl_verify
+                }
+                return '-'
+              },
+            },
+          ],
+          layout: {
+            topStart: {
+              buttons: [
+                { text: 'Edit',
+                  action: function () { 
+                    rows = serversDataTable.rows({ selected: true });
+                    editServer(rows.data()[0]['id']);
+                  },
+                  enabled: false,
+                },
+                'spacer',
+                { text: 'Delete',
+                  action: function () { 
+                    arr = []
+                    arr2 = []
+                    serversDataTable.rows('.selected').every( function() {
+                      arr.push(this.data().id)
+                      arr2.push(this.data().name)
+                    });
+                    $("#deleteServersList").text(arr2.join(", "));
+                    $("#deleteServersHiddenInput").val(JSON.stringify(arr));
+                    $("#deleteModal").modal('show');                    
+                  },
+                  enabled: false,
+                },
+                'spacer',
+                'spacer',
+                'pageLength',
+                'spacer',
+                {
+                  extend: 'collection',
+                  text: 'More',
+                  buttons: [
+                    {
+                      extend: 'colvis',
+                      text: 'Visible columns',
+                      columns: [1,2,3,4,5],
+                    },
+                    {
+                      text: (scrollY == '490px') ? 'Disable scrolling' : 'Enable scrolling',
+                      action: function ( e, dt, node, config ) {
+                        if (scrollY == '490px') {
+                          localStorage.setItem('serversDataTableScrollY', false);
+                          scrollY = false
+                        }
+                        else {
+                          localStorage.setItem('serversDataTableScrollY', '490px');
+                          scrollY = '490px'
+                        }
+                        dt.destroy()
+                        loadServersTable()
+                      },
+                    },
+                    {
+                      text: 'Reset table state',
+                      action: function ( e, dt, node, config ) {
+                        dt.state.clear();
+                        window.location.reload();
+                      },
+                    },
+                  ]
+                }
+
+              ]
+            }
+          },
+          lengthMenu: [
+            [10, 25, 50, 100, -1],
+            [10, 25, 50, 100, 'All'],
+          ],
+          order: [
+            [1, 'asc'], [2, 'asc']
+          ],
+          rowId: 'id',
+          scrollCollapse: true,
+          scrollX: true,
+          scrollY: scrollY,
+          select: {
+            style: 'multi',
+            selector: 'td:first-child',
+            blurable: true,
+            headerCheckbox: 'select-page',
+          },
+          stateDuration: 0,
+          stateSave: true,
+        });
+      }
+      else {
+        $('#serversDataTable').DataTable().ajax.reload(null, false);
+      }
+
+      serversDataTable.on('select deselect', function () {
+        var selectedRows = serversDataTable.rows({ selected: true }).count();
+        serversDataTable.button(0).enable(selectedRows === 1);
+        serversDataTable.button(2).enable(selectedRows > 0);
+      });
     }
 
     function loadInstructionsModal(){
@@ -144,21 +229,26 @@
       });
     }
 
-    function confirmDeleteServer(id, addr, port, name){
-      console.log("Info: confirming removal of server " + name);
-      if (confirm("Are you sure you want to remove host " + name + "?") == true) {
-        deleteServer(id);
-        setTimeout(() => { reloadPageContent(); }, 1000);
+    function deleteServers(){
+      var deleteServersHiddenInput = JSON.parse($("#deleteServersHiddenInput").val());
+      console.log("Info: deleting servers " + deleteServersHiddenInput.join(", "));
+      for (let i = 0; i < deleteServersHiddenInput.length; i++) {
+        $.post("{{ url_for('api') }}/servers/remove_server", { id: deleteServersHiddenInput[i] }, function (data) {
+          console.log(data);
+          if (data.error_code >= 400){
+            alert(data.error);
+          }
+        });
       }
-    }
 
-    function deleteServer(id){
-      console.log("Info: removing server " + id);
-      $.get("{{ url_for('api') }}/servers/remove_server", {
-        id: id
-      }, function (data) {
-        setTimeout(() => { reloadPageContent(); }, 1000);
-      });
+      //Send toast notification
+      $('#defaultToastHeader').text('Deleting Server(s)')
+      $('#defaultToastBody').text($("#deleteServersList").text())
+      defaultToast.show()
+
+      //Sync type
+      setTimeout(() => { reloadPageContent(); }, 1000);
+      operationStatusCheck()
     }
 
     function editServer(id){

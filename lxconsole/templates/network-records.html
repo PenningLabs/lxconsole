@@ -4,10 +4,11 @@
   <div class="row mb-2">
     <div class="col-sm-6">
       <h1>{{ page_title | safe }}</h1>
+      <h5>Zone: <span id="zone_name"></span></h5>
     </div>
     <div class="col-sm-6">
-      <button class="btn btn-primary float-sm-right mr-4" data-bs-toggle="modal" data-bs-target="#addModal" title="Add Certificate" aria-hidden="true">
-        <i class="fas fa-plus fa-sm fa-fw"></i> Certificate
+      <button class="btn btn-primary float-sm-right mr-4" data-bs-toggle="modal" data-bs-target="#addModal" title="Add Network Record" aria-hidden="true">
+        <i class="fas fa-plus fa-sm fa-fw"></i> Network Record
       </button>
     </div>
   </div>
@@ -17,7 +18,7 @@
   <div class="col-12">
     <div class="card">
       <div class="card-body">
-        <table class="table" id="certificatesDataTable" width="100%" cellspacing="0">
+        <table class="table" id="networkRecordsDataTable" width="100%" cellspacing="0">
         </table>
       </div>
     </div>
@@ -25,7 +26,7 @@
 {% endblock content %}
 
 {% block modal %}
-  {% include 'modals/certificates.html' %}
+  {% include 'modals/network-records.html' %}
 {% endblock modal %}
 
 {% block script %}
@@ -35,8 +36,9 @@
     const urlParams = new URLSearchParams(queryString);
     const serverId = urlParams.get('id');
     const project = urlParams.get('project');
-    var scrollY =  localStorage.getItem('certificatesDataTableScrollY') || '490px';
-    var editedCertificate = ''
+    const zone = urlParams.get('zone');
+    var editedNetworkRecord = ''
+    var scrollY =  localStorage.getItem('networkRecordsDataTableScrollY') || '490px';
     applySidebarStyles();
     applySidebarLinks();
     populateSidebarLinks();
@@ -47,7 +49,7 @@
       clearTimeout(pageReloadTimeout);
 
       //Reload the datatables content
-      loadCertificatesTable()
+      loadNetworkRecordsTable()
 
       //Set the automatic page reload
       pageReloadTimeout = setTimeout(() => { reloadPageContent(); }, reloadTime);
@@ -63,20 +65,29 @@
       populateProjectSelectDropdown()
       
       // Configure Datatable
-      loadCertificatesTable()
+      loadNetworkRecordsTable()
 
       //Set reload page content
       pageReloadTimeout = setTimeout(() => { reloadPageContent(); }, reloadTime);
 
     }
 
-    function loadCertificatesTable(){
-      if ( ! $.fn.DataTable.isDataTable( '#certificatesDataTable' ) ) {
-        certificatesDataTable = $('#certificatesDataTable').DataTable({
+    function loadNetworkRecordsTable() {
+      if ( ! $.fn.DataTable.isDataTable( '#networkRecordsDataTable' ) ) {
+        networkRecordsDataTable = $('#networkRecordsDataTable').DataTable({
           ajax: {
-            url: "{{ url_for('api') }}/certificates/list_certificates?id="+serverId+"&project=" + project + "&recursion=1",
+            url: "{{ url_for('api') }}/network-records/list_network_records?id=" + serverId + "&project=" + project + "&zone=" + zone + "&recursion=1",
             dataType: "json",
-            dataSrc: "metadata",
+            //dataSrc: "metadata",
+            dataSrc: function ( d ) {
+              if (d.hasOwnProperty('metadata') && d.metadata != null) {
+                return d.metadata;
+              }
+              else {
+                d.metadata = []
+                return d.metadata;
+              }
+            },
             contentType: "application/json",
             error: function (xhr, error, code) {
               console.log(xhr, code);
@@ -96,14 +107,6 @@
                 return '-'
               },
             },
-            { title: "Type", data: function (row, type, set) {
-                if (row.hasOwnProperty('type')) {
-                  if (row.type)
-                    return row.type
-                }
-                return '-'
-              },
-            },
             { title: "Description", data: function (row, type, set) {
                 if (row.hasOwnProperty('description')) {
                   if (row.description)
@@ -112,43 +115,13 @@
                 return '-'
               },
             },
-            { title: "Fingerprint", data: function (row, type, set) {
-                if (row.hasOwnProperty('fingerprint')) {
-                  if (row.fingerprint){
-                    if (type === 'display'){
-                      return row.fingerprint.substring(0,12) + "...";
+            { title: "Entries", data: function (row, type, set) {
+                if (row.hasOwnProperty('entries')) {
+                  if (row.entries){
+                    if (row.entries.length > 0){
+                      return JSON.stringify(row.entries)
                     }
-                    return row.fingerprint
-                  }
-                }
-                return '-'
-              },
-            },
-            { title: "Expiry Date", data: function (row, type, set) {
-                if (row.hasOwnProperty('expiry_date')) {
-                  if (row.expiry_date){}
-                    return row.expiry_date.replace("T", " ")
-                }
-                return '-'
-              },
-            },
-            { title: "Restricted", data: function (row, type, set) {
-                if (row.hasOwnProperty('restricted')) {
-                  // Boolean field
-                  return row.restricted
-                }
-                return '-'
-              },
-            },
-            { title: "Projects", data: function (row, type, set) {
-                if (row.hasOwnProperty('projects')) {
-                  if (Object.keys(row.projects).length > 0) {
-                    arr = []
-                    for (restricted_project in row.projects){
-                      arr.push(row.projects[restricted_project])
-                    }
-                    return arr.join(", ")
-                  }
+                  }                  
                 }
                 return '-'
               },
@@ -159,8 +132,8 @@
               buttons: [
                 { text: 'Edit',
                   action: function () { 
-                    rows = certificatesDataTable.rows({ selected: true });
-                    editItem(rows.data()[0]['fingerprint']);
+                    rows = networkRecordsDataTable.rows({ selected: true });
+                    editItem(rows.data()[0]['name']);
                   },
                   enabled: false,
                 },
@@ -168,11 +141,11 @@
                 { text: 'Delete',
                   action: function () { 
                     arr = []
-                    certificatesDataTable.rows('.selected').every( function() {
-                      arr.push(this.data().fingerprint)
+                    networkRecordsDataTable.rows('.selected').every( function() {
+                      arr.push(this.data().name)
                     });
-                    $("#deleteCertificatesList").text(arr.join(", "));
-                    $("#deleteCertificatesHiddenInput").val(JSON.stringify(arr));
+                    $("#deleteNetworkRecordsList").text(arr.join(", "));
+                    $("#deleteNetworkRecordsHiddenInput").val(JSON.stringify(arr));
                     $("#deleteModal").modal('show');                    
                   },
                   enabled: false,
@@ -188,21 +161,21 @@
                     {
                       extend: 'colvis',
                       text: 'Visible columns',
-                      columns: [1,2,3,4,5,6,7],
+                      columns: [1,2,3],
                     },
                     {
                       text: (scrollY == '490px') ? 'Disable scrolling' : 'Enable scrolling',
                       action: function ( e, dt, node, config ) {
                         if (scrollY == '490px') {
-                          localStorage.setItem('certificatesDataTableScrollY', false);
+                          localStorage.setItem('networkRecordsDataTableScrollY', false);
                           scrollY = false
                         }
                         else {
-                          localStorage.setItem('certificatesDataTableScrollY', '490px');
+                          localStorage.setItem('networkRecordsDataTableScrollY', '490px');
                           scrollY = '490px'
                         }
                         dt.destroy()
-                        loadCertificatesTable()
+                        loadNetworkRecordsTable()
                       },
                     },
                     {
@@ -223,9 +196,9 @@
             [10, 25, 50, 100, 'All'],
           ],
           order: [
-            [1, 'asc'], [4, 'asc']
+            [1, 'asc']
           ],
-          rowId: 'fingerprint',
+          rowId: 'name',
           scrollCollapse: true,
           scrollX: true,
           scrollY: scrollY,
@@ -240,49 +213,47 @@
         });
       }
       else {
-        $('#certificatesDataTable').DataTable().ajax.reload(null, false);
+        $('#networkRecordsDataTable').DataTable().ajax.reload(null, false);
       }
 
-      certificatesDataTable.on('select deselect', function () {
-        var selectedRows = certificatesDataTable.rows({ selected: true }).count();
-        certificatesDataTable.button(0).enable(selectedRows === 1);
-        certificatesDataTable.button(2).enable(selectedRows > 0);
+      networkRecordsDataTable.on('select deselect', function () {
+        var selectedRows = networkRecordsDataTable.rows({ selected: true }).count();
+        networkRecordsDataTable.button(0).enable(selectedRows === 1);
+        networkRecordsDataTable.button(2).enable(selectedRows > 0);
       });
     }
 
     function addItem(){
-      console.log("Info: adding new certificate");
+      console.log("Info: adding new item");
       data = $('#addForm').serialize();
-      $.post("{{ url_for('api') }}/certificates/add_certificate?id="+serverId+"&project="+project, data, function (data) {
+      $.post("{{ url_for('api') }}/network-records/add_network_record?id="+serverId+"&project="+project+"&zone="+zone, data, function (data) {
         console.log(data)
         if (data.error_code >= 400){
           alert(data.error);
         }
         //Sync type
-        setTimeout(() => { reloadPageContent(); }, 1000);
-        operationStatusCheck()
+        reloadPageContent();
       });
     }
 
     function createItemUsingJSON(){
       var json = $("#jsonCreateInput").val();
-      console.log("Info: adding new project");
-      $.post("{{ url_for('api') }}/certificates/add_certificate?id="+serverId+"&project="+project, { json: json },  function (data) {
+      console.log("Info: adding new network record");
+      $.post("{{ url_for('api') }}/network-records/add_network_record?id="+serverId+"&project="+project+"&zone="+zone, { json: json },  function (data) {
         console.log(data);
         if (data.error_code >= 400){
           alert(data.error);
         }
         //Sync type
-        setTimeout(() => { reloadPageContent(); }, 1000);
-        operationStatusCheck()
+        reloadPageContent();
       });
     }
 
     function deleteItems(){
-      var deleteCertificatesHiddenInput = JSON.parse($("#deleteCertificatesHiddenInput").val());
-      console.log("Info: deleting certificates " + deleteCertificatesHiddenInput.join(", "));
-      for (let i = 0; i < deleteCertificatesHiddenInput.length; i++) {
-        $.post("{{ url_for('api') }}/certificates/delete_certificate?id=" + serverId + "&project=" + project, { fingerprint: deleteCertificatesHiddenInput[i] }, function (data) {
+      var deleteNetworkRecordsHiddenInput = JSON.parse($("#deleteNetworkRecordsHiddenInput").val());
+      console.log("Info: deleting network records " + deleteNetworkRecordsHiddenInput.join(", "));
+      for (let i = 0; i < deleteNetworkRecordsHiddenInput.length; i++) {
+        $.post("{{ url_for('api') }}/network-records/delete_network_record?id=" + serverId + "&project=" + project + "&zone=" + zone, { name: deleteNetworkRecordsHiddenInput[i] }, function (data) {
           console.log(data);
           if (data.error_code >= 400){
             alert(data.error);
@@ -291,8 +262,8 @@
       }
 
       //Send toast notification
-      $('#defaultToastHeader').text('Deleting Certificate(s)')
-      $('#defaultToastBody').text(deleteCertificatesHiddenInput.join(", "))
+      $('#defaultToastHeader').text('Deleting Network Record(s)')
+      $('#defaultToastBody').text($("#deleteNetworkRecordsList").text())
       defaultToast.show()
 
       //Sync type
@@ -301,31 +272,44 @@
     }
 
     function editItem(name){
-      editedCertificate = name
-      console.log("Info: loading certificate " + name);
-      $.post("{{ url_for('api') }}/certificates/load_certificate?id=" + serverId + "&project=" + project, { fingerprint: name }, function (data) {
+      editedNetworkRecord = name
+      console.log("Info: loading network record " + name);
+      $.post("{{ url_for('api') }}/network-records/load_network_record?id=" + serverId + "&project=" + project + "&zone=" + zone, { name: name }, function (data) {
         console.log(data);
         if (data.error_code >= 400){
           alert(data.error);
         }
-        $("#certificateNameEditInput").text("Fingerprint: " + name);
         $("#jsonInput").val(JSON.stringify(data.metadata, null, 2));
         $("#editModal").modal('show');
       });
     }
 
+    // There is no API for renaming network records
+    function renameItem(){
+      name = editedNetworkRecord
+      console.log("Info: renaming network record");
+      data = $('#renameForm').serialize();
+      $.post("{{ url_for('api') }}/network-records/update_network_record?id=" + serverId + "&project=" + project + "&zone=" + zone  + "&name=" + encodeURI(name), data, function (data) {
+        console.log(data)
+        if (data.error_code >= 400){
+          alert(data.error);
+        }
+        //Sync type
+        reloadPageContent();
+      });
+    }
+
     function updateItem(){
-      name = editedCertificate
+      name = editedNetworkRecord
       var updatedJSON = $("#jsonInput").val();
-      console.log("Info: updating certificate");
-      $.post("{{ url_for('api') }}/certificates/update_certificate?id=" + serverId + "&project=" + project + "&fingerprint=" + encodeURI(name), { json: updatedJSON },  function (data) {
+      console.log("Info: updating netowrk record");
+      $.post("{{ url_for('api') }}/network-records/update_network_record?id=" + serverId + "&project=" + project + "&zone=" + zone + "&name=" + encodeURI(name), { json: updatedJSON },  function (data) {
         console.log(data);
         if (data.error_code >= 400){
           alert(data.error);
         }
         //Sync type
-        setTimeout(() => { reloadPageContent(); }, 1000);
-        operationStatusCheck()
+        reloadPageContent();
       });
     }
 
@@ -335,9 +319,18 @@
       if (!serverId || !project) {
         window.location.href = "{{ url_for('servers') }}";
       }
+      else if (!zone) {
+        window.location.href = "{{ url_for('network_zones') }}?id=" + serverId + '&project=' + project
+      }
       else {
         loadPageContent()
         operationStatusCheck()
+        $('#zone_name').text(zone)
+        
+        // Redirect datatables errors to console log
+        $.fn.dataTable.ext.errMode = function ( settings, helpPage, message ) { 
+          console.log(message);
+        };
       }
       
     });

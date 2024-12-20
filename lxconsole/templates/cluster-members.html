@@ -18,14 +18,6 @@
 {% block content %}
   <div class="col-12">
     <div class="card">
-      <div class="card-header">
-        <h3 class="card-title">Cluster Members</h3>
-        <div class="card-tools">
-          <button type="button" class="btn btn-tool" onclick="reloadPageContent()" title="Refresh">
-          <i class="fas fa-sync"></i>
-          </button>
-        </div>
-      </div>
       <div class="card-body">
         <table class="table" id="clusterMembersDataTable" width="100%" cellspacing="0">
         </table>
@@ -46,6 +38,7 @@
     const serverId = urlParams.get('id');
     const project = urlParams.get('project');
     var editedClusterMember = ''
+    var scrollY =  localStorage.getItem('clusterMembersDataTableScrollY') || '490px';
     applySidebarStyles();
     applySidebarLinks();
     populateSidebarLinks();
@@ -56,7 +49,7 @@
       clearTimeout(pageReloadTimeout);
 
       //Reload the datatables content
-      $('#clusterMembersDataTable').DataTable().ajax.reload(null, false);
+      loadClusterMembersTable()
 
       //Set the automatic page reload
       pageReloadTimeout = setTimeout(() => { reloadPageContent(); }, reloadTime);
@@ -72,93 +65,202 @@
       populateProjectSelectDropdown()
 
       // Configure Datatable
-      $('#clusterMembersDataTable').DataTable({
-        ajax: {
-          url: "{{ url_for('api') }}/cluster-members/list_cluster_members?id="+serverId+"&project=" + project + "&recursion=1",
-          dataType: "json",
-          dataSrc: "metadata",
-          contentType: "application/json",
-          error: function (xhr, error, code) {
-            console.log(xhr, code);
-          }
-        },
-        columns: [
-          { title: "Server Name", data: function (row, type, set) {
-              if (row.hasOwnProperty('server_name')) {
-                if (row.server_name)
-                  return row.server_name
-              }
-              return '-'
-            },
-          },
-          { title: "Description", data: function (row, type, set) {
-              if (row.hasOwnProperty('description')) {
-                if (row.description)
-                  return row.description
-              }
-              return '-'
-            },
-          },
-          { title: "Roles", data: function (row, type, set) {
-              if (row.hasOwnProperty('roles')) {
-                if (row.roles.length > 0){
-                  return row.roles.join(', <br />')
-                }
-              }
-              return '-'
-            },
-          },
-          { title: "URL", data: function (row, type, set) {
-              if (row.hasOwnProperty('url')) {
-                if (row.url)
-                  return row.url
-              }
-              return '-'
-            },
-          },
-          { title: "Database", data: function (row, type, set) {
-              if (row.hasOwnProperty('database')) {
-                if (row.database)
-                  return row.database
-              }
-              return '-'
-            },
-          },
-          { title: "Status", data: function (row, type, set) {
-              if (row.hasOwnProperty('status')) {
-                if (row.status)
-                  return row.status
-              }
-              return '-'
-            },
-          },
-
-          { title: "Actions", data: function (row, type, set) {
-              links = ''
-              if (row.hasOwnProperty('status')) {
-                links += '<a href="#" onclick=editItem(\''+row.server_name+'\')><i class="fas fa-edit fa-lg" title="Edit" aria-hidden="true"></i></a>'
-                links += '&nbsp' + '&nbsp'
-                if (row.status == 'Online'){
-                  links += '<a href="#" onclick=changeItemState(\''+row.server_name+'\',\'evacuate\')><i class="fas fa-sign-out-alt fa-lg" title="Evacuate" aria-hidden="true"></i></a>'
-                  links += '&nbsp' + '&nbsp'
-                }
-                if (row.status == 'Evacuated'){
-                  links += '<a href="#" onclick=changeItemState(\''+row.server_name+'\',\'restore\')><i class="fas fa-sign-in-alt fa-lg" title="Restore" aria-hidden="true"></i></a>'
-                  links += '&nbsp' + '&nbsp'
-                }
-                links += '<a href="#" onclick=confirmDeleteItem(\''+row.server_name+'\')><i class="fas fa-trash-alt fa-lg" title="Delete" aria-hidden="true"></i></a>'
-              }
-              return links
-            },
-          },
-
-        ],
-        order: [],
-      });
+      loadClusterMembersTable()
 
       //Set reload page content
       pageReloadTimeout = setTimeout(() => { reloadPageContent(); }, reloadTime);
 
+    }
+
+    function loadClusterMembersTable() {
+      if ( ! $.fn.DataTable.isDataTable( '#clusterMembersDataTable' ) ) {
+        clusterMembersDataTable = $('#clusterMembersDataTable').DataTable({
+          ajax: {
+          url: "{{ url_for('api') }}/cluster-members/list_cluster_members?id="+serverId+"&project=" + project + "&recursion=1",
+          dataType: "json",
+          dataSrc: "metadata",
+          contentType: "application/json",
+            error: function (xhr, error, code) {
+              console.log(xhr, code);
+            }
+          },
+          columns: [
+            {
+              data: null,
+              orderable: false,
+              render: DataTable.render.select()
+            },
+            { title: "Server Name", data: function (row, type, set) {
+                if (row.hasOwnProperty('server_name')) {
+                  if (row.server_name)
+                    return row.server_name
+                }
+                return '-'
+              },
+            },
+            { title: "Description", data: function (row, type, set) {
+                if (row.hasOwnProperty('description')) {
+                  if (row.description)
+                    return row.description
+                }
+                return '-'
+              },
+            },
+            { title: "Roles", data: function (row, type, set) {
+                if (row.hasOwnProperty('roles')) {
+                  if (row.roles.length > 0){
+                    return row.roles.join(', <br />')
+                  }
+                }
+                return '-'
+              },
+            },
+            { title: "URL", data: function (row, type, set) {
+                if (row.hasOwnProperty('url')) {
+                  if (row.url)
+                    return row.url
+                }
+                return '-'
+              },
+            },
+            { title: "Database", data: function (row, type, set) {
+                if (row.hasOwnProperty('database')) {
+                  if (row.database)
+                    return row.database
+                }
+                return '-'
+              },
+            },
+            { title: "Status", data: function (row, type, set) {
+                if (row.hasOwnProperty('status')) {
+                  if (row.status)
+                    return row.status
+                }
+                return '-'
+              },
+            },
+          ],
+          layout: {
+            topStart: {
+              buttons: [
+                {
+                  extend: 'collection',
+                  text: 'State',
+                  autoClose: true,
+                  enabled: false,
+                  buttons: [
+                    {
+                      text: 'Evacuate',
+                      action: function (e, dt, node, config) { 
+                        clusterMembersDataTable.rows('.selected').every( function() {
+                          changeItemState(this.data().server_name, 'evacuate')
+                        })
+                      },
+                    },
+                    {
+                      text: 'Restore',
+                      action: function () { 
+                        clusterMembersDataTable.rows('.selected').every( function() {
+                          changeItemState(this.data().server_name, 'restore')
+                        })
+                      },
+                    },
+                  ],
+                },
+                'spacer',
+                { text: 'Edit',
+                  action: function () { 
+                    rows = clusterMembersDataTable.rows({ selected: true });
+                    editItem(rows.data()[0]['server_name']);
+                  },
+                  enabled: false,
+                },
+                'spacer',
+                { text: 'Delete',
+                  action: function () { 
+                    arr = []
+                    arr2 = []
+                    clusterMembersDataTable.rows('.selected').every( function() {
+                      arr.push(this.data().server_name)
+                    });
+                    $("#deleteClusterMembersList").text(arr.join(", "));
+                    $("#deleteClusterMembersHiddenInput").val(JSON.stringify(arr));
+                    $("#deleteModal").modal('show');                    
+                  },
+                  enabled: false,
+                },
+                'spacer',
+                'spacer',
+                'pageLength',
+                'spacer',
+                {
+                  extend: 'collection',
+                  text: 'More',
+                  buttons: [
+                    {
+                      extend: 'colvis',
+                      text: 'Visible columns',
+                      columns: [1,2,3,4,5,6],
+                    },
+                    {
+                      text: (scrollY == '490px') ? 'Disable scrolling' : 'Enable scrolling',
+                      action: function ( e, dt, node, config ) {
+                        if (scrollY == '490px') {
+                          localStorage.setItem('clusterMembersDataTableScrollY', false);
+                          scrollY = false
+                        }
+                        else {
+                          localStorage.setItem('clusterMembersDataTableScrollY', '490px');
+                          scrollY = '490px'
+                        }
+                        dt.destroy()
+                        loadClusterMembersTable()
+                      },
+                    },
+                    {
+                      text: 'Reset table state',
+                      action: function ( e, dt, node, config ) {
+                        dt.state.clear();
+                        window.location.reload();
+                      },
+                    },
+                  ]
+                }
+
+              ]
+            }
+          },
+          lengthMenu: [
+            [10, 25, 50, 100, -1],
+            [10, 25, 50, 100, 'All'],
+          ],
+          order: [
+            [1, 'asc']
+          ],
+          rowId: 'server_name',
+          scrollCollapse: true,
+          scrollX: true,
+          scrollY: scrollY,
+          select: {
+            style: 'multi',
+            selector: 'td:first-child',
+            blurable: true,
+            headerCheckbox: 'select-page',
+          },
+          stateDuration: 0,
+          stateSave: true,
+        });
+      }
+      else {
+        $('#clusterMembersDataTable').DataTable().ajax.reload(null, false);
+      }
+
+      clusterMembersDataTable.on('select deselect', function () {
+        var selectedRows = clusterMembersDataTable.rows({ selected: true }).count();
+        clusterMembersDataTable.button(0).enable(selectedRows > 0);
+        clusterMembersDataTable.button(2).enable(selectedRows === 1);
+        clusterMembersDataTable.button(4).enable(selectedRows > 0);
+      });
     }
 
     function addItem(){
@@ -175,19 +277,16 @@
     }
 
     function changeItemState(name, action){
-      console.log("Info: confirming " + action + " action of cluster member " + name);
-      if (confirm("Are you sure you want to " + action + " cluster member " + name + "?") == true) {
-        console.log("Info: " + name + " " + action + " action started");
-        $.post("{{ url_for('api') }}/cluster-members/change_cluster_member_state?id=" + serverId + "&project=" + project, { name: name, action: action }, function (data) {
-          console.log(data);
-          if (data.error_code >= 400){
-            alert(data.error);
-          }
-          //Aync type
-          setTimeout(() => { reloadPageContent(); }, 2000);
-          operationStatusCheck()
-        });
-      }
+      console.log("Info: " + name + " " + action + " action started");
+      $.post("{{ url_for('api') }}/cluster-members/change_cluster_member_state?id=" + serverId + "&project=" + project, { name: name, action: action }, function (data) {
+        console.log(data);
+        if (data.error_code >= 400){
+          alert(data.error);
+        }
+        //Aync type
+        setTimeout(() => { reloadPageContent(); }, 2000);
+        operationStatusCheck()
+      });
     }
 
     function confirmDeleteItem(name){
@@ -210,21 +309,32 @@
       });
     }
 
-    function deleteItem(){
-      name = $("#clusterMember").val();
-      force = "false";
-      if ($('#forceDeleteCheck').is(':checked')) {
+    function deleteItems(){
+      var deleteClusterMembersHiddenInput = JSON.parse($("#deleteClusterMembersHiddenInput").val());
+      if ($('#forceDeleteClusterMembersInput').is(':checked')) {
         force = "true";
       }
-      console.log("Info: deleting item " + name);
-      $.post("{{ url_for('api') }}/cluster-members/delete_cluster_member?id=" + serverId + "&project=" + project, { name: name, force: force }, function (data) {
-        console.log(data);
-        if (data.error_code >= 400){
-          alert(data.error);
-        }
-        //Sync type
-        reloadPageContent();
-      });
+      else {
+        force = "false";
+      }
+      console.log("Info: deleting cluster members " + deleteClusterMembersHiddenInput.join(", "));
+      for (let i = 0; i < deleteClusterMembersHiddenInput.length; i++) {
+        $.post("{{ url_for('api') }}/cluster-members/delete_cluster_member?id=" + serverId + "&project=" + project, { name: deleteClusterMembersHiddenInput[i], force: force }, function (data) {
+          console.log(data);
+          if (data.error_code >= 400){
+            alert(data.error);
+          }
+        });
+      }
+
+      //Send toast notification
+      $('#defaultToastHeader').text('Deleting Cluster Members(s)')
+      $('#defaultToastBody').text(deleteClusterMembersHiddenInput.join(", "))
+      defaultToast.show()
+
+      //Sync type
+      setTimeout(() => { reloadPageContent(); }, 1000);
+      operationStatusCheck()
     }
 
     function editItem(name){
@@ -254,7 +364,6 @@
         reloadPageContent();
       });
     }
-
 
     function updateItem(){
       name = editedClusterMember

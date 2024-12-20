@@ -14,6 +14,10 @@ if not secret_key:
 
 app.config['SECRET_KEY'] = secret_key
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite3'
+
+# Set the Session SameSite attribute to 'Lax' or 'Strict' for "Remember Me" login
+app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
+
 db = SQLAlchemy(app)
 
 bcrypt = Bcrypt(app)

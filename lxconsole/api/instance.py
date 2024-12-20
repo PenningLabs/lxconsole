@@ -354,6 +354,8 @@ def api_instance_endpoint(endpoint):
       extenstion = '.tar.bz2'
     elif compression_algorithm == 'gzip':
       extenstion = '.tar.gz'
+    elif compression_algorithm == 'lz4':
+      extenstion = '.tar.lz4'
     elif compression_algorithm == 'lzma':
       extenstion = '.tar.lzma'
     elif compression_algorithm == 'xz':

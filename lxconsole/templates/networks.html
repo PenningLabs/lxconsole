@@ -16,14 +16,6 @@
 {% block content %}
   <div class="col-12">
     <div class="card">
-      <div class="card-header">
-        <h3 class="card-title">Networks</h3>
-        <div class="card-tools">
-          <button type="button" class="btn btn-tool" onclick="reloadPageContent()" title="Refresh">
-          <i class="fas fa-sync"></i>
-          </button>
-        </div>
-      </div>
       <div class="card-body">
         <table class="table" id="networksDataTable" width="100%" cellspacing="0">
         </table>
@@ -44,6 +36,7 @@
     const serverId = urlParams.get('id');
     const project = urlParams.get('project');
     var editedProfile = ''
+    var scrollY =  localStorage.getItem('networksDataTableScrollY') || '490px';
     applySidebarStyles();
     applySidebarLinks();
     populateSidebarLinks();
@@ -54,7 +47,7 @@
       clearTimeout(pageReloadTimeout);
 
       //Reload the datatables content
-      $('#networksDataTable').DataTable().ajax.reload(null, false);
+      loadNetworksTable()
 
       //Set the automatic page reload
       pageReloadTimeout = setTimeout(() => { reloadPageContent(); }, reloadTime);
@@ -70,88 +63,7 @@
       populateProjectSelectDropdown()
       
       // Configure Datatable
-      $('#networksDataTable').DataTable({
-        ajax: {
-          url: "{{ url_for('api') }}/networks/list_networks?id="+serverId+"&project=" + project + "&recursion=1",
-          dataType: "json",
-          dataSrc: "metadata",
-          contentType: "application/json",
-          error: function (xhr, error, code) {
-            console.log(xhr, code);
-          }
-        },
-        columns: [
-          { title: "Name", data: function (row, type, set) {
-              if (row.hasOwnProperty('name')) {
-                if (row.name && row.managed && row.type)
-                  return "<a href=\"{{ url_for('network') }}?id=" + serverId + '&project=' + project + '&network=' + row.name + '&network_type=' + row.type + '">' + row.name + '</a>';
-                if (row.name)
-                  return row.name
-              }
-              return '-'
-            },
-          },
-          { title: "Description", data: function (row, type, set) {
-              if (row.hasOwnProperty('description')) {
-                if (row.description)
-                  return row.description
-              }
-              return '-'
-            },
-          },
-          { title: "IPv4", data: function (row, type, set) {
-              if (row.hasOwnProperty('config')){
-                if (row.config.hasOwnProperty('ipv4.address')) {
-                  if (row.config['ipv4.address'])
-                    return row.config['ipv4.address']
-                }
-              }
-              return '-'
-            },
-          },
-          { title: "IPv6", data: function (row, type, set) {
-              if (row.hasOwnProperty('config')){
-                if (row.config.hasOwnProperty('ipv6.address')) {
-                  if (row.config['ipv6.address'])
-                    return row.config['ipv6.address']
-                }
-              }
-              return '-'
-            },
-          },
-          { title: "Type", data: function (row, type, set) {
-              if (row.hasOwnProperty('type')) {
-                if (row.type)
-                  return row.type
-              }
-              return '-'
-            },
-          },
-          { title: "Managed", data: function (row, type, set) {
-              if (row.hasOwnProperty('managed')) {
-                // Boolean field
-                return row.managed
-              }
-              return '-'
-            },
-          },
-          { title: "Actions", data: function (row, type, set) {
-              links = ''
-              if (row.hasOwnProperty('name') && row.hasOwnProperty('managed')) {
-                if (row.managed){
-                  links = '<a href="#" onclick=editNetwork(\''+row.name+'\')><i class="fas fa-edit fa-lg" title="Edit" aria-hidden="true"></i></a>' +
-                  '&nbsp' + '&nbsp' +
-                  '<a href="#" onclick=renameNetwork(\''+row.name+'\')><i class="fas fa-tag fa-lg" title="Rename" aria-hidden="true"></i></a>' +
-                  '&nbsp' + '&nbsp' +
-                  '<a href="#" onclick=confirmDeleteNetwork(\''+row.name+'\')><i class="fas fa-trash-alt fa-lg" title="Delete" aria-hidden="true"></i></a>'
-                }
-              }
-              return links
-            },
-          },
-        ],
-        order: [],
-      });
+      loadNetworksTable()
 
       //Populate Network/Parent Fields in addModal
       $.getJSON("{{ url_for('api') }}/networks/list_networks?id="+serverId+'&project='+project+'&recursion=1', function (data) {
@@ -167,6 +79,182 @@
       //Set reload page content
       pageReloadTimeout = setTimeout(() => { reloadPageContent(); }, reloadTime);
 
+    }
+
+    function loadNetworksTable() {
+      if ( ! $.fn.DataTable.isDataTable( '#networksDataTable' ) ) {
+        networksDataTable = $('#networksDataTable').DataTable({
+          ajax: {
+            url: "{{ url_for('api') }}/networks/list_networks?id="+serverId+"&project=" + project + "&recursion=1",
+            dataType: "json",
+            dataSrc: "metadata",
+            contentType: "application/json",
+            error: function (xhr, error, code) {
+              console.log(xhr, code);
+            }
+          },
+          columns: [
+            {
+              data: null,
+              orderable: false,
+              render: DataTable.render.select()
+            },
+            { title: "Name", data: function (row, type, set) {
+                if (row.hasOwnProperty('name')) {
+                  if (row.name && row.managed && row.type)
+                    return "<a href=\"{{ url_for('network') }}?id=" + serverId + '&project=' + project + '&network=' + row.name + '&network_type=' + row.type + '">' + row.name + '</a>';
+                  if (row.name)
+                    return row.name
+                }
+                return '-'
+              },
+            },
+            { title: "Description", data: function (row, type, set) {
+                if (row.hasOwnProperty('description')) {
+                  if (row.description)
+                    return row.description
+                }
+                return '-'
+              },
+            },
+            { title: "IPv4", data: function (row, type, set) {
+                if (row.hasOwnProperty('config')){
+                  if (row.config.hasOwnProperty('ipv4.address')) {
+                    if (row.config['ipv4.address'])
+                      return row.config['ipv4.address']
+                  }
+                }
+                return '-'
+              },
+            },
+            { title: "IPv6", data: function (row, type, set) {
+                if (row.hasOwnProperty('config')){
+                  if (row.config.hasOwnProperty('ipv6.address')) {
+                    if (row.config['ipv6.address'])
+                      return row.config['ipv6.address']
+                  }
+                }
+                return '-'
+              },
+            },
+            { title: "Type", data: function (row, type, set) {
+                if (row.hasOwnProperty('type')) {
+                  if (row.type)
+                    return row.type
+                }
+                return '-'
+              },
+            },
+            { title: "Managed", data: function (row, type, set) {
+                if (row.hasOwnProperty('managed')) {
+                  // Boolean field
+                  return row.managed
+                }
+                return '-'
+              },
+            },
+          ],
+          layout: {
+            topStart: {
+              buttons: [
+                { text: 'Edit',
+                  action: function () { 
+                    rows = networksDataTable.rows({ selected: true });
+                    editItem(rows.data()[0]['name']);
+                  },
+                  enabled: false,
+                },
+                'spacer',
+                { text: 'Delete',
+                  action: function () { 
+                    arr = []
+                    arr2 = []
+                    networksDataTable.rows('.selected').every( function() {
+                      arr.push(this.data().name)
+                    });
+                    $("#deleteNetworksList").text(arr.join(", "));
+                    $("#deleteNetworksHiddenInput").val(JSON.stringify(arr));
+                    $("#deleteModal").modal('show');                    
+                  },
+                  enabled: false,
+                },
+                'spacer',
+                'spacer',
+                'pageLength',
+                'spacer',
+                {
+                  extend: 'collection',
+                  text: 'More',
+                  buttons: [
+                    {
+                      extend: 'colvis',
+                      text: 'Visible columns',
+                      columns: [1,2,3,4,5,6],
+                    },
+                    {
+                      text: (scrollY == '490px') ? 'Disable scrolling' : 'Enable scrolling',
+                      action: function ( e, dt, node, config ) {
+                        if (scrollY == '490px') {
+                          localStorage.setItem('networksDataTableScrollY', false);
+                          scrollY = false
+                        }
+                        else {
+                          localStorage.setItem('networksDataTableScrollY', '490px');
+                          scrollY = '490px'
+                        }
+                        dt.destroy()
+                        loadNetworksTable()
+                      },
+                    },
+                    {
+                      text: 'Reset table state',
+                      action: function ( e, dt, node, config ) {
+                        dt.state.clear();
+                        window.location.reload();
+                      },
+                    },
+                  ]
+                }
+
+              ]
+            }
+          },
+          lengthMenu: [
+            [10, 25, 50, 100, -1],
+            [10, 25, 50, 100, 'All'],
+          ],
+          order: [
+            [6, 'des'],[1, 'asc']
+          ],
+          rowId: 'name',
+          scrollCollapse: true,
+          scrollX: true,
+          scrollY: scrollY,
+          select: {
+            selectable: function (rowData) {
+              if (rowData.hasOwnProperty('managed')) {
+                return rowData.managed; 
+              }
+              return false; 
+            },
+            style: 'multi',
+            selector: 'td:first-child',
+            blurable: true,
+            headerCheckbox: 'select-page',
+          },
+          stateDuration: 0,
+          stateSave: true,
+        });
+      }
+      else {
+        $('#networksDataTable').DataTable().ajax.reload(null, false);
+      }
+
+      networksDataTable.on('select deselect', function () {
+        var selectedRows = networksDataTable.rows({ selected: true }).count();
+        networksDataTable.button(0).enable(selectedRows === 1);
+        networksDataTable.button(2).enable(selectedRows > 0);
+      });
     }
 
     function addItem(){
@@ -388,13 +476,6 @@
       }
     }
 
-    function confirmDeleteNetwork(name){
-      console.log("Info: confirming deletion of network " + name);
-      if (confirm("Are you sure you want to delete network " + name + "?") == true) {
-        deleteNetwork(name);
-      }
-    }
-
     function createNetworkUsingJSON(){
       var json = $("#jsonCreateInput").val();
       console.log("Info: adding new network");
@@ -409,20 +490,29 @@
       });
     }
 
-    function deleteNetwork(name){
-      console.log("Info: deleting network " + name);
-      $.post("{{ url_for('api') }}/networks/delete_network?id=" + serverId + "&project=" + project, { name: name }, function (data) {
-        console.log(data);
-        if (data.error_code >= 400){
-          alert(data.error);
-        }
-        //Sync type
-        setTimeout(() => { reloadPageContent(); }, 1000);
-        operationStatusCheck()
-      });
+    function deleteItems(){
+      var deleteNetworksHiddenInput = JSON.parse($("#deleteNetworksHiddenInput").val());
+      console.log("Info: deleting networks " + deleteNetworksHiddenInput.join(", "));
+      for (let i = 0; i < deleteNetworksHiddenInput.length; i++) {
+        $.post("{{ url_for('api') }}/networks/delete_network?id=" + serverId + "&project=" + project, { name: deleteNetworksHiddenInput[i] }, function (data) {
+          console.log(data);
+          if (data.error_code >= 400){
+            alert(data.error);
+          }
+        });
+      }
+
+      //Send toast notification
+      $('#defaultToastHeader').text('Deleting Network(s)')
+      $('#defaultToastBody').text($("#deleteNetworksList").text())
+      defaultToast.show()
+
+      //Sync type
+      setTimeout(() => { reloadPageContent(); }, 1000);
+      operationStatusCheck()
     }
 
-    function editNetwork(name){
+    function editItem(name){
       editedNetwork = name
       console.log("Info: loading network " + name);
       $.post("{{ url_for('api') }}/networks/load_network?id=" + serverId + "&project=" + project, { name: name }, function (data) {
@@ -430,6 +520,7 @@
         if (data.error_code >= 400){
           alert(data.error);
         }
+        $("#networkToRename").val(name);
         $("#networkNameEditInput").text("Name: " + name);
         $("#jsonInput").val(JSON.stringify(data.metadata, null, 2));
         $("#editModal").modal('show');

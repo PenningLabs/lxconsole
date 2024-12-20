@@ -130,10 +130,11 @@
                     <label class="col-4 col-form-label text-right">backups.compression_algorithm: </label>
                     <div class="col-6">
                       <div class="form-group">
-                        <select onchange="" class="form-select" name="features.backups.compression_algorithm">
+                        <select onchange="" class="form-select" name="backups.compression_algorithm">
                           <option value="">(not set)</option>
                           <option value="bzip2">bzip2</option>
                           <option value="gzip">gzip</option>
+                          <option value="lz4">lz4</option>
                           <option value="lzma">lzma</option>
                           <option value="none">none</option>
                           <option value="xz">xz</option>
@@ -148,7 +149,7 @@
                     <label class="col-4 col-form-label text-right">images.auto_update_cached: </label>
                     <div class="col-6">
                       <div class="form-group">
-                        <select onchange="" class="form-select" name="features.images.auto_update_cached">
+                        <select onchange="" class="form-select" name="images.auto_update_cached">
                           <option value="">(not set)</option>
                           <option value="true">true</option>
                           <option value="false">false</option>
@@ -163,7 +164,7 @@
                     <label class="col-4 col-form-label text-right">images.auto_update_interval: </label>
                     <div class="col-6">
                       <div class="form-group">
-                        <input type="number" class="form-control" placeholder="" name="features.images.auto_update_interval">
+                        <input type="number" class="form-control" placeholder="" name="images.auto_update_interval">
                       </div>
                     </div>
                     <div class="col-1">
@@ -174,10 +175,11 @@
                     <label class="col-4 col-form-label text-right">images.compression_algorithm: </label>
                     <div class="col-6">
                       <div class="form-group">
-                        <select  onchange="" class="form-select" name="features.images.compression_algorithm">
+                        <select  onchange="" class="form-select" name="images.compression_algorithm">
                           <option value="">(not set)</option>
                           <option value="bzip2">bzip2</option>
                           <option value="gzip">gzip</option>
+                          <option value="lz4">lz4</option>
                           <option value="lzma">lzma</option>
                           <option value="none">none</option>
                           <option value="xz">xz</option>
@@ -192,7 +194,7 @@
                     <label class="col-4 col-form-label text-right">images.default_architecture: </label>
                     <div class="col-6">
                       <div class="form-group">
-                        <input type="text" class="form-control" placeholder="" name="features.images.default_architecture">
+                        <input type="text" class="form-control" placeholder="" name="images.default_architecture">
                       </div>
                     </div>
                     <div class="col-1">
@@ -203,7 +205,7 @@
                     <label class="col-4 col-form-label text-right">images.remote_cache_expiry: </label>
                     <div class="col-6">
                       <div class="form-group">
-                        <input type="number" class="form-control" placeholder="" name="features.images.remote_cache_expiry">
+                        <input type="number" class="form-control" placeholder="" name="images.remote_cache_expiry">
                       </div>
                     </div>
                     <div class="col-1">
@@ -214,7 +216,7 @@
                     <label class="col-4 col-form-label text-right">limits.containers: </label>
                     <div class="col-6">
                       <div class="form-group">
-                        <input type="number" class="form-control" placeholder="" name="features.limits.containers">
+                        <input type="number" class="form-control" placeholder="" name="limits.containers">
                       </div>
                     </div>
                     <div class="col-1">
@@ -225,7 +227,7 @@
                     <label class="col-4 col-form-label text-right">limits.cpu: </label>
                     <div class="col-6">
                       <div class="form-group">
-                        <input type="number" class="form-control" placeholder="" name="features.limits.cpu">
+                        <input type="number" class="form-control" placeholder="" name="limits.cpu">
                       </div>
                     </div>
                     <div class="col-1">
@@ -236,7 +238,7 @@
                     <label class="col-4 col-form-label text-right">limits.disk: </label>
                     <div class="col-6">
                       <div class="form-group">
-                        <input type="text" class="form-control" placeholder="" name="features.limits.disk">
+                        <input type="text" class="form-control" placeholder="" name="limits.disk">
                       </div>
                     </div>
                     <div class="col-1">
@@ -247,7 +249,7 @@
                     <label class="col-4 col-form-label text-right">limits.instances: </label>
                     <div class="col-6">
                       <div class="form-group">
-                        <input type="number" class="form-control" placeholder="" name="features.limits.instances">
+                        <input type="number" class="form-control" placeholder="" name="limits.instances">
                       </div>
                     </div>
                     <div class="col-1">
@@ -258,7 +260,7 @@
                     <label class="col-4 col-form-label text-right">limits.memory: </label>
                     <div class="col-6">
                       <div class="form-group">
-                        <input type="text" class="form-control" placeholder="" name="features.limits.memory">
+                        <input type="text" class="form-control" placeholder="" name="limits.memory">
                       </div>
                     </div>
                     <div class="col-1">
@@ -269,7 +271,7 @@
                     <label class="col-4 col-form-label text-right">limits.networks: </label>
                     <div class="col-6">
                       <div class="form-group">
-                        <input type="number" class="form-control" placeholder="" name="features.limits.networks">
+                        <input type="number" class="form-control" placeholder="" name="limits.networks">
                       </div>
                     </div>
                     <div class="col-1">
@@ -280,7 +282,7 @@
                     <label class="col-4 col-form-label text-right">limits.processes: </label>
                     <div class="col-6">
                       <div class="form-group">
-                        <input type="number" class="form-control" placeholder="" name="features.limits.processes">
+                        <input type="number" class="form-control" placeholder="" name="limits.processes">
                       </div>
                     </div>
                     <div class="col-1">
@@ -291,7 +293,7 @@
                     <label class="col-4 col-form-label text-right">limits.virtual-machines: </label>
                     <div class="col-6">
                       <div class="form-group">
-                        <input type="number" class="form-control" placeholder="" name="features.limits.virtual-machines">
+                        <input type="number" class="form-control" placeholder="" name="limits.virtual-machines">
                       </div>
                     </div>
                     <div class="col-1">
@@ -634,53 +636,78 @@
           </button>
         </div>
         <div class="modal-body">
-          <div class="row">
-            <label class="col-4 col-form-label" id="projectNameEditInput"></label>
-            <div class="col-12">
-              <div class="form-group text-right">
-                <pre>
-                  <textarea name="json" class="form-control" id="jsonInput" rows="16" ></textarea>
-                </pre>
+          <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item">
+              <a class="nav-link active" id="json-edit-tab" data-bs-toggle="tab" href="#json-edit" role="tab" aria-controls="json-edit" aria-selected="false">JSON</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="rename-edit-tab" data-bs-toggle="tab" href="#rename-edit" role="tab" aria-controls="rename-edit" aria-selected="true">Rename</a>
+            </li>
+          </ul>
+          <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="json-edit" role="tabpanel" aria-labelledby="json-edit-tab">
+              <br />
+              <div class="row">
+                <label class="col-4 col-form-label" id="projectNameEditInput"></label>
+                <div class="col-12">
+                  <div class="form-group text-right">
+                    <pre>
+                      <textarea name="json" class="form-control" id="jsonInput" rows="16" ></textarea>
+                    </pre>
+                  </div>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+                <a class="btn btn-primary" href="#" onclick="updateProject()" data-bs-dismiss="modal">Submit</a>
+              </div>
+            </div>
+            <div class="tab-pane fade" id="rename-edit" role="tabpanel" aria-labelledby="rename-edit-tab">
+              <form id="renameForm">
+                <br />
+                <div class="row">
+                  <label class="col-3 col-form-label text-right" id="newProjectNameLabel">Name: <span class="text-danger">*</span></label>
+                  <div class="col-7">
+                    <div class="form-group">
+                      <input type="text" id="newProjectName" class="form-control" placeholder="">
+                    </div>
+                  </div>
+                  <div class="col-1">
+                    <i class="far fa-sm fa-question-circle" title='(Required) - Enter in a new name for the project.'></i>
+                  </div>
+                </div>
+                <input type="hidden" id="projectToRename" name="projectToRename">
+              </form>
+              <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+                <a class="btn btn-primary" href="#" onclick="updateProjectName()" data-bs-dismiss="modal">Submit</a>
               </div>
             </div>
           </div>
-        </div>
-        <div class="modal-footer">
-          <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
-          <a class="btn btn-primary" href="#" onclick="updateProject()" data-bs-dismiss="modal">Submit</a>
         </div>
     </div>
   </div>
 </div>
 
-<!-- Rename Modal-->
-<div class="modal fade" id="renameModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
+<!-- Delete Modal-->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="renameProjectModalLabel">Rename Project</h5>
-          <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">×</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          <div class="row">
-            <label class="col-3 col-form-label text-right" id="newProjectNameLabel">Name: <span class="text-danger">*</span></label>
-            <div class="col-7">
-              <div class="form-group">
-                <input type="text" id="newProjectName" class="form-control" placeholder="">
-              </div>
-            </div>
-            <div class="col-1">
-              <i class="far fa-sm fa-question-circle" title='Enter in a new name for the project.'></i>
-            </div>
-          </div>
-          <input type="hidden" id ="projectToRename" name="projectToRename">
-        </div>
-        <div class="modal-footer">
-          <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
-          <a class="btn btn-primary" href="#" onclick="updateProjectName()" data-bs-dismiss="modal">Ok</a>
-        </div>
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Delete Project(s)</h5>
+        <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to delete the following project(s)?</p>
+        <span class="text-danger" id="deleteProjectsList"></span>
+        <input type="hidden" id="deleteProjectsHiddenInput">
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+        <a class="btn btn-primary" href="#" onclick="deleteItems()" data-bs-dismiss="modal">Yes</a>
+      </div>
     </div>
   </div>
 </div>
