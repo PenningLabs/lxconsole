@@ -147,6 +147,11 @@ def server():
 @app.route("/servers")
 @login_required
 def servers():
+  # Logout and redirect to login if `client_crt` session is not set
+  if 'client_crt' not in session:
+    logout_user()
+    return redirect(url_for('login'))
+  
   return render_template('servers.html', page_title='Servers', page_user_id=current_user.id, page_username=current_user.username, client_crt=session['client_crt'])
 
 @app.route("/simplestreams")
