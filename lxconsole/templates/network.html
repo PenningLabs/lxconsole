@@ -893,9 +893,9 @@
       }
 
       //Send toast notification
-      $('#defaultToastHeader').text('Deleting Forward(s)')
-      $('#defaultToastBody').text($("#deleteForwardsList").text())
-      defaultToast.show()
+      deleteForwardsHiddenInput.forEach(element => {
+        createToast(element, 'deleting forward')
+      });
 
       //Sync type
       setTimeout(() => { reloadPageContent(); }, 1000);
@@ -915,9 +915,9 @@
       }
 
       //Send toast notification
-      $('#defaultToastHeader').text('Deleting Load Balancer(s)')
-      $('#defaultToastBody').text($("#deleteLoadBalancersList").text())
-      defaultToast.show()
+      deleteLoadBalancersHiddenInput.forEach(element => {
+        createToast(element, 'deleting load balancer')
+      });
 
       //Sync type
       setTimeout(() => { reloadPageContent(); }, 1000);
@@ -937,9 +937,9 @@
       }
 
       //Send toast notification
-      $('#defaultToastHeader').text('Deleting Peer(s)')
-      $('#defaultToastBody').text($("#deletePeersList").text())
-      defaultToast.show()
+      deletePeersHiddenInput.forEach(element => {
+        createToast(element, 'deleting peer')
+      });
 
       //Sync type
       setTimeout(() => { reloadPageContent(); }, 1000);

@@ -39,35 +39,12 @@
       {% endblock modal %}
 
       <div class="toast-container position-fixed bottom-0 end-0 p-3">
-        <div id="defaultToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-          <div class="toast-header">
-            <i class="fas fa-info-circle pr-2"></i>
-            <strong class="me-auto" id="defaultToastHeader"></strong>
-            <small>just now</small>
-            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-          </div>
-          <div id="defaultToastBody" class="toast-body">
-          </div>
-        </div>
+        <!-- Toasts will be added here dynamically -->
       </div>
       
-      <div class="toast-container position-fixed bottom-0 end-0 p-3">
-        <div id="wideToast" class="toast" style="width:550px; max-width:550px;" role="alert" aria-live="assertive" aria-atomic="true">
-          <div class="toast-header">
-            <i class="fas fa-info-circle pr-2"></i>
-            <strong class="me-auto" id="wideToastHeader"></strong>
-            <small>just now</small>
-            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-          </div>
-          <div id="wideToastBody" class="toast-body">
-          </div>
-        </div>
-      </div>
-
-
       <footer class="main-footer">
         <div class="float-right d-none d-sm-block">
-          Version 0.6.1
+          Version 0.6.2
         </div>
         Copyright &copy; 2020-Present <a href="https://penninglabs.com">Penning Labs</a>. All rights reserved.
       </footer>
@@ -107,9 +84,6 @@
     <script>
       operations = []
      
-      const defaultToast = bootstrap.Toast.getOrCreateInstance(document.getElementById('defaultToast'))
-      const wideToast = bootstrap.Toast.getOrCreateInstance(document.getElementById('wideToast'))
-
       function changeProject(project){
         window.location.href = "{{ url_for('server') }}?id=" + serverId + '&project=' + project;
         // var url = new URL(window.location);
@@ -188,120 +162,150 @@
         });
       }
 
-      function operationStatusCheck(){
+      function createToast(message, title) {
+        const toastElement = document.createElement('div');
+        toastElement.classList.add('toast');
+        toastElement.innerHTML = `
+          <div class="toast-header">
+            <strong class="me-auto">Notification: ${title}</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
+          </div>
+          <div class="toast-body">
+            ${message}
+          </div>
+        `;
         
-        //Clear the automatic page reload
-        clearTimeout(operationReloadTimeout);
+        const toastContainer = document.querySelector('.toast-container');
+        toastContainer.appendChild(toastElement);
+        
+        const toast = new bootstrap.Toast(toastElement);
+        toast.show();
+      }
 
-        //Request list of opertions
-        $.get("{{ url_for('api') }}/operations/list_operations?id="+serverId+"&project=" + project + "&recursion=1", function (data) {
+      function operationStatusCheck(operation_id=null, item=null){
+        if (operation_id) {
+          $.post("{{ url_for('api') }}/operations/load_operation?id=" + serverId + "&project=" + project, { id: operation_id }, function (data) {
+            console.log(data);
+            if (data.hasOwnProperty('metadata') && data.metadata.hasOwnProperty('status_code') && data.metadata.status_code >= 400){
+              //Send toast notification
+              createToast(data.metadata.err, item)
+            }
+          });
+        }
+        else {
+          //Clear the automatic page reload
+          clearTimeout(operationReloadTimeout);
 
-          //Clear any previous messages in notification area
-          $('#notificationText').text("");
-          notification = ""
+          //Request list of opertions
+          $.get("{{ url_for('api') }}/operations/list_operations?id="+serverId+"&project=" + project + "&recursion=1", function (data) {
 
-          // Check if we have any running operations
-          if (data.metadata.hasOwnProperty('running') && data.metadata.running.length > 0){
+            //Clear any previous messages in notification area
+            $('#notificationText').text("");
+            notification = ""
 
-            //Set operations results
-            operations = data.metadata.running
+            // Check if we have any running operations
+            if (data.metadata.hasOwnProperty('running') && data.metadata.running.length > 0){
 
-            // Loop through each operation to find one to display
-            for (let i = 0; i < data.metadata.running.length; i++) {
+              //Set operations results
+              operations = data.metadata.running
 
-              // Check if task has a description property
-              if (data.metadata.running[i].hasOwnProperty('description') && data.metadata.running[i].description != null) {
-                // Create an array of descriptions that we do not want to display
-                ignoredDescriptions = ['Showing console','Executing command']   
+              // Loop through each operation to find one to display
+              for (let i = 0; i < data.metadata.running.length; i++) {
 
-                // Check if description is in the ignored array
-                if (ignoredDescriptions.includes(data.metadata.running[i].description)){
-                  continue
-                }
+                // Check if task has a description property
+                if (data.metadata.running[i].hasOwnProperty('description') && data.metadata.running[i].description != null) {
+                  // Create an array of descriptions that we do not want to display
+                  ignoredDescriptions = ['Showing console','Executing command']   
 
-                operationExists = true;
-                notification += data.metadata.running[i].description
+                  // Check if description is in the ignored array
+                  if (ignoredDescriptions.includes(data.metadata.running[i].description)){
+                    continue
+                  }
 
-                // Downloading image should also have download_progress that can be displayed
-                if (data.metadata.running[i].description == 'Downloading image'){
-                  if (data.metadata.running[i].hasOwnProperty('metadata') && data.metadata.running[i].metadata != null) {
-                    if (data.metadata.running[i].metadata.hasOwnProperty('download_progress') && data.metadata.running[i].metadata.download_progress != null) {
-                      notification += ' ' + data.metadata.running[i].metadata.download_progress
+                  operationExists = true;
+                  notification += data.metadata.running[i].description
+
+                  // Downloading image should also have download_progress that can be displayed
+                  if (data.metadata.running[i].description == 'Downloading image'){
+                    if (data.metadata.running[i].hasOwnProperty('metadata') && data.metadata.running[i].metadata != null) {
+                      if (data.metadata.running[i].metadata.hasOwnProperty('download_progress') && data.metadata.running[i].metadata.download_progress != null) {
+                        notification += ' ' + data.metadata.running[i].metadata.download_progress
+                      }
                     }
                   }
+
+                  // Many of the operations will indicate which resource the operation is being perfomed on
+                  if (data.metadata.running[i].hasOwnProperty('resources') && data.metadata.running[i].resources != null) {
+                    if (data.metadata.running[i].resources.hasOwnProperty('instances') && data.metadata.running[i].resources.instances != null) {
+                      notification += " " + data.metadata.running[i].resources.instances[0].replace("/1.0/instances/","")
+                    }
+                    else if (data.metadata.running[i].resources.hasOwnProperty('containers') && data.metadata.running[i].resources.containers != null) {
+                      notification += " " + data.metadata.running[i].resources.containers[0].replace("/1.0/containers/","")
+                    }
+                    else if (data.metadata.running[i].resources.hasOwnProperty('virtual-machines') && data.metadata.running[i].resources.virtual-machines != null) {
+                      notification += " " + data.metadata.running[i].resources.virtual-machines[0].replace("/1.0/virtual-machines/","")
+                    }
+                  }
+
+                  // Display the notification message and end the loop
+                  $('#notificationText').text(notification)
+                  break
+
                 }
-
-                // Many of the operations will indicate which resource the operation is being perfomed on
-                if (data.metadata.running[i].hasOwnProperty('resources') && data.metadata.running[i].resources != null) {
-                  if (data.metadata.running[i].resources.hasOwnProperty('instances') && data.metadata.running[i].resources.instances != null) {
-                    notification += " " + data.metadata.running[i].resources.instances[0].replace("/1.0/instances/","")
-                  }
-                  else if (data.metadata.running[i].resources.hasOwnProperty('containers') && data.metadata.running[i].resources.containers != null) {
-                    notification += " " + data.metadata.running[i].resources.containers[0].replace("/1.0/containers/","")
-                  }
-                  else if (data.metadata.running[i].resources.hasOwnProperty('virtual-machines') && data.metadata.running[i].resources.virtual-machines != null) {
-                    notification += " " + data.metadata.running[i].resources.virtual-machines[0].replace("/1.0/virtual-machines/","")
-                  }
-                }
-
-                // Display the notification message and end the loop
-                $('#notificationText').text(notification)
-                break
-
               }
             }
-          }
 
-          // Check if we have any failed operations
-          else if (data.metadata.hasOwnProperty('failure') && data.metadata.failure.length > 0){
+            // Check if we have any failed operations
+            else if (data.metadata.hasOwnProperty('failure') && data.metadata.failure.length > 0){
 
-            // Loop through each operation to find one to display
-            for (let i = 0; i < data.metadata.running.length; i++) {
+              // Loop through each operation to find one to display
+              for (let i = 0; i < data.metadata.running.length; i++) {
 
-              // Check if task has a description property
-              if (data.metadata.failure[i].hasOwnProperty('description') && data.metadata.failure[i].description != null) {
-                notification += data.metadata.failure[i].description
+                // Check if task has a description property
+                if (data.metadata.failure[i].hasOwnProperty('description') && data.metadata.failure[i].description != null) {
+                  notification += data.metadata.failure[i].description
 
-                // Many of the operations will indicate which resource the operation is being perfomed on
-                if (data.metadata.failure[i].hasOwnProperty('resources') && data.metadata.failure[i].resources != null) {
-                  if (data.metadata.failure[i].resources.hasOwnProperty('instances') && data.metadata.failure[i].resources.instances != null) {
-                    notification += " " + data.metadata.failure[i].resources.instances[i].replace("/1.0/instances/","")
+                  // Many of the operations will indicate which resource the operation is being perfomed on
+                  if (data.metadata.failure[i].hasOwnProperty('resources') && data.metadata.failure[i].resources != null) {
+                    if (data.metadata.failure[i].resources.hasOwnProperty('instances') && data.metadata.failure[i].resources.instances != null) {
+                      notification += " " + data.metadata.failure[i].resources.instances[i].replace("/1.0/instances/","")
+                    }
+                    else if (data.metadata.failure[i].resources.hasOwnProperty('containers') && data.metadata.failure[i].resources.containers != null) {
+                      notification += " " + data.metadata.failure[i].resources.containers[i].replace("/1.0/containers/","")
+                    }
+                    else if (data.metadata.failure[i].resources.hasOwnProperty('virtual-machines') && data.metadata.failure[i].resources.virtual-machines != null) {
+                      notification += " " + data.metadata.failure[i].resources.virtual-machines[i].replace("/1.0/virtual-machines/","")
+                    }
                   }
-                  else if (data.metadata.failure[i].resources.hasOwnProperty('containers') && data.metadata.failure[i].resources.containers != null) {
-                    notification += " " + data.metadata.failure[i].resources.containers[i].replace("/1.0/containers/","")
+
+                  if (data.metadata.failure[i].hasOwnProperty('err')){
+                    notification += ". Failure: " + data.metadata.failure[i].err
                   }
-                  else if (data.metadata.failure[i].resources.hasOwnProperty('virtual-machines') && data.metadata.failure[i].resources.virtual-machines != null) {
-                    notification += " " + data.metadata.failure[i].resources.virtual-machines[i].replace("/1.0/virtual-machines/","")
-                  }
+
+                  // Log the error notification to the console
+                  console.log(notification)
+
+                  // Display the notification message and end the loop
+                  $('#notificationText').text(notification)
+                  break
+
                 }
-
-                if (data.metadata.failure[i].hasOwnProperty('err')){
-                  notification += ". Failure: " + data.metadata.failure[i].err
-                }
-
-                // Log the error notification to the console
-                console.log(notification)
-
-                // Display the notification message and end the loop
-                $('#notificationText').text(notification)
-                break
-
               }
             }
-          }
 
-          else {
-            operations = []
-            // If we had an existing running operation, reload page to update
-            if (operationExists) {
-              reloadPageContent()
+            else {
+              operations = []
+              // If we had an existing running operation, reload page to update
+              if (operationExists) {
+                reloadPageContent()
+              }
+              operationExists = false
             }
-            operationExists = false
-          }
-          // Schedule operationStatusCheck to run again
-          operationReloadTimeout = setTimeout(() => { operationStatusCheck(); }, operationReloadTime);
+            // Schedule operationStatusCheck to run again
+            operationReloadTimeout = setTimeout(() => { operationStatusCheck(); }, operationReloadTime);
 
-        });
+          });
+        }
       }
 
       function setDarkTheme() {

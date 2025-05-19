@@ -302,9 +302,9 @@
       }
 
       //Send toast notification
-      $('#defaultToastHeader').text('Deleting Project(s)')
-      $('#defaultToastBody').text($("#deleteProjectsList").text())
-      defaultToast.show()
+      deleteProjectsHiddenInput.forEach(element => {
+        createToast(element, 'deleting project')
+      });
 
       //Sync type
       setTimeout(() => { reloadPageContent(); }, 1000);

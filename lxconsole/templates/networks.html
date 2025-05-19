@@ -503,9 +503,9 @@
       }
 
       //Send toast notification
-      $('#defaultToastHeader').text('Deleting Network(s)')
-      $('#defaultToastBody').text($("#deleteNetworksList").text())
-      defaultToast.show()
+      deleteNetworksHiddenInput.forEach(element => {
+        createToast(element, 'deleting network')
+      });
 
       //Sync type
       setTimeout(() => { reloadPageContent(); }, 1000);

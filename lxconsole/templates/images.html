@@ -215,9 +215,9 @@
                       arr.push(this.data().fingerprint)
                     });
                     //Send toast notification
-                    $('#wideToastHeader').text('Refreshing Image(s)')
-                    $('#wideToastBody').text(arr.join(", "))
-                    wideToast.show()
+                    arr.forEach(element => {
+                      createToast(element, 'refreshing image')
+                    });
                   },
                   enabled: false,
                 },
@@ -332,9 +332,9 @@
       }
         
       //Send toast notification
-      $('#wideToastHeader').text('Deleting Image(s)')
-      $('#wideToastBody').text(deleteImagesHiddenInput.join(", "))
-      wideToast.show()
+      deleteImagesHiddenInput.forEach(element => {
+        createToast(element, 'deleting image')
+      });
 
       //Sync type
       setTimeout(() => { reloadPageContent(); }, 1000);

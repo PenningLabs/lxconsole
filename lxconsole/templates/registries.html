@@ -133,6 +133,7 @@
                     });
                     $("#deleteRegistriesList").text(arr2.join(", "));
                     $("#deleteRegistriesHiddenInput").val(JSON.stringify(arr));
+                    $("#deleteRegistriesHiddenUrlsInput").val(JSON.stringify(arr2));
                     $("#deleteModal").modal('show');                    
                   },
                   enabled: false,
@@ -240,6 +241,7 @@
 
     function deleteRegistries(){
       var deleteRegistriesHiddenInput = JSON.parse($("#deleteRegistriesHiddenInput").val());
+      var deleteRegistriesHiddenUrlsInput = JSON.parse($("#deleteRegistriesHiddenUrlsInput").val());
       console.log("Info: deleting registries " + deleteRegistriesHiddenInput.join(", "));
       for (let i = 0; i < deleteRegistriesHiddenInput.length; i++) {
         $.post("{{ url_for('api') }}/registries/delete_registry", { id: deleteRegistriesHiddenInput[i] }, function (data) {
@@ -251,9 +253,9 @@
       }
 
       //Send toast notification
-      $('#defaultToastHeader').text('Deleting Registry(s)')
-      $('#defaultToastBody').text($("#deleteRegistriesList").text())
-      defaultToast.show()
+      deleteRegistriesHiddenUrlsInput.forEach(element => {
+        createToast(element, 'deleting registry')
+      });
 
       //Sync type
       setTimeout(() => { reloadPageContent(); }, 1000);

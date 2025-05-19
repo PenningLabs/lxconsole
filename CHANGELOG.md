@@ -1,3 +1,8 @@
+# 0.6.2
+ - Updated toast notifications to allow for mulitple notifications
+ - Added forceful stop on instances page for state change
+ - Added additional notifications for errors with instance action changes
+
 # 0.6.1
  - Converted remaining tables to new format
  - Renamed Proxy to WebSocket Proxy in servers table fields

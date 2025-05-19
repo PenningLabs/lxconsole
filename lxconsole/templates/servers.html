@@ -133,6 +133,7 @@
                     });
                     $("#deleteServersList").text(arr2.join(", "));
                     $("#deleteServersHiddenInput").val(JSON.stringify(arr));
+                    $("#deleteServersHiddenNamesInput").val(JSON.stringify(arr2));
                     $("#deleteModal").modal('show');                    
                   },
                   enabled: false,
@@ -231,6 +232,7 @@
 
     function deleteServers(){
       var deleteServersHiddenInput = JSON.parse($("#deleteServersHiddenInput").val());
+      var deleteServersHiddenNamesInput = JSON.parse($("#deleteServersHiddenNamesInput").val());
       console.log("Info: deleting servers " + deleteServersHiddenInput.join(", "));
       for (let i = 0; i < deleteServersHiddenInput.length; i++) {
         $.post("{{ url_for('api') }}/servers/remove_server", { id: deleteServersHiddenInput[i] }, function (data) {
@@ -242,9 +244,9 @@
       }
 
       //Send toast notification
-      $('#defaultToastHeader').text('Deleting Server(s)')
-      $('#defaultToastBody').text($("#deleteServersList").text())
-      defaultToast.show()
+      deleteServersHiddenNamesInput.forEach(element => {
+        createToast(element, 'deleting server')
+      });
 
       //Sync type
       setTimeout(() => { reloadPageContent(); }, 1000);

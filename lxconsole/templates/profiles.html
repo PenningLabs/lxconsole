@@ -255,9 +255,9 @@
       }
 
       //Send toast notification
-      $('#defaultToastHeader').text('Deleting Profile(s)')
-      $('#defaultToastBody').text($("#deleteProfilesList").text())
-      defaultToast.show()
+      deleteProfilesHiddenInput.forEach(element => {
+        createToast(element, 'deleting profile')
+      });
 
       //Sync type
       setTimeout(() => { reloadPageContent(); }, 1000);

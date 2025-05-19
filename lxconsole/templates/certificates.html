@@ -291,9 +291,9 @@
       }
 
       //Send toast notification
-      $('#defaultToastHeader').text('Deleting Certificate(s)')
-      $('#defaultToastBody').text(deleteCertificatesHiddenInput.join(", "))
-      defaultToast.show()
+      deleteCertificatesHiddenInput.forEach(element => {
+        createToast(element, 'deleting certificate')
+      });
 
       //Sync type
       setTimeout(() => { reloadPageContent(); }, 1000);

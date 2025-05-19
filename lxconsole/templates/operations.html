@@ -261,15 +261,14 @@
       }
 
       //Send toast notification
-      $('#defaultToastHeader').text('Deleting Operation(s)')
-      $('#defaultToastBody').text($("#deleteOperationsList").text())
-      defaultToast.show()
+      deleteOperationsHiddenInput.forEach(element => {
+        createToast(element, 'deleting operation')
+      });
 
       //Sync type
       setTimeout(() => { reloadPageContent(); }, 1000);
       operationStatusCheck()
     }
-
 
     function viewItem(name){
       console.log("Info: loading operation " + name);

@@ -243,7 +243,12 @@ def api_instances_endpoint(endpoint):
     url = 'https://' + server.addr + ':' + str(server.port) + '/1.0/instances/' + name + '/state?project=' + project
     client_cert = get_client_crt()
     client_key = get_client_key()
-    data = { 'action': action }
+    if action == 'force_stop':
+      action = 'stop'
+      force = True
+    else:
+      force = False
+    data = { 'action': action, 'force': force }
     results = requests.put(url, verify=server.ssl_verify, cert=(client_cert, client_key), json=data)
     return jsonify(results.json())
 

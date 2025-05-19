@@ -252,9 +252,9 @@
       }
 
       //Send toast notification
-      $('#defaultToastHeader').text('Deleting Cluster Group(s)')
-      $('#defaultToastBody').text(deleteClusterGroupsHiddenInput.join(", "))
-      defaultToast.show()
+      deleteClusterGroupsHiddenInput.forEach(element => {
+        createToast(element, 'deleting cluster group')
+      });
 
       //Sync type
       setTimeout(() => { reloadPageContent(); }, 1000);

@@ -262,9 +262,9 @@
       }
 
       //Send toast notification
-      $('#defaultToastHeader').text('Deleting Network Record(s)')
-      $('#defaultToastBody').text($("#deleteNetworkRecordsList").text())
-      defaultToast.show()
+      deleteNetworkRecordsHiddenInput.forEach(element => {
+        createToast(element, 'deleting network record')
+      });
 
       //Sync type
       setTimeout(() => { reloadPageContent(); }, 1000);

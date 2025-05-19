@@ -328,9 +328,9 @@
       }
 
       //Send toast notification
-      $('#defaultToastHeader').text('Deleting Cluster Members(s)')
-      $('#defaultToastBody').text(deleteClusterMembersHiddenInput.join(", "))
-      defaultToast.show()
+      deleteClusterMembersHiddenInput.forEach(element => {
+        createToast(element, 'deleting cluster member')
+      });
 
       //Sync type
       setTimeout(() => { reloadPageContent(); }, 1000);

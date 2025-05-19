@@ -488,9 +488,9 @@
       }
 
       //Send toast notification
-      $('#defaultToastHeader').text('Deleting Storage Pool(s)')
-      $('#defaultToastBody').text($("#deleteStoragePoolsList").text())
-      defaultToast.show()
+      deleteStoragePoolsHiddenInput.forEach(element => {
+        createToast(element, 'deleting storage pool')
+      });
 
       //Sync type
       setTimeout(() => { reloadPageContent(); }, 1000);

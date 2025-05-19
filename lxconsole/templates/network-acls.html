@@ -277,9 +277,9 @@
       }
 
       //Send toast notification
-      $('#defaultToastHeader').text('Deleting Network ACL(s)')
-      $('#defaultToastBody').text($("#deleteNetworkACLsList").text())
-      defaultToast.show()
+      deleteNetworkACLsHiddenInput.forEach(element => {
+        createToast(element, 'deleting network acl')
+      });
 
       //Sync type
       setTimeout(() => { reloadPageContent(); }, 1000);

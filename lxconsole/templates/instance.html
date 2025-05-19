@@ -2897,7 +2897,10 @@
         if (data.error_code >= 400){
           alert(data.error);
         }
-        //Async type
+        // Check Async request
+        if ( data.hasOwnProperty('metadata') && data.metadata.hasOwnProperty('id')) {
+          operationStatusCheck(data.metadata.id, name)
+        }
         setTimeout(() => { reloadPageContent(); }, 2000);
         operationStatusCheck()
       });
@@ -3273,7 +3276,7 @@
           .catch((error) => {
             console.log("Error: ", error)
             //If we make it here then we had an error connection to LXD server. Most likely the Self-Signed Certificate is not yet trusted by the user's browser
-            data = 'There was an error connecting to your LXD server. <br />The LXD server may be using a self-signed certificate. <br />Click <a href="https://' + wss_addr + '?addr=' + server_addr + '&port=' + data.port + '" target="_blank">here</a> to accept the certificate if not yet trusted.';
+            data = 'There was an error connecting to your Incus/LXD server. <br />The LXD server may be using a self-signed certificate. <br />Click <a href="https://' + wss_addr + '?addr=' + server_addr + '&port=' + data.port + '" target="_blank">here</a> to accept the certificate if not yet trusted.';
             $("#webSocketConnectionError").html(data);
             $('#webSocketConnectionErrorModal').modal('show');
           })
@@ -3390,7 +3393,7 @@
           .catch((error) => {
             console.log("Error: ", error)
             //If we make it here then we had an error connection to LXD server. Most likely the Self-Signed Certificate is not yet trusted by the user's browser
-            data = 'There was an error connecting to your LXD server. <br />The LXD server may be using a self-signed certificate. <br />Click <a href="https://' + wss_addr + '?addr=' + server_addr + '&port=' + data.port + '" target="_blank">here</a> to accept the certificate if not yet trusted.';
+            data = 'There was an error connecting to your Incus/LXD server. <br />The LXD server may be using a self-signed certificate. <br />Click <a href="https://' + wss_addr + '?addr=' + server_addr + '&port=' + data.port + '" target="_blank">here</a> to accept the certificate if not yet trusted.';
             $("#webSocketConnectionError").html(data);
             $('#webSocketConnectionErrorModal').modal('show');
           })
@@ -3510,7 +3513,7 @@
         .catch((error) => {
           console.log("Error: ", error)
           //If we make it here then we had an error connection to LXD server. Most likely the Self-Signed Certificate is not yet trusted by the user's browser
-          data = 'There was an error connecting to your LXD server. <br />The LXD server may be using a self-signed certificate. <br />Click <a href="https://' + wss_addr + '?addr=' + server_addr + '&port=' + data.port + '" target="_blank">here</a> to accept the certificate if not yet trusted.';
+          data = 'There was an error connecting to your Incus/LXD server. <br />The LXD server may be using a self-signed certificate. <br />Click <a href="https://' + wss_addr + '?addr=' + server_addr + '&port=' + data.port + '" target="_blank">here</a> to accept the certificate if not yet trusted.';
           $("#webSocketConnectionError").html(data);
           $('#webSocketConnectionErrorModal').modal('show');
         })

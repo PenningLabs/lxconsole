@@ -17,6 +17,3 @@
 - Combine cluster members and cluster groups into single page
 - Allow user to set table auto reload time
 - Add environment config to instance creation and editing
-
-
-

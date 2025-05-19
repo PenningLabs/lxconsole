@@ -297,9 +297,9 @@
       }
 
       //Send toast notification
-      $('#defaultToastHeader').text('Deleting Access Control(s)')
-      $('#defaultToastBody').text(deleteAccessControlsHiddenInput.join(", "))
-      defaultToast.show()
+      deleteAccessControlsHiddenInput.forEach(element => {
+        createToast(element, 'deleting access control')
+      });
 
       //Sync type
       setTimeout(() => { reloadPageContent(); }, 1000);

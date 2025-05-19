@@ -288,9 +288,9 @@
       }
 
       //Send toast notification
-      $('#defaultToastHeader').text('Deleting Network Zone(s)')
-      $('#defaultToastBody').text($("#deleteNetworkZonesList").text())
-      defaultToast.show()
+      deleteNetworkZonesHiddenInput.forEach(element => {
+        createToast(element, 'deleting network zone')
+      });
 
       //Sync type
       setTimeout(() => { reloadPageContent(); }, 1000);

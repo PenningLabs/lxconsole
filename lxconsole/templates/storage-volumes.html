@@ -312,9 +312,9 @@
       }
 
       //Send toast notification
-      $('#defaultToastHeader').text('Deleting Storage Volume(s)')
-      $('#defaultToastBody').text($("#deleteStorageVolumesList").text())
-      defaultToast.show()
+      deleteStorageVolumesHiddenInput.forEach(element => {
+        createToast(element, 'deleting storage volume')
+      });
 
       //Sync type
       setTimeout(() => { reloadPageContent(); }, 1000);

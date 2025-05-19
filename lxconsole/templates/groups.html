@@ -254,9 +254,9 @@
       }
 
       //Send toast notification
-      $('#defaultToastHeader').text('Deleting Group(s)')
-      $('#defaultToastBody').text(deleteGroupsHiddenInput.join(", "))
-      defaultToast.show()
+      deleteGroupsHiddenInput.forEach(element => {
+        createToast(element, 'deleting group')
+      });
 
       //Sync type
       setTimeout(() => { reloadPageContent(); }, 1000);

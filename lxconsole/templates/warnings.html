@@ -311,9 +311,9 @@
       }
 
       //Send toast notification
-      $('#defaultToastHeader').text('Deleting Warning(s)')
-      $('#defaultToastBody').text($("#deleteWarningsList").text())
-      defaultToast.show()
+      deleteWarningsHiddenInput.forEach(element => {
+        createToast(element, 'deleting warning')
+      });
 
       //Sync type
       setTimeout(() => { reloadPageContent(); }, 1000);

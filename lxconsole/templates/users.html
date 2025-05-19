@@ -144,6 +144,7 @@
                     });
                     $("#deleteUsersList").text(arr2.join(", "));
                     $("#deleteUsersHiddenInput").val(JSON.stringify(arr));
+                    $("#deleteUsersHiddenUsernamesInput").val(JSON.stringify(arr2));
                     $("#deleteModal").modal('show');                    
                   },
                   enabled: false,
@@ -233,9 +234,7 @@
         }
         else {
           //Send toast notification
-          $('#defaultToastHeader').text('New User')
-          $('#defaultToastBody').text(data.alert)
-          defaultToast.show()
+          createToast(data.alert, 'new user')
         }
         //Aync type
         setTimeout(() => { reloadPageContent(); }, 2000);
@@ -318,9 +317,7 @@
         }
         else {
           //Send toast notification
-          $('#defaultToastHeader').text('User Password')
-          $('#defaultToastBody').text(data.alert)
-          defaultToast.show()
+          createToast(data.alert, 'user password')
         }
         //Sync type
         setTimeout(() => { reloadPageContent(); }, 1000);
@@ -330,6 +327,7 @@
     // Delete user
     function deleteItems(){
       var deleteUsersHiddenInput = JSON.parse($("#deleteUsersHiddenInput").val());
+      var deleteUsersHiddenUsernamesInput = JSON.parse($("#deleteUsersHiddenUsernamesInput").val());
       console.log("Info: deleting user ids " + deleteUsersHiddenInput.join(", "));
       for (let i = 0; i < deleteUsersHiddenInput.length; i++) {
         $.post("{{ url_for('api') }}/users/delete_user", { id: deleteUsersHiddenInput[i] }, function (data) {
@@ -341,9 +339,9 @@
       }
 
       //Send toast notification
-      $('#defaultToastHeader').text('Deleting User(s)')
-      $('#defaultToastBody').text($("#deleteUsersList").text())
-      defaultToast.show()
+      deleteUsersHiddenUsernamesInput.forEach(element => {
+        createToast(element, 'deleting user')
+      });
 
       //Sync type
       setTimeout(() => { reloadPageContent(); }, 1000);
