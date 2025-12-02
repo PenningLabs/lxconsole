@@ -211,7 +211,7 @@
     // Load the user account information
     function loadAccount(){
       console.log("Info: loading account");
-      $.get("{{ url_for('api') }}/users/get_user?id={{ page_user_id }}", function (data) {
+      $.get("{{ url_for('api') }}/account/get_account", function (data) {
         data = data.metadata
         $("#accountUsername").val(data.username);
         $("#accountFirstName").val(data.first_name);
@@ -236,10 +236,9 @@
     // Enable OTP for the user
     function enableMFA(){
       console.log("Info: enabling MFA");
-      id = "{{ page_user_id }}"
       otp = $('#oneTimePassword').val();
       action = 'enable_mfa';
-      $.post("{{ url_for('api') }}/users/update_user", { id: id, action: action, otp: otp }, function (data) {
+      $.post("{{ url_for('api') }}/account/update_account", { action: action, otp: otp }, function (data) {
         console.log(data);
         if (data.error_code >= 400){
           alert(data.error);
@@ -258,9 +257,8 @@
     // Disable OTP for the user
     function disableMFA(){
       console.log("Info: disabling MFA");
-      id = "{{ page_user_id }}"
       action = 'disable_mfa';
-      $.post("{{ url_for('api') }}/users/update_user", { id: id, action: action }, function (data) {
+      $.post("{{ url_for('api') }}/account/update_account", { action: action }, function (data) {
         console.log(data);
         if (data.error_code >= 400){
           alert(data.error);
@@ -290,7 +288,7 @@
 
     // Check if MFA is enabled/disabled for the user
     function checkMFAStatus(){
-      $.get("{{ url_for('api') }}/users/get_mfa_status?id={{ page_user_id }}", function (data) {
+      $.get("{{ url_for('api') }}/account/get_account_mfa_status", function (data) {
         data = data.enabled
         if (data == true) {
           $('#mfaTitle').text("enabled")
@@ -313,10 +311,9 @@
 
     // Show edit modal for user groups
     function editUserGroups(){
-      id = "{{ page_user_id }}"
 
       //Retrieve the current groups for the user
-      $.get("{{ url_for('api') }}/users/get_user", { id: id,}, function (data) {
+      $.get("{{ url_for('api') }}/account/get_account", function (data) {
         data = data.metadata        
         user_groups = data.groups
         $('#idUserGroupsEditInput').val(data.id);
@@ -341,12 +338,11 @@
     // Update user account
     function updateAccount(){
       console.log("Info: updating user");
-      id = "{{ page_user_id }}"
       first_name = $("#accountFirstName").val();
       last_name = $("#accountLastName").val();
       email = $("#accountEmail").val();
       action = 'update_user_details'
-      $.post("{{ url_for('api') }}/users/update_user", { id: id, action: action, first_name: first_name, last_name: last_name, email: email }, function (data) {
+      $.post("{{ url_for('api') }}/account/update_account", { action: action, first_name: first_name, last_name: last_name, email: email }, function (data) {
         console.log(data);
         if (data.error_code >= 400){
           alert(data.error);
@@ -364,11 +360,10 @@
     // Update user account
     function updateAccountPassword(){
       console.log("Info: updating user password");
-      id = "{{ page_user_id }}"
       password = $("#accountPassword").val();
       confirm_password = $("#accountConfirmPassword").val();
       action = 'update_password'
-      $.post("{{ url_for('api') }}/users/update_user", { id: id, action: action, password: password, confirm_password: confirm_password }, function (data) {
+      $.post("{{ url_for('api') }}/account/update_account", { action: action, password: password, confirm_password: confirm_password }, function (data) {
         console.log(data);
         if (data.error_code >= 400){
           alert(data.error);
@@ -387,7 +382,7 @@
     function updateUserGroup(){
       console.log("Info: editing user group");
       data = $('#editUserGroupsForm').serialize();
-      $.post("{{ url_for('api') }}/users/update_user", data, function (data) {
+      $.post("{{ url_for('api') }}/account/update_account_groups", data, function (data) {
         console.log(data);
         if (data.error_code >= 400){
           alert(data.error);

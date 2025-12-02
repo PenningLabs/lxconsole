@@ -27,6 +27,7 @@ from . import groups
 from . import roles
 from . import access_controls
 from . import settings
+from . import account
 #from . import logs
 
 
@@ -62,4 +63,5 @@ api.add_url_rule('/groups/<endpoint>', view_func=groups.api_groups_endpoint, met
 api.add_url_rule('/roles/<endpoint>', view_func=roles.api_roles_endpoint, methods=['GET', 'POST'])
 api.add_url_rule('/access-controls/<endpoint>', view_func=access_controls.api_access_controls_endpoint, methods=['GET', 'POST'])
 api.add_url_rule('/settings/<endpoint>', view_func=settings.api_settings_endpoint, methods=['GET', 'POST'])
+api.add_url_rule('/account/<endpoint>', view_func=account.api_account_endpoint, methods=['GET', 'POST'])
 #api.add_url_rule('/logs/<endpoint>', view_func=logs.api_logs_endpoint, methods=['GET', 'POST'])

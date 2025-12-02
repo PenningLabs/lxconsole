@@ -13,7 +13,7 @@
           <div class="col-12">
             <p>Lxconsole is an open source management console providing a web-based user interface capable of managing multiple LXD/Incus servers from a single location.</p>
             <p>
-              <strong>Version</strong>: <span id="versionNumber">0.6.2</span> <br />
+              <strong>Version</strong>: <span id="versionNumber">0.6.3</span> <br />
               <strong>License</strong>: AGPL-3.0 <br />
               <strong>URL</strong>: https://lxconsole.com <br />
             </p>          
@@ -22,89 +22,6 @@
       </div>
       <div class="modal-footer">
         <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Dismiss</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Account Modal-->
-<div class="modal fade" id="accountModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">User Account</h5>
-        <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">×</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <form id="editUserForm">
-          <div class="row">
-            <label class="col-4 col-form-label">Username:</label>
-            <div class="col-7">
-              <div class="form-group">
-                <input type="text" id="usernameEditInput" class="form-control" required="required" placeholder="" name="username" disabled>
-              </div>
-            </div>
-            <div class="col-1"></div>
-          </div>
-        
-          <div class="row">
-            <label class="col-4 col-form-label">New Password:</label>
-            <div class="col-7">
-              <div class="form-group">
-                <input type="password" id="passwordEditInput" class="form-control" required="required" placeholder="" name="password">
-              </div>
-            </div>
-            <div class="col-1"></div>
-          </div>
-
-          <div class="row">
-            <label class="col-4 col-form-label">Confirm Password:</label>
-            <div class="col-7">
-              <div class="form-group">
-                <input type="password" id="confirmPasswordEditInput" class="form-control" required="required" placeholder="" name="confirm_password">
-              </div>
-            </div>
-            <div class="col-1"></div>
-          </div>
-        
-          <div class="row">
-            <label class="col-4 col-form-label">First Name: </label>
-            <div class="col-7">
-              <div class="form-group">
-                <input type="text" id="firstNameEditInput" class="form-control" placeholder="" name="first_name">
-              </div>
-            </div>
-            <div class="col-1"></div>
-          </div>
-        
-          <div class="row">
-            <label class="col-4 col-form-label">Last Name: </label>
-            <div class="col-7">
-              <div class="form-group">
-                <input type="text" id="lastNameEditInput" class="form-control" placeholder="" name="last_name">
-              </div>
-            </div>
-            <div class="col-1"></div>
-          </div>
-        
-          <div class="row">
-            <label class="col-4 col-form-label">Email: </label>
-            <div class="col-7">
-              <div class="form-group">
-                <input type="text" id="emailEditInput" class="form-control" required="required" placeholder="" name="email">
-              </div>
-            </div>
-            <div class="col-1"></div>
-          </div>
-
-        </form>
-
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Dismiss</button>
-        <a class="btn btn-primary" href="#" onclick="updateAccount()" data-bs-dismiss="modal">Update</a>
       </div>
     </div>
   </div>

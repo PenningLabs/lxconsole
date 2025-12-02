@@ -1,3 +1,10 @@
+# 0.6.3
+ - Added MFA status on the users page
+ - The users page will now only list users for accounts with the list_users_all privilege (Administrator role by default)
+ - Added new privilege to Administrator role allowing only this role the ability to add/remove groups to a user
+ - The get_mfa_status API endpoint is replaced with get_account_mfa_status or get_user_mfa_status
+ - New account.py adds API endpoints for logged in user account
+
 # 0.6.2
  - Updated toast notifications to allow for mulitple notifications
  - Added forceful stop on instances page for state change

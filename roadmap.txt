@@ -1,5 +1,4 @@
 # 0.7.0
-- Add support for MariaDB and Postgres database backends
 - Add logs page
 
 # 0.8.0
@@ -17,3 +16,4 @@
 - Combine cluster members and cluster groups into single page
 - Allow user to set table auto reload time
 - Add environment config to instance creation and editing
+- Add support for MariaDB and Postgres database backends

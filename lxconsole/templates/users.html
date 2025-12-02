@@ -122,6 +122,14 @@
                 return '-'
               },
             },
+            { title: "MFA Enabled", data: function (row, type, set) {
+                if (row.hasOwnProperty('mfa')) {
+                  // Boolean field
+                  return row.mfa
+                }
+                return '-'
+              },
+            },
           ],
           layout: {
             topStart: {
@@ -160,7 +168,7 @@
                     {
                       extend: 'colvis',
                       text: 'Visible columns',
-                      columns: [1,2,3,4,5],
+                      columns: [1,2,3,4,5,6],
                     },
                     {
                       text: (scrollY == '490px') ? 'Disable scrolling' : 'Enable scrolling',
@@ -295,7 +303,7 @@
     function updateUserGroup(){
       console.log("Info: editing user group");
       data = $('#editUserGroupsForm').serialize();
-      $.post("{{ url_for('api') }}/users/update_user", data, function (data) {
+      $.post("{{ url_for('api') }}/users/update_user_groups", data, function (data) {
         console.log(data);
         if (data.error_code >= 400){
           alert(data.error);
