@@ -958,6 +958,13 @@ def api_instance_endpoint(endpoint):
             device.update({ 'nictype': expanded_devices[expanded_device]['nictype'] })
           if 'parent' in expanded_devices[expanded_device]:
             device.update({ 'parent': expanded_devices[expanded_device]['parent'] })
+          # Expose network limits even if they are not present.
+          limits_egress = expanded_devices[expanded_device].get('limits.egress')
+          if limits_egress:
+            device.update({ 'limits_egress': limits_egress })
+          limits_ingress = expanded_devices[expanded_device].get('limits.ingress')
+          if limits_ingress:
+            device.update({ 'limits_ingress': limits_ingress })
           devices.append(device)
     return jsonify({ 'data': devices })
 

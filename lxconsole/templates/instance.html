@@ -1589,6 +1589,26 @@
               return links
               },
             },
+            { title: "Ingress Limit", data: function (row, type, set) {
+              if (row.hasOwnProperty('limits_ingress')) {
+                if (row.limits_ingress)
+                  return row.limits_ingress
+                } else { 
+                  return '-'
+                }
+              return '-'
+              },
+            },
+            { title: "Egress Limit", data: function (row, type, set) {
+                if (row.hasOwnProperty('limits_egress')) {
+                  if (row.limits_egress)
+                    return row.limits_egress
+                  } else {
+                    return '-'
+                  }
+                return '-'
+              },
+            },
           ],
           order: [],
         });
