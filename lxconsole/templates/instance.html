@@ -1551,8 +1551,8 @@
             },
             { title: "NIC Type", data: function (row, type, set) {
                 if (row.hasOwnProperty('nictype')) {
-                  if (row.nictype)
-                    return row.nictype
+                  if (row.type)
+                    return row.type
                 }
                 return '-'
               },
@@ -1587,6 +1587,26 @@
                 links = '<a onclick=delete_device(\''+row.device+'\')><i class="fas fa-trash-alt fa-lg" title="Delete" aria-hidden="true"></i></a>'
               }
               return links
+              },
+            },
+            { title: "Ingress Limit", data: function (row, type, set) {
+              if (row.hasOwnProperty('limits_ingress')) {
+                if (row.limits_ingress)
+                  return row.limits_ingress
+                } else { 
+                  return '-'
+                }
+              return '-'
+              },
+            },
+            { title: "Egress Limit", data: function (row, type, set) {
+                if (row.hasOwnProperty('limits_egress')) {
+                  if (row.limits_egress)
+                    return row.limits_egress
+                  } else {
+                    return '-'
+                  }
+                return '-'
               },
             },
           ],
