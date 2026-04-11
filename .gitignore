@@ -8,3 +8,4 @@ instance
 lxconsole/__pycache__/
 lxconsole/api/__pycache__/
 var
+scan_results.txt
