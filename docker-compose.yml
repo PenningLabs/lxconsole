@@ -1,0 +1,22 @@
+services:
+    lxconsole:
+        build: .
+        ports:
+            - ${PORT}:5000
+        container_name: lxconsole
+        env_file:
+            - .env
+        environment:
+            - LXCONSOLE_SECRET_KEY=${SECRET}
+        volumes:
+            - ${CERTS}:/opt/lxconsole/certs
+            - ${INSTANCE}:/opt/lxconsole/instance
+        restart: unless-stopped
+        image: penninglabs/lxconsole
+
+# copy example env file
+# cp env.example .env
+# edit .env file
+# run 
+# docker-compose build
+# docker-compose up -d
